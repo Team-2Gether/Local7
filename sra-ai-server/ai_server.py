@@ -5,22 +5,21 @@ import google.generativeai as genai
 from dotenv import load_dotenv # dotenv 라이브러리 임포트
 
 # .env 파일 로드
-# 이 함수는 스크립트 실행 시 .env 파일에서 환경 변수를 자동으로 로드합니다.
+# 스크립트 실행 시 .env 파일에서 환경 변수를 자동으로 로드
 load_dotenv()
 
 app = FastAPI()
 
-# Gemini API 키 설정: 환경 변수에서 API 키를 가져옵니다.
-# 'API_KEY'라는 환경 변수가 설정되어 있어야 합니다.
+# Gemini API 키 설정: 환경 변수에서 API 키를 가져옴
 API_KEY = os.getenv("API_KEY")
 
 if not API_KEY:
-    # API 키가 설정되지 않았다면 명확한 오류 메시지를 출력하고 종료합니다.
+    # API 키가 설정되지 않았다면 명확한 오류 메시지를 출력하고 종료
     raise ValueError("API_KEY 환경 변수가 설정되지 않았습니다. .env 파일을 확인해주세요.")
 
 genai.configure(api_key=API_KEY)
 
-# 사용할 Gemini 모델 지정 (새로운 모델명 적용)
+# 사용할 Gemini 모델 지정 
 model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
 class ChatRequest(BaseModel):
@@ -31,7 +30,7 @@ async def chat(data: ChatRequest):
     user_input = data.message
     try:
         response = model.generate_content(user_input)
-        # Gemini 응답은 text 속성에 내용이 있습니다.
+        # Gemini 응답은 text 속성에 내용이 있음
         return {"response": response.text}
     except Exception as e:
         # API 호출 중 오류 발생 시 500 에러와 함께 상세 메시지 반환

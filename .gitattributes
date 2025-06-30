@@ -19,4 +19,6 @@
 *.mov binary
 *.mp3 binary
 *.wav binary
-*.class binary # Java 컴파일된 클래스 파일
+
+# Java 컴파일된 클래스 파일
+*.class binary 
