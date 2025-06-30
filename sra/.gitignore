@@ -42,6 +42,7 @@ out/                     # IntelliJ 컴파일 결과물
 
 ### VS Code ###
 .vscode/                 # VS Code 설정 폴더 전체 제외 (개인 설정)
+*.class
 
 # 운영체제 관련
 .DS_Store                # macOS

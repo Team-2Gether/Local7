@@ -24,17 +24,31 @@ repositories {
 }
 
 dependencies {
+
+	// Spring Boot 핵심 웹 의존성 (RESTful API 개발에 필요)
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// Spring WebFlux (WebClient 포함, 비동기 논블로킹 통신에 필요)
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// MyBatis (데이터베이스 연동 프레임워크)
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
+
+	// Oracle JDBC Driver (Oracle DB 연결)
+	implementation 'com.oracle.database.jdbc:ojdbc8'
+
+	// Lombok (Getter, Setter 등 자동 생성)
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// 개발 중 자동 재시작 및 핫 스왑 지원
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// 테스트 관련 의존성
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.projectreactor:reactor-test'
-	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'io.projectreactor:reactor-test' // WebFlux 테스트 지원
+	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4' // MyBatis 테스트 지원
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher' // JUnit 5 테스트 런처
+
 }
 
 tasks.named('test') {
