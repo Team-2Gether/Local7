@@ -9,6 +9,8 @@ target/                  # Maven 빌드 결과물 폴더 (Gradle 사용해도 �
 *.tar.gz
 !gradle/wrapper/gradle-wrapper.jar # Gradle Wrapper Jar는 포함 (빌드 시스템 고정)
 
+
+
 # IDE (STS, IntelliJ IDEA, NetBeans)
 ### STS ###
 .apt_generated
@@ -52,3 +54,5 @@ logs/
 # 임시 파일
 *.tmp
 *.bak
+*.lock
+*.bin
