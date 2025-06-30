@@ -1,0 +1,19 @@
+# Python 관련
+__pycache__/
+*.pyc
+*.pyd
+*.so
+.Python
+.venv/                 # 가상 환경 폴더 (Python 3.x venv)
+venv/                  # 가상 환경 폴더 (일반적으로 사용되는 이름)
+
+# IDE
+.idea/
+.vscode/               # VS Code 설정 (FastAPI 프로젝트에 대한)
+
+# 운영체제
+.DS_Store
+Thumbs.db
+
+# 로그 파일
+*.log

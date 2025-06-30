@@ -1,0 +1,22 @@
+# 라인 엔딩 설정 (모든 텍스트 파일에 대해 LF로 통일)
+* text=auto eol=lf
+
+# 특정 파일 타입에 대한 바이너리 지정 (Git이 병합하려 시도하지 않음)
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.bmp binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.rar binary
+*.pdf binary
+*.ico binary
+*.webp binary
+*.svg binary
+*.mp4 binary
+*.mov binary
+*.mp3 binary
+*.wav binary
+*.class binary # Java 컴파일된 클래스 파일

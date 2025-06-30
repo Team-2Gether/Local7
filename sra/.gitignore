@@ -1,0 +1,54 @@
+# Spring Boot 및 빌드 관련
+HELP.md
+.gradle/                 # Gradle 관련 폴더
+build/                   # Gradle/Maven 빌드 결과물 폴더
+target/                  # Maven 빌드 결과물 폴더 (Gradle 사용해도 일단 포함)
+*.jar
+*.war
+*.zip
+*.tar.gz
+!gradle/wrapper/gradle-wrapper.jar # Gradle Wrapper Jar는 포함 (빌드 시스템 고정)
+
+# IDE (STS, IntelliJ IDEA, NetBeans)
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/                     # Eclipse/STS 빌드 결과물
+# !**/src/main/**/bin/    # 이미 bin/이 제외되므로 특정 경로 포함은 불필요
+# !**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/                     # IntelliJ 컴파일 결과물
+# !**/src/main/**/out/    # 이미 out/이 제외되므로 특정 경로 포함은 불필요
+# !**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/                 # VS Code 설정 폴더 전체 제외 (개인 설정)
+
+# 운영체제 관련
+.DS_Store                # macOS
+Thumbs.db                # Windows
+
+# 로그 파일
+*.log
+logs/
+
+# 임시 파일
+*.tmp
+*.bak
