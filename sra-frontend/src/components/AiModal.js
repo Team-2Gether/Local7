@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal'; // react-modal 라이브러리 임포트
-import { chatWithAi, summarizeReview, extractKeywords } from '../api/aiApi';  // extractKeywords 함수 임포트
+import { chatWithAi, summarizeReview, analyzeSentiment } from '../api/aiApi';  
 
 // 모달의 접근성을 위한 설정
 Modal.setAppElement('#root'); // #root는 React 앱의 기본 DOM 요소 ID
@@ -20,11 +20,10 @@ const AiModal = ({ isOpen, onRequestClose }) => {
     const [reviewKeywords, setReviewKeywords] = useState([]);
     const [isReviewLoading, setIsReviewLoading] = useState(false);
 
-    // 키워드 추출 기능 상태
-    const [keywordInput, setKeywordInput] = useState('');
-    const [extractedKeywords, setExtractedKeywords] = useState([]);
-    const [isKeywordLoading, setIsKeywordLoading] = useState(false);
-
+    // 감성 분석 기능 상태 
+    const [sentimentInput, setSentimentInput] = useState('');
+    const [sentimentResult, setSentimentResult] = useState('');
+    const [isSentimentLoading, setIsSentimentLoading] = useState(false);
 
     // 채팅 메시지 전송 핸들러
     const handleChatSubmit = async () => {
@@ -61,19 +60,32 @@ const AiModal = ({ isOpen, onRequestClose }) => {
         }
     };
 
-    // ⭐ 키워드 추출 요청 핸들러
-    const handleExtractKeywordsSubmit = async () => {
-        if (!keywordInput.trim()) return;
-        setIsKeywordLoading(true);
-        setExtractedKeywords([]); // 이전 키워드 초기화
+    // 감성 분석 요청 핸들러 
+    const handleAnalyzeSentiment = async () => {
+        if (!sentimentInput.trim()) return;
+        setIsSentimentLoading(true);
+        setSentimentResult(''); // 이전 결과 초기화
         try {
-            const { keywords } = await extractKeywords(keywordInput);
-            setExtractedKeywords(keywords);
+            const result = await analyzeSentiment(sentimentInput);
+            setSentimentResult(result);
         } catch (error) {
-            setExtractedKeywords(['키워드 추출에 실패했습니다.']);
-            console.error(error); 
+            setSentimentResult('감성 분석에 실패했습니다.');
+            console.error('감성 분석 오류:', error);
         } finally {
-            setIsKeywordLoading(false);
+            setIsSentimentLoading(false);
+        }
+    };
+
+    const getSentimentColor = (sentiment) => {
+        switch (sentiment) {
+            case 'positive':
+                return 'green';
+            case 'negative':
+                return 'red';
+            case 'neutral':
+                return 'gray';
+            default:
+                return 'black';
         }
     };
 
@@ -130,19 +142,20 @@ const AiModal = ({ isOpen, onRequestClose }) => {
                 >
                     리뷰 요약
                 </button>
-                {/* 키워드 추출 탭 버튼 추가 */}
-                <button 
-                    onClick={() => setActiveTab('extract')} 
-                    style={{ 
-                        padding: '10px 15px', 
+                {/* 감성 분석 탭 버튼 추가 */}
+                <button
+                    onClick={() => setActiveTab('sentiment')}
+                    style={{
+                        padding: '10px 20px',
+                        marginRight: '10px',
                         cursor: 'pointer',
-                        backgroundColor: activeTab === 'extract' ? '#007bff' : '#f0f0f0',
-                        color: activeTab === 'extract' ? 'white' : 'black',
+                        backgroundColor: activeTab === 'sentiment' ? '#007bff' : '#f0f0f0',
+                        color: activeTab === 'sentiment' ? 'white' : 'black',
                         border: 'none',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
                     }}
                 >
-                    키워드 추출
+                    감성 분석
                 </button>
             </div>
 
@@ -219,39 +232,42 @@ const AiModal = ({ isOpen, onRequestClose }) => {
                     </div>
                 )}
 
-                {/* 키워드 추출 탭 내용 추가 */}
-                {activeTab === 'extract' && (
-                    <div>
-                        <h3>키워드 추출</h3>
+                {/* 감성 분석 탭 내용 */}
+                {activeTab === 'sentiment' && (
+                    <div style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '8px' }}>
+                        <h3>텍스트 감성 분석</h3>
                         <textarea
-                            value={keywordInput}
-                            onChange={(e) => setKeywordInput(e.target.value)}
-                            placeholder="키워드를 추출할 텍스트를 입력하세요..."
-                            rows="6"
-                            style={{ width: '100%', padding: '10px', boxSizing: 'border-box', marginBottom: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-                        />
-                        <button 
-                            onClick={handleExtractKeywordsSubmit} 
-                            disabled={isKeywordLoading}
-                            style={{ 
+                            value={sentimentInput}
+                            onChange={(e) => setSentimentInput(e.target.value)}
+                            placeholder="감성 분석할 텍스트를 입력하세요..."
+                            rows="5"
+                            style={{ width: 'calc(100% - 22px)', padding: '10px', marginBottom: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
+                        ></textarea>
+                        <button
+                            onClick={handleAnalyzeSentiment}
+                            disabled={isSentimentLoading}
+                            style={{
                                 padding: '10px 20px', 
                                 backgroundColor: '#28a745', 
                                 color: 'white', 
                                 border: 'none', 
                                 borderRadius: '5px', 
-                                cursor: 'pointer' 
+                                cursor: 'pointer'
                             }}
                         >
-                            {isKeywordLoading ? '추출 중...' : '키워드 추출'}
+                            {isSentimentLoading ? '분석 중...' : '감성 분석'}
                         </button>
-                        {extractedKeywords.length > 0 && (
+                        {sentimentResult && (
                             <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#e9ecef', borderRadius: '5px' }}>
-                                <h4>추출된 키워드:</h4>
-                                <p>{extractedKeywords.join(', ')}</p>
+                                <h4>분석 결과:</h4>
+                                <p style={{ fontWeight: 'bold', color: getSentimentColor(sentimentResult) }}>
+                                    {sentimentResult === 'positive' ? '긍정적 😊' : sentimentResult === 'negative' ? '부정적 😠' : '중립 😐'}
+                                </p>
                             </div>
                         )}
                     </div>
                 )}
+
             </div>
             <button 
                 onClick={onRequestClose} 

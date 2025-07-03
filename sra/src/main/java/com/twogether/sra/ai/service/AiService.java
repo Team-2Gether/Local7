@@ -1,11 +1,6 @@
 package com.twogether.sra.ai.service;
 
-import com.twogether.sra.ai.vo.AiChatRequest;
-import com.twogether.sra.ai.vo.AiChatResponse;
-import com.twogether.sra.ai.vo.AiReviewRequest;
-import com.twogether.sra.ai.vo.AiReviewResponse;
-import com.twogether.sra.ai.vo.AiKeywordRequest;
-import com.twogether.sra.ai.vo.AiKeywordResponse;
+import com.twogether.sra.ai.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -57,15 +52,16 @@ public class AiService {
     }
 
     /**
-     * FastAPI AI 서버의 /extract-keywords 엔드포인트를 호출하여 텍스트에서 키워드를 추출
-     * @param request 키워드를 추출할 텍스트 (AiKeywordRequest VO 객체)
-     * @return 추출된 키워드 리스트 (AiKeywordResponse VO 객체)
+     * FastAPI AI 서버의 /analyze-sentiment 엔드포인트를 호출하여 텍스트 감성을 분석
+     * @param request 감성을 분석할 텍스트 (SentimentRequest VO 객체)
+     * @return 분석된 감성 (SentimentResponse VO 객체)
      */
-    public Mono<AiKeywordResponse> extractKeywords(AiKeywordRequest request) {
+    public Mono<SentimentResponse> analyzeSentiment(SentimentRequest request) {
         return webClient.post()
-                .uri("/extract-keywords")
+                .uri("/analyze-sentiment") // FastAPI의 새 엔드포인트 URI
                 .bodyValue(request)
                 .retrieve()
-                .bodyToMono(AiKeywordResponse.class);
+                .bodyToMono(SentimentResponse.class);
     }
+
 }

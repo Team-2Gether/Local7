@@ -38,18 +38,16 @@ export const summarizeReview = async (reviewText) => {
 };
 
 /**
- * 텍스트에서 AI로 핵심 키워드를 추출하는 API 호출 함수
- * @param {string} text - 키워드를 추출할 텍스트
- * @returns {Promise<{keywords: string[]}>} 추출된 키워드 리스트
+ * 텍스트의 감성을 분석하는 API 호출 함수 
+ * @param {string} text - 감성을 분석할 텍스트
+ * @returns {Promise<string>} 분석된 감성 (positive, negative, neutral 중 하나)
  */
-export const extractKeywords = async (text) => {
+export const analyzeSentiment = async (text) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}/extract-keywords`, { text });
-        return {
-            keywords: response.data.keywords
-        };
+        const response = await axios.post(`${API_BASE_URL}/analyze-sentiment`, { text: text });
+        return response.data.sentiment; // Spring Boot의 SentimentResponse에서 sentiment 필드 추출
     } catch (error) {
-        console.error('Error extracting keywords:', error);
+        console.error('Error analyzing sentiment:', error);
         throw error;
     }
 };

@@ -86,3 +86,38 @@ async def extract_keywords(request: KeywordRequest):
         return {"keywords": keywords}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"키워드 추출 중 오류 발생: {str(e)}")
+    
+class SentimentRequest(BaseModel):
+    text: str
+
+class SentimentResponse(BaseModel):
+    sentiment: str # 긍정 (positive), 부정 (negative), 중립 (neutral) 등으로 분류
+
+@app.post("/analyze-sentiment")
+async def analyze_sentiment(request: SentimentRequest):
+    try:
+        # Gemini 모델에 감성 분석 프롬프트 전달
+        prompt = f"""다음 한국어 텍스트의 감성을 긍정(positive), 부정(negative), 또는 중립(neutral) 중 하나로 분류해줘.
+        오직 분류 결과(positive, negative, neutral)만 반환해줘.
+
+        텍스트: "{request.text}"
+        감성:"""
+
+        response = model.generate_content(prompt)
+        sentiment_result = response.text.strip().lower() # 결과값을 소문자로 변환
+
+        # 유효한 감성 분류인지 확인 (Gemini가 항상 정확히 지정된 형태로 응답하지 않을 수 있으므로)
+        if "positive" in sentiment_result:
+            sentiment = "positive"
+        elif "negative" in sentiment_result:
+            sentiment = "negative"
+        elif "neutral" in sentiment_result:
+            sentiment = "neutral"
+        else:
+            # 예상치 못한 응답일 경우 중립으로 처리하거나 오류 발생시킬 수 있음
+            sentiment = "neutral" 
+            print(f"Warning: Unexpected sentiment response from AI: {sentiment_result}")
+
+        return {"sentiment": sentiment}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"감성 분석 중 오류 발생: {str(e)}")    
