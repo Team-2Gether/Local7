@@ -43,6 +43,9 @@ dependencies {
 	// 개발 중 자동 재시작 및 핫 스왑 지원
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+	// Pagenable 관련
+	implementation 'org.springframework.data:spring-data-commons:3.3.12'
+
 	// 테스트 관련 의존성
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test' // WebFlux 테스트 지원

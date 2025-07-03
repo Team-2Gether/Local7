@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.twogether.sra.kakaomapapi.dao.RestaurantDAO">
+
+    <insert id="insertRestaurant" parameterType="com.twogether.sra.kakaomapapi.vo.RestaurantVO"
+            useGeneratedKeys="true" keyProperty="restaurantId" keyColumn="restaurant_id">
+        <![CDATA[
+        INSERT INTO tb_restaurant ( restaurant_name,
+            restaurant_address,
+            restaurant_phone_number,
+            restaurant_category,
+            restaurant_latitude,
+            restaurant_longitude,
+            restaurant_open_hours,
+            restaurant_break_time,
+            restaurant_holiday,
+            restaurant_parking_info,
+            restaurant_average_rating,
+            restaurant_review_count,
+            created_id,
+            updated_id
+        ) VALUES (
+            #{restaurantName},
+            #{restaurantAddress},
+            #{restaurantPhoneNumber},
+            #{restaurantCategory},
+            #{restaurantLatitude},
+            #{restaurantLongitude},
+            #{restaurantOpenHours},
+            #{restaurantBreakTime},
+            #{restaurantHoliday},
+            #{restaurantParkingInfo},
+            #{restaurantAverageRating},
+            #{restaurantReviewCount},
+            #{createdId},
+            #{updatedId}
+        )
+        ]]>
+    </insert>
+
+    <select id="selectAllRestaurants" resultType="com.twogether.sra.kakaomapapi.vo.RestaurantVO">
+        <![CDATA[
+        SELECT
+            restaurant_id,
+            restaurant_name,
+            restaurant_address,
+            restaurant_phone_number,
+            restaurant_category,
+            restaurant_latitude,
+            restaurant_longitude,
+            restaurant_open_hours,
+            restaurant_break_time,
+            restaurant_holiday,
+            restaurant_parking_info,
+            restaurant_average_rating,
+            restaurant_review_count,           created_date,
+            created_id,
+            updated_date,
+            updated_id
+        FROM
+            tb_restaurant ]]>
+    </select>
+
+    <select id="countRestaurantByNameAndAddress" resultType="int">
+        <![CDATA[
+        SELECT COUNT(*)
+        FROM tb_restaurant WHERE restaurant_name = #{restaurantName} AND restaurant_address = #{restaurantAddress}
+        ]]>
+    </select>
+
+</mapper>
