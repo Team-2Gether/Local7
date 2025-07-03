@@ -2,25 +2,21 @@ import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import google.generativeai as genai
-from dotenv import load_dotenv # dotenv 라이브러리 임포트
+from dotenv import load_dotenv 
 
 # .env 파일 로드
-# 스크립트 실행 시 .env 파일에서 환경 변수를 자동으로 로드
 load_dotenv()
 
 app = FastAPI()
 
-# Gemini API 키 설정: 환경 변수에서 API 키를 가져옴
 API_KEY = os.getenv("API_KEY")
 
 if not API_KEY:
-    # API 키가 설정되지 않았다면 명확한 오류 메시지를 출력하고 종료
     raise ValueError("API_KEY 환경 변수가 설정되지 않았습니다. .env 파일을 확인해주세요.")
 
 genai.configure(api_key=API_KEY)
 
-# 사용할 Gemini 모델 지정 
-model = genai.GenerativeModel("gemini-1.5-flash-latest")
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 class ChatRequest(BaseModel):
     message: str
@@ -30,15 +26,16 @@ async def chat(data: ChatRequest):
     user_input = data.message
     try:
         response = model.generate_content(user_input)
-        # Gemini 응답은 text 속성에 내용이 있음
         return {"response": response.text}
     except Exception as e:
-        # API 호출 중 오류 발생 시 500 에러와 함께 상세 메시지 반환
         raise HTTPException(status_code=500, detail=f"AI 응답 생성 중 오류 발생: {str(e)}")
 
 # --- 추가된 리뷰 요약 및 키워드 추출 엔드포인트 ---
 class ReviewRequest(BaseModel):
     review_text: str
+
+class KeywordRequest(BaseModel): 
+    text: str
 
 @app.post("/summarize-review")
 async def summarize_review(request: ReviewRequest):
@@ -71,3 +68,21 @@ async def summarize_review(request: ReviewRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"리뷰 요약 중 오류 발생: {str(e)}")
+
+# 키워드 추출 엔드포인트 추가 
+@app.post("/extract-keywords")
+async def extract_keywords(request: KeywordRequest):
+    try:
+        prompt = f"""다음 텍스트에서 핵심 키워드 3~5개를 추출해줘. 
+        키워드는 쉼표(,)로 구분해서 나열해줘.
+
+        텍스트: "{request.text}"
+
+        키워드:
+        """
+        response = model.generate_content(prompt)
+        extracted_text = response.text.strip().replace("키워드:", "").strip()
+        keywords = [k.strip() for k in extracted_text.split(',') if k.strip()]
+        return {"keywords": keywords}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"키워드 추출 중 오류 발생: {str(e)}")

@@ -36,3 +36,20 @@ export const summarizeReview = async (reviewText) => {
         throw error;
     }
 };
+
+/**
+ * 텍스트에서 AI로 핵심 키워드를 추출하는 API 호출 함수
+ * @param {string} text - 키워드를 추출할 텍스트
+ * @returns {Promise<{keywords: string[]}>} 추출된 키워드 리스트
+ */
+export const extractKeywords = async (text) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/extract-keywords`, { text });
+        return {
+            keywords: response.data.keywords
+        };
+    } catch (error) {
+        console.error('Error extracting keywords:', error);
+        throw error;
+    }
+};

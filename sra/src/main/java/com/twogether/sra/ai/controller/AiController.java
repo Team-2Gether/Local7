@@ -5,6 +5,8 @@ import com.twogether.sra.ai.vo.AiChatRequest;
 import com.twogether.sra.ai.vo.AiChatResponse;
 import com.twogether.sra.ai.vo.AiReviewRequest;
 import com.twogether.sra.ai.vo.AiReviewResponse;
+import com.twogether.sra.ai.vo.AiKeywordRequest;
+import com.twogether.sra.ai.vo.AiKeywordResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +14,10 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/ai")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AiController {
+
+    // CORS 설정 추가: React 개발 서버 도메인에서 요청을 허용합니다.
 
     private final AiService aiService; // AiService 주입
 
@@ -47,4 +52,16 @@ public class AiController {
                 .map(response -> ResponseEntity.ok(response)); // 응답이 오면 HTTP 200 OK와 함께 반환
     }
 
+    /**
+     * 새로 추가: 텍스트에서 AI로 핵심 키워드를 추출하기 위한 엔드포인트
+     * POST /api/ai/extract-keywords
+     * 요청 예시: {"text": "이 음식은 정말 맛있고, 서비스도 훌륭했어요."}
+     * 응답 예시: {"keywords": ["음식", "서비스"]}
+     */
+    @PostMapping("/extract-keywords")
+    public Mono<ResponseEntity<AiKeywordResponse>> extractKeywords(@RequestBody AiKeywordRequest request) {
+        // AiService를 호출하여 AI 서버로부터 비동기 응답을 받음
+        return aiService.extractKeywords(request)
+                .map(response -> ResponseEntity.ok(response)); // 응답이 오면 HTTP 200 OK와 함께 반환
+    }
 }

@@ -4,19 +4,30 @@ import com.twogether.sra.ai.vo.AiChatRequest;
 import com.twogether.sra.ai.vo.AiChatResponse;
 import com.twogether.sra.ai.vo.AiReviewRequest;
 import com.twogether.sra.ai.vo.AiReviewResponse;
+import com.twogether.sra.ai.vo.AiKeywordRequest;
+import com.twogether.sra.ai.vo.AiKeywordResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class AiService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AiService.class);
 
     private final WebClient webClient;
 
     @Autowired
-    public AiService(WebClient webClient) {
-        this.webClient = webClient;
+    // @Value를 생성자 파라미터에 직접 붙여서 값을 주입
+    public AiService(WebClient.Builder webClientBuilder, @Value("${ai.server.url}") String aiServerUrl) {
+        // 이제 aiServerUrl은 생성자 호출 시점에 이미 값을 가지고 있음
+        logger.info("AI Server URL: {}", aiServerUrl);
+        this.webClient = webClientBuilder.baseUrl(aiServerUrl).build();
     }
 
     /**
@@ -45,4 +56,16 @@ public class AiService {
                 .bodyToMono(AiReviewResponse.class);
     }
 
+    /**
+     * FastAPI AI 서버의 /extract-keywords 엔드포인트를 호출하여 텍스트에서 키워드를 추출
+     * @param request 키워드를 추출할 텍스트 (AiKeywordRequest VO 객체)
+     * @return 추출된 키워드 리스트 (AiKeywordResponse VO 객체)
+     */
+    public Mono<AiKeywordResponse> extractKeywords(AiKeywordRequest request) {
+        return webClient.post()
+                .uri("/extract-keywords")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(AiKeywordResponse.class);
+    }
 }

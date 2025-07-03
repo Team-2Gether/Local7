@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal'; // react-modal 라이브러리 임포트
-import { chatWithAi, summarizeReview } from '../api/aiApi'; // 위에서 만든 API 함수 임포트
+import { chatWithAi, summarizeReview, extractKeywords } from '../api/aiApi';  // extractKeywords 함수 임포트
 
-// 모달의 접근성을 위한 설정 (필수)
+// 모달의 접근성을 위한 설정
 Modal.setAppElement('#root'); // #root는 React 앱의 기본 DOM 요소 ID
 
 const AiModal = ({ isOpen, onRequestClose }) => {
-    const [activeTab, setActiveTab] = useState('chat'); // 'chat' 또는 'summarize'
+    // 'chat', 'summarize', 'extract' 탭 추가
+    const [activeTab, setActiveTab] = useState('chat'); 
     
     // 채팅 기능 상태
     const [chatInput, setChatInput] = useState('');
@@ -19,6 +20,12 @@ const AiModal = ({ isOpen, onRequestClose }) => {
     const [reviewKeywords, setReviewKeywords] = useState([]);
     const [isReviewLoading, setIsReviewLoading] = useState(false);
 
+    // 키워드 추출 기능 상태
+    const [keywordInput, setKeywordInput] = useState('');
+    const [extractedKeywords, setExtractedKeywords] = useState([]);
+    const [isKeywordLoading, setIsKeywordLoading] = useState(false);
+
+
     // 채팅 메시지 전송 핸들러
     const handleChatSubmit = async () => {
         if (!chatInput.trim()) return;
@@ -29,6 +36,7 @@ const AiModal = ({ isOpen, onRequestClose }) => {
             setChatResponse(response);
         } catch (error) {
             setChatResponse('AI 응답을 가져오는 데 실패했습니다.');
+            console.error(error); 
         } finally {
             setIsChatLoading(false);
         }
@@ -47,8 +55,25 @@ const AiModal = ({ isOpen, onRequestClose }) => {
         } catch (error) {
             setReviewSummary('리뷰 요약에 실패했습니다.');
             setReviewKeywords([]);
+            console.error(error); 
         } finally {
             setIsReviewLoading(false);
+        }
+    };
+
+    // ⭐ 키워드 추출 요청 핸들러
+    const handleExtractKeywordsSubmit = async () => {
+        if (!keywordInput.trim()) return;
+        setIsKeywordLoading(true);
+        setExtractedKeywords([]); // 이전 키워드 초기화
+        try {
+            const { keywords } = await extractKeywords(keywordInput);
+            setExtractedKeywords(keywords);
+        } catch (error) {
+            setExtractedKeywords(['키워드 추출에 실패했습니다.']);
+            console.error(error); 
+        } finally {
+            setIsKeywordLoading(false);
         }
     };
 
@@ -68,7 +93,7 @@ const AiModal = ({ isOpen, onRequestClose }) => {
                     bottom: 'auto',
                     marginRight: '-50%',
                     transform: 'translate(-50%, -50%)',
-                    width: '50%', // 모달 너비 조정
+                    width: '50%', 
                     maxWidth: '600px',
                     padding: '20px',
                     borderRadius: '8px'
@@ -95,6 +120,7 @@ const AiModal = ({ isOpen, onRequestClose }) => {
                     onClick={() => setActiveTab('summarize')} 
                     style={{ 
                         padding: '10px 15px', 
+                        marginRight: '10px', 
                         cursor: 'pointer',
                         backgroundColor: activeTab === 'summarize' ? '#007bff' : '#f0f0f0',
                         color: activeTab === 'summarize' ? 'white' : 'black',
@@ -103,6 +129,20 @@ const AiModal = ({ isOpen, onRequestClose }) => {
                     }}
                 >
                     리뷰 요약
+                </button>
+                {/* 키워드 추출 탭 버튼 추가 */}
+                <button 
+                    onClick={() => setActiveTab('extract')} 
+                    style={{ 
+                        padding: '10px 15px', 
+                        cursor: 'pointer',
+                        backgroundColor: activeTab === 'extract' ? '#007bff' : '#f0f0f0',
+                        color: activeTab === 'extract' ? 'white' : 'black',
+                        border: 'none',
+                        borderRadius: '5px'
+                    }}
+                >
+                    키워드 추출
                 </button>
             </div>
 
@@ -174,6 +214,40 @@ const AiModal = ({ isOpen, onRequestClose }) => {
                                         <p>{reviewKeywords.join(', ')}</p>
                                     </>
                                 )}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* 키워드 추출 탭 내용 추가 */}
+                {activeTab === 'extract' && (
+                    <div>
+                        <h3>키워드 추출</h3>
+                        <textarea
+                            value={keywordInput}
+                            onChange={(e) => setKeywordInput(e.target.value)}
+                            placeholder="키워드를 추출할 텍스트를 입력하세요..."
+                            rows="6"
+                            style={{ width: '100%', padding: '10px', boxSizing: 'border-box', marginBottom: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+                        />
+                        <button 
+                            onClick={handleExtractKeywordsSubmit} 
+                            disabled={isKeywordLoading}
+                            style={{ 
+                                padding: '10px 20px', 
+                                backgroundColor: '#28a745', 
+                                color: 'white', 
+                                border: 'none', 
+                                borderRadius: '5px', 
+                                cursor: 'pointer' 
+                            }}
+                        >
+                            {isKeywordLoading ? '추출 중...' : '키워드 추출'}
+                        </button>
+                        {extractedKeywords.length > 0 && (
+                            <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#e9ecef', borderRadius: '5px' }}>
+                                <h4>추출된 키워드:</h4>
+                                <p>{extractedKeywords.join(', ')}</p>
                             </div>
                         )}
                     </div>
