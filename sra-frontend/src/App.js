@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import SignupForm from './components/signup/SignupForm';
 import Navbar from './components/signup/Navbar';
+=======
+import React, { useState } from 'react';
+import AiModal from './pages/ai/components/AiModal'; // AiModal 컴포넌트 임포트
+import './App.css'; // 필요하다면 CSS 파일 임포트
+>>>>>>> 565dc4df8c099d2ba6a087e275f12ff446cc80d9
 
 function App() {
   return (
