@@ -34,9 +34,6 @@ async def chat(data: ChatRequest):
 class ReviewRequest(BaseModel):
     review_text: str
 
-class KeywordRequest(BaseModel): 
-    text: str
-
 @app.post("/summarize-review")
 async def summarize_review(request: ReviewRequest):
     try:
@@ -69,27 +66,8 @@ async def summarize_review(request: ReviewRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"리뷰 요약 중 오류 발생: {str(e)}")
 
-# 키워드 추출 엔드포인트 추가 
-@app.post("/extract-keywords")
-async def extract_keywords(request: KeywordRequest):
-    try:
-        prompt = f"""다음 텍스트에서 핵심 키워드 3~5개를 추출해줘. 
-        키워드는 쉼표(,)로 구분해서 나열해줘.
-
-        텍스트: "{request.text}"
-
-        키워드:
-        """
-        response = model.generate_content(prompt)
-        extracted_text = response.text.strip().replace("키워드:", "").strip()
-        keywords = [k.strip() for k in extracted_text.split(',') if k.strip()]
-        return {"keywords": keywords}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"키워드 추출 중 오류 발생: {str(e)}")
-    
 class SentimentRequest(BaseModel):
     text: str
-
 class SentimentResponse(BaseModel):
     sentiment: str # 긍정 (positive), 부정 (negative), 중립 (neutral) 등으로 분류
 
