@@ -1,4 +1,4 @@
 package com.twogether.sra.like.controller;
 
-public class LikesController {
+public class LikeController {
 }

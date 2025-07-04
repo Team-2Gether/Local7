@@ -1,4 +1,4 @@
 package com.twogether.sra.like.service;
 
-public class LikesServiceImpl {
+public interface LikeService {
 }
