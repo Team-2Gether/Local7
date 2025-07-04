@@ -1,4 +1,4 @@
 package com.twogether.sra.comment.controller;
 
-public class CommentsController {
+public class CommentController {
 }

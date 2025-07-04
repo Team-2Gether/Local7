@@ -1,4 +1,4 @@
 package com.twogether.sra.review.dao;
 
-public class ReviewsDAO {
+public class ReviewDAO {
 }

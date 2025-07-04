@@ -1,4 +1,4 @@
 package com.twogether.sra.review.vo;
 
-public class ReviewsVO {
+public class ReviewVO {
 }
