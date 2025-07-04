@@ -1,4 +1,4 @@
 package com.twogether.sra.review.service;
 
-public interface ReviewsService {
+public interface ReviewService {
 }

@@ -1,4 +1,4 @@
-package com.twogether.sra.follows.controller;
+package com.twogether.sra.follow.controller;
 
 public class FollowsController {
 }

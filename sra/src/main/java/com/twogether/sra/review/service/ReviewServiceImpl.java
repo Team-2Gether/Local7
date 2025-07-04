@@ -1,4 +1,4 @@
 package com.twogether.sra.review.service;
 
-public class ReviewsServiceImpl {
+public class ReviewServiceImpl {
 }

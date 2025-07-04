@@ -1,4 +1,4 @@
-package com.twogether.sra.likes.dao;
+package com.twogether.sra.like.dao;
 
 public class LikesDAO {
 }

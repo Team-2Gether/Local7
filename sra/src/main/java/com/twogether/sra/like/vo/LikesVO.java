@@ -1,4 +1,4 @@
-package com.twogether.sra.likes.vo;
+package com.twogether.sra.like.vo;
 
 public class LikesVO {
 }

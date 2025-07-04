@@ -1,4 +1,4 @@
-package com.twogether.sra.follows.service;
+package com.twogether.sra.follow.service;
 
-public class FollowsServiceImpl {
+public class FollowServiceImpl {
 }
