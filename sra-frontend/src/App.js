@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AiModal from './components/AiModal'; // AiModal 컴포넌트 임포트
+import AiModal from './pages/ai/components/AiModal'; // AiModal 컴포넌트 임포트
 import './App.css'; // 필요하다면 CSS 파일 임포트
 
 function App() {
