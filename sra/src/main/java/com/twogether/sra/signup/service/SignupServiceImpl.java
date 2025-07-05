@@ -41,7 +41,7 @@ public class SignupServiceImpl implements SignupService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
             message.setSubject("[투게더] 이메일 인증 코드"); // Email subject
-            message.setText("귀하의 이메일 인증 코드는 " + verificationCode + " 입니다. 5분 이내로 입력해주세요."); // Email body
+            message.setText("이메일 인증 코드는 " + verificationCode + " 입니다. 5분 이내로 입력해주세요."); // Email body
             mailSender.send(message); // Send the email
 
             // For development/debugging, you might return the code.
