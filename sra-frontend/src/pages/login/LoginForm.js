@@ -1,80 +1,80 @@
 // src/pages/login/LoginForm.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// import { useNavigate } from 'react-router-dom'; // App.js에서 리다이렉션 처리하므로 여기서는 필요 없음
-import './LoginForm.css'; // For styling
+import './LoginForm.css'; // Import the CSS file
 
-// LoginForm은 onLoginSuccess prop을 받습니다.
-function LoginForm({ onLoginSuccess }) { // Prop으로 onLoginSuccess를 받도록 변경
+function LoginForm({ onLoginSuccess }) {
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  // const navigate = useNavigate(); // 이제 필요 없습니다.
+  const navigate = useNavigate();
+
+  axios.defaults.withCredentials = true;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
-
-    if (!credential || !password) {
-      setMessage('아이디/이메일과 비밀번호를 모두 입력해주세요.');
-      return;
-    }
-
     try {
-      const response = await axios.post('http://localhost:8080/api/user/login', { // 백엔드 URL 확인
+      const response = await axios.post('http://localhost:8080/api/user/login', {
         credential,
         password,
       });
+      const data = response.data;
 
-      if (response.data.status === 'success') {
-        setMessage(response.data.message);
-        console.log('Login successful!', response.data.user);
-        alert(response.data.message + '\n환영합니다, ' + (response.data.user.userNickname || response.data.user.userUsername) + '님!');
-
-        // 로그인 성공 시 App.js로부터 받은 콜백 함수 호출
-        if (onLoginSuccess) {
-          onLoginSuccess(response.data.user); // 사용자 데이터를 전달
-        }
-        // navigate('/'); // 직접적인 리다이렉션은 App.js에서 처리
+      if (response.status === 200) {
+        alert(data.message);
+        onLoginSuccess({ userNickname: data.user.userNickname, userUsername: data.user.userUsername });
       } else {
-        setMessage(response.data.message || '로그인 실패: 알 수 없는 오류.');
+        alert("로그인 실패: " + data.message);
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || '로그인 중 오류가 발생했습니다.';
-      setMessage(errorMessage);
-      console.error('Login error:', error.response || error);
+      console.error("로그인 중 오류 발생:", error);
+      if (error.response && error.response.data && error.response.data.message) {
+        alert("로그인 실패: " + error.response.data.message);
+      } else {
+        alert("로그인 중 오류가 발생했습니다.");
+      }
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>로그인</h2>
-      {message && <p className={`message ${message.includes('성공') ? 'success' : 'error'}`}>{message}</p>}
+    <div className="login-form-container">
+      {/* Logo */}
+      <img src="/path/to/your/logo.png" alt="LOCALR7 Logo" className="logo" />
+      {/* You'll need to replace "/path/to/your/logo.png" with the actual path to your logo image */}
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="credential">아이디 또는 이메일:</label>
           <input
             type="text"
             id="credential"
-            name="credential"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
+            placeholder="Email" /* Changed to placeholder */
             required
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">비밀번호:</label>
           <input
             type="password"
             id="password"
-            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password" /* Changed to placeholder */
             required
           />
         </div>
-        <button type="submit" className="btn-login">로그인</button>
+        <button type="submit">LOGIN</button>
       </form>
+
+      <div className="links-container">
+        <a href="#">회원 가입</a>
+        <a href="#">비밀번호 변경</a>
+        <a href="#">이용 약관</a>
+      </div>
+
+      <button className="intro-button" onClick={() => navigate('/intro')}>
+        <span>사이트 소개</span> <span className="go-text">GO</span>
+      </button>
     </div>
   );
 }

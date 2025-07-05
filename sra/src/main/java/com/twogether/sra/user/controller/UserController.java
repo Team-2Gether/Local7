@@ -87,7 +87,6 @@ public class UserController {
         Map<String, String> response = new HashMap<>();
         response.put("status", "error");
         response.put("code", code);
-        response.put("message", message);
         return response;
     }
 }
