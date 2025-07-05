@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.twogether.sra.restaurant.dao.RestaurantDAO">
+
+    <select id="findAllRestaurants" resultType="com.twogether.sra.restaurant.vo.RestaurantVO">
+        SELECT
+        RESTAURANT_ID,
+        RESTAURANT_NAME,
+        RESTAURANT_ADDRESS,
+        RESTAURANT_PHONE_NUMBER,
+        RESTAURANT_CATEGORY,
+        RESTAURANT_LATITUDE,
+        RESTAURANT_LONGITUDE,
+        RESTAURANT_OPEN_HOURS,
+        RESTAURANT_BREAK_TIME,
+        RESTAURANT_HOLIDAY,
+        RESTAURANT_PARKING_INFO,
+        RESTAURANT_AVERAGE_RATING,
+        RESTAURANT_REVIEW_COUNT
+        FROM
+        TB_RESTAURANT
+        WHERE
+        RESTAURANT_LATITUDE IS NOT NULL AND RESTAURANT_LONGITUDE IS NOT NULL
+        ORDER BY
+        RESTAURANT_NAME
+    </select>
+
+    <select id="findRestaurantsByCategory" resultType="com.twogether.sra.restaurant.vo.RestaurantVO">
+        SELECT
+        RESTAURANT_ID,
+        RESTAURANT_NAME,
+        RESTAURANT_ADDRESS,
+        RESTAURANT_PHONE_NUMBER,
+        RESTAURANT_CATEGORY,
+        RESTAURANT_LATITUDE,
+        RESTAURANT_LONGITUDE,
+        RESTAURANT_OPEN_HOURS,
+        RESTAURANT_BREAK_TIME,
+        RESTAURANT_HOLIDAY,
+        RESTAURANT_PARKING_INFO,
+        RESTAURANT_AVERAGE_RATING,
+        RESTAURANT_REVIEW_COUNT
+        FROM
+        TB_RESTAURANT
+        WHERE
+        RESTAURANT_CATEGORY = #{category}
+        AND RESTAURANT_LATITUDE IS NOT NULL AND RESTAURANT_LONGITUDE IS NOT NULL
+        ORDER BY
+        RESTAURANT_NAME
+    </select>
+
+</mapper>
