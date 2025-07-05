@@ -91,16 +91,29 @@ class KakaoMapCrawler:
         """
         sql = """
         INSERT INTO TB_RESTAURANT (
-            RESTAURANT_NAME, RESTAURANT_ADDRESS, RESTAURANT_PHONE_NUMBER,
-            RESTAURANT_CATEGORY, RESTAURANT_LATITUDE, RESTAURANT_LONGITUDE,
-            CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
-            -- Kakao API에서 직접 제공하지 않는 필드는 현재 NULL로 처리합니다.
-            -- RESTAURANT_OPEN_HOURS, RESTAURANT_BREAK_TIME, RESTAURANT_HOLIDAY,
-            -- RESTAURANT_PARKING_INFO, RESTAURANT_AVERAGE_RATING, RESTAURANT_REVIEW_COUNT
+            RESTAURANT_NAME,
+            RESTAURANT_ADDRESS,
+            RESTAURANT_PHONE_NUMBER,
+            RESTAURANT_CATEGORY,
+            RESTAURANT_LATITUDE,
+            RESTAURANT_LONGITUDE,
+            CREATED_DATE,
+            CREATED_ID,
+            UPDATED_DATE,
+            UPDATED_ID,
+            RESTAURANT_OPEN_HOURS -- 이제 이 필드를 포함합니다.
         ) VALUES (
-            :restaurantName, :restaurantAddress, :restaurantPhoneNumber,
-            :restaurantCategory, :restaurantLatitude, :restaurantLongitude,
-            TO_DATE(:createdDate, 'YYYY-MM-DD'), :createdId, TO_DATE(:updatedDate, 'YYYY-MM-DD'), :updatedId
+            :restaurantName,
+            :restaurantAddress,
+            :restaurantPhoneNumber,
+            :restaurantCategory,
+            :restaurantLatitude,
+            :restaurantLongitude,
+            TO_DATE(:createdDate, 'YYYY-MM-DD'),
+            :createdId,
+            TO_DATE(:updatedDate, 'YYYY-MM-DD'),
+            :updatedId,
+            :restaurantOpenHours -- 이제 이 필드를 포함합니다.
         )
         """
         try:
@@ -114,7 +127,8 @@ class KakaoMapCrawler:
                 'createdDate': restaurant_info.get('createdDate'),
                 'createdId': restaurant_info.get('createdId'),
                 'updatedDate': restaurant_info.get('updatedDate'),
-                'updatedId': restaurant_info.get('updatedId')
+                'updatedId': restaurant_info.get('updatedId'),
+                'restaurantOpenHours': restaurant_info.get('restaurantOpenHours') # 이 값을 삽입
             })
             return True
         except oracledb.Error as e:
@@ -125,6 +139,28 @@ class KakaoMapCrawler:
             else:
                 print(f"  DB 삽입 오류: {error_obj.message} - 데이터: {restaurant_info.get('restaurantName')}")
             return False
+
+    # --- 새로 추가된/수정된 부분 시작 ---
+    def get_operating_hours(self, place_name, address):
+        """
+        (가상의 함수) 외부 API 또는 웹 스크래핑을 통해 특정 장소의 영업 시간을 가져옵니다.
+        이 함수는 실제 구현이 필요합니다.
+        현재 Kakao Local Search API에서는 직접적인 영업 시간 정보가 제공되지 않습니다.
+        """
+        # 실제 구현에서는 다음과 같은 방법들을 고려할 수 있습니다:
+        # 1. Kakao Place Details API (ID가 필요할 수 있음)
+        # 2. Naver, Google Places API 등 다른 지도/장소 API 연동
+        # 3. 해당 장소의 웹사이트, 블로그 등 직접 웹 스크래핑 (매우 복잡하고 안정적이지 않음)
+
+        # 현재는 예시 데이터를 반환합니다. 실제 운영 시에는 이 부분을 구현해야 합니다.
+        # 이 함수가 실제 영업 시간을 반환한다고 가정합니다.
+        if "스타벅스" in place_name:
+            return "매일 07:00 - 22:00"
+        elif "롯데리아" in place_name:
+            return "매일 10:00 - 23:00"
+        else:
+            return "정보 없음" # 또는 None
+    # --- 새로 추가된/수정된 부분 끝 ---
 
     def crawl_restaurants(self):
         """
@@ -164,6 +200,11 @@ class KakaoMapCrawler:
                                 continue
 
                             for doc in data['documents']:
+                                # --- 수정된 부분 시작 ---
+                                # 이곳에서 영업 시간 정보를 가져오는 가상의 함수를 호출합니다.
+                                operating_hours = self.get_operating_hours(doc.get('place_name'), doc.get('road_address_name') or doc.get('address_name'))
+                                # --- 수정된 부분 끝 ---
+
                                 restaurant_info = {
                                     "restaurantName": doc.get('place_name'),
                                     "restaurantAddress": doc.get('road_address_name') or doc.get('address_name'),
@@ -174,14 +215,15 @@ class KakaoMapCrawler:
                                     "createdDate": datetime.now().strftime("%Y-%m-%d"),
                                     "createdId": "system_crawler_7road",
                                     "updatedDate": datetime.now().strftime("%Y-%m-%d"),
-                                    "updatedId": "system_crawler_7road"
+                                    "updatedId": "system_crawler_7road",
+                                    "restaurantOpenHours": operating_hours # 여기에 영업 시간 데이터 추가
                                 }
 
                                 # DB에 이미 존재하는지 확인 후 삽입
                                 if not self.restaurant_exists(cursor, restaurant_info['restaurantName'], restaurant_info['restaurantAddress']):
                                     if self.insert_restaurant(cursor, restaurant_info):
                                         newly_saved_count += 1
-                                        print(f"  새로운 맛집 저장: {restaurant_info['restaurantName']} - {restaurant_info['restaurantAddress']}")
+                                        print(f"  새로운 맛집 저장: {restaurant_info['restaurantName']} - {restaurant_info['restaurantAddress']} (영업 시간: {restaurant_info['restaurantOpenHours']})")
                                 else:
                                     print(f"  이미 존재하는 맛집 (크롤러 중복 확인): {restaurant_info['restaurantName']} - {restaurant_info['restaurantAddress']}")
                                     
@@ -254,4 +296,4 @@ if __name__ == "__main__":
             print(f"\n--- 오류 발생 ---")
             print(f"크롤링 또는 DB 처리 중 오류 발생: {e}")
         finally:
-            crawler.close_db() # DB 연
+            crawler.close_db() # DB 연결 종료

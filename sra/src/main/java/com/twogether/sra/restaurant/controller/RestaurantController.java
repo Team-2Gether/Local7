@@ -4,6 +4,7 @@ import com.twogether.sra.restaurant.service.RestaurantService;
 import com.twogether.sra.restaurant.vo.RestaurantVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/restaurants") // 음식점 관련 API 엔드포인트
+@CrossOrigin(origins = "http://localhost:3000")
 public class RestaurantController {
 
     @Autowired
