@@ -1,0 +1,40 @@
+/* src/components/Sidebar.css */
+
+.sidebar-container {
+    width: 80px;
+    /* 사이드바 너비 */
+    background-color: #333;
+    /* 배경색 */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+}
+
+.sidebar-button {
+    background: transparent;
+    /* 기본 배경색은 투명으로 설정 */
+    border: none;
+    color: white;
+    padding: 15px 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    /* 부드러운 전환 효과 */
+    border-radius: 5px;
+}
+
+.sidebar-button:hover {
+    background-color: #575757;
+    /* 호버 시 배경색 */
+}
+
+.sidebar-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
