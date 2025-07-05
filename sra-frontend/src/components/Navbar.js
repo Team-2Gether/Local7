@@ -1,68 +1,12 @@
 // src/components/Navbar.js
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
-import './Navbar.css'; // Optional: for basic styling
+import React from 'react'; // useEffect, useState 제거
+import { Link } from 'react-router-dom'; // useNavigate 제거
+import './Navbar.css';
 
-function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
-  const [userNickname, setUserNickname] = useState(''); // State to store user's nickname
-  const navigate = useNavigate(); // Hook for navigation
-
-  // Effect to check login status when the component mounts or updates
-  useEffect(() => {
-    // In a real application, you'd make an API call to check session status.
-    // For simplicity, let's assume we're using localStorage or a context API
-    // to manage login state on the client side after the initial login API call.
-    // However, the most robust way for session is to check server-side.
-    // We'll simulate checking a client-side flag here.
-
-    // A better approach would be to call an API endpoint like /api/user/status
-    // to truly check the server-side session.
-
-    // Example of a hypothetical API call to check status:
-    const checkLoginStatus = async () => {
-      try {
-        const response = await fetch('/api/user/status'); // Call the new status endpoint
-        const data = await response.json();
-        if (data.isLoggedIn) {
-          setIsLoggedIn(true);
-          setUserNickname(data.userNickname);
-        } else {
-          setIsLoggedIn(false);
-          setUserNickname('');
-        }
-      } catch (error) {
-        console.error("Failed to fetch login status:", error);
-        setIsLoggedIn(false);
-        setUserNickname('');
-      }
-    };
-
-    checkLoginStatus();
-
-    // You might also want to set up an event listener or use a context API
-    // to update this state globally when login/logout actions occur.
-  }, []); // Empty dependency array means this effect runs once after the initial render
-
-  const handleLogout = async () => {
-    try {
-      const response = await fetch('/api/user/logout', {
-        method: 'POST',
-      });
-      const data = await response.json();
-      if (response.ok) {
-        alert(data.message);
-        setIsLoggedIn(false); // Update state to logged out
-        setUserNickname(''); // Clear user nickname
-        navigate('/login'); // Redirect to login page after logout
-      } else {
-        alert("로그아웃 실패: " + data.message);
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-      alert("로그아웃 중 오류가 발생했습니다.");
-    }
-  };
+// Navbar는 isLoggedIn, userNickname, onLogout prop을 받습니다.
+function Navbar({ isLoggedIn, userNickname, onLogout }) {
+  // 이제 Navbar는 자체적으로 로그인 상태를 관리하지 않고 prop으로 받습니다.
+  // 따라서 내부의 useState와 useEffect는 제거합니다.
 
   return (
     <nav className="navbar">
@@ -76,7 +20,7 @@ function Navbar() {
               <span className="nav-link">환영합니다, {userNickname}님!</span>
             </li>
             <li className="nav-item">
-              <button onClick={handleLogout} className="nav-link logout-button">로그아웃</button>
+              <button onClick={onLogout} className="nav-link logout-button">로그아웃</button>
             </li>
           </>
         ) : (

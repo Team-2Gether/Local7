@@ -1,5 +1,7 @@
+// src/pages/signup/SignupForm.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // useNavigate 추가
 import './SignupForm.css'; // Optional: for basic styling
 
 function SignupForm() {
@@ -22,6 +24,8 @@ function SignupForm() {
     userLoginId: null, // null: not checked, true: duplicate, false: available
     userNickname: null,
   });
+
+  const navigate = useNavigate(); // useNavigate 초기화
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,7 +64,7 @@ function SignupForm() {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/api/signup/send-email-code', {
+      const response = await axios.post('http://localhost:8080/api/signup/send-email-code', { // 백엔드 URL 확인
         email: formData.userEmail,
       });
       if (response.data.status === 'success') {
@@ -83,7 +87,7 @@ function SignupForm() {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/api/signup/verify-email-code', {
+      const response = await axios.post('http://localhost:8080/api/signup/verify-email-code', { // 백엔드 URL 확인
         email: formData.userEmail,
         code: verificationCode,
       });
@@ -115,7 +119,7 @@ function SignupForm() {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8080/api/signup/check-duplicate/${field}/${value}`);
+      const response = await axios.get(`http://localhost:8080/api/signup/check-duplicate/${field}/${value}`); // 백엔드 URL 확인
       if (response.data.isDuplicate) {
         setMessages((prev) => ({ ...prev, [field]: `이미 사용 중인 ${field === 'login-id' ? '아이디' : '닉네임'}입니다.` }));
         if (updateStatus) {
@@ -156,17 +160,15 @@ function SignupForm() {
       return;
     }
 
-    // Perform final duplicate checks before submission
-    const isLoginIdDup = await checkDuplicate('login-id', formData.userLoginId, false); // Don't update status for final check
-    const isEmailDup = await checkDuplicate('email', formData.userEmail, false); // Assuming email check happens earlier
-    const isNicknameDup = await checkDuplicate('nickname', formData.userNickname, false); // Don't update status for final check
+    const isLoginIdDup = await checkDuplicate('login-id', formData.userLoginId, false);
+    const isEmailDup = await checkDuplicate('email', formData.userEmail, false);
+    const isNicknameDup = await checkDuplicate('nickname', formData.userNickname, false);
 
     if (isLoginIdDup || isEmailDup || isNicknameDup) {
       setMessages((prev) => ({ ...prev, general: '중복된 정보가 있습니다. 확인해주세요.' }));
       return;
     }
 
-    // Ensure explicit checks were performed and passed if buttons exist
     if (duplicateStatus.userLoginId !== false) {
       setMessages((prev) => ({ ...prev, general: '아이디 중복 확인을 해주세요.' }));
       return;
@@ -176,11 +178,9 @@ function SignupForm() {
       return;
     }
 
-
     try {
-      // Destructure to send only required fields for signup
       const { userPasswordConfirm, ...dataToSend } = formData;
-      const response = await axios.post('http://localhost:8080/api/signup/register', dataToSend);
+      const response = await axios.post('http://localhost:8080/api/signup/register', dataToSend); // 백엔드 URL 확인
       setMessages({ general: response.data.message || '회원가입 성공!' });
       alert('회원가입 성공: ' + response.data.message);
       
@@ -194,6 +194,7 @@ function SignupForm() {
       setEmailVerified(false);
       setDuplicateStatus({ userLoginId: null, userNickname: null });
 
+      navigate('/login'); // 회원가입 성공 후 로그인 페이지로 리다이렉션
     } catch (error) {
       const errorMessage = error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
       setMessages({ general: errorMessage });

@@ -1,18 +1,19 @@
-// src/components/LoginForm.js
+// src/pages/login/LoginForm.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // For redirection
+// import { useNavigate } from 'react-router-dom'; // App.js에서 리다이렉션 처리하므로 여기서는 필요 없음
 import './LoginForm.css'; // For styling
 
-function LoginForm() {
-  const [credential, setCredential] = useState(''); // Can be userLoginId or userEmail
+// LoginForm은 onLoginSuccess prop을 받습니다.
+function LoginForm({ onLoginSuccess }) { // Prop으로 onLoginSuccess를 받도록 변경
+  const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // Hook for navigation
+  // const navigate = useNavigate(); // 이제 필요 없습니다.
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(''); // Clear previous messages
+    setMessage('');
 
     if (!credential || !password) {
       setMessage('아이디/이메일과 비밀번호를 모두 입력해주세요.');
@@ -20,18 +21,21 @@ function LoginForm() {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/api/user/login', {
+      const response = await axios.post('http://localhost:8080/api/user/login', { // 백엔드 URL 확인
         credential,
         password,
       });
 
       if (response.data.status === 'success') {
         setMessage(response.data.message);
-        // Here you would typically store user info (e.g., in context, Redux, localStorage)
-        // For simplicity, let's just log and redirect.
         console.log('Login successful!', response.data.user);
         alert(response.data.message + '\n환영합니다, ' + (response.data.user.userNickname || response.data.user.userUsername) + '님!');
-        navigate('/'); // Redirect to home page or dashboard
+
+        // 로그인 성공 시 App.js로부터 받은 콜백 함수 호출
+        if (onLoginSuccess) {
+          onLoginSuccess(response.data.user); // 사용자 데이터를 전달
+        }
+        // navigate('/'); // 직접적인 리다이렉션은 App.js에서 처리
       } else {
         setMessage(response.data.message || '로그인 실패: 알 수 없는 오류.');
       }

@@ -15,18 +15,15 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDAO userDAO;
 
-    // Basic email validation regex
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     @Override
     public Mono<UserVO> login(String credential, String password) {
         return Mono.fromCallable(() -> {
             UserVO user = null;
-            // Determine if the credential is an email or a login ID
             if (EMAIL_PATTERN.matcher(credential).matches()) {
                 user = userDAO.findByUserEmail(credential);
             } else {
-                // Assume it's a login ID if not an email
                 user = userDAO.findByUserLoginId(credential);
             }
 
@@ -40,8 +37,7 @@ public class UserServiceImpl implements UserService {
                     return user;
                 }
             }
-            // User not found or password does not match
-            return null;
+            return null; // Return null on failed login
         });
     }
 }
