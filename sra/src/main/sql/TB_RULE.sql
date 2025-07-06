@@ -13,6 +13,3 @@ COMMENT ON COLUMN TB_RULE.RULE_NAME IS '권한명 (예: user, admin)';
 -- TB_RULE 테이블에 데이터 삽입
 INSERT INTO TB_RULE (RULE_NAME) VALUES ('user');
 INSERT INTO TB_RULE (RULE_NAME) VALUES ('admin');
-
--- TB_USER.RULE_ID 컬럼에 주석 추가
-COMMENT ON COLUMN TB_USER.RULE_ID IS '사용자 권한 ID (TB_RULE 테이블 참조)';
