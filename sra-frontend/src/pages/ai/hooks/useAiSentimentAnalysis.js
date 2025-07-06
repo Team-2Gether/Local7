@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { analyzeSentiment } from '../../../api/aiApi'; // api 폴더의 aiApi 임포트
+import { analyzeSentiment } from '../../../api/AiApi'; // api 폴더의 aiApi 임포트
 
 const useAiSentimentAnalysis = () => {
     const [sentimentInput, setSentimentInput] = useState('');
