@@ -1,27 +1,27 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios
+import axios from 'axios';
 import SignupForm from './pages/signup/SignupPage';
 import Navbar from './components/Navbar';
 import Home from './pages/home/Home';
 import LoginForm from './pages/login/LoginForm';
+import NotFoundPage from './pages/404page/NotFoundPage';
 
 function AppContent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
-  // Configure axios to send cookies with all requests
   axios.defaults.withCredentials = true;
 
   const checkLoginStatus = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/user/status'); // Use axios.get
-      const data = response.data; // Axios wraps response data in .data
+      const response = await axios.get('http://localhost:8080/api/user/status');
+      const data = response.data;
       if (response.status === 200 && data.isLoggedIn) {
         setIsLoggedIn(true);
-        setCurrentUser({ userNickname: data.userNickname, userUsername: data.userUsername });
+        setCurrentUser({ userNickname: data.userNickname, userUsername: data.userUsername, userEmail: data.userEmail });
       } else {
         setIsLoggedIn(false);
         setCurrentUser(null);
@@ -45,8 +45,8 @@ function AppContent() {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/api/user/logout'); // Use axios.post
-      const data = response.data; // Axios wraps response data in .data
+      const response = await axios.post('http://localhost:8080/api/user/logout');
+      const data = response.data;
       if (response.status === 200) {
         alert(data.message);
         setIsLoggedIn(false);
@@ -69,6 +69,7 @@ function AppContent() {
           <Route path="/" element={isLoggedIn ? <Home currentUser={currentUser} /> : <LoginForm onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
     </>

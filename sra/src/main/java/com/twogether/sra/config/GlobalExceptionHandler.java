@@ -1,4 +1,4 @@
-package com.twogether.sra.exception; // 적절한 패키지로 변경해주세요.
+package com.twogether.sra.config; // 적절한 패키지로 변경해주세요.
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
