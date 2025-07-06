@@ -7,8 +7,8 @@ import StatusMessage from './components/StatusMessage';
 import IdNicknameInputGroup from './components/IdNicknameInputGroup';
 import InputField from './components/InputField';
 import PasswordConfirmField from './components/PasswordConfirmField';
-import EmailVerificationGroup from './components/EmailVerificationGroup.js';
-import TextAreaField from './components/TextAreaField.js';
+import EmailVerificationGroup from './components/EmailVerificationGroup'; 
+import TextAreaField from './components/TextAreaField';
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -19,31 +19,20 @@ function SignupPage() {
     emailSent,
     messages,
     duplicateStatus,
-    handleChange,
-    handleEmailChange,
+    handleChange, 
     handleVerificationCodeChange,
-    handleSendVerificationCode,
-    handleVerifyEmailCode,
+    handleSendVerificationCode, 
+    handleVerifyEmailCode,      
     checkDuplicate,
-    handleSubmit: submitForm,
-    resetFormAndStates
+    handleSubmit, 
   } = useSignupForm(navigate);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const success = await submitForm(e);
-    if (success) {
-      alert('회원가입 성공!');
-      // resetFormAndStates(); // 리다이렉션 시 컴포넌트 언마운트되므로 별도로 호출할 필요 없음
-    }
-  };
 
   return (
     <div className="signup-container">
       <h2>회원가입</h2>
       {messages.general && <StatusMessage type={messages.general.includes('성공') ? 'success' : 'error'} message={messages.general} />}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}> {/* 훅에서 반환된 handleSubmit을 직접 사용 */}
         <IdNicknameInputGroup
           label="아이디:"
           id="userLoginId"
@@ -53,7 +42,7 @@ function SignupPage() {
           onBlur={() => checkDuplicate('login-id', formData.userLoginId)}
           onClickCheck={() => checkDuplicate('login-id', formData.userLoginId)}
           isDuplicate={duplicateStatus.userLoginId}
-          fieldMessage={messages['login-id']}
+          fieldMessage={messages.userLoginId}
         />
 
         <InputField
@@ -75,13 +64,13 @@ function SignupPage() {
           userPassword={formData.userPassword}
           required
         />
-
+        
         <EmailVerificationGroup
           userEmail={formData.userEmail}
           verificationCode={verificationCode}
           emailVerified={emailVerified}
           emailSent={emailSent}
-          handleEmailChange={handleEmailChange}
+          handleEmailChange={handleChange} // formData의 handleChange를 사용
           handleVerificationCodeChange={handleVerificationCodeChange}
           handleSendVerificationCode={handleSendVerificationCode}
           handleVerifyEmailCode={handleVerifyEmailCode}
