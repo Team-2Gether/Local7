@@ -1,6 +1,6 @@
 import React from 'react';
 import {FaHome, FaPlus, FaUser, FaRobot} from 'react-icons/fa'; // 아이콘 임포트
-import './Sidebar.css'; // Sidebar.css 임포트 추가
+import '../assets/css/Sidebar.css'; // Sidebar.css 임포트 추가
 
 const Sidebar = ({onMenuItemClick}) => {
     return (

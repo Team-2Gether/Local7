@@ -1,7 +1,7 @@
 // src/components/Navbar.js
 import React from 'react'; // useEffect, useState 제거
 import { Link } from 'react-router-dom'; // useNavigate 제거
-import './Navbar.css';
+import '../assets/css/Navbar.css';
 
 // Navbar는 isLoggedIn, userNickname, onLogout prop을 받습니다.
 function Navbar({ isLoggedIn, userNickname, onLogout }) {
