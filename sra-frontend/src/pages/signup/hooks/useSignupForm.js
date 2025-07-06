@@ -1,9 +1,10 @@
 // src/pages/signup/hooks/useSignupForm.js
 import { useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios'; // 직접 Axios 사용 대신 API 함수 임포트
 import useFormData from './useFormData';
 import useEmailVerification from './useEmailVerification';
 import useDuplicateCheck from './useDuplicateCheck';
+import { registerUser } from '../../../api/SignupApi'; // SignupApi에서 registerUser 함수 임포트
 
 function useSignupForm(navigate) {
   const initialFormData = {
@@ -27,11 +28,12 @@ function useSignupForm(navigate) {
     emailSent,
     handleVerificationCodeChange,
     sendVerificationCode,
-    verifyEmailCode,
+    verifyEmailCode, // useEmailVerification에서 반환되는 이름과 일치하도록 수정
     resetEmailVerification,
   } = useEmailVerification(formData.userEmail, setMessages);
 
-  const { duplicateStatus, checkDuplicate, resetDuplicateStatus, setDuplicateStatus } = useDuplicateCheck(setMessages); // setDuplicateStatus 구조 분해 할당
+  // setDuplicateStatus를 useDuplicateCheck 훅의 반환 값에 추가했으므로 구조 분해 할당
+  const { duplicateStatus, checkDuplicate, resetDuplicateStatus, setDuplicateStatus } = useDuplicateCheck(setMessages); 
 
   const handleAllChanges = (e) => {
     const { name } = e.target;
@@ -45,57 +47,27 @@ function useSignupForm(navigate) {
         delete newMessages.verificationCode;
       }
       if (name === 'userLoginId' || name === 'userNickname' || name === 'userEmail') {
-        delete newMessages.general;
+        delete newMessages.general; // 일반 메시지 초기화
+        if (name === 'userLoginId') setDuplicateStatus((prev) => ({ ...prev, userLoginId: null }));
+        if (name === 'userNickname') setDuplicateStatus((prev) => ({ ...prev, userNickname: null }));
+        if (name === 'userEmail') {
+          setDuplicateStatus((prev) => ({ ...prev, userEmail: null }));
+          resetEmailVerification(); // 이메일 변경 시 인증 상태 초기화
+        }
       }
       return newMessages;
     });
-
-    // Reset duplicate status for the changed field using setDuplicateStatus
-    if (name === 'userLoginId') setDuplicateStatus(prev => ({ ...prev, userLoginId: null }));
-    if (name === 'userNickname') setDuplicateStatus(prev => ({ ...prev, userNickname: null }));
-    if (name === 'userEmail') setDuplicateStatus(prev => ({ ...prev, userEmail: null }));
-
-    if (name === 'userEmail') {
-      resetEmailVerification();
-    }
-  };
-
-  const handleCheckDuplicate = async (field, value) => {
-    setMessages(prev => {
-        const newMsgs = {...prev};
-        delete newMsgs.general;
-        return newMsgs;
-    });
-    return checkDuplicate(field, value, true);
-  };
-
-  const handleSendCode = async () => {
-    setMessages(prev => {
-        const newMsgs = {...prev};
-        delete newMsgs.userEmail;
-        delete newMsgs.general;
-        delete newMsgs.emailStatus;
-        return newMsgs;
-    });
-    const isEmailDup = await checkDuplicate('email', formData.userEmail, false);
-    if (isEmailDup) {
-      setMessages(prev => ({ ...prev, general: '이미 사용 중인 이메일입니다. 다른 이메일을 사용해주세요.' }));
-      return;
-    }
-    await sendVerificationCode();
-  };
-
-  const resetFormAndStates = () => {
-    resetFormData();
-    resetEmailVerification();
-    resetDuplicateStatus();
-    setMessages({});
   };
 
   const handleSubmit = async (e) => {
-    if (e) e.preventDefault();
-    setMessages({});
+    e.preventDefault();
+    setMessages({}); // Submit 시 모든 메시지 초기화 (선택 사항)
 
+    // 유효성 검사 로직 (기존 로직 유지)
+    if (!formData.userLoginId || !formData.userPassword || !formData.userPasswordConfirm || !formData.userEmail || !formData.userNickname || !formData.userUsername) {
+      setMessages({ general: '모든 필수 필드를 입력해주세요.' });
+      return false;
+    }
     if (formData.userPassword !== formData.userPasswordConfirm) {
       setMessages({ general: '비밀번호와 비밀번호 확인이 일치하지 않습니다.' });
       return false;
@@ -120,15 +92,25 @@ function useSignupForm(navigate) {
 
     try {
       const { userPasswordConfirm, ...dataToSend } = formData;
-      const response = await axios.post('http://localhost:8080/api/signup/register', dataToSend);
-      setMessages({ general: response.data.message || '회원가입 성공!' });
+      // API 함수 호출로 변경
+      const response = await registerUser(dataToSend);
+      setMessages({ general: response.message || '회원가입 성공!' });
       navigate('/login');
+      resetFormAndStates(); // 회원가입 성공 후 폼 초기화
       return true;
     } catch (error) {
       const errorMessage = error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
       setMessages({ general: errorMessage });
       return false;
     }
+  };
+
+  // 모든 상태를 초기화하는 함수 추가
+  const resetFormAndStates = () => {
+    resetFormData();
+    resetEmailVerification();
+    resetDuplicateStatus();
+    setMessages({});
   };
 
   return {
@@ -139,13 +121,13 @@ function useSignupForm(navigate) {
     messages,
     duplicateStatus,
     handleChange: handleAllChanges,
-    handleEmailChange: handleAllChanges,
+    handleEmailChange: handleAllChanges, // handleChange가 userEmail도 처리하므로 별도 함수 필요 없을 수 있음
     handleVerificationCodeChange,
-    handleSendVerificationCode: handleSendCode,
-    handleVerifyEmailCode: verifyEmailCode,
-    checkDuplicate: handleCheckDuplicate,
-    handleSubmit,
-    resetFormAndStates,
+    handleSendVerificationCode: sendVerificationCode, // 이름 일관성을 위해 수정
+    handleVerifyEmailCode: verifyEmailCode, // 이름 일관성을 위해 수정
+    checkDuplicate,
+    handleSubmit, // handleSubmit으로 반환
+    resetFormAndStates
   };
 }
 
