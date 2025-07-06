@@ -1,7 +1,9 @@
+// src/pages/home/Home.js
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar'; // Sidebar 컴포넌트 임포트
 import AiModal from '../ai/components/AiModal'; // AiModal 임포트 (경로 확인해주세요)
+import UserPage from '../user/UserPage'; // UserPage 임포트 추가
 import './Home.css'; // Home.css 임포트 추가
 
 // Home 컴포넌트는 currentUser prop을 받습니다.
@@ -29,8 +31,7 @@ function Home({currentUser}) {
         if (activeContent === 'home') {
             const script = document.createElement('script');
             // Kakao Maps API Key를 올바르게 입력해주세요.
-            script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=690813b8710fce175e3acf9121422624&librar" +
-                    "ies=services";
+            script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=690813b8710fce175e3acf9121422624&libraries=services";
             script.async = true;
             document
                 .head
@@ -133,7 +134,6 @@ function Home({currentUser}) {
             case 'home':
                 return (
                     <div className="home-container">
-                        {/* style 제거, className 추가 */}
                         <h1>환영합니다, {
                                 currentUser
                                     ? (currentUser.userNickname || currentUser.userUsername)
@@ -141,10 +141,7 @@ function Home({currentUser}) {
                             }님!</h1>
                         <p>이곳은 투게더 애플리케이션의 메인 페이지입니다.</p>
                         {error && <p className="error-message">오류: {error}</p>}
-                        {/* style 제거, className 추가 */}
-                        <div id="map" className="map-container"
-                            // style 제거, className 추가
-                        >
+                        <div id="map" className="map-container">
                             {!window.kakao && <p>카카오 맵을 로드 중입니다...</p>}
                         </div>
                         <h2>음식점 목록</h2>
@@ -152,12 +149,9 @@ function Home({currentUser}) {
                             restaurants.length > 0
                                 ? (
                                     <ul className="restaurant-list">
-                                        {/* style 제거, className 추가 */}
                                         {
                                             restaurants.map(restaurant => (restaurant && (
-                                                <li key={restaurant.restaurantId} className="restaurant-item"
-                                                    // style 제거, className 추가
->
+                                                <li key={restaurant.restaurantId} className="restaurant-item">
                                                     <h3>{restaurant.restaurantName}</h3>
                                                     <p>주소: {restaurant.restaurantAddress}</p>
                                                     <p>카테고리: {restaurant.restaurantCategory}</p>
@@ -176,10 +170,7 @@ function Home({currentUser}) {
                     <p>새로운 맛집 리뷰를 작성해보세요.</p>
                 </div>;
             case 'mypage':
-                return <div>
-                    <h2>마이 페이지</h2>
-                    <p>내 프로필, 저장된 맛집, 활동 내역을 관리합니다.</p>
-                </div>;
+                return <UserPage currentUser={currentUser} />; {/* UserPage 컴포넌트 렌더링 및 currentUser 전달 */}
             default: // 예외 처리 또는 기본 홈 콘텐츠
                 return <div>
                     <h2>홈 페이지 콘텐츠</h2>
@@ -191,11 +182,9 @@ function Home({currentUser}) {
     return (
         // 모든 내용을 감싸는 단일 최상위 div
         <div className="app-layout">
-            {/* style 제거, className 추가 */}
             {/* Sidebar 컴포넌트에 클릭 핸들러 전달 */}
             <Sidebar onMenuItemClick={handleSidebarClick}/> {/* 메인 콘텐츠 영역 */}
             <div className="main-content-area">
-                {/* style 제거, className 추가 */}
                 {renderMainContent()}
             </div>
 
