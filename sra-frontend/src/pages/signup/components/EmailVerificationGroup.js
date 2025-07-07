@@ -1,4 +1,3 @@
-// src/pages/signup/components/EmailVerificationGroup.js
 import React from 'react';
 import InputField from './InputField';
 import AuthButton from './AuthButton';

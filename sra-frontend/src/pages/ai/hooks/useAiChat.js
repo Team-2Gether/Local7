@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { chatWithAi } from '../../../api/AiApi'; // api 폴더의 aiApi 임포트
+import { chatWithAi } from '../../../api/aiApi';
 
 const useAiChat = () => {
     const [chatInput, setChatInput] = useState('');

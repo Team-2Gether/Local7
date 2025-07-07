@@ -65,7 +65,7 @@ function UserPage({ currentUser }) {
             displayLoginIdMessage('새 아이디를 입력해주세요.', 'error');
             return;
         }
-        if (newUserLoginId === currentUser.userLoginId) {
+        if (currentUser && newUserLoginId === currentUser.userLoginId) {
             displayLoginIdMessage('현재 아이디와 동일합니다. 변경하려면 다른 아이디를 입력해주세요.', 'error');
             setIsLoginIdChecked(true);
             setIsLoginIdAvailable(false);
@@ -98,7 +98,8 @@ function UserPage({ currentUser }) {
         }
 
         try {
-            const response = await axios.put('http://localhost:8080/api/user/update-loginid', {
+            // axios.put을 axios.post로 변경
+            const response = await axios.post('http://localhost:8080/api/user/update-loginid', {
                 newUserLoginId: newUserLoginId
             });
 

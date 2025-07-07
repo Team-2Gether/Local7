@@ -1,4 +1,3 @@
-// src/pages/signup/components/PasswordConfirmField.js
 import React from 'react';
 import InputField from './InputField';
 import StatusMessage from './StatusMessage'; // Corrected import path

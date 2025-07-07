@@ -1,10 +1,9 @@
-// src/pages/signup/hooks/useSignupForm.js
 import { useState } from 'react';
 // import axios from 'axios'; // 직접 Axios 사용 대신 API 함수 임포트
-import useFormData from './useFormData';
 import useEmailVerification from './useEmailVerification';
 import useDuplicateCheck from './useDuplicateCheck';
 import { registerUser } from '../../../api/SignupApi'; // SignupApi에서 registerUser 함수 임포트
+import useFormData from '../../../hook/useFormData';
 
 function useSignupForm(navigate) {
   const initialFormData = {

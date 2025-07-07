@@ -1,10 +1,16 @@
-// src/main/java/com/twogether/sra/user/service/UserService.java
 package com.twogether.sra.user.service;
 
 import com.twogether.sra.user.vo.UserVO;
-import reactor.core.publisher.Mono;
 
 public interface UserService {
     // Returns the UserVO if login is successful, null otherwise
-    Mono<UserVO> login(String credential, String password);
+    UserVO login(String credential, String password);
+    //새로운 메서드추가
+    boolean checkLoginIdDuplicate(String userLoginId);
+    //새로운 메서드추가
+    void updateUserLoginId(Long userId, String newUserLoginId);
+    //새로운 메서드추가
+    void requestPasswordChange(Long userId, String currentPassword);
+    //새로운 메서드추가
+    void resetPassword(Long userId, String verificationCode, String newPassword);
 }

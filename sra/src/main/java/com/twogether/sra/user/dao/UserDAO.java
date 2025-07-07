@@ -1,4 +1,3 @@
-// src/main/java/com/twogether/sra/user/dao/UserDAO.java
 package com.twogether.sra.user.dao;
 
 import com.twogether.sra.user.vo.UserVO;
@@ -10,4 +9,10 @@ import org.springframework.stereotype.Repository;
 public interface UserDAO {
     UserVO findByUserLoginId(String userLoginId);
     UserVO findByUserEmail(String userEmail);
+    //새로운 메서드추가
+    int countByUserLoginId(String userLoginId);
+    //새로운 메서드추가
+    void updateUserLoginId(Long userId, String newUserLoginId);
+    //새로운 메서드추가
+    void updateUserPassword(Long userId, String newPassword);
 }
