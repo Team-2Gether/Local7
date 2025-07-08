@@ -6,7 +6,7 @@ import SignupForm from './pages/signup/SignupPage';
 import Navbar from './components/Navbar';
 import Home from './pages/home/Home';
 import LoginForm from './pages/login/LoginForm';
-import NotFoundPage from './pages/404page/NotFoundPage';
+import NotFoundPage from './components/404page/NotFoundPage';
 
 function AppContent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
