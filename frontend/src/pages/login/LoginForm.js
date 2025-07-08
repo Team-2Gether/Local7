@@ -6,7 +6,7 @@ import LoginFormLinks from './components/LoginFormLinks';
 import IntroButton from './components/IntroButton';
 import useLogin from './hooks/useLogin';
 
-function LoginForm({ onLoginSuccess }) {
+function LoginForm({ onLoginSuccess, onCloseModal  }) {
   const {
     credential,
     setCredential,
@@ -25,7 +25,7 @@ function LoginForm({ onLoginSuccess }) {
         setPassword={setPassword}
         handleSubmit={handleSubmit}
       />
-      <LoginFormLinks />
+      <LoginFormLinks onCloseModal={onCloseModal} />
       <IntroButton />
     </div>
   );

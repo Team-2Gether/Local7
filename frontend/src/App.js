@@ -69,31 +69,38 @@ function AppContent() {
 
     return (
         <>
-            {isLoggedIn ? (
-                // 사용자가 로그인된 경우: Navbar와 메인 콘텐츠 (Home, Signup, 404)를 표시
-                <>
-                    <Navbar isLoggedIn={isLoggedIn} userNickname={currentUser?.userNickname} onLogout={handleLogout} />
-                    <div className="main-app-content">
-                        <Routes>
-                            <Route path="/" element={<Home currentUser={currentUser} />} />
-                            <Route path="/signup" element={<SignupForm />} />
-                            <Route path="*" element={<NotFoundPage />} />
-                        </Routes>
-                    </div>
-                </>
-            ) : (
-                // 사용자가 로그인되지 않은 경우: 빈 화면에 로그인 버튼만 표시
-                <div className="initial-login-screen">
-                    <button
-                        className="login-trigger-button initial-center-button"
-                        onClick={() => setIsLoginModalOpen(true)}
-                    >
-                        로그인
-                    </button>
-                </div>
+            {/* Navbar는 로그인된 경우에만 표시 */}
+            {isLoggedIn && (
+                <Navbar isLoggedIn={isLoggedIn} userNickname={currentUser?.userNickname} onLogout={handleLogout} />
             )}
 
-            {/* 로그인 모달 (항상 렌더링되지만, isLoginModalOpen 상태에 따라 보임/숨김) */}
+            {/* Routes는 항상 활성화되도록 조건부 렌더링 밖으로 이동 */}
+            <Routes>
+                {/* 루트 경로: 로그인 상태에 따라 Home 컴포넌트 또는 초기 로그인 화면 표시 */}
+                <Route path="/" element={isLoggedIn ? (
+                    <div className="main-app-content"> {/* 로그인 후의 메인 콘텐츠 영역 */}
+                        <Home currentUser={currentUser} />
+                    </div>
+                ) : (
+                    <div className="initial-login-screen"> {/* 로그인 안 된 초기 화면 */}
+                        {/* 로그인 버튼은 이 화면 내에 위치 */}
+                        <button
+                            className="login-trigger-button"
+                            onClick={() => setIsLoginModalOpen(true)}
+                        >
+                            로그인
+                        </button>
+                    </div>
+                )} />
+
+                {/* 회원가입 페이지: 로그인 상태와 무관하게 항상 접근 가능 */}
+                <Route path="/signup" element={<SignupForm />} />
+
+                {/* 404 페이지: 모든 일치하지 않는 경로 처리 */}
+                <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+
+            {/* 로그인 모달: 항상 렌더링되지만, isLoginModalOpen 상태에 따라 보임/숨김 */}
             <Modal
                 isOpen={isLoginModalOpen}
                 onRequestClose={() => setIsLoginModalOpen(false)}
@@ -101,7 +108,7 @@ function AppContent() {
                 overlayClassName="login-modal-overlay"
                 contentLabel="로그인 모달"
             >
-                <LoginForm onLoginSuccess={handleLoginSuccess} />
+                <LoginForm onLoginSuccess={handleLoginSuccess} onCloseModal={() => setIsLoginModalOpen(false)}/>
             </Modal>
         </>
     );
