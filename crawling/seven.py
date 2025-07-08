@@ -3,6 +3,7 @@ import json
 import time
 from datetime import datetime
 import oracledb
+import random # random 모듈 추가
 
 class KakaoMapCrawler:
     def __init__(self, api_key, db_config, base_url="https://dapi.kakao.com/v2/local/search/category.json"):
@@ -74,8 +75,22 @@ class KakaoMapCrawler:
         :return: 존재하면 True, 아니면 False
         """
         try:
-            sql = "SELECT COUNT(*) FROM TB_RESTAURANT WHERE RESTAURANT_NAME = :name AND RESTAURANT_ADDRESS = :address"
-            cursor.execute(sql, name=name, address=address)
+            # 주소 파싱 후 ADDR_DETAIL을 기준으로 중복 체크
+            parsed_address = self._parse_address(address)
+            sql = """
+            SELECT COUNT(*) FROM TB_RESTAURANT
+            WHERE RESTAURANT_NAME = :name
+            AND ADDR_SIDO = :sido
+            AND ADDR_SIGUNGU = :sigungu
+            AND ADDR_DONG = :dong
+            AND ADDR_DETAIL = :detail
+            """
+            cursor.execute(sql,
+                           name=name,
+                           sido=parsed_address['sido'],
+                           sigungu=parsed_address['sigungu'],
+                           dong=parsed_address['dong'],
+                           detail=parsed_address['detail'])
             count = cursor.fetchone()[0]
             return count > 0
         except oracledb.Error as e:
@@ -83,52 +98,220 @@ class KakaoMapCrawler:
             print(f"음식점 중복 확인 중 오류 발생: {error_obj.message}")
             return False # 오류 발생 시 중복되지 않은 것으로 간주 (혹은 True로 처리하여 삽입 방지)
 
+    # _generate_random_phone_number 메서드는 사용자가 제외를 요청했으므로 삭제
+
+    def _parse_address(self, full_address):
+        """
+        전체 주소 문자열을 시/도, 시/군/구, 동, 상세 주소로 파싱합니다.
+        한국 주소 체계를 고려하여 최대한 정교하게 파싱 시도.
+        """
+        parts = full_address.split()
+        sido = ""
+        sigungu = ""
+        dong = ""
+        detail = full_address # 기본적으로 전체를 detail로 설정
+
+        if not parts:
+            return {'sido': None, 'sigungu': None, 'dong': None, 'detail': None}
+
+        # 시/도 추출 (첫 번째 부분, '특별시', '광역시', '도', '특별자치시' 등 포함)
+        if "특별시" in parts[0] or "광역시" in parts[0] or "도" in parts[0] or "특별자치시" in parts[0]:
+            sido = parts[0]
+            parts = parts[1:] # 시/도를 제외한 나머지
+        elif len(parts) > 0 and (parts[0].endswith("시") or parts[0].endswith("도")): # '서울시', '경기도' 등
+            sido = parts[0]
+            parts = parts[1:]
+        elif len(parts) > 1 and (parts[0] + ' ' + parts[1]).endswith("특별시") or \
+             (parts[0] + ' ' + parts[1]).endswith("광역시") or \
+             (parts[0] + ' ' + parts[1]).endswith("특별자치도"): # '세종 특별자치시', '제주 특별자치도'
+            sido = parts[0] + ' ' + parts[1]
+            parts = parts[2:]
+
+
+        # 시/군/구 추출 (두 번째 부분)
+        if len(parts) > 0:
+            if parts[0].endswith("시") or parts[0].endswith("군") or parts[0].endswith("구"):
+                sigungu = parts[0]
+                parts = parts[1:]
+            elif len(parts) > 1 and parts[1].endswith("읍") or parts[1].endswith("면") or parts[1].endswith("동"):
+                # 예: '세종 조치원읍' 같은 경우 두번째가 읍/면/동이면 두번째까지 시군구로 포함 안함
+                pass # 처리하지 않고 다음 동/읍/면으로 넘어감
+            elif len(parts) > 1 and (parts[0] + ' ' + parts[1]).endswith("시") or \
+                 (parts[0] + ' ' + parts[1]).endswith("군") or \
+                 (parts[0] + ' ' + parts[1]).endswith("구"): # '수원 장안구'
+                sigungu = parts[0] + ' ' + parts[1]
+                parts = parts[2:]
+
+
+        # 동/읍/면 추출 (세 번째 부분)
+        if len(parts) > 0:
+            if parts[0].endswith("동") or parts[0].endswith("읍") or parts[0].endswith("면") or parts[0].endswith("가"):
+                dong = parts[0]
+                parts = parts[1:]
+            elif len(parts) > 1 and (parts[0] + ' ' + parts[1]).endswith("동") or \
+                 (parts[0] + ' ' + parts[1]).endswith("읍") or \
+                 (parts[0] + ' ' + parts[1]).endswith("면"): # '이태원 1동'
+                dong = parts[0] + ' ' + parts[1]
+                parts = parts[2:]
+
+
+        # 나머지 부분을 상세 주소로 간주
+        detail = " ".join(parts)
+
+        return {
+            'sido': sido if sido else None,
+            'sigungu': sigungu if sigungu else None,
+            'dong': dong if dong else None,
+            'detail': detail if detail else None
+        }
+
+    def _parse_operating_hours(self, hours_string):
+        """
+        영업 시간 문자열을 파싱하여 시작/종료 시간 및 분, 브레이크 타임, 휴무일 정보를 딕셔너리로 반환합니다.
+        '정보 없음' 또는 None인 경우 랜덤 값을 생성합니다.
+        """
+        open_hour, open_minute, close_hour, close_minute = None, None, None, None
+        break_start_hour, break_start_minute, break_end_hour, break_end_minute = None, None, None, None
+        holiday = None
+
+        if not hours_string or "정보 없음" in hours_string:
+            # 랜덤한 영업 시간 생성 (예: 오전 8시 ~ 오후 10시 사이)
+            open_hour = random.randint(7, 10) # 07시 ~ 10시 사이에 오픈
+            open_minute = random.choice([0, 30])
+            close_hour = random.randint(20, 23) # 20시 ~ 23시 사이에 마감
+            close_minute = random.choice([0, 30])
+            
+            # 50% 확률로 브레이크 타임 설정
+            if random.random() > 0.5: 
+                break_start_hour = 13
+                break_start_minute = 0
+                break_end_hour = 14
+                break_end_minute = 0
+            
+            holiday = random.choice(['매주 일요일', '매주 월요일', '연중무휴', '명절 당일 휴무', None])
+        elif "매일" in hours_string:
+            # 예: '매일 07:00 - 22:00'
+            try:
+                time_part = hours_string.split("매일 ")[1]
+                start_time_str, end_time_str = time_part.split(" - ")
+                open_hour, open_minute = map(int, start_time_str.split(':'))
+                close_hour, close_minute = map(int, end_time_str.split(':'))
+            except (IndexError, ValueError):
+                pass
+        elif "-" in hours_string and ":" in hours_string:
+            # 예: '10:00-23:00' (매일이라는 접두사 없이)
+            try:
+                start_time_str, end_time_str = hours_string.split("-")
+                open_hour, open_minute = map(int, start_time_str.split(':'))
+                close_hour, close_minute = map(int, end_time_str.split(':'))
+            except (IndexError, ValueError):
+                pass
+
+        return {
+            'open_hour': open_hour,
+            'open_minute': open_minute,
+            'close_hour': close_hour,
+            'close_minute': close_minute,
+            'break_start_hour': break_start_hour,
+            'break_start_minute': break_start_minute,
+            'break_end_hour': break_end_hour,
+            'break_end_minute': break_end_minute,
+            'holiday': holiday
+        }
+
     def insert_restaurant(self, cursor, restaurant_info):
         """
         음식점 정보를 데이터베이스에 삽입합니다.
         :param cursor: DB 커서 객체
         :param restaurant_info: 삽입할 음식점 정보 딕셔너리
         """
+        # 주소 파싱
+        parsed_address = self._parse_address(restaurant_info.get('restaurantAddress', ''))
+        
+        # 영업 시간 파싱
+        parsed_hours = self._parse_operating_hours(restaurant_info.get('restaurantOpenHours', ''))
+
+        # PARKING_INFO에 랜덤 값 적용
+        parking_info_value = random.choice(['가능', '불가능', '유료 주차', '인근 주차장 이용', None])
+
         sql = """
         INSERT INTO TB_RESTAURANT (
+            RESTAURANT_ID,
             RESTAURANT_NAME,
-            RESTAURANT_ADDRESS,
-            RESTAURANT_PHONE_NUMBER,
+            ADDR_SIDO,
+            ADDR_SIGUNGU,
+            ADDR_DONG,
+            ADDR_DETAIL,
+            PHONE_NUMBER,
             RESTAURANT_CATEGORY,
-            RESTAURANT_LATITUDE,
-            RESTAURANT_LONGITUDE,
+            RESTAURANT_LAT,
+            RESTAURANT_LON,
+            OPEN_HOUR,
+            OPEN_MINUTE,
+            CLOSE_HOUR,
+            CLOSE_MINUTE,
+            BREAK_START_HOUR,
+            BREAK_START_MINUTE,
+            BREAK_END_HOUR,
+            BREAK_END_MINUTE,
+            RESTAURANT_HOLIDAY,
+            PARKING_INFO,
             CREATED_DATE,
             CREATED_ID,
             UPDATED_DATE,
-            UPDATED_ID,
-            RESTAURANT_OPEN_HOURS -- 이제 이 필드를 포함합니다.
+            UPDATED_ID
         ) VALUES (
+            SEQ_TB_RESTAURANT.NEXTVAL,
             :restaurantName,
-            :restaurantAddress,
-            :restaurantPhoneNumber,
+            :addrSido,
+            :addrSigungu,
+            :addrDong,
+            :addrDetail,
+            :phoneNumber,
             :restaurantCategory,
-            :restaurantLatitude,
-            :restaurantLongitude,
-            TO_DATE(:createdDate, 'YYYY-MM-DD'),
+            :restaurantLat,
+            :restaurantLon,
+            :openHour,
+            :openMinute,
+            :closeHour,
+            :closeMinute,
+            :breakStartHour,
+            :breakStartMinute,
+            :breakEndHour,
+            :breakEndMinute,
+            :restaurantHoliday,
+            :parkingInfo,
+            :createdDate,
             :createdId,
-            TO_DATE(:updatedDate, 'YYYY-MM-DD'),
-            :updatedId,
-            :restaurantOpenHours -- 이제 이 필드를 포함합니다.
+            :updatedDate,
+            :updatedId
         )
         """
         try:
             cursor.execute(sql, {
                 'restaurantName': restaurant_info.get('restaurantName'),
-                'restaurantAddress': restaurant_info.get('restaurantAddress'),
-                'restaurantPhoneNumber': restaurant_info.get('restaurantPhoneNumber'),
-                'restaurantCategory': restaurant_info.get('restaurantCategory'),
-                'restaurantLatitude': restaurant_info.get('restaurantLatitude'),
-                'restaurantLongitude': restaurant_info.get('restaurantLongitude'),
-                'createdDate': restaurant_info.get('createdDate'),
-                'createdId': restaurant_info.get('createdId'),
-                'updatedDate': restaurant_info.get('updatedDate'),
-                'updatedId': restaurant_info.get('updatedId'),
-                'restaurantOpenHours': restaurant_info.get('restaurantOpenHours') # 이 값을 삽입
+                'addrSido': parsed_address['sido'],
+                'addrSigungu': parsed_address['sigungu'],
+                'addrDong': parsed_address['dong'],
+                'addrDetail': parsed_address['detail'],
+                'phoneNumber': restaurant_info.get('restaurantPhoneNumber', None), # phone number는 랜덤값 생성 제외
+                'restaurantCategory': restaurant_info.get('restaurantCategory', None),
+                'restaurantLat': restaurant_info.get('restaurantLatitude', None),
+                'restaurantLon': restaurant_info.get('restaurantLongitude', None),
+                'openHour': parsed_hours['open_hour'],
+                'openMinute': parsed_hours['open_minute'],
+                'closeHour': parsed_hours['close_hour'],
+                'closeMinute': parsed_hours['close_minute'],
+                'breakStartHour': parsed_hours['break_start_hour'],
+                'breakStartMinute': parsed_hours['break_start_minute'],
+                'breakEndHour': parsed_hours['break_end_hour'],
+                'breakEndMinute': parsed_hours['break_end_minute'],
+                'restaurantHoliday': parsed_hours['holiday'],
+                'parkingInfo': parking_info_value,
+                'createdDate': datetime.now(),
+                'createdId': "system_crawler_7road",
+                'updatedDate': datetime.now(),
+                'updatedId': "system_crawler_7road"
             })
             return True
         except oracledb.Error as e:
@@ -140,27 +323,17 @@ class KakaoMapCrawler:
                 print(f"  DB 삽입 오류: {error_obj.message} - 데이터: {restaurant_info.get('restaurantName')}")
             return False
 
-    # --- 새로 추가된/수정된 부분 시작 ---
     def get_operating_hours(self, place_name, address):
         """
         (가상의 함수) 외부 API 또는 웹 스크래핑을 통해 특정 장소의 영업 시간을 가져옵니다.
-        이 함수는 실제 구현이 필요합니다.
-        현재 Kakao Local Search API에서는 직접적인 영업 시간 정보가 제공되지 않습니다.
+        현재는 예시 데이터를 반환합니다. 실제 운영 시에는 이 부분을 구현해야 합니다.
         """
-        # 실제 구현에서는 다음과 같은 방법들을 고려할 수 있습니다:
-        # 1. Kakao Place Details API (ID가 필요할 수 있음)
-        # 2. Naver, Google Places API 등 다른 지도/장소 API 연동
-        # 3. 해당 장소의 웹사이트, 블로그 등 직접 웹 스크래핑 (매우 복잡하고 안정적이지 않음)
-
-        # 현재는 예시 데이터를 반환합니다. 실제 운영 시에는 이 부분을 구현해야 합니다.
-        # 이 함수가 실제 영업 시간을 반환한다고 가정합니다.
         if "스타벅스" in place_name:
             return "매일 07:00 - 22:00"
         elif "롯데리아" in place_name:
             return "매일 10:00 - 23:00"
         else:
             return "정보 없음" # 또는 None
-    # --- 새로 추가된/수정된 부분 끝 ---
 
     def crawl_restaurants(self):
         """
@@ -188,35 +361,29 @@ class KakaoMapCrawler:
                             "page": page,
                             "size": 15
                         }
-                        # print(f"  API 호출 중: {location['name']}, {page} 페이지...")
                         try:
                             response = requests.get(self.base_url, headers=self.headers, params=params)
                             response.raise_for_status()
                             data = response.json()
 
                             if not data.get('documents'):
-                                # print(f"    {location['name']}의 {category_code} 카테고리에서 {page} 페이지에 음식점 데이터가 없습니다.")
                                 is_end = True
                                 continue
 
                             for doc in data['documents']:
-                                # --- 수정된 부분 시작 ---
-                                # 이곳에서 영업 시간 정보를 가져오는 가상의 함수를 호출합니다.
+                                # 전화번호는 랜덤값 생성 제외. API에서 제공되는 값이 없으면 None으로 유지.
+                                phone_number = doc.get('phone')
+
                                 operating_hours = self.get_operating_hours(doc.get('place_name'), doc.get('road_address_name') or doc.get('address_name'))
-                                # --- 수정된 부분 끝 ---
 
                                 restaurant_info = {
                                     "restaurantName": doc.get('place_name'),
                                     "restaurantAddress": doc.get('road_address_name') or doc.get('address_name'),
-                                    "restaurantPhoneNumber": doc.get('phone'),
+                                    "restaurantPhoneNumber": phone_number, # 여기에 API에서 가져온 값 그대로 사용
                                     "restaurantCategory": doc.get('category_name'),
                                     "restaurantLatitude": float(doc.get('y')),
                                     "restaurantLongitude": float(doc.get('x')),
-                                    "createdDate": datetime.now().strftime("%Y-%m-%d"),
-                                    "createdId": "system_crawler_7road",
-                                    "updatedDate": datetime.now().strftime("%Y-%m-%d"),
-                                    "updatedId": "system_crawler_7road",
-                                    "restaurantOpenHours": operating_hours # 여기에 영업 시간 데이터 추가
+                                    "restaurantOpenHours": operating_hours # 영업 시간은 _parse_operating_hours에서 랜덤 처리
                                 }
 
                                 # DB에 이미 존재하는지 확인 후 삽입
@@ -260,16 +427,6 @@ if __name__ == "__main__":
     KAKAO_API_KEY = "3d0097c2b1a5131da26af9e3d3ed09f7" # 여기에 실제 키 입력
 
     # 2. Oracle DB 연결 정보 설정 (필수)
-    # TNSName 방식 (tnsnames.ora 파일 사용):
-    # DSN_STRING = "your_tns_name"
-    # 또는 EZConnect 방식 (가장 일반적):
-    # DSN_STRING = "hostname:port/service_name" 예: "localhost:1521/XEPDB1"
-    # DSN_STRING = "oracle.example.com:1521/orclpdb1"
-    
-    # Oracle Cloud Autonomous Database 연결 예시 (Wallet 파일 필요)
-    # lib_dir로 wallet 파일이 있는 디렉토리를 지정해야 합니다.
-    # dsn= "(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=example.adb.oraclecloud.com))(connect_data=(service_name=example_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=true)))"
-    
     DB_CONFIG = {
         'user': "seven",    # Oracle DB 사용자 이름
         'password': "7777", # Oracle DB 비밀번호

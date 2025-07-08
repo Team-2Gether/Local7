@@ -35,10 +35,17 @@ public class UserController {
             session.setAttribute("isLoggedIn", true);
             session.setAttribute("userId", user.getUserId());
             session.setAttribute("userLoginId", user.getUserLoginId());
-            session.setAttribute("userUsername", user.getUserUsername());
+            session.setAttribute("userName", user.getUserName());
             session.setAttribute("userNickname", user.getUserNickname());
-            session.setAttribute("userRule", user.getRuleName()); // 권한 이름 저장
+            session.setAttribute("userRule", user.getRuleName());
             session.setAttribute("userEmail",user.getUserEmail());
+            session.setAttribute("userProfileImageUrl", user.getUserProfileImageUrl());
+            session.setAttribute("userBio", user.getUserBio());
+            session.setAttribute("createDate", user.getCreateDate());
+            session.setAttribute("createdId", user.getCreatedId());
+            session.setAttribute("updatedDate", user.getUpdatedDate());
+            session.setAttribute("updatedId", user.getUpdatedId());
+
 
             Map<String, Object> successResponse = new HashMap<>();
             successResponse.put("status", "success");
@@ -78,10 +85,16 @@ public class UserController {
             response.put("isLoggedIn", true);
             response.put("userId", session.getAttribute("userId"));
             response.put("userLoginId", session.getAttribute("userLoginId"));
-            response.put("userUsername", session.getAttribute("userUsername"));
+            response.put("userName", session.getAttribute("userName"));
             response.put("userNickname", session.getAttribute("userNickname"));
-            response.put("userRule", session.getAttribute("userRule")); // 세션에서 권한 이름 반환
+            response.put("userRule", session.getAttribute("userRule"));
             response.put("userEmail",session.getAttribute("userEmail"));
+            response.put("userProfileImageUrl", session.getAttribute("userProfileImageUrl"));
+            response.put("userBio", session.getAttribute("userBio"));
+            response.put("createDate", session.getAttribute("createDate"));
+            response.put("createdId", session.getAttribute("createdId"));
+            response.put("updatedDate", session.getAttribute("updatedDate"));
+            response.put("updatedId", session.getAttribute("updatedId"));
             return ResponseEntity.ok(response);
         } else {
             response.put("isLoggedIn", false);
@@ -144,7 +157,7 @@ public class UserController {
 
         try {
             userService.requestPasswordChange(userId, currentPassword);
-            return ResponseEntity.ok(createSuccessResponse("인증 코드를 이메일로 발송했습니다.")); // Line 147
+            return ResponseEntity.ok(createSuccessResponse("비밀번호 재설정을 위한 인증 코드를 이메일로 발송했습니다.")); // 메시지 변경
         } catch (RuntimeException e) {
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
             String message = "비밀번호 변경 요청 중 오류가 발생했습니다.";
@@ -190,12 +203,12 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "error");
         response.put("code", code);
-        response.put("message", message); // 클라이언트에서 메시지를 사용할 수 있도록 추가
+        response.put("message", message);
         return response;
     }
 
-    private Map<String, Object> createSuccessResponse(String message) { // Map<String, String>에서 Map<String, Object>로 변경
-        Map<String, Object> response = new HashMap<>(); // HashMap<String, String>에서 HashMap<String, Object>로 변경
+    private Map<String, Object> createSuccessResponse(String message) {
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "success");
         response.put("message", message);
         return response;

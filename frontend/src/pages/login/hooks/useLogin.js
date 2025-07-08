@@ -14,12 +14,17 @@ function useLogin(onLoginSuccess) {
             onLoginSuccess({
                 userId: data.userId,
                 userLoginId: data.userLoginId,
-                userUsername: data.userUsername,
+                userName: data.userName, // userUsername -> userName으로 변경
                 userNickname: data.userNickname,
                 userBio: data.userBio,
                 userEmail: data.userEmail,
                 ruleId: data.ruleId,
-                userRule: data.userRule
+                userRule: data.userRule,
+                userProfileImageUrl: data.userProfileImageUrl, // 추가
+                createDate: data.createDate, // 추가
+                createdId: data.createdId, // 추가
+                updatedDate: data.updatedDate, // 추가
+                updatedId: data.updatedId // 추가
             });
         } catch (error) {
             console.error("로그인 중 오류 발생:", error);

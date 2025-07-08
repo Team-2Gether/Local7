@@ -6,50 +6,40 @@
 
     <resultMap id="userResultMap" type="com.twogether.local7.user.vo.UserVO">
         <id property="userId" column="USER_ID"/>
-        <result property="userLoginId" column="USER_LOGIN_ID"/>
-        <result property="userUsername" column="USER_USERNAME"/>
-        <result property="userPassword" column="USER_PASSWORD"/>
+        <result property="userLoginId" column="LOGIN_ID"/> <result property="userName" column="USER_NAME"/> <result property="userPassword" column="USER_PASSWORD"/>
         <result property="userEmail" column="USER_EMAIL"/>
         <result property="userNickname" column="USER_NICKNAME"/>
-        <result property="userProfileImageUrl" column="USER_PROFILE_IMAGE_URL"/>
-        <result property="userBio" column="USER_BIO"/>
+        <result property="userProfileImageUrl" column="USER_PROF_IMG_URL"/> <result property="userBio" column="USER_BIO"/>
         <result property="ruleId" column="RULE_ID"/>
         <result property="ruleName" column="RULE_NAME"/>
-    </resultMap>
+        <result property="createDate" column="CREATE_DATE"/> <result property="createdId" column="CREATED_ID"/> <result property="updatedDate" column="UPDATED_DATE"/> <result property="updatedId" column="UPDATED_ID"/> </resultMap>
 
     <select id="findByUserLoginId" parameterType="string" resultMap="userResultMap">
         SELECT
         T.USER_ID,
-        T.USER_LOGIN_ID,
-        T.USER_USERNAME,
-        T.USER_PASSWORD,
+        T.LOGIN_ID, T.USER_NAME, T.USER_PASSWORD,
         T.USER_EMAIL,
         T.USER_NICKNAME,
-        T.USER_PROFILE_IMAGE_URL,
-        T.USER_BIO,
+        T.USER_PROF_IMG_URL, T.USER_BIO,
         T.RULE_ID,
-        R.RULE_NAME
-        FROM
+        R.RULE_NAME,
+        T.CREATE_DATE, T.CREATED_ID, T.UPDATED_DATE, T.UPDATED_ID FROM
         TB_USER T
         LEFT JOIN
         TB_RULE R ON T.RULE_ID = R.RULE_ID
         WHERE
-        T.USER_LOGIN_ID = #{userLoginId}
-    </select>
+        T.LOGIN_ID = #{userLoginId} </select>
 
     <select id="findByUserEmail" parameterType="string" resultMap="userResultMap">
         SELECT
         T.USER_ID,
-        T.USER_LOGIN_ID,
-        T.USER_USERNAME,
-        T.USER_PASSWORD,
+        T.LOGIN_ID, T.USER_NAME, T.USER_PASSWORD,
         T.USER_EMAIL,
         T.USER_NICKNAME,
-        T.USER_PROFILE_IMAGE_URL,
-        T.USER_BIO,
+        T.USER_PROF_IMG_URL, T.USER_BIO,
         T.RULE_ID,
-        R.RULE_NAME
-        FROM
+        R.RULE_NAME,
+        T.CREATE_DATE, T.CREATED_ID, T.UPDATED_DATE, T.UPDATED_ID FROM
         TB_USER T
         LEFT JOIN
         TB_RULE R ON T.RULE_ID = R.RULE_ID
@@ -58,18 +48,16 @@
     </select>
 
     <select id="countByUserLoginId" parameterType="string" resultType="int">
-        SELECT COUNT(*) FROM TB_USER WHERE USER_LOGIN_ID = #{userLoginId}
-    </select>
+        SELECT COUNT(*) FROM TB_USER WHERE LOGIN_ID = #{userLoginId} </select>
 
-    <update id="updateUserLoginId">
+    <update id="updateUserLoginId" parameterType="map">
         UPDATE TB_USER
-        SET USER_LOGIN_ID = #{param2}
-        WHERE USER_ID = #{param1}
+        SET LOGIN_ID = #{newUserLoginId} WHERE USER_ID = #{userId}
     </update>
 
-    <update id="updateUserPassword">
+    <update id="updateUserPassword" parameterType="map">
         UPDATE TB_USER
-        SET USER_PASSWORD = #{param2}
-        WHERE USER_ID = #{param1}
+        SET USER_PASSWORD = #{newPassword}
+        WHERE USER_ID = #{userId}
     </update>
 </mapper>
