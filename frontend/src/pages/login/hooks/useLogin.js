@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {loginUser} from '../../../api/LoginApi';
-import useFormData from '../../../hook/useFormData';
+import useFormData from '../../../common/useFormData';
 
 function useLogin(onLoginSuccess) {
     const {formData, handleChange} = useFormData({credential: '', password: ''}); //useFormData를 사용하여 formData와 handleChange를 초기화

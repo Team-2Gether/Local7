@@ -3,7 +3,7 @@ import { useState } from 'react';
 import useEmailVerification from './useEmailVerification';
 import useDuplicateCheck from './useDuplicateCheck';
 import { registerUser } from '../../../api/SignupApi'; // SignupApi에서 registerUser 함수 임포트
-import useFormData from '../../../hook/useFormData';
+import useFormData from '../../../common/useFormData';
 
 function useSignupForm(navigate) {
   const initialFormData = {

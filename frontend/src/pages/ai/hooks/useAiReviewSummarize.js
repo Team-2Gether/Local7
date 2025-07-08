@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { summarizeReview } from '../../../api/aiApi'; 
+import { summarizeReview } from '../../../api/AiApi'; 
 
 const useAiReviewSummarize = () => {
     const [reviewInput, setReviewInput] = useState('');
