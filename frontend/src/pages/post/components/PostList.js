@@ -1,7 +1,7 @@
 // src/pages/post/components/PostList.js
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import usePosts from '../hooks/usePosts'; // usePosts 훅 임포트
+import usePosts from '../hooks/usePost'; // usePosts 훅 임포트
 
 function PostList() {
     const { posts, loading, error, message, loadAllPosts, removePost, setMessage } = usePosts();

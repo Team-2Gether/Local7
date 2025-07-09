@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import usePosts from '../hooks/usePosts'; 
+import usePosts from './hooks/usePost'; 
 
 function PostForm() {
     const { id } = useParams();

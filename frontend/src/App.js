@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Modal from 'react-modal'; // react-modal 임포트
+import Modal from 'react-modal'; 
 import SignupForm from './pages/signup/SignupPage';
 import Navbar from './components/Navbar';
 import Home from './pages/home/Home';
 import LoginForm from './pages/login/LoginForm';
+import PostList from './pages/post/components/PostList'; 
+import PostForm from './pages/post/PostForm'; 
 import NotFoundPage from './components/404page/NotFoundPage';
-import './App.css'; // App.css 임포트 유지
+import './App.css'; 
 
-// react-modal이 앱의 루트 요소를 식별하도록 설정합니다.
 Modal.setAppElement('#root');
 
 function AppContent() {
@@ -26,7 +27,21 @@ function AppContent() {
             const data = response.data;
             if (response.status === 200 && data.isLoggedIn) {
                 setIsLoggedIn(true);
-                setCurrentUser({ userNickname: data.userNickname, userUsername: data.userUsername, userEmail: data.userEmail });
+                setCurrentUser({
+                    userId: data.userId,
+                    userLoginId: data.userLoginId,
+                    userName: data.userName,
+                    userNickname: data.userNickname,
+                    userBio: data.userBio,
+                    userEmail: data.userEmail,
+                    ruleId: data.ruleId,
+                    userRule: data.userRule,
+                    userProfileImageUrl: data.userProfileImageUrl,
+                    createDate: data.createDate,
+                    createdId: data.createdId,
+                    updatedDate: data.updatedDate,
+                    updatedId: data.updatedId
+                });
             } else {
                 setIsLoggedIn(false);
                 setCurrentUser(null);
@@ -95,6 +110,12 @@ function AppContent() {
 
                 {/* 회원가입 페이지: 로그인 상태와 무관하게 항상 접근 가능 */}
                 <Route path="/signup" element={<SignupForm />} />
+
+                {/* 게시글 관련 라우트: 로그인 상태와 무관하게 항상 접근 가능 */}
+                <Route path="/posts" element={<PostList />} /> {/* 게시글 목록 */}
+                <Route path="/posts/new" element={<PostForm />} /> {/* 새 게시글 작성 */}
+                <Route path="/posts/edit/:id" element={<PostForm />} /> {/* 게시글 수정 (ID 파라미터) */}
+
 
                 {/* 404 페이지: 모든 일치하지 않는 경로 처리 */}
                 <Route path="*" element={<NotFoundPage />} />
