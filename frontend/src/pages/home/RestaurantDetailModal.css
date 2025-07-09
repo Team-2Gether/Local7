@@ -1,0 +1,147 @@
+/* RestaurantDetailModal.css */
+
+.restaurant-detail-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.restaurant-detail-modal {
+    background: white;
+    border-radius: 8px;
+    max-width: 450px; /* 카카오맵 정보창과 유사한 너비 */
+    width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    position: relative;
+    outline: none;
+    overflow: hidden; /* 내용이 넘치지 않도록 */
+}
+
+/* 카카오맵 스타일 유사하게 변경 */
+.modal-header-kakao {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* 상단 정렬 */
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #fcfcfc;
+}
+
+.modal-header-kakao .title-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.modal-header-kakao h3 {
+    margin: 0;
+    font-size: 22px;
+    color: #333;
+    font-weight: bold;
+    line-height: 1.3;
+}
+
+.modal-header-kakao .category {
+    font-size: 14px;
+    color: #888;
+    margin-top: 5px;
+}
+
+.close-button-kakao {
+    background: none;
+    border: none;
+    font-size: 32px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    line-height: 1;
+    margin-left: 15px;
+    transition: color 0.2s ease;
+}
+
+.close-button-kakao:hover {
+    color: #333;
+}
+
+.modal-body-kakao {
+    padding: 20px;
+}
+
+.info-item {
+    display: flex;
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+.info-item .info-label {
+    flex-shrink: 0; /* 라벨이 줄어들지 않도록 */
+    width: 80px; /* 라벨 너비 고정 */
+    color: #666;
+    font-weight: normal;
+}
+
+.info-item .info-content {
+    flex-grow: 1;
+    color: #333;
+    word-break: break-word; /* 긴 텍스트 줄바꿈 */
+}
+
+.link-section {
+    text-align: center;
+    padding-top: 15px;
+    border-top: 1px dashed #eee; /* 점선 구분선 */
+    margin-top: 20px;
+}
+
+.kakao-map-full-link {
+    display: inline-flex; /* 아이콘과 텍스트 정렬 */
+    align-items: center;
+    gap: 8px; /* 아이콘과 텍스트 사이 간격 */
+    padding: 10px 20px;
+    background-color: #FEE500; /* 카카오 노란색 */
+    color: #3C1E1E;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.kakao-map-full-link:hover {
+    background-color: #FAD100;
+    transform: translateY(-1px); /* 살짝 위로 이동 효과 */
+}
+
+.kakao-map-full-link img {
+    width: 20px; /* 아이콘 크기 */
+    height: 20px;
+}
+
+/* 추가적인 반응형 디자인 고려 (필요시) */
+@media (max-width: 600px) {
+    .restaurant-detail-modal {
+        max-width: 95%;
+        margin: 10px;
+    }
+    .modal-header-kakao h3 {
+        font-size: 20px;
+    }
+    .close-button-kakao {
+        font-size: 28px;
+    }
+    .info-item {
+        flex-direction: column; /* 작은 화면에서는 세로로 정렬 */
+        align-items: flex-start;
+    }
+    .info-item .info-label {
+        width: auto;
+        margin-bottom: 5px;
+    }
+}
