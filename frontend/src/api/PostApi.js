@@ -44,7 +44,7 @@ export const fetchPostById = async (postId) => {
  */
 export const createPost = async (postData) => {
     try {
-        const response = await api.post('/', postData);
+        const response = await api.post('', postData);
         return response.data;
     } catch (error) {
         console.error('게시글 생성 실패:', error);
