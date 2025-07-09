@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.app.mapper.PostMapper">
+
+    <!-- PostVO와 DB 컬럼 매핑 -->
+    <resultMap id="postResultMap" type="com.twogether.local7.post.vo.PostVO">
+        <id property="postId" column="POST_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="restaurantId" column="RESTAURANT_ID"/>
+        <result property="postTitle" column="POST_TITLE"/>
+        <result property="postContent" column="POST_CONTENT"/>
+        <result property="locationTag" column="LOCATION_TAG"/>
+        <result property="isNotice" column="IS_NOTICE"/>
+        <result property="createdDate" column="CREATED_DATE"/>
+        <result property="createdId" column="CREATED_ID"/>
+        <result property="updatedDate" column="UPDATED_DATE"/>
+        <result property="updatedId" column="UPDATED_ID"/>
+    </resultMap>
+
+    <!-- 모든 게시글 조회 -->
+    <select id="getAllPosts" resultMap="postResultMap">
+        SELECT
+            POST_ID, USER_ID, RESTAURANT_ID, POST_TITLE, POST_CONTENT,
+            LOCATION_TAG, IS_NOTICE, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
+        FROM TB_POST
+        ORDER BY CREATED_DATE DESC
+    </select>
+
+    <!-- 특정 게시글 ID로 조회 -->
+    <select id="getPostById" resultMap="postResultMap">
+        SELECT
+            POST_ID, USER_ID, RESTAURANT_ID, POST_TITLE, POST_CONTENT,
+            LOCATION_TAG, IS_NOTICE, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
+        FROM TB_POST
+            WHERE POST_ID = #{postId}
+    </select>
+
+    <!-- 게시글 생성 -->
+    <insert id="insertPost" parameterType="com.example.app.vo.PostVO">
+        <!-- Oracle Sequence를 사용하여 POST_ID 자동 생성 및 VO에 설정 -->
+        <selectKey keyProperty="postId" resultType="long" order="BEFORE">
+            SELECT TB_POST_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TB_POST (
+        POST_ID, USER_ID, RESTAURANT_ID, POST_TITLE, POST_CONTENT,
+        LOCATION_TAG, IS_NOTICE, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
+        ) VALUES (
+        #{postId}, #{userId}, #{restaurantId}, #{postTitle}, #{postContent},
+        #{locationTag}, #{isNotice}, SYSTIMESTAMP, #{createdId}, SYSTIMESTAMP, #{updatedId}
+        )
+    </insert>
+
+    <!-- 게시글 업데이트 -->
+    <update id="updatePost" parameterType="com.example.app.vo.PostVO">
+        UPDATE TB_POST
+        SET
+            POST_TITLE = #{postTitle},
+            POST_CONTENT = #{postContent},
+            LOCATION_TAG = #{locationTag},
+            IS_NOTICE = #{isNotice},
+            UPDATED_DATE = SYSTIMESTAMP,
+            UPDATED_ID = #{updatedId}
+        WHERE POST_ID = #{postId}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="deletePost">
+        DELETE FROM TB_POST
+        WHERE POST_ID = #{postId}
+    </delete>
+
+</mapper>
