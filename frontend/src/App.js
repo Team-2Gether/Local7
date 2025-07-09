@@ -57,46 +57,6 @@ function AppContent() {
         checkLoginStatus();
     }, []);
 
-    // Kakao Map initialization and CustomOverlay
-    useEffect(() => {
-        if (isLoggedIn && window.kakao) {
-            const container = document.getElementById('korea-map');
-            const options = {
-                center: new window.kakao.maps.LatLng(36, 128), // Center of South Korea
-                level:30
-            };
-            const map = new window.kakao.maps.Map(container, options);
-
-            // 7번국도 (National Road 7) approximate coordinates (example)
-            const linePath = [
-                new window.kakao.maps.LatLng(38.2104, 128.5913), // Sokcho
-                new window.kakao.maps.LatLng(37.8813, 128.8292), // Gangneung
-                new window.kakao.maps.LatLng(37.3850, 129.1210), // Donghae
-                new window.kakao.maps.LatLng(36.5309, 129.4207), // Uljin
-                new window.kakao.maps.LatLng(35.5384, 129.3114), // Pohang
-                new window.kakao.maps.LatLng(35.1531, 129.1183), // Busan
-            ];
-
-            const polyline = new window.kakao.maps.Polyline({
-                path: linePath,
-                strokeWeight: 4,
-                strokeColor: '#FF0000',
-                strokeOpacity: 0.8,
-                strokeStyle: 'solid'
-            });
-            polyline.setMap(map);
-
-            // Custom Overlay
-            const customOverlay = new window.kakao.maps.CustomOverlay({
-                content: `<img src="../korea.png" style="width:ce;">`, // Make sure you have this image in your public/images folder
-                position: new window.kakao.maps.LatLng(37.5, 128), // Position at the center of the map
-                xAnchor: 0.5,
-                yAnchor: 0.5
-            });
-            customOverlay.setMap(map);
-        }
-    }, [isLoggedIn]);
-
     const handleLoginSuccess = (userData) => {
         setIsLoggedIn(true);
         setCurrentUser(userData);
@@ -124,62 +84,9 @@ function AppContent() {
 
     return (
         <>
-            
+            {/* Navbar는 로그인된 경우에만 표시 */}
             {isLoggedIn && (
-                <>
-                    <Navbar isLoggedIn={isLoggedIn} userNickname={currentUser?.userNickname} onLogout={handleLogout} />
-
-                    <div className="main-app-content">
-                        {/* Top Black Header - Map + Description */}
-                        <div className="black-header">
-                            <div className="map-and-text">
-                                <div id="korea-map" className="korea-map" style={{ width: "400px", height: "300px" }}></div>
-                                <div className="description">
-                                    <h1>속초<span>__SOKCHO</span></h1>
-                                    <p>
-                                        속초는 6.25전쟁 당시 북한에서 내려온 피란민들이 정착한 곳으로,
-                                        그들의 향수와 생활 방식이 음식 문화에 깊이 스며들어 있다.
-                                        이곳의 음식은 단순한 맛을 넘어 역사와 삶의 이야기를 닮고있다.
-                                    </p>
-                                    <div className="button-group">
-                                        <button>게시글</button>
-                                        <button>맛집</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* 4 Photos */}
-                        <div className="photo-strip">
-                            <img src="/images/photo1.jpg" alt="사진1" />
-                            <img src="/images/photo2.jpg" alt="사진2" />
-                            <img src="/images/photo3.jpg" alt="사진3" />
-                            <img src="/images/photo4.jpg" alt="사진4" />
-                        </div>
-
-                        {/* Bottom Section: Photo + Comments + Map */}
-                        <div className="bottom-section">
-                            <div className="left-content">
-                                <img src="/images/kyungju-night.jpg" alt="경주" />
-                                <div className="comments">
-                                    <div><strong>user001:</strong> 경주야경 정말 잘됐네요~</div>
-                                    <div><strong>맛집탐방:</strong> 휴가를 떠나고 싶습니까?~</div>
-                                    <input type="text" placeholder="댓글을 입력하세요" />
-                                </div>
-                            </div>
-                            <div className="right-map">
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18..."
-                                    style={{ border: 0 }}
-                                    allowFullScreen=""
-                                    loading="lazy"
-                                    title="map"
-                                ></iframe>
-                            </div>
-                        </div>
-                    </div>
-                </>
-                
+                <Navbar isLoggedIn={isLoggedIn} userNickname={currentUser?.userNickname} onLogout={handleLogout} />
             )}
 
             {/* Routes는 항상 활성화되도록 조건부 렌더링 밖으로 이동 */}
