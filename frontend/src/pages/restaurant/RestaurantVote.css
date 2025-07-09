@@ -1,0 +1,12 @@
+.vote-container {
+  text-align: center;
+  margin-top: 60px;
+}
+
+.vote-buttons button {
+  font-size: 20px;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
