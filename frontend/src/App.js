@@ -99,6 +99,20 @@ function AppContent() {
                 ) : (
                     <div className="initial-login-screen"> {/* 로그인 안 된 초기 화면 */}
                         {/* 로그인 버튼은 이 화면 내에 위치 */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         <button
                             className="login-trigger-button"
                             onClick={() => setIsLoginModalOpen(true)}
