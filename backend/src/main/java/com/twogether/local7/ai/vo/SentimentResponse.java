@@ -1,14 +1,8 @@
 package com.twogether.local7.ai.vo;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class SentimentResponse {
 
     private String sentiment;
