@@ -64,5 +64,112 @@
 
 /* 메인 앱 콘텐츠 영역 (로그인 후 표시될 Navbar + Routes 영역) */
 .main-app-content {
-    /* 기존 스타일 유지 또는 추가 */
+
+}
+/* 상단 검은 배경 */
+.black-header {
+    background: #1e1e1e;
+    color: white;
+    padding: 60px;
+}
+
+.black-header button{
+    width: 50px;   /* 버튼의 너비를 설정 */
+    height: 30px;   /* 버튼의 높이를 설정 */
+    background: white;
+    color: #212121;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: none;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+}
+.black-header .map-and-text {
+    display: flex;
+    align-items: center;
+    margin-left:80px;
+}
+.black-header .map-and-text {
+    display: flex;
+    align-items: center;
+}
+
+/* 지역 이름 */
+.description  {
+    font-size: 18px;
+    margin-bottom: 20px;
+    margin-left: 180px;
+}
+
+.description span {
+    font-size: 20px;
+    color: #ccc;
+    margin-bottom: 1000px;
+}
+.description p {
+    max-width: 400px;
+    font-size: 15px;
+
+}
+.button-group button{
+    width: 80px;   /* 버튼의 너비를 설정 */
+    height: 35px;   /* 버튼의 높이를 설정 */
+    background: white;
+    color: black;
+    margin-right: 10px;
+    margin-top: 50px;
+    border: none;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+/* 사진 4개 */
+.photo-strip {
+    display: flex;
+    padding:  100px;
+    overflow-x: auto;
+    justify-content: center;
+}
+.photo-strip img {
+    width: 220px;
+    margin-right: 15px;
+    border-radius: 8px;
+}
+
+/* 아래 사진 + 댓글 + 지도 */
+.bottom-section {
+    display: flex;
+    padding: 20px;
+}
+.left-content {
+    flex: 1;
+    margin-right: 20px;
+}
+.left-content img {
+    width: 100%;
+    border-radius: 8px;
+}
+.comments {
+    background: #f9f9f9;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+.comments input {
+    width: 100%;
+    margin-top: 8px;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.right-map {
+    flex: 1;
+}
+.right-map iframe {
+    width: 100%;
+    height: 300px;
+    border-radius: 8px;
 }
