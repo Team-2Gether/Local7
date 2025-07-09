@@ -64,28 +64,43 @@
 
 /* 메인 앱 콘텐츠 영역 (로그인 후 표시될 Navbar + Routes 영역) */
 .main-app-content {
-    /* 기존 스타일 유지 또는 추가 */
+
 }
 /* 상단 검은 배경 */
 .black-header {
     background: #1e1e1e;
     color: white;
-    padding: 100px;
+    padding: 60px;
+}
+
+.black-header button{
+    width: 50px;   /* 버튼의 너비를 설정 */
+    height: 30px;   /* 버튼의 높이를 설정 */
+    background: white;
+    color: #212121;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: none;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
 }
 .black-header .map-and-text {
     display: flex;
     align-items: center;
-    justify-content: center;
+    margin-left:80px;
 }
-.korea-map img {
-    width: 180px;
-    margin-right: 40px;
+.black-header .map-and-text {
+    display: flex;
+    align-items: center;
 }
+
 /* 지역 이름 */
 .description  {
     font-size: 18px;
     margin-bottom: 20px;
-    margin-left: 150px;
+    margin-left: 180px;
 }
 
 .description span {
