@@ -5,6 +5,7 @@ import Sidebar from '../../components/Sidebar'; // Sidebar 컴포넌트 임포�
 import AiModal from '../ai/components/AiModal'; // AiModal 임포트 (경로 확인해주세요)
 import UserPage from '../user/UserPage'; // UserPage 임포트 추가
 import './Home.css'; // Home.css 임포트 추가
+import RestaurantDetailModal from "./RestaurantDetailModal"; // RestaurantDetailModal 임포트 추가
 
 // Home 컴포넌트는 currentUser prop을 받습니다.
 function Home({currentUser}) {
@@ -15,6 +16,10 @@ function Home({currentUser}) {
     const [activeContent, setActiveContent] = useState('home'); // 현재 활성화된 콘텐츠 (home, add, mypage, ai)
     const [isAiModalOpen, setIsAiModalOpen] = useState(false); // AI 모달 열림/닫힘 상태
 
+    // 음식점 상세 모달 관련 상태
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false); // 상세 모달 열림/닫힘 상태
+    const [selectedRestaurant, setSelectedRestaurant] = useState(null); // 선택된 음식점 정보
+
     // 사이드바 메뉴 클릭 핸들러
     const handleSidebarClick = (item) => {
         if (item === 'ai') {
@@ -23,6 +28,12 @@ function Home({currentUser}) {
             setActiveContent(item); // 다른 버튼 클릭 시 콘텐츠 변경
             setIsAiModalOpen(false); // 혹시 열려있을 AI 모달 닫기
         }
+    };
+
+    // 음식점 클릭 핸들러 (상세 모달 열기)
+    const handleRestaurantClick = (restaurant) => {
+        setSelectedRestaurant(restaurant);
+        setIsDetailModalOpen(true);
     };
 
     // Kakao Map 로드 및 음식점 데이터 가져오기 (Home 콘텐츠에만 로드되도록)
@@ -53,13 +64,49 @@ function Home({currentUser}) {
                             center: new window
                                 .kakao
                                 .maps
-                                .LatLng(33.450701, 126.570667), // 기본 중심 (제주도)
+                                .LatLng(37.5665, 126.9780), // 서울 시청으로 기본 중심 변경
                             level: 3
                         };
                         const map = new window
                             .kakao
                             .maps
                             .Map(container, options);
+
+                        // GPS 현재 위치를 가져오는 함수 (이 부분은 유지하되, 필요에 따라 기본 위치 로직과 병합)
+                        const getCurrentLocation = () => {
+                            if (navigator.geolocation) {
+                                navigator
+                                    .geolocation
+                                    .getCurrentPosition((position) => {
+                                        const lat = position.coords.latitude;
+                                        const lon = position.coords.longitude;
+                                        const locPosition = new window
+                                            .kakao
+                                            .maps
+                                            .LatLng(lat, lon);
+                                        map.setCenter(locPosition); // 현재 위치로 지도 중심 이동
+
+                                        // 현재 위치에 마커 표시
+                                        new window
+                                            .kakao
+                                            .maps
+                                            .Marker({map: map, position: locPosition, title: "현재 위치"});
+
+                                    }, (err) => {
+                                        console.error("Geolocation 에러 발생:", err);
+                                        // GPS를 가져오지 못할 경우, 위에서 설정한 '서울 시청'으로 유지됩니다.
+                                        alert('현재 위치를 가져올 수 없습니다. 설정된 기본 위치로 지도를 로드합니다.');
+                                    }, {
+                                        enableHighAccuracy: true,
+                                        maximumAge: 0,
+                                        timeout: 5000
+                                    });
+                            } else {
+                                alert('이 브라우저에서는 Geolocation을 지원하지 않습니다. 설정된 기본 위치로 지도를 로드합니다.');
+                            }
+                        };
+
+                        getCurrentLocation(); // 페이지 로드 시 현재 위치 가져오기 (만약 사용자의 GPS를 우선하려면 이 부분은 유지)
 
                         axios
                             .get('http://localhost:8080/api/restaurants')
@@ -76,32 +123,27 @@ function Home({currentUser}) {
                                         .maps
                                         .LatLngBounds();
                                     fetchedRestaurants.forEach(restaurant => {
-                                        if (restaurant.restaurantLatitude && restaurant.restaurantLongitude) {
+                                        if (restaurant.restaurantLat && restaurant.restaurantLon) { // 필드명 변경
                                             const markerPosition = new window
                                                 .kakao
                                                 .maps
                                                 .LatLng(
-                                                    parseFloat(restaurant.restaurantLatitude),
-                                                    parseFloat(restaurant.restaurantLongitude)
+                                                    parseFloat(restaurant.restaurantLat), // 필드명 변경
+                                                    parseFloat(restaurant.restaurantLon) // 필드명 변경
                                                 );
                                             const marker = new window
                                                 .kakao
                                                 .maps
                                                 .Marker({map: map, position: markerPosition, title: restaurant.restaurantName});
 
-                                            const infowindow = new window
-                                                .kakao
-                                                .maps
-                                                .InfoWindow(
-                                                    {content: `<div style="padding:5px;font-size:12px;">${restaurant.restaurantName}<br/>${restaurant.restaurantAddress}</div>`}
-                                                );
-
+                                            // 마커 클릭 시 상세 정보 윈도우 표시 (기존 Infowindow는 유지하되, 목록 클릭 시 모달이 뜨도록 변경)
                                             window
                                                 .kakao
                                                 .maps
                                                 .event
                                                 .addListener(marker, 'click', function () {
-                                                    infowindow.open(map, marker);
+                                                    // 마커 클릭 시에도 모달을 열도록 수정
+                                                    handleRestaurantClick(restaurant);
                                                 });
                                             bounds.extend(markerPosition);
                                         }
@@ -150,13 +192,18 @@ function Home({currentUser}) {
                                 ? (
                                     <ul className="restaurant-list">
                                         {
-                                            restaurants.map(restaurant => (restaurant && (
-                                                <li key={restaurant.restaurantId} className="restaurant-item">
-                                                    <h3>{restaurant.restaurantName}</h3>
-                                                    <p>주소: {restaurant.restaurantAddress}</p>
-                                                    <p>카테고리: {restaurant.restaurantCategory}</p>
-                                                </li>
-                                            )))
+                                            restaurants.map(restaurant => {
+                                                // 주소 필드들을 조합
+                                                const fullAddress = `${restaurant.addrSido || ''} ${restaurant.addrSigungu || ''} ${restaurant.addrDong || ''} ${restaurant.addrDetail || ''}`.trim();
+                                                return restaurant && (
+                                                    <li key={restaurant.restaurantId} className="restaurant-item"
+                                                        onClick={() => handleRestaurantClick(restaurant)}> {/* 클릭 이벤트 추가 */}
+                                                        <h3>{restaurant.restaurantName}</h3>
+                                                        <p>주소: {fullAddress}</p> {/* 수정된 주소 필드 */}
+                                                        <p>카테고리: {restaurant.restaurantCategory}</p>
+                                                    </li>
+                                                );
+                                            })
                                         }
                                     </ul>
                                 )
@@ -170,7 +217,7 @@ function Home({currentUser}) {
                     <p>새로운 맛집 리뷰를 작성해보세요.</p>
                 </div>;
             case 'mypage':
-                return <UserPage currentUser={currentUser} />; {/* UserPage 컴포넌트 렌더링 및 currentUser 전달 */}
+                return <UserPage currentUser={currentUser}/>; {/* UserPage 컴포넌트 렌더링 및 currentUser 전달 */}
             default: // 예외 처리 또는 기본 홈 콘텐츠
                 return <div>
                     <h2>홈 페이지 콘텐츠</h2>
@@ -190,6 +237,15 @@ function Home({currentUser}) {
 
             {/* AI 모달 */}
             <AiModal isOpen={isAiModalOpen} onRequestClose={() => setIsAiModalOpen(false)}/>
+
+            {/* 음식점 상세 모달 */}
+            {selectedRestaurant && (
+                <RestaurantDetailModal
+                    isOpen={isDetailModalOpen}
+                    onRequestClose={() => setIsDetailModalOpen(false)}
+                    restaurant={selectedRestaurant}
+                />
+            )}
         </div>
     );
 }

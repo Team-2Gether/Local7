@@ -1,4 +1,3 @@
-// src/main/java/com/twogether/sra/restaurant/dao/RestaurantDAO.java
 package com.twogether.local7.restaurant.dao;
 
 import com.twogether.local7.restaurant.vo.RestaurantVO;

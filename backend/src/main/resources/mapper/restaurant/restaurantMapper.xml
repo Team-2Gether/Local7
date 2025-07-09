@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.twogether.local7.restaurant.dao.RestaurantDAO">
+
+    <resultMap id="restaurantResultMap" type="com.twogether.local7.restaurant.vo.RestaurantVO">
+        <id property="restaurantId" column="RESTAURANT_ID"/>
+        <result property="restaurantName" column="RESTAURANT_NAME"/>
+        <result property="addrSido" column="ADDR_SIDO"/>
+        <result property="addrSigungu" column="ADDR_SIGUNGU"/>
+        <result property="addrDong" column="ADDR_DONG"/>
+        <result property="addrDetail" column="ADDR_DETAIL"/>
+        <result property="phoneNumber" column="PHONE_NUMBER"/>
+        <result property="restaurantCategory" column="RESTAURANT_CATEGORY"/>
+        <result property="restaurantLat" column="RESTAURANT_LAT"/>
+        <result property="restaurantLon" column="RESTAURANT_LON"/>
+        <result property="openHour" column="OPEN_HOUR"/>
+        <result property="openMinute" column="OPEN_MINUTE"/>
+        <result property="closeHour" column="CLOSE_HOUR"/>
+        <result property="closeMinute" column="CLOSE_MINUTE"/>
+        <result property="breakStartHour" column="BREAK_START_HOUR"/>
+        <result property="breakStartMinute" column="BREAK_START_MINUTE"/>
+        <result property="breakEndHour" column="BREAK_END_HOUR"/>
+        <result property="breakEndMinute" column="BREAK_END_MINUTE"/>
+        <result property="restaurantHoliday" column="RESTAURANT_HOLIDAY"/>
+        <result property="parkingInfo" column="PARKING_INFO"/>
+        <result property="createdDate" column="CREATED_DATE"/>
+        <result property="createdId" column="CREATED_ID"/>
+        <result property="updatedDate" column="UPDATED_DATE"/>
+        <result property="updatedId" column="UPDATED_ID"/>
+    </resultMap>
+
+    <select id="findAllRestaurants" resultMap="restaurantResultMap">
+        SELECT
+        RESTAURANT_ID,
+        RESTAURANT_NAME,
+        ADDR_SIDO,
+        ADDR_SIGUNGU,
+        ADDR_DONG,
+        ADDR_DETAIL,
+        PHONE_NUMBER,
+        RESTAURANT_CATEGORY,
+        RESTAURANT_LAT,
+        RESTAURANT_LON,
+        OPEN_HOUR,
+        OPEN_MINUTE,
+        CLOSE_HOUR,
+        CLOSE_MINUTE,
+        BREAK_START_HOUR,
+        BREAK_START_MINUTE,
+        BREAK_END_HOUR,
+        BREAK_END_MINUTE,
+        RESTAURANT_HOLIDAY,
+        PARKING_INFO,
+        CREATED_DATE,
+        CREATED_ID,
+        UPDATED_DATE,
+        UPDATED_ID
+        FROM TB_RESTAURANT
+    </select>
+
+    <select id="findRestaurantsByCategory" parameterType="string" resultMap="restaurantResultMap">
+        SELECT
+        RESTAURANT_ID,
+        RESTAURANT_NAME,
+        ADDR_SIDO,
+        ADDR_SIGUNGU,
+        ADDR_DONG,
+        ADDR_DETAIL,
+        PHONE_NUMBER,
+        RESTAURANT_CATEGORY,
+        RESTAURANT_LAT,
+        RESTAURANT_LON,
+        OPEN_HOUR,
+        OPEN_MINUTE,
+        CLOSE_HOUR,
+        CLOSE_MINUTE,
+        BREAK_START_HOUR,
+        BREAK_START_MINUTE,
+        BREAK_END_HOUR,
+        BREAK_END_MINUTE,
+        RESTAURANT_HOLIDAY,
+        PARKING_INFO,
+        CREATED_DATE,
+        CREATED_ID,
+        UPDATED_DATE,
+        UPDATED_ID
+        FROM TB_RESTAURANT
+        WHERE RESTAURANT_CATEGORY = #{category}
+    </select>
+
+</mapper>
