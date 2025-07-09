@@ -1,4 +1,4 @@
 package com.twogether.local7.follow.dao;
 
-public class FollowDAO {
+public interface FollowDAO {
 }
