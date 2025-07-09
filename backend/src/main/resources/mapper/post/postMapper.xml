@@ -5,7 +5,6 @@
 <mapper namespace="com.twogether.local7.post.dao.PostDAO">
 
     <!-- PostVO와 DB 컬럼 매핑 -->
-    <!-- type 속성의 패키지 경로를 수정했습니다. -->
     <resultMap id="postResultMap" type="com.twogether.local7.post.vo.PostVO">
         <id property="postId" column="POST_ID"/>
         <result property="userId" column="USER_ID"/>
@@ -39,7 +38,6 @@
     </select>
 
     <!-- 게시글 생성 -->
-    <!-- parameterType 속성의 패키지 경로를 수정했습니다. -->
     <insert id="insertPost" parameterType="com.twogether.local7.post.vo.PostVO">
         <!-- Oracle Sequence를 사용하여 POST_ID 자동 생성 및 VO에 설정 -->
         <selectKey keyProperty="postId" resultType="long" order="BEFORE">
@@ -55,7 +53,6 @@
     </insert>
 
     <!-- 게시글 업데이트 -->
-    <!-- parameterType 속성의 패키지 경로를 수정했습니다. -->
     <update id="updatePost" parameterType="com.twogether.local7.post.vo.PostVO">
         UPDATE TB_POST
         SET
