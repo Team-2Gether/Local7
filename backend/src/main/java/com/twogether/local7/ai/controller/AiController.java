@@ -9,7 +9,6 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/ai")
-@CrossOrigin(origins = "http://localhost:3000")
 public class AiController {
 
     // CORS 설정 추가: React 개발 서버 도메인에서 요청을 허용합니다.
