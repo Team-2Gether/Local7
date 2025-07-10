@@ -15,10 +15,6 @@
     /* 현재 별도 설정은 없지만, 필요한 경우 여기에 */
 }
 
-/* -------------------------------------------
-    dark-box : 콘텐츠를 담는 어두운 박스
--------------------------------------------- */
-
 
 /* -------------------------------------------
     지도 + 버튼 + 설명 묶음 (가로로 나열)
@@ -231,4 +227,15 @@
 
 .ReactModal__Content {
     z-index: 2001 !important;
+}
+/*배너 사진*/
+.banner {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.banner-img {
+    width: 570px;
+    height: auto;
+    border-radius: 0px;
 }
