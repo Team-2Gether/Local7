@@ -4,7 +4,7 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import SignupForm from './pages/signup/SignupPage';
 import Navbar from './components/Navbar';
-import Main from './pages/home/Home';
+import Main from './pages/home/Main';
 import LoginForm from './pages/login/LoginForm';
 import NotFoundPage from './components/404page/NotFoundPage';
 import TermsOfServiceModal from './components/TermsOfServiceModal';
@@ -104,6 +104,7 @@ function AppContent() {
             setIsAiModalOpen(false);
 
             if (item === 'home') navigate('/');
+            else if (item === 'restaurants') navigate('/');
             else if (item === 'posts') navigate('/posts');
             else if (item === 'add') navigate('/posts/new');
             else if (item === 'mypage') navigate('/mypage');

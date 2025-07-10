@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Routes, Route } from 'react-router-dom';
 import RestaurantDetailModal from './RestaurantDetailModal';
 import RestaurantVote from '../vote/VotePage';
+import Home from './Home';
 import PostList from '../post/components/PostList';
 import PostForm from '../post/PostForm';
 
@@ -21,8 +22,7 @@ function Main({ currentUser, activeContent }) { // activeContent prop 추가
     const mapInstanceRef = useRef(null);
 
     useEffect(() => {
-        // activeContent가 변경될 때마다 지도 초기화를 다시 시도
-        if (activeContent === 'home') {
+        if (activeContent === 'home' || activeContent === 'restaurants') {
             if (window.kakao && window.kakao.maps) {
                 initializeMapAndLoadData();
             } else {
@@ -38,7 +38,7 @@ function Main({ currentUser, activeContent }) { // activeContent prop 추가
                 };
             }
         }
-    }, [activeContent]); // activeContent가 변경될 때마다 useEffect 실행
+    }, [activeContent]);
 
     const handleRestaurantClick = (restaurant) => {
         setSelectedRestaurant(restaurant);
@@ -118,7 +118,7 @@ function Main({ currentUser, activeContent }) { // activeContent prop 추가
     // 메인 콘텐츠 렌더링 함수
     const renderMainContent = () => {
         switch (activeContent) {
-            case 'home':
+            case 'restaurants':
                 return (
                     <div className="home-container">
                         <h1>
@@ -164,6 +164,9 @@ function Main({ currentUser, activeContent }) { // activeContent prop 추가
                         }
                     </div>
                 );
+            
+            case 'home':
+                return <Home currentUser={currentUser} />;
 
             case 'posts':
                 return <PostList />;
