@@ -10,7 +10,7 @@ function LoginFormComponent({ credential, setCredential, password, setPassword, 
           id="credential"
           value={credential}
           onChange={(e) => setCredential(e.target.value)}
-          placeholder="Email"
+          placeholder="Email or ID"
           required
           disabled={isLoading}
         />
