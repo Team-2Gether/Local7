@@ -4,12 +4,10 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import SignupForm from './pages/signup/SignupPage';
 import Navbar from './components/Navbar';
-import Main from './pages/home/main';
+import Main from './pages/home/main'; 
 import LoginForm from './pages/login/LoginForm';
-import PostList from './pages/post/components/PostList';
-import PostForm from './pages/post/PostForm';
 import NotFoundPage from './components/404page/NotFoundPage';
-import TermsOfServiceModal from './components/TermsOfServiceModal'; // TermsOfServiceModal import
+import TermsOfServiceModal from './components/TermsOfServiceModal';
 import sea from './assets/images/sea.png';
 import ko from './assets/images/ko.png';
 import first from './assets/images/first.png';
@@ -21,7 +19,7 @@ function AppContent() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-    const [isTermsModalOpen, setIsTermsModalOpen] = useState(false); // TermsOfServiceModal 상태 추가
+    const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
     const navigate = useNavigate();
 
     axios.defaults.withCredentials = true;
@@ -65,7 +63,7 @@ function AppContent() {
     const handleLoginSuccess = (userData) => {
         setIsLoggedIn(true);
         setCurrentUser(userData);
-        setIsLoginModalOpen(false); // 로그인 성공 시 모달 닫기
+        setIsLoginModalOpen(false);
         navigate('/'); // 홈 페이지로 이동
     };
 
@@ -87,24 +85,21 @@ function AppContent() {
         }
     };
 
-    // 이용약관 모달 열기/닫기 함수
     const openTermsModal = () => setIsTermsModalOpen(true);
     const closeTermsModal = () => setIsTermsModalOpen(false);
 
     return (
         <>
-            {/* Navbar는 로그인된 경우에만 표시 */}
             {isLoggedIn && (
                 <Navbar isLoggedIn={isLoggedIn} userNickname={currentUser?.userNickname} onLogout={handleLogout} />
             )}
 
             <Routes>
-                {/* 루트 경로: 로그인 상태에 따라 Home 컴포넌트 또는 초기 로그인 화면 표시 */}
-                <Route path="/" element={isLoggedIn ? (
-                    // 로그인된 경우: Home 컴포넌트가 내부적으로 사이드바를 포함하도록 변경
+        
+                <Route path="/*" element={isLoggedIn ? (
                     <Main currentUser={currentUser} />
                 ) : (
-                    <div className="initial-login-screen"> {/* 로그인 안 된 초기 화면 */}
+                    <div className="initial-login-screen"> 
                         <div className="login-image-wrapper">
                             <img
                                 src={sea}
@@ -134,12 +129,7 @@ function AppContent() {
                 {/* 회원가입 페이지: 로그인 상태와 무관하게 항상 접근 가능 */}
                 <Route path="/signup" element={<SignupForm />} />
 
-                <Route path="/posts" element={<PostList />} /> 
-                <Route path="/posts/new" element={<PostForm />} /> 
-                <Route path="/posts/edit/:id" element={<PostForm />} />
-
-
-                {/* 404 페이지: 모든 일치하지 않는 경로 처리 */}
+                {/* 404 페이지: 모든 일치하지 않는 경로 처리 (Main 내부에서 처리되지 않는 경우) */}
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
 
@@ -151,14 +141,14 @@ function AppContent() {
                 overlayClassName="login-modal-overlay"
                 contentLabel="로그인 모달"
             >
-                <LoginForm onLoginSuccess={handleLoginSuccess} onCloseModal={() => setIsLoginModalOpen(false)} onOpenTermsModal={openTermsModal} /> {/* onOpenTermsModal prop 전달 */}
+                <LoginForm onLoginSuccess={handleLoginSuccess} onCloseModal={() => setIsLoginModalOpen(false)} onOpenTermsModal={openTermsModal} />
             </Modal>
 
             {/* 이용약관 모달 */}
             <TermsOfServiceModal
                 isOpen={isTermsModalOpen}
                 onClose={closeTermsModal}
-                showAgreeButton={false} // 로그인 폼에서 약관을 보여줄 때는 '동의하기' 버튼이 필요 없을 수 있음
+                showAgreeButton={false}
             />
         </>
     );
