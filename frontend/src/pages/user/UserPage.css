@@ -15,6 +15,23 @@
     margin-bottom: 25px;
 }
 
+.user-update-form {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.user-update-form h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
 .user-update-form .form-group {
     margin-bottom: 15px;
 }
@@ -27,7 +44,8 @@
 }
 
 .user-update-form input[type="text"],
-.user-update-form textarea {
+.user-update-form textarea,
+.user-update-form input[type="password"] {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -49,24 +67,51 @@
 
 .submit-button {
     width: 100%;
-    padding: 12px 20px;
+    padding: 10px 15px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
-    font-size: 1.1rem;
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
 }
 
 .submit-button:hover {
     background-color: #0056b3;
 }
 
+.input-with-button {
+    display: flex;
+    gap: 10px;
+}
+
+.input-with-button input {
+    flex-grow: 1;
+}
+
+.check-button {
+    padding: 10px 15px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* 버튼 텍스트가 줄바꿈되지 않도록 */
+}
+
+.check-button:hover {
+    background-color: #5a6268;
+}
+
 .message {
     padding: 10px;
-    margin-bottom: 15px;
+    margin-top: 10px;
     border-radius: 4px;
+    font-size: 0.9rem;
     text-align: center;
 }
 

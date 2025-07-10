@@ -18,18 +18,29 @@ function UserPage({ currentUser }) {
     const [loginIdMessageType, setLoginIdMessageType] = useState('');
     const [passwordMessage, setPasswordMessage] = useState('');
     const [passwordMessageType, setPasswordMessageType] = useState('');
-    // 닉네임 관련 상태 추가
     const [newUserNickname, setNewUserNickname] = useState('');
-    const [isNicknameChecked, setIsNicknameChecked] = useState(false); // 닉네임 중복 확인 여부
-    const [isNicknameAvailable, setIsNicknameAvailable] = useState(false); // 닉네임 사용 가능 여부
+    const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+    const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
     const [nicknameMessage, setNicknameMessage] = useState('');
     const [nicknameMessageType, setNicknameMessageType] = useState('');
+
+    const [withdrawalPassword, setWithdrawalPassword] = useState('');
+    const [withdrawalVerificationCode, setWithdrawalVerificationCode] = useState('');
+    const [withdrawalRequested, setWithdrawalRequested] = useState(false);
+
+    // 새롭게 추가된 로딩 상태 변수들
+    const [isUpdatingLoginId, setIsUpdatingLoginId] = useState(false);
+    const [isRequestingPasswordChange, setIsRequestingPasswordChange] = useState(false);
+    const [isResettingPassword, setIsResettingPassword] = useState(false);
+    const [isUpdatingNickname, setIsUpdatingNickname] = useState(false);
+    const [isRequestingWithdrawalCode, setIsRequestingWithdrawalCode] = useState(false);
+    const [isWithdrawing, setIsWithdrawing] = useState(false);
 
 
     useEffect(() => {
         if (currentUser) {
             setNewUserLoginId(currentUser.userLoginId || '');
-            setNewUserNickname(currentUser.userNickname || ''); // 닉네임 초기값 설정
+            setNewUserNickname(currentUser.userNickname || '');
         }
     }, [currentUser]);
 
@@ -60,7 +71,6 @@ function UserPage({ currentUser }) {
         }, 5000);
     };
 
-    // 닉네임 메시지 표시 함수 추가
     const displayNicknameMessage = (msg, type) => {
         setNicknameMessage(msg);
         setNicknameMessageType(type);
@@ -78,12 +88,11 @@ function UserPage({ currentUser }) {
         setLoginIdMessageType('');
     };
 
-    // 닉네임 변경 핸들러
     const handleNicknameChange = (e) => {
         setNewUserNickname(e.target.value);
-        setIsNicknameChecked(false); // 닉네임 변경 시 중복 확인 상태 초기화
+        setIsNicknameChecked(false);
         setIsNicknameAvailable(false);
-        setNicknameMessage(''); // 닉네임 변경 시 메시지 초기화
+        setNicknameMessage('');
         setNicknameMessageType('');
     };
 
@@ -124,24 +133,78 @@ function UserPage({ currentUser }) {
             return;
         }
 
+        setIsUpdatingLoginId(true); // 로딩 시작
         try {
-            const response = await axios.post('http://localhost:8080/api/user/update-loginid', {
-                newUserLoginId: newUserLoginId
-            });
-
+            const response = await axios.post('http://localhost:8080/api/user/update-loginid', { newUserLoginId: newUserLoginId });
             if (response.status === 200 && response.data.status === 'success') {
                 displayMessage('아이디가 성공적으로 변경되었습니다. 다시 로그인해야 적용됩니다.', 'success');
-                // window.location.reload(); // 새로고침 대신 세션 업데이트만으로 처리
             } else {
                 displayMessage(response.data.message || '아이디 변경에 실패했습니다.', 'error');
             }
         } catch (error) {
             console.error("아이디 변경 중 오류 발생:", error);
             displayMessage('아이디 변경 중 오류가 발생했습니다.', 'error');
+        } finally {
+            setIsUpdatingLoginId(false); // 로딩 종료
         }
     };
 
-    // 닉네임 중복 확인 핸들러 추가
+    const handleRequestPasswordChange = async (e) => {
+        e.preventDefault();
+        if (!currentPassword) {
+            displayPasswordMessage('현재 비밀번호를 입력해주세요.', 'error');
+            return;
+        }
+
+        setIsRequestingPasswordChange(true); // 로딩 시작
+        try {
+            const response = await axios.post('http://localhost:8080/api/user/request-password-change', { currentPassword });
+            if (response.data.status === 'success') {
+                setPasswordChangeRequested(true);
+                displayPasswordMessage(response.data.message, 'success');
+            } else {
+                displayPasswordMessage(response.data.message || '비밀번호 변경 요청에 실패했습니다.', 'error');
+            }
+        } catch (error) {
+            console.error("비밀번호 변경 요청 중 오류 발생:", error);
+            displayPasswordMessage(error.response?.data?.message || '비밀번호 변경 요청 중 오류가 발생했습니다.', 'error');
+        } finally {
+            setIsRequestingPasswordChange(false); // 로딩 종료
+        }
+    };
+
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+        if (newPassword !== confirmPassword) {
+            displayPasswordMessage('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.', 'error');
+            return;
+        }
+        if (!verificationCode || !newPassword) {
+            displayPasswordMessage('인증 코드와 새 비밀번호를 모두 입력해주세요.', 'error');
+            return;
+        }
+
+        setIsResettingPassword(true); // 로딩 시작
+        try {
+            const response = await axios.post('http://localhost:8080/api/user/reset-password', { verificationCode, newPassword });
+            if (response.data.status === 'success') {
+                displayMessage(response.data.message, 'success');
+                setPasswordChangeRequested(false);
+                setCurrentPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
+                setVerificationCode('');
+            } else {
+                displayPasswordMessage(response.data.message || '비밀번호 재설정에 실패했습니다.', 'error');
+            }
+        } catch (error) {
+            console.error("비밀번호 재설정 중 오류 발생:", error);
+            displayPasswordMessage(error.response?.data?.message || '비밀번호 재설정 중 오류가 발생했습니다.', 'error');
+        } finally {
+            setIsResettingPassword(false); // 로딩 종료
+        }
+    };
+
     const handleCheckNickname = async () => {
         if (!newUserNickname.trim()) {
             displayNicknameMessage('새 닉네임을 입력해주세요.', 'error');
@@ -173,188 +236,176 @@ function UserPage({ currentUser }) {
         }
     };
 
-    // 닉네임 업데이트 핸들러 추가
     const handleUpdateNickname = async () => {
         if (!isNicknameChecked || !isNicknameAvailable) {
             displayNicknameMessage('먼저 닉네임 중복 확인을 완료하고 사용 가능한 닉네임을 입력해주세요.', 'error');
             return;
         }
 
+        setIsUpdatingNickname(true); // 로딩 시작
         try {
-            const response = await axios.post('http://localhost:8080/api/user/update-nickname', {
-                newUserNickname: newUserNickname
-            });
-
+            const response = await axios.post('http://localhost:8080/api/user/update-nickname', { newUserNickname: newUserNickname });
             if (response.status === 200 && response.data.status === 'success') {
-                displayMessage('닉네임이 성공적으로 변경되었습니다.', 'success');
-                // 현재 사용자 정보 업데이트 (UI 즉시 반영)
-                // currentUser 객체를 직접 수정하는 대신, 부모 컴포넌트의 상태 업데이트 함수를 호출하거나,
-                // 세션을 다시 로드하여 최신 정보 반영 (여기서는 간단히 새로고침)
-                window.location.reload();
+                displayMessage('닉네임이 성공적으로 변경되었습니다. 다시 로그인해야 적용됩니다.', 'success');
             } else {
-                displayNicknameMessage(response.data.message || '닉네임 변경에 실패했습니다.', 'error');
+                displayMessage(response.data.message || '닉네임 변경에 실패했습니다.', 'error');
             }
         } catch (error) {
             console.error("닉네임 변경 중 오류 발생:", error);
-            displayNicknameMessage('닉네임 변경 중 오류가 발생했습니다.', 'error');
+            displayMessage('닉네임 변경 중 오류가 발생했습니다.', 'error');
+        } finally {
+            setIsUpdatingNickname(false); // 로딩 종료
         }
     };
 
-    const handleRequestPasswordChange = async () => {
-        if (!currentUser || !currentUser.userEmail) {
-            displayPasswordMessage('이메일 정보가 없어 비밀번호 변경을 요청할 수 없습니다. 관리자에게 문의하세요.', 'error');
-            return;
-        }
-        if (!currentPassword.trim()) {
-            displayPasswordMessage('현재 비밀번호를 입력해주세요.', 'error');
-            return;
-        }
-
+    const handleRequestWithdrawalVerification = async () => {
+        setIsRequestingWithdrawalCode(true); // 로딩 시작
         try {
-            const response = await axios.post('http://localhost:8080/api/user/request-password-change', {
-                currentPassword: currentPassword
-            });
-            if (response.status === 200 && response.data.status === 'success') {
-                displayPasswordMessage(response.data.message, 'success');
-                setPasswordChangeRequested(true);
+            const response = await axios.post('http://localhost:8080/api/user/request-withdrawal-verification');
+            if (response.data.status === 'success') {
+                setWithdrawalRequested(true);
+                displayMessage(response.data.message, 'success');
             } else {
-                displayPasswordMessage(response.data.message || '인증 코드 발송에 실패했습니다. 현재 비밀번호를 확인해주세요.', 'error');
+                displayMessage(response.data.message || '회원 탈퇴 인증 코드 발송에 실패했습니다.', 'error');
             }
         } catch (error) {
-            console.error("비밀번호 변경 요청 중 오류 발생:", error);
-            displayPasswordMessage('비밀번호 변경 요청 중 오류가 발생했습니다.', 'error');
+            console.error("회원 탈퇴 인증 코드 요청 중 오류 발생:", error);
+            displayMessage(error.response?.data?.message || '회원 탈퇴 인증 코드 요청 중 오류가 발생했습니다.', 'error');
+        } finally {
+            setIsRequestingWithdrawalCode(false); // 로딩 종료
         }
     };
 
-    const handleResetPassword = async (e) => {
+    const handleWithdrawal = async (e) => {
         e.preventDefault();
-        if (newPassword !== confirmPassword) {
-            displayPasswordMessage('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.', 'error');
+        if (!withdrawalPassword || !withdrawalVerificationCode) {
+            displayMessage('비밀번호와 인증 코드를 모두 입력해주세요.', 'error');
             return;
         }
-        if (!newPassword.trim() || !verificationCode.trim()) {
-            displayPasswordMessage('새 비밀번호와 인증 코드를 모두 입력해주세요.', 'error');
-            return;
-            }
 
+        setIsWithdrawing(true); // 로딩 시작
         try {
-            const response = await axios.post('http://localhost:8080/api/user/reset-password', {
-                verificationCode: verificationCode,
-                newPassword: newPassword
+            const response = await axios.post('http://localhost:8080/api/user/withdraw', {
+                password: withdrawalPassword,
+                verificationCode: withdrawalVerificationCode
             });
-
-            if (response.status === 200 && response.data.status === 'success') {
-                displayMessage('비밀번호가 성공적으로 변경되었습니다. 다시 로그인해야 합니다.', 'success');
-                setPasswordChangeRequested(false);
-                setCurrentPassword('');
-                setNewPassword('');
-                setConfirmPassword('');
-                setVerificationCode('');
-                // window.location.reload(); // 새로고침 대신 세션 업데이트만으로 처리
+            if (response.data.status === 'success') {
+                displayMessage(response.data.message, 'success');
+                if (window.confirm("회원 탈퇴가 성공적으로 처리되었습니다. 확인을 누르면 로그인 페이지로 이동합니다.")) {
+                    window.location.href = '/login';
+                }
             } else {
-                displayPasswordMessage(response.data.message || '비밀번호 변경에 실패했습니다. 인증 코드를 확인해주세요.', 'error');
+                displayMessage(response.data.message || '회원 탈퇴에 실패했습니다.', 'error');
             }
         } catch (error) {
-            console.error("비밀번호 재설정 중 오류 발생:", error);
-            displayPasswordMessage('비밀번호 재설정 중 오류가 발생했습니다.', 'error');
+            console.error("회원 탈퇴 중 오류 발생:", error);
+            displayMessage(error.response?.data?.message || '회원 탈퇴 중 오류가 발생했습니다.', 'error');
+        } finally {
+            setIsWithdrawing(false); // 로딩 종료
         }
     };
 
-    if (!currentUser) {
-        return <div className="user-page-container"><h2>사용자 정보를 불러오는 중...</h2></div>;
-    }
 
     return (
         <div className="user-page-container">
-            {message && <div className={`global-message ${messageType}`}>{message}</div>}
+            <h2>내 정보</h2>
+            {message && (
+                <div className={`message ${messageType === 'success' ? 'success' : 'error'}`}>
+                    {message}
+                </div>
+            )}
 
-            <div className="user-update-section">
+            {/* 아이디 변경 섹션 */}
+            <div className="user-update-form">
                 <h3>아이디 변경</h3>
                 <div className="form-group">
-                    <label htmlFor="newUserLoginId">새 아이디:</label>
-                    <input
-                        type="text"
-                        id="newUserLoginId"
-                        value={newUserLoginId}
-                        onChange={handleLoginIdChange}
-                        placeholder="새로운 아이디를 입력하세요"
-                    />
-                    {loginIdMessage && <div className={`input-message ${loginIdMessageType}`}>{loginIdMessage}</div>}
-                    <button type="button" onClick={handleCheckLoginId} className="check-button">중복 확인</button>
+                    <label htmlFor="userLoginId">현재 아이디:</label>
+                    <input type="text" id="userLoginId" value={currentUser?.userLoginId || ''} disabled />
                 </div>
-                {isLoginIdChecked && isLoginIdAvailable && (
-                    <button
-                        type="button"
-                        onClick={handleUpdateLoginId}
-                        className="submit-button"
-                    >
-                        아이디 변경
-                    </button>
-                )}
+                <div className="form-group">
+                    <label htmlFor="newUserLoginId">새 아이디:</label>
+                    <div className="input-with-button">
+                        <input
+                            type="text"
+                            id="newUserLoginId"
+                            value={newUserLoginId}
+                            onChange={handleLoginIdChange}
+                            placeholder="새 아이디를 입력하세요"
+                        />
+                        <button className="check-button" onClick={handleCheckLoginId}>중복 확인</button>
+                    </div>
+                    {loginIdMessage && (
+                        <div className={`message ${loginIdMessageType === 'success' ? 'success' : 'error'}`}>
+                            {loginIdMessage}
+                        </div>
+                    )}
+                </div>
+                <button
+                    className="submit-button"
+                    onClick={handleUpdateLoginId}
+                    disabled={!isLoginIdChecked || !isLoginIdAvailable || isUpdatingLoginId} // 로딩 상태 추가
+                >
+                    {isUpdatingLoginId ? '변경 중...' : '아이디 변경'}
+                </button>
             </div>
 
-            <hr className="divider" />
-
-            {/* 닉네임 변경 섹션 추가 */}
-            <div className="user-update-section">
+            {/* 닉네임 변경 섹션 */}
+            <div className="user-update-form">
                 <h3>닉네임 변경</h3>
                 <div className="form-group">
-                    <label htmlFor="newUserNickname">새 닉네임:</label>
-                    <input
-                        type="text"
-                        id="newUserNickname"
-                        value={newUserNickname}
-                        onChange={handleNicknameChange}
-                        placeholder="새로운 닉네임을 입력하세요"
-                    />
-                    {nicknameMessage && <div className={`input-message ${nicknameMessageType}`}>{nicknameMessage}</div>}
-                    <button type="button" onClick={handleCheckNickname} className="check-button">중복 확인</button>
+                    <label htmlFor="userNickname">현재 닉네임:</label>
+                    <input type="text" id="userNickname" value={currentUser?.userNickname || ''} disabled />
                 </div>
-                {isNicknameChecked && isNicknameAvailable && ( // 닉네임 중복 확인 통과 시에만 변경 버튼 표시
-                    <button
-                        type="button"
-                        onClick={handleUpdateNickname}
-                        className="submit-button"
-                    >
-                        닉네임 변경
-                    </button>
-                )}
+                <div className="form-group">
+                    <label htmlFor="newUserNickname">새 닉네임:</label>
+                    <div className="input-with-button">
+                        <input
+                            type="text"
+                            id="newUserNickname"
+                            value={newUserNickname}
+                            onChange={handleNicknameChange}
+                            placeholder="새 닉네임을 입력하세요"
+                        />
+                        <button className="check-button" onClick={handleCheckNickname}>중복 확인</button>
+                    </div>
+                    {nicknameMessage && (
+                        <div className={`message ${nicknameMessageType === 'success' ? 'success' : 'error'}`}>
+                            {nicknameMessage}
+                        </div>
+                    )}
+                </div>
+                <button
+                    className="submit-button"
+                    onClick={handleUpdateNickname}
+                    disabled={!isNicknameChecked || !isNicknameAvailable || isUpdatingNickname} // 로딩 상태 추가
+                >
+                    {isUpdatingNickname ? '변경 중...' : '닉네임 변경'}
+                </button>
             </div>
 
-            <hr className="divider" />
 
-            <div className="user-update-section">
+            {/* 비밀번호 변경 섹션 */}
+            <div className="user-update-form">
                 <h3>비밀번호 변경</h3>
-                <div className="form-group">
-                    <label htmlFor="currentPassword">현재 비밀번호:</label>
-                    <input
-                        type="password"
-                        id="currentPassword"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
-                        placeholder="현재 비밀번호를 입력하세요"
-                        required
-                    />
-                    {passwordMessage && passwordMessageType === 'error' && <div className={`input-message ${passwordMessageType}`}>{passwordMessage}</div>}
-                </div>
                 {!passwordChangeRequested ? (
-                    <p>비밀번호를 변경하려면 위 입력란에 현재 비밀번호를 입력 후 아래 버튼을 눌러 이메일 인증 코드를 받으세요. <br/>(현재 이메일: <strong>{currentUser.userEmail}</strong>)</p>
+                    <form onSubmit={handleRequestPasswordChange}>
+                        <div className="form-group">
+                            <label htmlFor="currentPassword">현재 비밀번호:</label>
+                            <input
+                                type="password"
+                                id="currentPassword"
+                                value={currentPassword}
+                                onChange={(e) => setCurrentPassword(e.target.value)}
+                                placeholder="현재 비밀번호를 입력해주세요"
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="submit-button" disabled={isRequestingPasswordChange}>
+                            {isRequestingPasswordChange ? '요청 중...' : '비밀번호 변경 요청'}
+                        </button>
+                    </form>
                 ) : (
-                    <p>등록된 이메일 (<strong>{currentUser.userEmail}</strong>)로 전송된 6자리 인증 코드를 확인하세요. <br/>코드는 5분간 유효합니다.</p>
-                )}
-                <button
-                    type="button"
-                    onClick={handleRequestPasswordChange}
-                    className="request-code-button"
-                    disabled={passwordChangeRequested || !currentPassword.trim()}
-                >
-                    인증 코드 받기
-                </button>
-                {passwordChangeRequested && passwordMessageType === 'success' && <div className={`input-message ${passwordMessageType}`}>{passwordMessage}</div>}
-
-
-                {passwordChangeRequested && (
-                    <form onSubmit={handleResetPassword} className="password-reset-form">
+                    <form onSubmit={handleResetPassword}>
                         <div className="form-group">
                             <label htmlFor="verificationCode">인증 코드:</label>
                             <input
@@ -388,7 +439,57 @@ function UserPage({ currentUser }) {
                                 required
                             />
                         </div>
-                        <button type="submit" className="submit-button">비밀번호 변경</button>
+                        <button type="submit" className="submit-button" disabled={isResettingPassword}>
+                            {isResettingPassword ? '변경 중...' : '비밀번호 변경'}
+                        </button>
+                    </form>
+                )}
+                {passwordMessage && (
+                    <div className={`message ${passwordMessageType === 'success' ? 'success' : 'error'}`}>
+                        {passwordMessage}
+                    </div>
+                )}
+            </div>
+
+            {/* 회원 탈퇴 섹션 */}
+            <div className="user-withdrawal-form user-update-form">
+                <h3>회원 탈퇴</h3>
+                <p className="warning-text">회원 탈퇴 시 모든 정보가 삭제되며 복구할 수 없습니다. 신중하게 진행해주세요.</p>
+                {!withdrawalRequested ? (
+                    <button
+                        className="delete-button"
+                        onClick={handleRequestWithdrawalVerification}
+                        disabled={isRequestingWithdrawalCode} // 로딩 상태 추가
+                    >
+                        {isRequestingWithdrawalCode ? '요청 중...' : '회원 탈퇴 인증 코드 요청'}
+                    </button>
+                ) : (
+                    <form onSubmit={handleWithdrawal}>
+                        <div className="form-group">
+                            <label htmlFor="withdrawalPassword">비밀번호:</label>
+                            <input
+                                type="password"
+                                id="withdrawalPassword"
+                                value={withdrawalPassword}
+                                onChange={(e) => setWithdrawalPassword(e.target.value)}
+                                placeholder="비밀번호를 입력해주세요"
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="withdrawalVerificationCode">인증 코드:</label>
+                            <input
+                                type="text"
+                                id="withdrawalVerificationCode"
+                                value={withdrawalVerificationCode}
+                                onChange={(e) => setWithdrawalVerificationCode(e.target.value)}
+                                placeholder="이메일로 받은 인증 코드"
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="delete-button" disabled={isWithdrawing}>
+                            {isWithdrawing ? '탈퇴 처리 중...' : '회원 탈퇴 완료'}
+                        </button>
                     </form>
                 )}
             </div>
