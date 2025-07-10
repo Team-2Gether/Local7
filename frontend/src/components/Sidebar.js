@@ -1,5 +1,5 @@
 import React from 'react';
-import {FaHome, FaUser, FaRobot, FaAward, FaListAlt} from 'react-icons/fa';
+import {FaHome, FaUser, FaRobot, FaAward, FaListAlt, FaUtensils} from 'react-icons/fa';
 
 const Sidebar = ({onMenuItemClick}) => {
 
@@ -16,7 +16,11 @@ const Sidebar = ({onMenuItemClick}) => {
                 <span>TOP10</span>
             </button>
 
-            {/* '게시글' 버튼을 클릭하면 onMenuItemClick('posts')를 호출하도록 변경 */}
+            <button className="sidebar-button" onClick={() => onMenuItemClick('restaurants')}>
+                <FaUtensils className="sidebar-icon" />
+                <span>음식점</span>
+            </button>
+
             <button className="sidebar-button" onClick={() => onMenuItemClick('posts')}>
                 <FaListAlt className="sidebar-icon"/>
                 <span>게시글</span>
