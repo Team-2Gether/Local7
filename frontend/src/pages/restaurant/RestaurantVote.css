@@ -11,6 +11,11 @@
   cursor: pointer;
 }
 
+.selected {
+  color: blueviolet;
+  border-color: blueviolet;
+}
+
 .tap-contents {
   display: flex;
   width: 400px;
