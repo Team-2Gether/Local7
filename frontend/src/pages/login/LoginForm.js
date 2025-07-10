@@ -6,7 +6,7 @@ import LoginFormLinks from './components/LoginFormLinks';
 import IntroButton from './components/IntroButton';
 import useLogin from './hooks/useLogin';
 
-function LoginForm({ onLoginSuccess, onCloseModal  }) {
+function LoginForm({ onLoginSuccess, onCloseModal, onOpenTermsModal }) { // onOpenTermsModal prop 추가
   const {
     credential,
     setCredential,
@@ -25,7 +25,7 @@ function LoginForm({ onLoginSuccess, onCloseModal  }) {
         setPassword={setPassword}
         handleSubmit={handleSubmit}
       />
-      <LoginFormLinks onCloseModal={onCloseModal} />
+      <LoginFormLinks onCloseModal={onCloseModal} onOpenTermsModal={onOpenTermsModal} /> {/* onOpenTermsModal prop 전달 */}
       <IntroButton />
     </div>
   );

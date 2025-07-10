@@ -1,6 +1,8 @@
+// src/pages/post/PostForm.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import usePosts from './hooks/usePost'; 
+import usePosts from './hooks/usePost';
+import '../../assets/css/post.css';
 
 function PostForm() {
     const { id } = useParams();
@@ -14,8 +16,8 @@ function PostForm() {
         postContent: '',
         locationTag: '',
         isNotice: 'N',
-        userId: 1, 
-        restaurantId: 1 
+        userId: 1, // 실제 사용자 ID로 변경 필요
+        restaurantId: 1 // 실제 음식점 ID로 변경 필요
     });
 
     // 수정 모드일 때 기존 게시글 데이터 불러오기
@@ -37,40 +39,7 @@ function PostForm() {
                 restaurantId: post.restaurantId || 1
             });
         }
-    }, [post, isEditMode]);
-
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === 'checkbox' ? (checked ? 'Y' : 'N') : value,
-        }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setMessage(null);
-        setError(null);
-
-        try {
-            if (isEditMode) {
-                await modifyPost(parseInt(id), formData);
-            } else {
-                await addPost(formData);
-                setFormData({ 
-                    postTitle: '',
-                    postContent: '',
-                    locationTag: '',
-                    isNotice: 'N',
-                    userId: 1,
-                    restaurantId: 1
-                });
-            }
-            navigate('/posts'); // 목록 페이지로 이동
-        } catch (err) {
-            console.error('게시글 저장 오류:', err);
-        }
-    };
+    }, [isEditMode, post]);
 
     // 메시지 표시 후 일정 시간 뒤 사라지도록
     useEffect(() => {
@@ -82,98 +51,105 @@ function PostForm() {
         }
     }, [message, setMessage]);
 
-    if (loading && isEditMode) {
-        return <div style={{ textAlign: 'center', padding: '20px' }}>게시글 데이터를 불러오는 중...</div>;
-    }
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? (checked ? 'Y' : 'N') : value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null); // 새로운 요청 전 에러 초기화
+
+        try {
+            if (isEditMode) {
+                await modifyPost(parseInt(id), formData);
+                alert('게시글이 성공적으로 수정되었습니다.');
+            } else {
+                await addPost(formData);
+                alert('게시글이 성공적으로 작성되었습니다.');
+            }
+            navigate('/posts'); 
+        } catch (err) {
+            console.error('게시글 처리 실패:', err);
+        }
+    };
+
 
     return (
-        <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', border: '1px solid #eee', borderRadius: '8px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
-            <h2 style={{ textAlign: 'center', marginBottom: '25px', color: '#333' }}>
-                {isEditMode ? '게시글 수정' : '새 게시글 작성'}
-            </h2>
-            {message && <p style={{ color: 'green', textAlign: 'center', marginBottom: '15px' }}>{message}</p>}
-            {error && <p style={{ color: 'red', textAlign: 'center', marginBottom: '15px' }}>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '15px' }}>
-                    <label htmlFor="postTitle" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>제목:</label>
-                    <input
-                        type="text"
-                        id="postTitle"
-                        name="postTitle"
-                        value={formData.postTitle}
-                        onChange={handleChange}
-                        required
-                        style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', boxSizing: 'border-box' }}
-                    />
+        <div className="post-form-page">
+            <div className="post-form-content-area">
+                <div className="post-form-container">
+                    <h2>{isEditMode ? '게시글 수정' : '새 게시글 작성'}</h2>
+                    {loading && <p>처리 중...</p>}
+                    {error && <p className="error-message">오류: {error}</p>}
+                    {message && <p className="success-message">{message}</p>}
+
+                    <form onSubmit={handleSubmit} className="post-form">
+                        <div className="form-group">
+                            <label htmlFor="postTitle" className="form-label">제목:</label>
+                            <input
+                                type="text"
+                                id="postTitle"
+                                name="postTitle"
+                                value={formData.postTitle}
+                                onChange={handleChange}
+                                required
+                                className="form-input"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="postContent" className="form-label">내용:</label>
+                            <textarea
+                                id="postContent"
+                                name="postContent"
+                                value={formData.postContent}
+                                onChange={handleChange}
+                                required
+                                className="form-textarea"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="locationTag" className="form-label">위치 태그:</label>
+                            <input
+                                type="text"
+                                id="locationTag"
+                                name="locationTag"
+                                value={formData.locationTag}
+                                onChange={handleChange}
+                                className="form-input"
+                            />
+                        </div>
+                        <div className="checkbox-group">
+                            <input
+                                type="checkbox"
+                                id="isNotice"
+                                name="isNotice"
+                                checked={formData.isNotice === 'Y'}
+                                onChange={handleChange}
+                                className="checkbox-input"
+                            />
+                            <label htmlFor="isNotice" className="form-label">공지사항 여부</label>
+                        </div>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="post-button post-submit-button"
+                        >
+                            {loading ? '저장 중...' : (isEditMode ? '게시글 수정' : '게시글 작성')}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => navigate('/posts')}
+                            className="post-button post-back-button"
+                        >
+                            목록으로 돌아가기
+                        </button>
+                    </form>
                 </div>
-                <div style={{ marginBottom: '15px' }}>
-                    <label htmlFor="postContent" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>내용:</label>
-                    <textarea
-                        id="postContent"
-                        name="postContent"
-                        value={formData.postContent}
-                        onChange={handleChange}
-                        required
-                        rows="8"
-                        style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', boxSizing: 'border-box' }}
-                    />
-                </div>
-                <div style={{ marginBottom: '15px' }}>
-                    <label htmlFor="locationTag" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>위치 태그:</label>
-                    <input
-                        type="text"
-                        id="locationTag"
-                        name="locationTag"
-                        value={formData.locationTag}
-                        onChange={handleChange}
-                        style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', boxSizing: 'border-box' }}
-                    />
-                </div>
-                <div style={{ marginBottom: '20px' }}>
-                    <input
-                        type="checkbox"
-                        id="isNotice"
-                        name="isNotice"
-                        checked={formData.isNotice === 'Y'}
-                        onChange={handleChange}
-                        style={{ marginRight: '8px' }}
-                    />
-                    <label htmlFor="isNotice" style={{ fontWeight: 'bold' }}>공지사항 여부</label>
-                </div>
-                <button
-                    type="submit"
-                    disabled={loading}
-                    style={{
-                        padding: '12px 25px',
-                        backgroundColor: '#007bff',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                        fontSize: '1.1em',
-                        width: '100%'
-                    }}
-                >
-                    {loading ? '저장 중...' : (isEditMode ? '게시글 수정' : '게시글 작성')}
-                </button>
-                <button
-                    type="button"
-                    onClick={() => navigate('/posts')}
-                    style={{
-                        padding: '12px 25px',
-                        backgroundColor: '#6c757d',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                        fontSize: '1.1em',
-                        width: '100%',
-                        marginTop: '10px'
-                    }}
-                >
-                    목록으로 돌아가기
-                </button>
-            </form>
+            </div>
         </div>
     );
 }

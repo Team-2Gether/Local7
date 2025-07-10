@@ -1,18 +1,23 @@
+// App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Modal from 'react-modal'; 
+import Modal from 'react-modal';
 import SignupForm from './pages/signup/SignupPage';
 import Navbar from './components/Navbar';
-import Home from './pages/home/Home';
+import Main from './pages/home/main';
 import LoginForm from './pages/login/LoginForm';
-import PostList from './pages/post/components/PostList'; 
-import PostForm from './pages/post/PostForm'; 
 import NotFoundPage from './components/404page/NotFoundPage';
+import TermsOfServiceModal from './components/TermsOfServiceModal';
+import MyPage from './pages/user/MyPage';
+import UserPage from './pages/user/UserPage';
+import Sidebar from './components/Sidebar'; // Sidebar import 추가
+import AiModal from './pages/ai/components/AiModal'; // AiModal import 추가
+
 import sea from './assets/images/sea.png';
 import ko from './assets/images/ko.png';
 import first from './assets/images/first.png';
-import './App.css'; 
+import './App.css';
 
 Modal.setAppElement('#root');
 
@@ -20,6 +25,10 @@ function AppContent() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+    const [isAiModalOpen, setIsAiModalOpen] = useState(false); // AiModal 상태 추가
+    const [activeContent, setActiveContent] = useState('home'); // activeContent 상태 추가
+
     const navigate = useNavigate();
 
     axios.defaults.withCredentials = true;
@@ -63,7 +72,7 @@ function AppContent() {
     const handleLoginSuccess = (userData) => {
         setIsLoggedIn(true);
         setCurrentUser(userData);
-        setIsLoginModalOpen(false); // 로그인 성공 시 모달 닫기
+        setIsLoginModalOpen(false);
         navigate('/'); // 홈 페이지로 이동
     };
 
@@ -85,62 +94,91 @@ function AppContent() {
         }
     };
 
+    const openTermsModal = () => setIsTermsModalOpen(true);
+    const closeTermsModal = () => setIsTermsModalOpen(false);
+
+    // Sidebar 메뉴 클릭 핸들러
+    const handleSidebarClick = (item) => {
+        if (item === 'ai') {
+            setIsAiModalOpen(true);
+        } else {
+            setActiveContent(item);
+            setIsAiModalOpen(false);
+
+            if (item === 'home') navigate('/');
+            else if (item === 'posts') navigate('/posts');
+            else if (item === 'add') navigate('/posts/new');
+            else if (item === 'mypage') navigate('/mypage');
+            else if (item === 'pick') navigate('/pick');
+        }
+    };
+
     return (
-        <>
-            {/* Navbar는 로그인된 경우에만 표시 */}
+        <div className="app-layout">
             {isLoggedIn && (
-                <Navbar isLoggedIn={isLoggedIn} userNickname={currentUser?.userNickname} onLogout={handleLogout} />
+                <>
+                    <Navbar isLoggedIn={isLoggedIn} userNickname={currentUser?.userNickname} onLogout={handleLogout} />
+                    <Sidebar onMenuItemClick={handleSidebarClick} /> {/* Sidebar 추가 */}
+                </>
             )}
 
-            {/* Routes는 항상 활성화되도록 조건부 렌더링 밖으로 이동 */}
-            <Routes>
-                {/* 루트 경로: 로그인 상태에 따라 Home 컴포넌트 또는 초기 로그인 화면 표시 */}
-                <Route path="/" element={isLoggedIn ? (
-                    <div className="main-app-content"> {/* 로그인 후의 메인 콘텐츠 영역 */}
-                        <Home currentUser={currentUser} />
-                    </div>
-                ) : (
-                    <div className="initial-login-screen"> {/* 로그인 안 된 초기 화면 */}
-                        {/* 로그인 버튼은 이 화면 내에 위치 */}
-
-                        <div className="login-image-wrapper">
-                            <img 
-                                src={sea} 
-                                alt="sea"
-                                className="login-background-image"
-                            />
-                            <img 
-                                src={ko} 
-                                alt="ko"
-                                className="overlay-image ko-image"
-                            />
-                            <img 
-                                src={first} 
-                                alt="first"
-                                className="overlay-image first-image"
-                            />
-                            <button
-                                className="login-trigger-button"
-                                onClick={() => setIsLoginModalOpen(true)}
-                            >
-                                로그인
-                            </button>
+            <div className="main-content-area"> {/* Main 콘텐츠 영역 추가 */}
+                <Routes>
+                    <Route path="/*" element={isLoggedIn ? (
+                        <Main currentUser={currentUser} activeContent={activeContent} /> // activeContent 전달
+                    ) : (
+                        <div className="initial-login-screen">
+                            <div className="login-image-wrapper">
+                                <img
+                                    src={sea}
+                                    alt="sea"
+                                    className="login-background-image"
+                                />
+                                <img
+                                    src={ko}
+                                    alt="ko"
+                                    className="overlay-image ko-image"
+                                />
+                                <img
+                                    src={first}
+                                    alt="first"
+                                    className="overlay-image first-image"
+                                />
+                                <button
+                                    className="login-trigger-button"
+                                    onClick={() => setIsLoginModalOpen(true)}
+                                >
+                                    로그인
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                )} />
+                    )} />
 
-                {/* 회원가입 페이지: 로그인 상태와 무관하게 항상 접근 가능 */}
-                <Route path="/signup" element={<SignupForm />} />
+                    {/* 마이페이지 경로 추가 */}
+                    <Route path="/mypage" element={isLoggedIn ? (
+                        <MyPage currentUser={currentUser} isLoggedIn={isLoggedIn} />
+                    ) : (
+                        <div className="initial-login-screen">
+                            로그인이 필요합니다. <button onClick={() => setIsLoginModalOpen(true)}>로그인</button>
+                        </div>
+                    )} />
 
-                {/* 게시글 관련 라우트: 로그인 상태와 무관하게 항상 접근 가능 */}
-                <Route path="/posts" element={<PostList />} /> {/* 게시글 목록 */}
-                <Route path="/posts/new" element={<PostForm />} /> {/* 새 게시글 작성 */}
-                <Route path="/posts/edit/:id" element={<PostForm />} /> {/* 게시글 수정 (ID 파라미터) */}
+                    {/* UserPage 경로 추가 */}
+                    <Route path="/userpage" element={isLoggedIn ? (
+                        <UserPage currentUser={currentUser} onLogout={handleLogout} />
+                    ) : (
+                        <div className="initial-login-screen">
+                            로그인이 필요합니다. <button onClick={() => setIsLoginModalOpen(true)}>로그인</button>
+                        </div>
+                    )} />
 
+                    {/* 회원가입 페이지: 로그인 상태와 무관하게 항상 접근 가능 */}
+                    <Route path="/signup" element={<SignupForm />} />
 
-                {/* 404 페이지: 모든 일치하지 않는 경로 처리 */}
-                <Route path="*" element={<NotFoundPage />} />
-            </Routes>
+                    {/* 404 페이지: 모든 일치하지 않는 경로 처리 (Main 내부에서 처리되지 않는 경우) */}
+                    <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+            </div>
 
             {/* 로그인 모달: 항상 렌더링되지만, isLoginModalOpen 상태에 따라 보임/숨김 */}
             <Modal
@@ -150,9 +188,19 @@ function AppContent() {
                 overlayClassName="login-modal-overlay"
                 contentLabel="로그인 모달"
             >
-                <LoginForm onLoginSuccess={handleLoginSuccess} onCloseModal={() => setIsLoginModalOpen(false)}/>
+                <LoginForm onLoginSuccess={handleLoginSuccess} onCloseModal={() => setIsLoginModalOpen(false)} onOpenTermsModal={openTermsModal} />
             </Modal>
-        </>
+
+            {/* 이용약관 모달 */}
+            <TermsOfServiceModal
+                isOpen={isTermsModalOpen}
+                onClose={closeTermsModal}
+                showAgreeButton={false}
+            />
+
+            {/* AiModal 추가 */}
+            <AiModal isOpen={isAiModalOpen} onRequestClose={() => setIsAiModalOpen(false)} />
+        </div>
     );
 }
 
