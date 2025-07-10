@@ -1,0 +1,264 @@
+/* 전체 컨테이너 */
+.card-feed-container {
+padding: 20px;
+width: 900px;
+margin: 0 auto;
+}
+
+/* 상단 검색 및 필터 버튼 */
+.top-bar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+}
+
+.search-bar {
+display: flex;
+gap: 8px;
+}
+
+.search-bar input {
+width: 300px;
+padding: 8px 12px;
+border-radius: 20px;
+border: 1px solid #ccc;
+}
+
+.search-bar button {
+padding: 8px 16px;
+border-radius: 20px;
+border: 1px solid #aaa;
+background-color: white;
+cursor: pointer;
+}
+
+.filter-buttons button {
+padding: 6px 14px;
+border-radius: 12px;
+border: 1px solid #444;
+background: white;
+margin-left: 8px;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+
+.filter-buttons .active {
+font-weight: bold;
+background: black;
+color: white;
+}
+
+
+/* 카드 전체 그리드 (2열) */
+.card-feed-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 24px;
+}
+
+/* 카드 하나 */
+.card {
+border: 1px solid #ddd;
+border-radius: 12px;
+overflow: hidden;
+background-color: #fff;
+box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* 카드 상단: 이미지 + 지도 */
+.card-top {
+display: flex;
+height: 200px; /* 지도의 높이 확보 */
+}
+
+.card-image {
+  position: relative; /* ★ 이게 꼭 있어야 함 */
+}
+
+.card-image,
+.card-map {
+flex: 1;
+overflow: hidden;
+}
+
+/* 이미지 */
+.card-image img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+/* 지도 */
+.card-map > div {
+width: 100%;
+height: 100%;
+}
+
+/* 좋아요 하트 버튼 */
+.like-button {
+position: absolute;
+top: 10px;
+left: 10px;
+font-size: 24px;
+ line-height: 1;
+background: transparent; /* ✅ 배경 제거 */
+border: none;
+padding: 0;
+color: red;
+cursor: pointer;
+}
+
+.like-button:hover {
+color: #e60023;
+}
+
+/* 식당명 / 주소 */
+.card-info {
+display: flex;
+justify-content: space-between;
+padding: 10px 16px;
+font-size: 13px;
+line-height: 1.4;
+}
+
+.card-info div {
+width: 48%;
+}
+
+/* 댓글 영역 */
+.card-comments {
+padding: 0 16px;
+border-top: 1px solid #eee;
+}
+
+.comment {
+display: flex;
+align-items: center;
+padding: 8px 0;
+border-bottom: 1px solid #f4f4f4;
+font-size: 13px;
+}
+
+.profile {
+width: 24px;
+height: 24px;
+border-radius: 50%;
+margin-right: 6px;
+}
+
+.comment-id {
+font-weight: bold;
+margin-right: 6px;
+}
+
+.comment-text {
+flex: 1;
+}
+
+.comment-like {
+margin-left: 6px;
+font-size: 12px;
+color: #666;
+}
+
+/* 댓글 작성 */
+.card-footer {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 10px 16px;
+border-top: 1px solid #eee;
+}
+
+.card-footer input {
+flex: 1;
+padding: 6px 10px;
+font-size: 13px;
+border: 1px solid #ccc;
+border-radius: 20px;
+}
+
+.card-footer button {
+margin-left: 10px;
+padding: 6px 5px;
+font-size: 12px;
+border: none;
+border-radius: 20px;
+background-color: rgba(156, 172, 12, 0.507);
+cursor: pointer;
+}
+
+/* 댓글 내부 버튼 정리 */
+.comment-like,
+.comment-actions {
+display: flex;
+align-items: center;
+gap: 6px;
+font-size: 13px;
+color: #555;
+margin-left: auto;
+}
+
+/* 좋아요 버튼 */
+.comment-like button {
+background-color: transparent;
+border: none;
+cursor: pointer;
+font-size: 14px;
+color: #f39c12;
+}
+
+/* 수정/삭제 버튼 공통 스타일 */
+.comment-actions {
+display: flex;
+gap: 8px;
+}
+
+.comment-actions button {
+background-color: #f5f5f5;
+border: 1px solid #ccc;
+padding: 2px 8px;
+border-radius: 8px;
+font-size: 12px;
+color: #333;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+
+.comment-actions button:hover {
+background-color: #e0e0e0;
+border-color: #aaa;
+}
+
+/* 수정 시 입력창 스타일 */
+.comment input {
+padding: 4px 8px;
+font-size: 13px;
+border: 1px solid #ccc;
+border-radius: 6px;
+margin-left: 10px;
+}
+
+.report-button {
+margin-left: 6px;
+padding: 2px 6px;
+font-size: 12px;
+border: 1px solid #ccc;
+background-color: #fff0f0;
+color: #d9534f;
+border-radius: 8px;
+cursor: pointer;
+transition: 0.2s;
+}
+
+.report-button:hover {
+background-color: #f8d7da;
+border-color: #d43f3a;
+}
+
+.report-button:disabled {
+background-color: #f5f5f5;
+color: #aaa;
+cursor: not-allowed;
+}
