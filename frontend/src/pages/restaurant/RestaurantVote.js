@@ -26,6 +26,11 @@ function RestaurantVote() {
 
   return (
     <div className="vote-container">
+      <div className="tap-contents">
+        <div>이달의 여행지</div>
+        <div>이달의 게시물</div>
+      </div>
+
       <h2>이달의 여행지를 투표해주세요</h2>
       <div className="vote-buttons">
         <button onClick={() => handleVote('A')}>고성 ({votes.A})</button>
@@ -40,6 +45,21 @@ function RestaurantVote() {
         <button onClick={() => handleVote('J')}>경주 ({votes.J})</button>
         <button onClick={() => handleVote('K')}>울산 ({votes.K})</button>
         <button onClick={() => handleVote('L')}>부산 ({votes.L})</button>
+      </div>
+
+      <button className="vote-todo-Button">투표하기</button>
+
+      <div className="views-container">
+        <div className="views-contents">
+          <div>사용자프로필</div>
+          <span>/사용자닉네임/</span>
+          <span>댓글 내용</span>
+        </div>
+
+        <form className="views-submit">
+          <input type="text"></input>
+          <button>입력</button>
+        </form>
       </div>
     </div>
   );
