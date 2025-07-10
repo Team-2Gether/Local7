@@ -13,4 +13,8 @@ public interface UserService {
     void requestPasswordChange(Long userId, String currentPassword);
     //새로운 메서드추가
     void resetPassword(Long userId, String verificationCode, String newPassword);
+    //새로운 메서드추가: 닉네임 중복 확인
+    boolean checkNicknameDuplicate(String userNickname);
+    //새로운 메서드추가: 닉네임 변경
+    void updateUserNickname(Long userId, String newUserNickname);
 }

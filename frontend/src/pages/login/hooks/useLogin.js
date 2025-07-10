@@ -4,9 +4,16 @@ import useFormData from '../../../common/useFormData';
 
 function useLogin(onLoginSuccess) {
     const {formData, handleChange} = useFormData({credential: '', password: ''}); //useFormData를 사용하여 formData와 handleChange를 초기화
+    const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isLoading) { // 이미 로딩 중이면 요청을 보내지 않음
+            return;
+        }
+
+        setIsLoading(true); // 로딩 시작
+
         try {
             const data = await loginUser(formData.credential, formData.password); //formData에서 credential과 password를 사용
 
@@ -14,17 +21,17 @@ function useLogin(onLoginSuccess) {
             onLoginSuccess({
                 userId: data.userId,
                 userLoginId: data.userLoginId,
-                userName: data.userName, // userUsername -> userName으로 변경
+                userName: data.userName,
                 userNickname: data.userNickname,
                 userBio: data.userBio,
                 userEmail: data.userEmail,
                 ruleId: data.ruleId,
                 userRule: data.userRule,
-                userProfileImageUrl: data.userProfileImageUrl, // 추가
-                createDate: data.createDate, // 추가
-                createdId: data.createdId, // 추가
-                updatedDate: data.updatedDate, // 추가
-                updatedId: data.updatedId // 추가
+                userProfileImageUrl: data.userProfileImageUrl,
+                createDate: data.createDate,
+                createdId: data.createdId,
+                updatedDate: data.updatedDate,
+                updatedId: data.updatedId
             });
         } catch (error) {
             console.error("로그인 중 오류 발생:", error);
@@ -43,6 +50,8 @@ function useLogin(onLoginSuccess) {
             } else {
                 alert("로그인 중 오류가 발생했습니다.");
             }
+        } finally {
+            setIsLoading(false); // 로딩 종료
         }
     };
 
@@ -61,7 +70,8 @@ function useLogin(onLoginSuccess) {
                 value
             }
         }), //handleChange를 사용하여 password 업데이트
-        handleSubmit
+        handleSubmit,
+        isLoading // isLoading 상태 반환
     };
 }
 

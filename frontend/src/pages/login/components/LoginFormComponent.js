@@ -1,7 +1,7 @@
 // src/pages/login/LoginFormComponent.js
 import React from 'react';
 
-function LoginFormComponent({ credential, setCredential, password, setPassword, handleSubmit }) {
+function LoginFormComponent({ credential, setCredential, password, setPassword, handleSubmit, isLoading }) {
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group">
@@ -12,6 +12,7 @@ function LoginFormComponent({ credential, setCredential, password, setPassword, 
           onChange={(e) => setCredential(e.target.value)}
           placeholder="Email"
           required
+          disabled={isLoading}
         />
       </div>
       <div className="form-group">
@@ -22,9 +23,12 @@ function LoginFormComponent({ credential, setCredential, password, setPassword, 
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           required
+          disabled={isLoading}
         />
       </div>
-      <button type="submit">LOGIN</button>
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? '로그인 중...' : 'LOGIN'}
+      </button>
     </form>
   );
 }

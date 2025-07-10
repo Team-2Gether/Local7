@@ -56,9 +56,9 @@ public class UserController {
             System.err.println("Login error: " + e.getMessage());
             // 특정 예외 유형에 따라 다른 에러 코드 반환
             if (e.getMessage() != null) {
-                if (e.getMessage().contains("User not found")) {
+                if (e.getMessage().contains("User not found") || e.getMessage().contains("사용자 정보를 찾을 수 없거나 비밀번호가 일치하지 않습니다.")) {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                            .body(createErrorResponse("user_not_found", "존재하지 않는 아이디/이메일입니다."));
+                            .body(createErrorResponse("user_not_found", "아이디/이메일 또는 비밀번호가 일치하지 않습니다."));
                 } else if (e.getMessage().contains("Password mismatch")) {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                             .body(createErrorResponse("password_mismatch", "비밀번호가 일치하지 않습니다."));
@@ -134,6 +134,8 @@ public class UserController {
 
         try {
             userService.updateUserLoginId(userId, newUserLoginId);
+            // 세션 정보 업데이트
+            session.setAttribute("userLoginId", newUserLoginId);
             return ResponseEntity.ok(createSuccessResponse("아이디가 성공적으로 변경되었습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -161,7 +163,7 @@ public class UserController {
         } catch (RuntimeException e) {
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
             String message = "비밀번호 변경 요청 중 오류가 발생했습니다.";
-            if (e.getMessage() != null && e.getMessage().contains("현재비밀번호가일치하지않습니다.")) {
+            if (e.getMessage() != null && e.getMessage().contains("현재 비밀번호가 일치하지 않습니다.")) {
                 status = HttpStatus.UNAUTHORIZED;
                 message = e.getMessage();
             }
@@ -171,7 +173,6 @@ public class UserController {
 
     @PostMapping("/reset-password")
     public ResponseEntity<Map<String, Object>> resetPassword(@RequestBody Map<String, String> request, HttpSession session) {
-        String currentPassword = request.get("currentPassword");
         String verificationCode = request.get("verificationCode");
         String newPassword = request.get("newPassword");
         Long userId = (Long) session.getAttribute("userId");
@@ -180,22 +181,65 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(createErrorResponse("unauthorized", "로그인 후 이용해주세요."));
         }
-        if (currentPassword == null || currentPassword.isEmpty() || verificationCode == null || verificationCode.isEmpty() || newPassword == null || newPassword.isEmpty()) {
+        if (verificationCode == null || verificationCode.isEmpty() || newPassword == null || newPassword.isEmpty()) {
             return ResponseEntity.badRequest()
-                    .body(createErrorResponse("invalid_input", "모든 필드를 입력해주세요."));
+                    .body(createErrorResponse("invalid_input", "인증 코드와 새 비밀번호를 모두 입력해주세요."));
         }
 
         try {
             userService.resetPassword(userId, verificationCode, newPassword);
-            return ResponseEntity.ok(createSuccessResponse("비밀번호가 성공적으로 변경되었습니다."));
+            return ResponseEntity.ok(createSuccessResponse("비밀번호가 성공적으로 변경되었습니다. 다시 로그인해야 합니다."));
         } catch (RuntimeException e) {
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
             String message = "비밀번호 재설정 중 오류가 발생했습니다.";
-            if (e.getMessage() != null && e.getMessage().contains("인증코드가유효하지않습니다.")) {
+            if (e.getMessage() != null && e.getMessage().contains("인증코드가 유효하지 않거나 만료되었습니다.")) {
                 status = HttpStatus.BAD_REQUEST;
                 message = e.getMessage();
             }
             return ResponseEntity.status(status).body(createErrorResponse("reset_failed", message));
+        }
+    }
+
+    // 닉네임 중복 확인 API 추가
+    @GetMapping("/check-nickname")
+    public ResponseEntity<Map<String, ?>> checkNicknameDuplicate(@RequestParam String userNickname) {
+        try {
+            boolean isDuplicate = userService.checkNicknameDuplicate(userNickname);
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("isDuplicate", isDuplicate);
+            response.put("message", isDuplicate ? "이미 사용중인 닉네임입니다." : "사용 가능한 닉네임입니다.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(createErrorResponse("check_failed", "닉네임 중복 확인 중 오류가 발생했습니다."));
+        }
+    }
+
+    // 닉네임 변경 API 추가
+    @PostMapping("/update-nickname")
+    public ResponseEntity<Map<String, Object>> updateNickname(@RequestBody Map<String, String> request, HttpSession session) {
+        String newUserNickname = request.get("newUserNickname");
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(createErrorResponse("unauthorized", "로그인 후 이용해주세요."));
+        }
+
+        if (newUserNickname == null || newUserNickname.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(createErrorResponse("invalid_input", "새 닉네임을 입력해주세요."));
+        }
+
+        try {
+            userService.updateUserNickname(userId, newUserNickname);
+            // 세션 정보 업데이트
+            session.setAttribute("userNickname", newUserNickname);
+            return ResponseEntity.ok(createSuccessResponse("닉네임이 성공적으로 변경되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(createErrorResponse("update_failed", "닉네임 변경 중 오류가 발생했습니다."));
         }
     }
 
