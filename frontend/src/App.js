@@ -1,11 +1,10 @@
-// App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from 'react-modal';
 import SignupForm from './pages/signup/SignupPage';
 import Navbar from './components/Navbar';
-import Main from './pages/home/main';
+import Main from './pages/home/Home';
 import LoginForm from './pages/login/LoginForm';
 import NotFoundPage from './components/404page/NotFoundPage';
 import TermsOfServiceModal from './components/TermsOfServiceModal';
@@ -115,19 +114,19 @@ function AppContent() {
     return (
         <div className="app-layout">
             {isLoggedIn && (
-                <div className="navbar-container"> {/* Navbar를 위한 컨테이너 추가 */}
+                <div className="navbar-container"> 
                     <Navbar isLoggedIn={isLoggedIn} userNickname={currentUser?.userNickname} onLogout={handleLogout} />
                 </div>
             )}
 
             <div className="main-content-area"> 
                 {isLoggedIn && (
-                    <div className="sidebar-container"> {/* Sidebar를 위한 컨테이너 추가 */}
+                    <div className="sidebar-container"> 
                         <Sidebar onMenuItemClick={handleSidebarClick} />
                     </div>
                 )}
                 
-                <div className="content-with-sidebar"> {/* Sidebar가 있을 때 콘텐츠 영역 */}
+                <div className="content-with-sidebar"> 
                     <Routes>
                         <Route path="/*" element={isLoggedIn ? (
                             <Main currentUser={currentUser} activeContent={activeContent} />
