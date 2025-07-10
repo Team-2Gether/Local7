@@ -1,64 +1,48 @@
-import React, { useEffect, useState, useRef } from 'react'; 
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import Sidebar from '../../components/Sidebar';
-import AiModal from '../ai/components/AiModal';
-import UserPage from '../user/UserPage';
+import AiModal from '../ai/components/AiModal'; // 이 모달은 App.js로 이동했으므로 제거 예정이지만, 일단 둠
+import UserPage from '../user/UserPage'; // 이 컴포넌트는 App.js에서 라우팅하므로 제거
 import RestaurantDetailModal from './RestaurantDetailModal';
 import RestaurantVote from '../restaurant/RestaurantVote';
 import PostList from '../post/components/PostList';
 import PostForm from '../post/PostForm';
 
 import './Home.css';
+import MyPage from '../user/MyPage'; // 이 컴포넌트는 App.js에서 라우팅하므로 제거
 
-function Main({ currentUser }) {
+function Main({ currentUser, activeContent }) { // activeContent prop 추가
     const [restaurants, setRestaurants] = useState([]);
     const [error, setError] = useState(null);
 
-    const location = useLocation();
-    const navigate = useNavigate();
-
-    const [activeContent, setActiveContent] = useState('home');
-    const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+    const location = useLocation(); // 라우팅 로직은 App.js로 이동했으므로 필요 없음
+    const navigate = useNavigate(); // 라우팅 로직은 App.js로 이동했으므로 필요 없음
 
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [selectedRestaurant, setSelectedRestaurant] = useState(null);
 
-
     const mapContainerRef = useRef(null);
-    const mapInstanceRef = useRef(null); 
+    const mapInstanceRef = useRef(null);
 
     useEffect(() => {
-        if (location.pathname === '/posts') {
-            setActiveContent('posts');
-        } else if (location.pathname.startsWith('/posts/new')) {
-            setActiveContent('add');
-        } else if (location.pathname.startsWith('/posts/edit/')) {
-            setActiveContent('edit');
-        } else if (location.pathname === '/mypage') {
-            setActiveContent('mypage');
-        } else if (location.pathname === '/pick') {
-            setActiveContent('pick');
-        } else {
-            setActiveContent('home');
+        // activeContent가 변경될 때마다 지도 초기화를 다시 시도
+        if (activeContent === 'home') {
+            if (window.kakao && window.kakao.maps) {
+                initializeMapAndLoadData();
+            } else {
+                const script = document.createElement('script');
+                script.src = '//dapi.kakao.com/v2/maps/sdk.js?appkey=690813b8710fce175e3acf9121422624&libraries=services';
+                script.async = true;
+                document.head.appendChild(script);
+
+                script.onload = () => {
+                    window.kakao.maps.load(() => {
+                        initializeMapAndLoadData();
+                    });
+                };
+            }
         }
-    }, [location.pathname]);
-
-
-    const handleSidebarClick = (item) => {
-        if (item === 'ai') {
-            setIsAiModalOpen(true);
-        } else {
-            setActiveContent(item);
-            setIsAiModalOpen(false);
-
-            if (item === 'home') navigate('/');
-            else if (item === 'posts') navigate('/posts');
-            else if (item === 'add') navigate('/posts/new');
-            else if (item === 'mypage') navigate('/mypage');
-            else if (item === 'pick') navigate('/pick');
-        }
-    };
+    }, [activeContent]); // activeContent가 변경될 때마다 useEffect 실행
 
     const handleRestaurantClick = (restaurant) => {
         setSelectedRestaurant(restaurant);
@@ -66,10 +50,15 @@ function Main({ currentUser }) {
     };
 
     const initializeMapAndLoadData = () => {
-        const container = mapContainerRef.current; 
+        const container = mapContainerRef.current;
         if (!container) {
             console.warn("Kakao map container 'map' not found. Skipping map initialization.");
             return;
+        }
+
+        // 기존 맵 인스턴스가 있다면 파괴
+        if (mapInstanceRef.current) {
+            mapInstanceRef.current = null;
         }
 
         const options = {
@@ -77,7 +66,7 @@ function Main({ currentUser }) {
             level: 3
         };
         const map = new window.kakao.maps.Map(container, options);
-        mapInstanceRef.current = map; 
+        mapInstanceRef.current = map;
 
         const getCurrentLocation = () => {
             if (navigator.geolocation) {
@@ -130,29 +119,6 @@ function Main({ currentUser }) {
             });
     };
 
-    // Kakao Map 스크립트 로드 및 지도 초기화 useEffect
-    useEffect(() => {
-        if (activeContent === 'home') {
-            // Kakao Map 스크립트가 이미 로드되었는지 확인
-            if (window.kakao && window.kakao.maps) {
-                // 스크립트가 이미 로드되었다면 바로 지도 초기화
-                initializeMapAndLoadData();
-            } else {
-                // 스크립트가 로드되지 않았다면 로드
-                const script = document.createElement('script');
-                script.src = '//dapi.kakao.com/v2/maps/sdk.js?appkey=690813b8710fce175e3acf9121422624&libraries=services';
-                script.async = true;
-                document.head.appendChild(script);
-
-                script.onload = () => {
-                    window.kakao.maps.load(() => {
-                        initializeMapAndLoadData();
-                    });
-                };
-            }
-        }
-    }, [activeContent]); 
-
     // 메인 콘텐츠 렌더링 함수
     const renderMainContent = () => {
         switch (activeContent) {
@@ -170,9 +136,9 @@ function Main({ currentUser }) {
                         </h1>
                         <p>이곳은 투게더 애플리케이션의 메인 페이지입니다.</p>
                         {error && <p className="error-message">오류: {error}</p>}
-                        
+
                         <div id="map" className="map-container" ref={mapContainerRef}>
-  
+
                         </div>
                         <h2>음식점 목록</h2>
                         {
@@ -216,7 +182,7 @@ function Main({ currentUser }) {
                 return <RestaurantVote currentUser={currentUser}/>;
 
             case 'mypage':
-                return <UserPage currentUser={currentUser}/>;
+                return <MyPage currentUser={currentUser}/>;
 
             default:
                 return (
@@ -229,19 +195,21 @@ function Main({ currentUser }) {
     };
 
     return (
-        <div className="app-layout">
-            <Sidebar onMenuItemClick={handleSidebarClick}/>
-            <div className="main-content-area">
+        <> {/* 최상위 div.app-layout 제거 */}
+            {/* Sidebar는 App.js로 이동했으므로 제거 */}
+            {/* <Sidebar onMenuItemClick={handleSidebarClick}/> */}
+            {/* <div className="main-content-area"> */}{/* 이 div는 App.js의 main-content-area 내부로 들어감 */}
                 <Routes>
                     <Route path="/" element={renderMainContent()} />
                     <Route path="/posts" element={renderMainContent()} />
-                    <Route path="/posts/new" element={renderMainContent()} /> 
-                    <Route path="/posts/edit/:id" element={renderMainContent()} /> 
+                    <Route path="/posts/new" element={renderMainContent()} />
+                    <Route path="/posts/edit/:id" element={renderMainContent()} />
                     <Route path="/mypage" element={renderMainContent()} />
                     <Route path="/pick" element={renderMainContent()} />
                 </Routes>
-            </div>
-            <AiModal isOpen={isAiModalOpen} onRequestClose={() => setIsAiModalOpen(false)}/>
+            {/* </div> */}
+            {/* AiModal은 App.js로 이동했으므로 제거 */}
+            {/* <AiModal isOpen={isAiModalOpen} onRequestClose={() => setIsAiModalOpen(false)}/> */}
             {
                 selectedRestaurant && (
                     <RestaurantDetailModal
@@ -250,7 +218,7 @@ function Main({ currentUser }) {
                         restaurant={selectedRestaurant}/>
                 )
             }
-        </div>
+        </>
     );
 }
 
