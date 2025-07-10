@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaHome, FaPlus, FaUser, FaRobot, FaAward } from 'react-icons/fa'; // 아이콘 임포트
+import { FaHome, FaPlus, FaUser, FaRobot, FaAward, FaListAlt } from 'react-icons/fa'; // 아이콘 임포트
 import { useNavigate } from 'react-router-dom';
 import '../assets/css/Sidebar.css'; // Sidebar.css 임포트 추가
 
@@ -37,8 +37,8 @@ const Sidebar = ({ onMenuItemClick }) => {
         // style, onMouseEnter, onMouseLeave 제거, className 사용
         onClick={handleAddClick}
       >
-        <FaPlus className="sidebar-icon" /> {/* style 대신 className 사용 */}
-        <span>추가</span>
+        <FaListAlt className="sidebar-icon" /> {/* style 대신 className 사용 */}
+        <span>게시글</span>
       </button>
       <button
         className="sidebar-button"

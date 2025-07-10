@@ -19,7 +19,7 @@ public class PostController {
     private PostService postService;
 
     // 모든 게시글 조회 (GET /api/posts)
-    @GetMapping
+    @GetMapping({"", "/"})
     public ResponseEntity<Map<String, Object>> getAllPosts() {
         List<PostVO> posts = postService.getAllPosts();
         Map<String, Object> response = new HashMap<>();
