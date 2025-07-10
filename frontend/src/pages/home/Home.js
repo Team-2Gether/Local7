@@ -3,6 +3,7 @@ import banner1 from '../../assets/images/banner.png';
 import banner2 from '../../assets/images/banner2.png';
 
 // 도시별 컴포넌트 import
+import Seven from './components/Seven';
 import Busan from './components/Busan';
 import Donghae from './components/Donghae';
 import Gangneung from './components/Gangneung';
@@ -140,6 +141,7 @@ function Home() {
                         </div>
 
                         {/* 도시별 소개 컴포넌트 */}
+                        {selectedCity === "전체" && <Seven />}
                         {selectedCity === "부산" && <Busan />}
                         {selectedCity === "동해" && <Donghae />}
                         {selectedCity === "강릉" && <Gangneung />}
