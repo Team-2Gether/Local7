@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import AiModal from '../ai/components/AiModal'; // 이 모달은 App.js로 이동했으므로 제거 예정이지만, 일단 둠
-import UserPage from '../user/UserPage'; // 이 컴포넌트는 App.js에서 라우팅하므로 제거
+import { Routes, Route } from 'react-router-dom';
 import RestaurantDetailModal from './RestaurantDetailModal';
 import RestaurantVote from '../vote/VotePage';
 import PostList from '../post/components/PostList';
@@ -15,8 +13,6 @@ function Main({ currentUser, activeContent }) { // activeContent prop 추가
     const [restaurants, setRestaurants] = useState([]);
     const [error, setError] = useState(null);
 
-    const location = useLocation(); // 라우팅 로직은 App.js로 이동했으므로 필요 없음
-    const navigate = useNavigate(); // 라우팅 로직은 App.js로 이동했으므로 필요 없음
 
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [selectedRestaurant, setSelectedRestaurant] = useState(null);
