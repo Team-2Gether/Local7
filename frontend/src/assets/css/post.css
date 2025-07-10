@@ -98,7 +98,7 @@
 }
 
 /* 새 게시글 작성 버튼 (PostList용) */
-.new-post-button {
+.create-post-button {
     padding: 10px 20px;
     background-color: #28a745;
     color: white;
