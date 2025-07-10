@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Modal from 'react-modal'; 
+import Modal from 'react-modal';
 import SignupForm from './pages/signup/SignupPage';
 import Navbar from './components/Navbar';
 import Main from './pages/home/main';
 import LoginForm from './pages/login/LoginForm';
-import PostList from './pages/post/components/PostList'; 
-import PostForm from './pages/post/PostForm'; 
+import PostList from './pages/post/components/PostList';
+import PostForm from './pages/post/PostForm';
 import NotFoundPage from './components/404page/NotFoundPage';
 import sea from './assets/images/sea.png';
 import ko from './assets/images/ko.png';
 import first from './assets/images/first.png';
-import './App.css'; 
+import './App.css';
 
 Modal.setAppElement('#root');
 
@@ -92,30 +92,26 @@ function AppContent() {
                 <Navbar isLoggedIn={isLoggedIn} userNickname={currentUser?.userNickname} onLogout={handleLogout} />
             )}
 
-            {/* Routes는 항상 활성화되도록 조건부 렌더링 밖으로 이동 */}
             <Routes>
                 {/* 루트 경로: 로그인 상태에 따라 Home 컴포넌트 또는 초기 로그인 화면 표시 */}
                 <Route path="/" element={isLoggedIn ? (
-                    <div className="main-app-content"> {/* 로그인 후의 메인 콘텐츠 영역 */}
-                        <Main currentUser={currentUser} />
-                    </div>
+                    // 로그인된 경우: Home 컴포넌트가 내부적으로 사이드바를 포함하도록 변경
+                    <Main currentUser={currentUser} />
                 ) : (
                     <div className="initial-login-screen"> {/* 로그인 안 된 초기 화면 */}
-                        {/* 로그인 버튼은 이 화면 내에 위치 */}
-
                         <div className="login-image-wrapper">
-                            <img 
-                                src={sea} 
+                            <img
+                                src={sea}
                                 alt="sea"
                                 className="login-background-image"
                             />
-                            <img 
-                                src={ko} 
+                            <img
+                                src={ko}
                                 alt="ko"
                                 className="overlay-image ko-image"
                             />
-                            <img 
-                                src={first} 
+                            <img
+                                src={first}
                                 alt="first"
                                 className="overlay-image first-image"
                             />
@@ -132,10 +128,9 @@ function AppContent() {
                 {/* 회원가입 페이지: 로그인 상태와 무관하게 항상 접근 가능 */}
                 <Route path="/signup" element={<SignupForm />} />
 
-                {/* 게시글 관련 라우트: 로그인 상태와 무관하게 항상 접근 가능 */}
-                <Route path="/posts" element={<PostList />} /> {/* 게시글 목록 */}
-                <Route path="/posts/new" element={<PostForm />} /> {/* 새 게시글 작성 */}
-                <Route path="/posts/edit/:id" element={<PostForm />} /> {/* 게시글 수정 (ID 파라미터) */}
+                <Route path="/posts" element={<PostList />} /> 
+                <Route path="/posts/new" element={<PostForm />} /> 
+                <Route path="/posts/edit/:id" element={<PostForm />} />
 
 
                 {/* 404 페이지: 모든 일치하지 않는 경로 처리 */}

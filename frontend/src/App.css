@@ -1,4 +1,48 @@
-/* src/App.css */
+.sidebar-container {
+    width: 80px; 
+    background-color: #333; 
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+    flex-shrink: 0; 
+    overflow-y: auto; 
+}
+
+
+.sidebar-button {
+    background: transparent; 
+    border: none;
+    color: white;
+    padding: 15px 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
+    border-radius: 5px;
+}
+
+.sidebar-button:hover {
+    background-color: #575757;
+}
+
+
+.sidebar-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+
+.page-content {
+    flex-grow: 1; 
+    padding: 20px; 
+    overflow-y: auto; 
+}
+
 
 /* 로그인 모달 오버레이 스타일 */
 .login-modal-overlay {
@@ -32,30 +76,36 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh; 
+    width: 100vw; 
     background-color: white;
+    overflow: hidden; 
 }
 
 /* 초기 로그인 화면 내부 사진 + 버튼 래퍼 */
 .login-image-wrapper {
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    width: 100%; 
+    height: 100%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
     overflow: hidden;
     z-index: 1;
 }
 
-/* 로그인 배경 사진 스타일 */
+
 .login-background-image {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%; 
+    height: 100%; 
     object-fit: cover;
     z-index: 0;
 }
 
-/* 로그인 버튼: 이미지 위에 올리기 */
+
 .login-image-wrapper .login-trigger-button {
     position: absolute;
     bottom: 150px;
@@ -70,29 +120,30 @@
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0,0,0,0.3);
     transition: background-color 0.07s ease;
+    z-index: 2; /* 이미지보다 위에 오도록 */
 }
 
 .login-image-wrapper .login-trigger-button:hover {
     background-color: #FFCC00;
 }
 
-/* 공통 오버레이 이미지 */
+
 .overlay-image {
     position: absolute;
     top: 20%;
     height: 50%;
     object-fit: contain;
+    z-index: 2; 
 }
 
-/* 왼쪽 ko.png 지도 */
+
 .ko-image {
     left: 0;
     width: 40%;
 }
 
-/* 오른쪽 first.png */
+
 .first-image {
     right: 10%;
     width: 55%;
 }
-
