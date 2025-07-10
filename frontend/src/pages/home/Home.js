@@ -1,13 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import banner1 from '../../assets/images/banner.png';
 import banner2 from '../../assets/images/banner2.png';
+
+// 도시별 컴포넌트 import
+import Seven from './components/Seven';
+import Busan from './components/Busan';
+import Donghae from './components/Donghae';
+import Gangneung from './components/Gangneung';
+import Goseong from './components/Goseong';
+import Gyeongju from './components/Gyeongju';
+import Pohang from './components/Pohang';
+import Samcheok from './components/Samcheok';
+import Sokcho from './components/Sokcho';
+import Uljin from './components/Uljin';
+import Ulsan from './components/Ulsan';
+import Yangyang from './components/Yangyang';
+import Yeongdeok from './components/Yeongdeok';
+
 import './Home.css';
 
-
-function Home({ currentUser }) {
-    const navigate = useNavigate();
-    const [selectedCity, setSelectedCity] = useState(null);
+function Home() {
+    const [selectedCity, setSelectedCity] = useState("속초");
     const [mapObj, setMapObj] = useState(null);
 
     useEffect(() => {
@@ -24,6 +37,7 @@ function Home({ currentUser }) {
             const map = new window.kakao.maps.Map(container, options);
             setMapObj(map);
 
+            // 도시들 데이터
             const cityPoints = [
                 { name: "고성", latlng: new window.kakao.maps.LatLng(38.3800, 128.4676) },
                 { name: "속초", latlng: new window.kakao.maps.LatLng(38.2104, 128.5913) },
@@ -39,6 +53,7 @@ function Home({ currentUser }) {
                 { name: "부산", latlng: new window.kakao.maps.LatLng(35.1796, 129.0756) }
             ];
 
+            // 경로 선
             const linePath = cityPoints.map(c => c.latlng);
             const polyline = new window.kakao.maps.Polyline({
                 path: linePath,
@@ -49,6 +64,7 @@ function Home({ currentUser }) {
             });
             polyline.setMap(map);
 
+            // 각 도시 사각형
             cityPoints.forEach(city => {
                 const delta = 0.03;
                 const polygonPath = [
@@ -73,6 +89,7 @@ function Home({ currentUser }) {
         document.head.appendChild(script);
     }, []);
 
+    // 지도 중심 이동
     const handleCityClick = (city) => {
         setSelectedCity(city);
 
@@ -101,21 +118,18 @@ function Home({ currentUser }) {
             <div className="main-content-area">
                 <div className="dark-box">
 
-                    {/* 추가된 배너 */}
+                    {/* 배너 */}
                     <div className="banner">
                         <img src={banner1} alt="배너1" className="banner-img" />
                         <img src={banner2} alt="배너2" className="banner-img" />
                     </div>
 
                     <div className="map-description-container">
-                        <div 
-                            id="kakao-map" 
-                            style={{ width: "380px", height: "300px", borderRadius: "20px" }}
-                        ></div>
+                        <div id="kakao-map" style={{ width: "380px", height: "300px", borderRadius: "20px" }}></div>
 
                         <div className="grid-buttons">
-                            {["전체", "고성", "속초", "양양", "강릉", "동해", "삼척",
-                              "울진", "영덕", "포항", "경주", "울산", "부산"].map((city, idx) => (
+                            {["전체","고성","속초","양양","강릉","동해","삼척",
+                              "울진","영덕","포항","경주","울산","부산"].map((city, idx) => (
                                 <button
                                     key={idx}
                                     className={selectedCity === city ? "active" : ""}
@@ -126,18 +140,20 @@ function Home({ currentUser }) {
                             ))}
                         </div>
 
-                        <div className="description-area">
-                            <h2>속초<span>__SOKCHO</span></h2>
-                            <p>
-                                속초는 6.25전쟁 당시 북한에서 내려온 피란민들이 정착한 곳으로,
-                                그들의 향수와 생활 방식이 음식 문화에 깊이 스며들어 있다.
-                                이곳의 음식은 단순한 맛을 넘어 역사와 삶의 이야기를 닮고 있다.
-                            </p>
-                            <div className="desc-buttons">
-                                <button className="yellow-btn">음식점</button>
-                                <button className="white-btn">게시글</button>
-                            </div>
-                        </div>
+                        {/* 도시별 소개 컴포넌트 */}
+                        {selectedCity === "전체" && <Seven />}
+                        {selectedCity === "부산" && <Busan />}
+                        {selectedCity === "동해" && <Donghae />}
+                        {selectedCity === "강릉" && <Gangneung />}
+                        {selectedCity === "고성" && <Goseong />}
+                        {selectedCity === "경주" && <Gyeongju />}
+                        {selectedCity === "포항" && <Pohang />}
+                        {selectedCity === "삼척" && <Samcheok />}
+                        {selectedCity === "속초" && <Sokcho />}
+                        {selectedCity === "울진" && <Uljin />}
+                        {selectedCity === "울산" && <Ulsan />}
+                        {selectedCity === "양양" && <Yangyang />}
+                        {selectedCity === "영덕" && <Yeongdeok />}
                     </div>
 
                     <hr className="separator" />
