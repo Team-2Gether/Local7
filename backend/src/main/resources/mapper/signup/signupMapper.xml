@@ -6,30 +6,30 @@
 
     <insert id="insertUser" parameterType="com.twogether.local7.signup.vo.SignupVO">
         INSERT INTO TB_USER (
-        USER_LOGIN_ID,
-        USER_USERNAME,
+        LOGIN_ID,
+        USER_NAME,
         USER_PASSWORD,
         USER_EMAIL,
         USER_NICKNAME,
-        USER_PROFILE_IMAGE_URL,
+        USER_PROF_IMG_URL,
         USER_BIO,
-        USER_CREATED_AT,
-        USER_UPDATED_AT
+        CREATE_DATE,
+        CREATED_ID
         ) VALUES (
         #{userLoginId},
-        #{userUsername},
+        #{userName},
         #{userPassword},
         #{userEmail},
         #{userNickname},
-        #{userProfileImageUrl},
+        #{userProfImgUrl},
         #{userBio},
         SYSTIMESTAMP,
-        SYSTIMESTAMP
+        #{userLoginId}
         )
     </insert>
 
     <select id="countByUserLoginId" parameterType="string" resultType="int">
-        SELECT COUNT(*) FROM TB_USER WHERE USER_LOGIN_ID = #{userLoginId}
+        SELECT COUNT(*) FROM TB_USER WHERE LOGIN_ID = #{userLoginId}
     </select>
 
     <select id="countByUserEmail" parameterType="string" resultType="int">

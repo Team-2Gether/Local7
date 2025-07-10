@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     // 임시로 인증 코드를 저장할 맵 (실제 앱에서는 DB나 Redis 사용)
     private final Map<Long, String> verificationCodes = new HashMap<>();
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     @Override
     public UserVO login(String credential, String password) {
@@ -36,24 +36,19 @@ public class UserServiceImpl implements UserService {
 
         //사용자정보가유효하지않으면즉시null을반환
         if (!isValidUser(user)) {
-            throw new RuntimeException("User not found");
+            throw new RuntimeException("사용자 정보를 찾을 수 없거나 비밀번호가 일치하지 않습니다.");
         }
 
-        //IMPORTANT:Inarealapplication,'password'hereshouldbehasehd
-        //andcomparedagainstaStoredhash.
-        //Forthisexample,we're doingadirectstringcomparisonasrequested.
-        if (user.getUserPassword().equals(password)) {
-            //Passwordmatches,returntheuserobject(excludingpasswordforsecurity)
-            user.setUserPassword(null);
-            return user;
-        } else {
-            throw new RuntimeException("Password mismatch");
+        //비밀번호검증
+        if (!user.getUserPassword().equals(password)) { // 실제 애플리케이션에서는 해싱된 비밀번호와 비교해야 함
+            throw new RuntimeException("사용자 정보를 찾을 수 없거나 비밀번호가 일치하지 않습니다.");
         }
+
+        return user;
     }
 
-    //사용자계정이유효한지확인하는메서드
     private boolean isValidUser(UserVO user) {
-        return user != null && user.getUserId() != null;
+        return user != null;
     }
 
     @Override
@@ -68,9 +63,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void requestPasswordChange(Long userId, String currentPassword) {
-        UserVO user = userDAO.findByUserLoginId(String.valueOf(userId)); // Assuming userId can be used to find user
-        if (user == null || !user.getUserPassword().equals(currentPassword)) {
-            throw new RuntimeException("현재비밀번호가일치하지않습니다.");
+        // userId를 통해 사용자 정보 조회로 수정
+        UserVO user = userDAO.findByUserId(userId);
+        if (user == null || !user.getUserPassword().equals(currentPassword)) { // 실제 앱에서는 비밀번호 해싱 비교
+            throw new RuntimeException("현재 비밀번호가 일치하지 않습니다.");
         }
 
         // 인증 코드 생성
@@ -79,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
         // 실제 이메일 발송
         sendVerificationEmail(user.getUserEmail(), verificationCode); // 수정: EmailService 통합
-        System.out.println("인증 코드 발송 (실제로 이메일 발송): " + user.getUserEmail() + ", 코드: " + verificationCode);
+        System.out.println("인증 코드 발송: " + user.getUserEmail() + ", 코드: " + verificationCode);
     }
 
     @Override
@@ -96,6 +92,18 @@ public class UserServiceImpl implements UserService {
         userDAO.updateUserPassword(userId, newPassword);
     }
 
+    // 닉네임 중복 확인 메서드 구현
+    @Override
+    public boolean checkNicknameDuplicate(String userNickname) {
+        return userDAO.countByUserNickname(userNickname) > 0;
+    }
+
+    // 닉네임 변경 메서드 구현
+    @Override
+    public void updateUserNickname(Long userId, String newUserNickname) {
+        userDAO.updateUserNickname(userId, newUserNickname);
+    }
+
     // 6자리 난수 인증 코드 생성 메서드
     private String generateVerificationCode() {
         Random random = new Random();
@@ -107,8 +115,8 @@ public class UserServiceImpl implements UserService {
     private void sendVerificationEmail(String to, String verificationCode) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
-        message.setSubject("비밀번호 재설정 인증 코드");
-        message.setText("요청하신 비밀번호 재설정 인증 코드입니다: " + verificationCode + "\n이 코드는 5분간 유효합니다.");
+        message.setSubject("비밀번호 변경 인증 코드");
+        message.setText("인증 코드: " + verificationCode);
         mailSender.send(message);
     }
 }
