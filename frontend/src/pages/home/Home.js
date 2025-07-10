@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-import React from "react";
-import HomeCardFeed from "./HomeCardFeed";
-=======
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
->>>>>>> 12a09a385ff9304003aae29bf79e32b4509a5b82
 
 function Home({ currentUser }) {
     const navigate = useNavigate();
@@ -62,71 +56,6 @@ function Home({ currentUser }) {
                     new window.kakao.maps.LatLng(city.latlng.getLat() + delta, city.latlng.getLng() - delta)
                 ];
 
-<<<<<<< HEAD
-    </div>
-  );
-
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Home.css';
-
-function Home({ currentUser }) {
-    const navigate = useNavigate();
-    const [selectedCity, setSelectedCity] = useState(null); // 선택된 도시 상태
-    const [mapObj, setMapObj] = useState(null); // map 객체를 상태로 저장
-
-
-    useEffect(() => {
-        const script = document.createElement("script");
-        script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=690813b8710fce175e3acf9121422624&libraries=services";
-        script.async = true;
-        script.onload = () => {
-            const container = document.getElementById('kakao-map');
-            const options = {
-                center: new window.kakao.maps.LatLng(36.5, 127.75),
-                level: 14
-            };
-            const map = new window.kakao.maps.Map(container, options);
-            setMapObj(map);
-
-            const cityPoints = [
-                { name: "고성", latlng: new window.kakao.maps.LatLng(38.3800, 128.4676) },
-                { name: "속초", latlng: new window.kakao.maps.LatLng(38.2104, 128.5913) },
-                { name: "양양", latlng: new window.kakao.maps.LatLng(38.0768, 128.6199) },
-                { name: "강릉", latlng: new window.kakao.maps.LatLng(37.7520, 128.8761) },
-                { name: "동해", latlng: new window.kakao.maps.LatLng(37.5224, 129.1147) },
-                { name: "삼척", latlng: new window.kakao.maps.LatLng(37.4475, 129.1651) },
-                { name: "울진", latlng: new window.kakao.maps.LatLng(36.9932, 129.4005) },
-                { name: "영덕", latlng: new window.kakao.maps.LatLng(36.3504, 129.3657) },
-                { name: "포항", latlng: new window.kakao.maps.LatLng(35.9982, 129.4000) },
-                { name: "경주", latlng: new window.kakao.maps.LatLng(35.8562, 129.2246) },
-                { name: "울산", latlng: new window.kakao.maps.LatLng(35.5396, 129.3110) },
-                { name: "부산", latlng: new window.kakao.maps.LatLng(35.1796, 129.0756) }
-            ];
-
-            // 선
-            const linePath = cityPoints.map(c => c.latlng);
-            const polyline = new window.kakao.maps.Polyline({
-                path: linePath,
-                strokeWeight: 5,
-                strokeColor: '#FFCC00',
-                strokeOpacity: 0.8,
-                strokeStyle: 'solid'
-            });
-            polyline.setMap(map);
-
-            // 폴리곤
-            cityPoints.forEach(city => {
-                const delta = 0.03;
-                const polygonPath = [
-                    new window.kakao.maps.LatLng(city.latlng.getLat() - delta, city.latlng.getLng() - delta),
-                    new window.kakao.maps.LatLng(city.latlng.getLat() - delta, city.latlng.getLng() + delta),
-                    new window.kakao.maps.LatLng(city.latlng.getLat() + delta, city.latlng.getLng() + delta),
-                    new window.kakao.maps.LatLng(city.latlng.getLat() + delta, city.latlng.getLng() - delta)
-                ];
-
-=======
->>>>>>> 12a09a385ff9304003aae29bf79e32b4509a5b82
                 const polygon = new window.kakao.maps.Polygon({
                     path: polygonPath,
                     strokeWeight: 3,
