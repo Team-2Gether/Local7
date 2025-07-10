@@ -18,12 +18,7 @@
 /* -------------------------------------------
     dark-box : 콘텐츠를 담는 어두운 박스
 -------------------------------------------- */
-.dark-box {
-    background-color: #2a2a2a;
-    color: #fff;
-    padding: 30px;
-    border-radius: 8px; /* 모서리 둥글게 */
-}
+
 
 /* -------------------------------------------
     지도 + 버튼 + 설명 묶음 (가로로 나열)
@@ -65,15 +60,16 @@
     transition: background-color 0.2s;
 }
 
-/* 도시 누른 버튼 표시 */
-.grid-buttons button.active {
+/* hover 시 색상 변경 */
+.grid-buttons button:hover {
     background-color: #FFCC00;
     color: #000;
 }
 
-/* 버튼 hover 시 색상 변경 */
-.grid-buttons button:hover {
+/* ✅ active(선택된) 버튼 유지 스타일 */
+.grid-buttons button.active {
     background-color: #FFCC00;
+    color: #000;
 }
 
 /* -------------------------------------------
@@ -91,7 +87,7 @@
 .description-area h2 {
     font-size: 1.8em;
     margin-bottom: 10px;
-     margin-right: 239px;
+    margin-right: 239px;
     color: #18A0FB; /* 파란색 포인트 */
 }
 
