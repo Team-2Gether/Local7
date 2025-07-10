@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './RestaurantVote.css';
+import './Vote.css';
 
 // 투표지역 항목 자동 생성 필드(추가된 항목 개수가 일치해야함)
 const initialVotes = Array.from({ length: 12 }, (_, i) =>

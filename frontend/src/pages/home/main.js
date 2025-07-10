@@ -4,7 +4,7 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import AiModal from '../ai/components/AiModal'; // 이 모달은 App.js로 이동했으므로 제거 예정이지만, 일단 둠
 import UserPage from '../user/UserPage'; // 이 컴포넌트는 App.js에서 라우팅하므로 제거
 import RestaurantDetailModal from './RestaurantDetailModal';
-import RestaurantVote from '../restaurant/RestaurantVote';
+import RestaurantVote from '../vote/VotePage';
 import PostList from '../post/components/PostList';
 import PostForm from '../post/PostForm';
 
