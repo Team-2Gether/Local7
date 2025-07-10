@@ -9,6 +9,7 @@ import LoginForm from './pages/login/LoginForm';
 import PostList from './pages/post/components/PostList';
 import PostForm from './pages/post/PostForm';
 import NotFoundPage from './components/404page/NotFoundPage';
+import TermsOfServiceModal from './components/TermsOfServiceModal'; // TermsOfServiceModal import
 import sea from './assets/images/sea.png';
 import ko from './assets/images/ko.png';
 import first from './assets/images/first.png';
@@ -20,6 +21,7 @@ function AppContent() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isTermsModalOpen, setIsTermsModalOpen] = useState(false); // TermsOfServiceModal 상태 추가
     const navigate = useNavigate();
 
     axios.defaults.withCredentials = true;
@@ -85,6 +87,10 @@ function AppContent() {
         }
     };
 
+    // 이용약관 모달 열기/닫기 함수
+    const openTermsModal = () => setIsTermsModalOpen(true);
+    const closeTermsModal = () => setIsTermsModalOpen(false);
+
     return (
         <>
             {/* Navbar는 로그인된 경우에만 표시 */}
@@ -145,8 +151,15 @@ function AppContent() {
                 overlayClassName="login-modal-overlay"
                 contentLabel="로그인 모달"
             >
-                <LoginForm onLoginSuccess={handleLoginSuccess} onCloseModal={() => setIsLoginModalOpen(false)}/>
+                <LoginForm onLoginSuccess={handleLoginSuccess} onCloseModal={() => setIsLoginModalOpen(false)} onOpenTermsModal={openTermsModal} /> {/* onOpenTermsModal prop 전달 */}
             </Modal>
+
+            {/* 이용약관 모달 */}
+            <TermsOfServiceModal
+                isOpen={isTermsModalOpen}
+                onClose={closeTermsModal}
+                showAgreeButton={false} // 로그인 폼에서 약관을 보여줄 때는 '동의하기' 버튼이 필요 없을 수 있음
+            />
         </>
     );
 }
