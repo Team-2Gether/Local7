@@ -4,7 +4,7 @@ import axios from 'axios';
 import Modal from 'react-modal'; 
 import SignupForm from './pages/signup/SignupPage';
 import Navbar from './components/Navbar';
-import Home from './pages/home/Home';
+import Main from './pages/home/main';
 import LoginForm from './pages/login/LoginForm';
 import PostList from './pages/post/components/PostList'; 
 import PostForm from './pages/post/PostForm'; 
@@ -97,7 +97,7 @@ function AppContent() {
                 {/* 루트 경로: 로그인 상태에 따라 Home 컴포넌트 또는 초기 로그인 화면 표시 */}
                 <Route path="/" element={isLoggedIn ? (
                     <div className="main-app-content"> {/* 로그인 후의 메인 콘텐츠 영역 */}
-                        <Home currentUser={currentUser} />
+                        <Main currentUser={currentUser} />
                     </div>
                 ) : (
                     <div className="initial-login-screen"> {/* 로그인 안 된 초기 화면 */}
