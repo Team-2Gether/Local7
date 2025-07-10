@@ -9,6 +9,9 @@ import LoginForm from './pages/login/LoginForm';
 import PostList from './pages/post/components/PostList'; 
 import PostForm from './pages/post/PostForm'; 
 import NotFoundPage from './components/404page/NotFoundPage';
+import sea from './assets/images/sea.png';
+import ko from './assets/images/ko.png';
+import first from './assets/images/first.png';
 import './App.css'; 
 
 Modal.setAppElement('#root');
@@ -100,25 +103,29 @@ function AppContent() {
                     <div className="initial-login-screen"> {/* 로그인 안 된 초기 화면 */}
                         {/* 로그인 버튼은 이 화면 내에 위치 */}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        <button
-                            className="login-trigger-button"
-                            onClick={() => setIsLoginModalOpen(true)}
-                        >
-                            로그인
-                        </button>
+                        <div className="login-image-wrapper">
+                            <img 
+                                src={sea} 
+                                alt="sea"
+                                className="login-background-image"
+                            />
+                            <img 
+                                src={ko} 
+                                alt="ko"
+                                className="overlay-image ko-image"
+                            />
+                            <img 
+                                src={first} 
+                                alt="first"
+                                className="overlay-image first-image"
+                            />
+                            <button
+                                className="login-trigger-button"
+                                onClick={() => setIsLoginModalOpen(true)}
+                            >
+                                로그인
+                            </button>
+                        </div>
                     </div>
                 )} />
 

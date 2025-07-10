@@ -7,11 +7,11 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.75); /* 반투명 검은색 배경 */
+    background-color: rgba(0, 0, 0, 0.75);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 3000; /* AI 모달보다 높게 설정 */
+    z-index: 3000;
 }
 
 /* 로그인 모달 콘텐츠 스타일 */
@@ -19,53 +19,80 @@
     background: white;
     padding: 20px;
     border-radius: 8px;
-    outline: none; /* 기본 포커스 외곽선 제거 */
+    outline: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 400px; /* 모달 최대 너비 */
-    width: 90%; /* 반응형 너비 */
-    position: relative; /* 내부 요소 위치 지정을 위해 */
-    z-index: 3001; /* 오버레이보다 높게 설정 */
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    z-index: 3001;
 }
 
-/* 초기 로그인 화면 컨테이너  */
+/* 초기 로그인 화면 컨테이너 */
 .initial-login-screen {
     display: flex;
-    justify-content: center; /* 가로 중앙 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
-    height: 100vh; /* 뷰포트 전체 높이 */
-    width: 100vw; /* 뷰포트 전체 너비 */
-    background-color: white; /* 흰색 배경 */
+    justify-content: center;
+    align-items: center;
+    background-color: white;
 }
 
-/* 로그인 트리거 버튼 스타일 */
-.login-trigger-button {
-    position: fixed;
-    top: 50%;
-    right: 40px; /* 오른쪽 끝에서 40px 떨어진 위치 */
-    transform: translateY(-50%);
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
+/* 초기 로그인 화면 내부 사진 + 버튼 래퍼 */
+.login-image-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* 로그인 배경 사진 스타일 */
+.login-background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 0;
+}
+
+/* 로그인 버튼: 이미지 위에 올리기 */
+.login-image-wrapper .login-trigger-button {
+    position: absolute;
+    bottom: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 7px 70px;
+    background-color: white;
+    color: #18A0FB;
     border: none;
-    border-radius: 5px;
+    border-radius: 20px;
+    font-size: 1.5em;
     cursor: pointer;
-    font-size: 1em;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    transition: background-color 0.07s ease;
 }
 
-/* 초기 화면에서 버튼을 중앙에 배치하기 위한 추가 스타일 */
-.login-trigger-button.initial-center-button {
-    position: static; /* fixed 위치 오버라이드 */
-    transform: none; /* transform 오버라이드 */
-    margin: 0; /* 여백 제거 */
+.login-image-wrapper .login-trigger-button:hover {
+    background-color: #FFCC00;
 }
 
-.login-trigger-button:hover {
-    background-color: #0056b3;
+/* 공통 오버레이 이미지 */
+.overlay-image {
+    position: absolute;
+    top: 20%;
+    height: 50%;
+    object-fit: contain;
 }
 
-/* 메인 앱 콘텐츠 영역 (로그인 후 표시될 Navbar + Routes 영역) */
-.main-app-content {
-    /* 기존 스타일 유지 또는 추가 */
+/* 왼쪽 ko.png 지도 */
+.ko-image {
+    left: 0;
+    width: 40%;
 }
+
+/* 오른쪽 first.png */
+.first-image {
+    right: 10%;
+    width: 55%;
+}
+
