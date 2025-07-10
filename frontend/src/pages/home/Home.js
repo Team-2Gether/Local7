@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../../components/Sidebar';
 import './Home.css';
 
 function Home({ currentUser }) {
@@ -8,14 +7,6 @@ function Home({ currentUser }) {
     const [selectedCity, setSelectedCity] = useState(null); // 선택된 도시 상태
     const [mapObj, setMapObj] = useState(null); // map 객체를 상태로 저장
 
-    const handleMenuItemClick = (menuItem) => {
-        console.log(`${menuItem} 메뉴 클릭됨`);
-        if (menuItem === 'home') {
-            navigate('/');
-        } else if (menuItem === 'posts') { 
-            navigate('/posts');
-        }
-    };
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -106,7 +97,7 @@ function Home({ currentUser }) {
 
     return (
         <div className="app-layout">
-            <Sidebar onMenuItemClick={handleMenuItemClick} />
+            
             <div className="main-content-area">
                 <div className="dark-box">
                     <div className="map-description-container">
