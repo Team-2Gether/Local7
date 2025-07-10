@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import usePosts from '../hooks/usePost'; // usePosts 훅 임포트
-import Sidebar from '../../../components/Sidebar';
 
 function PostList() {
     const { posts, loading, error, message, loadAllPosts, removePost, setMessage } = usePosts();
@@ -36,22 +35,6 @@ function PostList() {
             return () => clearTimeout(timer);
         }
     }, [message, setMessage]);
-
-    // Sidebar 메뉴 클릭 핸들러 (PostList 내에서 정의)
-    const handleMenuItemClick = (menuItem) => {
-        console.log(`${menuItem} 메뉴 클릭됨`);
-        if (menuItem === 'home') {
-            navigate('/');
-        } else if (menuItem === 'posts') {
-            navigate('/posts');
-        } else if (menuItem === 'mypage') {
-            // navigate('/mypage');
-        } else if (menuItem === 'ai') {
-            // navigate('/ai');
-        } else if (menuItem === 'pick') {
-            // navigate('/pick');
-        }
-    };
 
     if (loading) {
         return <div style={{ textAlign: 'center', padding: '20px' }}>게시글을 불러오는 중...</div>;
