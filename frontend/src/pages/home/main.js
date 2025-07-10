@@ -5,7 +5,7 @@ import Sidebar from '../../components/Sidebar';
 import AiModal from '../ai/components/AiModal';
 import UserPage from '../user/UserPage';
 import RestaurantDetailModal from './RestaurantDetailModal';
-import RestaurantVote from '../restaurant/RestaurantVote';
+import RestaurantVote from '../vote/VotePage';
 import PostList from '../post/components/PostList';
 import PostForm from '../post/PostForm';
 
