@@ -1,7 +1,10 @@
 package com.twogether.local7.user.controller;
 
+import com.twogether.local7.pagention.Pagination;
+import com.twogether.local7.pagention.SimplePageable;
 import com.twogether.local7.user.service.UserService;
 import com.twogether.local7.user.vo.UserVO;
+import com.twogether.local7.user.vo.PostVO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -287,6 +291,38 @@ public class UserController {
                 message = e.getMessage();
             }
             return ResponseEntity.status(status).body(createErrorResponse("withdrawal_failed", message));
+        }
+    }
+
+    // 수정된 게시글 조회 API
+    @GetMapping("/posts")
+    public ResponseEntity<Map<String, Object>> getUserPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(createErrorResponse("unauthorized", "로그인 후 이용해주세요."));
+        }
+
+        try {
+            // SimplePageable 객체 생성
+            SimplePageable pageable = new SimplePageable(page, size);
+            Pagination<PostVO> userPosts = userService.getPostsByUserId(userId, pageable); // Pageable 파라미터 전달
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("message", "사용자가 작성한 게시글 목록을 성공적으로 조회했습니다.");
+            response.put("pagination", userPosts); // Pagination 객체 전체를 반환
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(createErrorResponse("invalid_pagination_parameters", e.getMessage()));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(createErrorResponse("post_retrieval_failed", "게시글 조회 중 오류가 발생했습니다."));
         }
     }
 

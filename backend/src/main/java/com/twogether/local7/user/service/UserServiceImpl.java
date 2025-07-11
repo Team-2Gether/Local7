@@ -1,12 +1,18 @@
+// UserServiceImpl.java
 package com.twogether.local7.user.service;
 
+import com.twogether.local7.pagention.Pagination;
 import com.twogether.local7.user.dao.UserDAO;
 import com.twogether.local7.user.vo.UserVO;
+import com.twogether.local7.user.vo.PostVO;
+import com.twogether.local7.pagention.Pageable; // Custom Pageable import 추가
+import org.apache.ibatis.session.RowBounds; // RowBounds import 추가
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -149,5 +155,21 @@ public class UserServiceImpl implements UserService {
         message.setSubject(subject);
         message.setText("인증 코드: " + verificationCode + "\n\n이 코드를 입력하여 본인임을 인증해주세요.");
         mailSender.send(message);
+    }
+
+    // 수정된 메서드 구현
+    @Override
+    public Pagination<PostVO> getPostsByUserId(Long userId, Pageable pageable) {
+        int totalPosts = userDAO.countPostsByUserId(userId); // 총 게시글 수 조회
+        // RowBounds를 사용하여 페이지네이션 처리
+        RowBounds rowBounds = new RowBounds((int) pageable.getOffset(), pageable.getPageSize());
+        List<PostVO> posts = userDAO.findPostsByUserId(userId, rowBounds); // 페이지네이션된 게시글 조회
+        return new Pagination<>(posts, pageable, totalPosts); // Pagination 객체 반환
+    }
+
+    // 추가된 메서드 구현
+    @Override
+    public int countPostsByUserId(Long userId) {
+        return userDAO.countPostsByUserId(userId);
     }
 }

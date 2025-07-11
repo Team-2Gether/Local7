@@ -21,6 +21,21 @@
         <result property="updatedId" column="UPDATED_ID"/>
     </resultMap>
 
+    <resultMap id="postResultMap" type="com.twogether.local7.user.vo.PostVO">
+        <id property="postId" column="POST_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="userLoginId" column="LOGIN_ID"/>
+        <result property="restaurantId" column="RESTAURANT_ID"/>
+        <result property="postTitle" column="POST_TITLE"/>
+        <result property="postContent" column="POST_CONTENT"/>
+        <result property="locationTag" column="LOCATION_TAG"/>
+        <result property="isNotice" column="IS_NOTICE"/>
+        <result property="createdDate" column="CREATED_DATE"/>
+        <result property="createdId" column="CREATED_ID"/>
+        <result property="updatedDate" column="UPDATED_DATE"/>
+        <result property="updatedId" column="UPDATED_ID"/>
+    </resultMap>
+
     <select id="findByUserLoginId" parameterType="string" resultMap="userResultMap">
         SELECT
         T.USER_ID,
@@ -131,4 +146,34 @@
     <delete id="deleteUser" parameterType="long">
         DELETE FROM TB_USER WHERE USER_ID = #{userId}
     </delete>
+
+    <select id="findPostsByUserId" parameterType="long" resultMap="postResultMap">
+        SELECT
+        P.POST_ID,
+        P.USER_ID,
+        U.LOGIN_ID,
+        P.RESTAURANT_ID,
+        P.POST_TITLE,
+        P.POST_CONTENT,
+        P.LOCATION_TAG,
+        P.IS_NOTICE,
+        P.CREATED_DATE,
+        P.CREATED_ID,
+        P.UPDATED_DATE,
+        P.UPDATED_ID
+        FROM
+        TB_POST P
+        JOIN
+        TB_USER U ON P.USER_ID = U.USER_ID
+        WHERE
+        P.USER_ID = #{userId}
+        ORDER BY
+        P.CREATED_DATE DESC
+    </select>
+
+    <select id="countPostsByUserId" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_POST
+        WHERE USER_ID = #{userId}
+    </select>
 </mapper>

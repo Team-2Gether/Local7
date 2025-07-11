@@ -24,21 +24,8 @@ function MyPage({ currentUser, isLoggedIn }) {
         }
     }, [currentUser, isLoggedIn, navigate]);
 
-    if (loading) {
-        return <div className="my-page-container">로딩 중...</div>;
-    }
-
-    if (error) {
-        return <div className="my-page-container error-message">{error}</div>;
-    }
-
-    // isLoggedIn이 false이거나 userData가 없으면 "로그인이 필요합니다." 메시지를 보여줍니다.
-    if (!isLoggedIn || !userData) {
-        return <div className="my-page-container">로그인이 필요합니다.</div>;
-    }
-
     return (
-        <div className="my-page-container">
+        <div>
             <h1 className="my-page-title">마이 페이지</h1>
             <div className="my-page-content"> {/* 새로운 div로 컨텐츠를 묶습니다. */}
                 <div className="my-page-navigation"> {/* 왼쪽에 배치될 네비게이션 섹션 */}

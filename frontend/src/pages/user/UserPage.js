@@ -375,7 +375,7 @@ function UserPage({ currentUser, onLogout }) { // onLogout prop 추가
 
 
     return (
-        <div className="user-page-container">
+        <div >
             <h2><FaLock /> 내 정보</h2> {/* FaLock 아이콘 추가 */}
             {message && (
                 <div className={`message ${messageType === 'success' ? 'success' : 'error'}`}>
@@ -393,48 +393,7 @@ function UserPage({ currentUser, onLogout }) { // onLogout prop 추가
                 </div>
 
                 <div className="user-update-sections-wrapper"> {/* 기존 섹션들을 감싸는 div 추가 */}
-                    {/* 아이디 변경 섹션 */}
-                    <div className="user-update-form">
-                        <h3>아이디 변경</h3>
-                        <div className="form-group">
-                            <label htmlFor="userLoginId">현재 아이디:</label>
-                            <input type="text" id="userLoginId" value={currentUser?.userLoginId || ''} disabled />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="newUserLoginId">새 아이디:</label>
-                            <div className="input-with-button">
-                                <input
-                                    type="text"
-                                    id="newUserLoginId"
-                                    value={newUserLoginId}
-                                    onChange={handleLoginIdChange}
-                                    placeholder="새 아이디를 입력하세요"
-                                    disabled={isCheckingLoginId || isUpdatingLoginId} // 로딩 중 비활성화
-                                />
-                                <button
-                                    className="check-button"
-                                    onClick={handleCheckLoginId}
-                                    disabled={isCheckingLoginId || isUpdatingLoginId} // 로딩 중 비활성화
-                                >
-                                    {isCheckingLoginId ? '확인 중...' : '중복 확인'}
-                                </button>
-                            </div>
-                            {loginIdMessage && (
-                                <div className={`message ${loginIdMessageType === 'success' ? 'success' : 'error'}`}>
-                                    {loginIdMessage}
-                                </div>
-                            )}
-                        </div>
-                        <button
-                            className="submit-button"
-                            onClick={handleUpdateLoginId}
-                            // 중복 확인이 완료되지 않았거나, 사용 불가능하거나, 로딩 중이거나, 현재 아이디와 동일할 때 비활성화
-                            disabled={!isLoginIdChecked || !isLoginIdAvailable || isUpdatingLoginId || isCheckingLoginId || newUserLoginId === currentUser?.userLoginId}
-                        >
-                            {isUpdatingLoginId ? '변경 중...' : '아이디 변경'}
-                        </button>
-                    </div>
-
+                    
                     {/* 닉네임 변경 섹션 */}
                     <div className="user-update-form">
                         <h3>닉네임 변경</h3>
@@ -477,6 +436,47 @@ function UserPage({ currentUser, onLogout }) { // onLogout prop 추가
                         </button>
                     </div>
 
+                    {/* 아이디 변경 섹션 */}
+                    <div className="user-update-form">
+                        <h3>아이디 변경</h3>
+                        <div className="form-group">
+                            <label htmlFor="userLoginId">현재 아이디:</label>
+                            <input type="text" id="userLoginId" value={currentUser?.userLoginId || ''} disabled />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="newUserLoginId">새 아이디:</label>
+                            <div className="input-with-button">
+                                <input
+                                    type="text"
+                                    id="newUserLoginId"
+                                    value={newUserLoginId}
+                                    onChange={handleLoginIdChange}
+                                    placeholder="새 아이디를 입력하세요"
+                                    disabled={isCheckingLoginId || isUpdatingLoginId} // 로딩 중 비활성화
+                                />
+                                <button
+                                    className="check-button"
+                                    onClick={handleCheckLoginId}
+                                    disabled={isCheckingLoginId || isUpdatingLoginId} // 로딩 중 비활성화
+                                >
+                                    {isCheckingLoginId ? '확인 중...' : '중복 확인'}
+                                </button>
+                            </div>
+                            {loginIdMessage && (
+                                <div className={`message ${loginIdMessageType === 'success' ? 'success' : 'error'}`}>
+                                    {loginIdMessage}
+                                </div>
+                            )}
+                        </div>
+                        <button
+                            className="submit-button"
+                            onClick={handleUpdateLoginId}
+                            // 중복 확인이 완료되지 않았거나, 사용 불가능하거나, 로딩 중이거나, 현재 아이디와 동일할 때 비활성화
+                            disabled={!isLoginIdChecked || !isLoginIdAvailable || isUpdatingLoginId || isCheckingLoginId || newUserLoginId === currentUser?.userLoginId}
+                        >
+                            {isUpdatingLoginId ? '변경 중...' : '아이디 변경'}
+                        </button>
+                    </div>
 
                     {/* 비밀번호 변경 섹션 */}
                     <div className="user-update-form">
@@ -624,8 +624,8 @@ function UserPage({ currentUser, onLogout }) { // onLogout prop 추가
                             </div>
                         )}
                     </div>
-                </div> {/* user-update-sections-wrapper 닫기 */}
-            </div> {/* user-page-content 닫기 */}
+                </div>
+            </div>
         </div>
     );
 }

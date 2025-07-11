@@ -1,17 +1,3 @@
-/* MyPage.css */
-
-.my-page-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 1000px; /* 전체 컨테이너 최대 너비 */
-    margin: 20px auto;
-}
-
 .my-page-title {
     color: #333;
     margin-bottom: 20px;
