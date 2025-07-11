@@ -20,25 +20,6 @@ const Ulsan = ({ activeSection, setActiveSection }) => (
       그들의 노력과 꿈은 음식 속에 담겨 세대를 잇는다.
       울산의 음식은 강인한 정신과 따뜻한 마음이 어우러진 결과다.
     </p>
-
-    {/* 버튼 그룹
-        - activeSection에 따라 버튼 스타일 변경
-        - 클릭 시 setActiveSection 호출해 부모 상태 변경
-    */}
-    <div className="desc-buttons">
-      <button
-        className={activeSection === "restaurants" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("restaurants")}
-      >
-        음식점
-      </button>
-      <button
-        className={activeSection === "posts" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("posts")}
-      >
-        스레드
-      </button>
-    </div>
   </div>
 );
 

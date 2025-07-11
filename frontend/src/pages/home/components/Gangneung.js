@@ -19,25 +19,6 @@ const Gangneung = ({ activeSection, setActiveSection }) => (
       전통과 현대가 어우러진 풍부한 맛을 전한다.
       강릉의 음식은 자연의 품 안에서 자란 삶의 기록이다.
     </p>
-
-    {/* 버튼 그룹: 음식점 / 스레드
-        - 버튼 클릭 시 부모에서 내려준 setActiveSection 함수를 호출해 상태 변경
-        - activeSection 상태에 따라 현재 활성화된 버튼은 노란색(yellow-btn), 비활성화는 흰색(white-btn)으로 스타일링됨
-    */}
-    <div className="desc-buttons">
-      <button
-        className={activeSection === "restaurants" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("restaurants")}
-      >
-        음식점
-      </button>
-      <button
-        className={activeSection === "posts" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("posts")}
-      >
-        스레드
-      </button>
-    </div>
   </div>
 );
 

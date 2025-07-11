@@ -14,13 +14,13 @@
 -------------------------------------------- */
 .map-description-container {
     display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    flex-wrap: wrap;
+    align-items: flex-start; /* 지도 + 버튼들이 위쪽 정렬 */
+    gap: 20px; /* 지도와 버튼 사이 간격 */
+    flex-wrap: wrap; /* 작으면 줄바꿈 */
 }
 
 #kakao-map {
-    border-radius: 10px;
+    border-radius: 10px; /* 지도 모서리 둥글게 */
 }
 
 /* -------------------------------------------
@@ -28,8 +28,8 @@
 -------------------------------------------- */
 .grid-buttons {
     display: grid;
-    grid-template-columns: repeat(2, 60px);
-    gap: 2px;
+    grid-template-columns: repeat(2, 60px); /* 2열 그리드 */
+    gap: 2px; /* 버튼 사이 간격 */
     background: #333;
     padding: 10px;
     border-radius: 20px;
@@ -43,12 +43,41 @@
     cursor: pointer;
     transition: background-color 0.2s;
 }
+/* 버튼 호버 시 */
 .grid-buttons button:hover {
     background-color: #FFCC00;
     color: #000;
 }
+/* 현재 선택된 도시 버튼 */
 .grid-buttons button.active {
     background-color: #FFCC00;
+    color: #000;
+}
+
+/* -------------------------------------------
+    음식점 / 스레드 탭 버튼
+-------------------------------------------- */
+.section-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+.tab-button {
+    background: #444;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.tab-button:hover {
+    background: #FFCC00;
+    color: #000;
+}
+/* 활성화된 탭 버튼 */
+.tab-button.active {
+    background: #FFCC00;
     color: #000;
 }
 
@@ -66,41 +95,23 @@
     font-size: 1.8em;
     margin-bottom: 10px;
     margin-right: 239px;
-    color: #9bd5fc;
+    color: #9bd5fc; /* 큰 제목 파란색 */
 }
 .description-area h2 span {
     font-size: 0.7em;
-    color: #ffffff;
+    color: #ffffff; /* 작은 텍스트 흰색 */
 }
 .description-area p {
     line-height: 1.5;
     margin-bottom: 20px;
     color: #ffffff;
 }
-.desc-buttons {
-    display: flex;
-    gap: 10px;
-}
-.desc-buttons .yellow-btn,
-.desc-buttons .white-btn {
-    background: #fff;
-    color: #000;
-    padding: 8px 20px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-.desc-buttons .yellow-btn:hover,
-.desc-buttons .white-btn:hover {
-    background: #FFCC00;
-}
 
 /* -------------------------------------------
     구분선
 -------------------------------------------- */
 .separator {
-    border-color: #383838;
+    border: none;
     margin: 10px 0;
 }
 
@@ -180,25 +191,20 @@
     배너 영역 - 위로 올라가는 슬라이드 모션
 -------------------------------------------- */
 .banner {
-    display: flex;
     justify-content: center;
     overflow: hidden;
-    height: 100px; /* 배너 높이 설정 */
+    height: 100px; /* 배너 높이 */
     margin-bottom: 20px;
 }
-
 .slides-container-vertical {
     display: flex;
-    flex-direction: column; /* 위로 쌓음 */
-    transition: transform .9s ease-in-out; /* 부드러운 모션 */
+    flex-direction: column;
+    transition: transform 1.9s ease-in-out;
 }
-
-/* 무한 반복 시 순간 이동용 */
+/* 무한 슬라이드를 위해 순간 이동 시 transition 제거 */
 .slides-container-vertical.no-transition {
     transition: none !important;
 }
-
-/* 배너 이미지 - 기존 스타일 유지 */
 .banner-img {
     width: 570px;
     height: auto;

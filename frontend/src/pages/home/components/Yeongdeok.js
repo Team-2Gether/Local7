@@ -20,24 +20,6 @@ const Yeongdeok = ({ activeSection, setActiveSection }) => (
       영덕의 맛은 바다와 사람의 깊은 교감에서 비롯된다.
     </p>
 
-    {/* 버튼 그룹
-        - activeSection 값에 따라 버튼 스타일 변경
-        - 버튼 클릭 시 setActiveSection 함수 호출로 상태 변경
-    */}
-    <div className="desc-buttons">
-      <button
-        className={activeSection === "restaurants" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("restaurants")}
-      >
-        음식점
-      </button>
-      <button
-        className={activeSection === "posts" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("posts")}
-      >
-        스레드
-      </button>
-    </div>
   </div>
 );
 

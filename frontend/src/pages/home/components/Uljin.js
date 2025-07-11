@@ -20,25 +20,6 @@ const Uljin = ({ activeSection, setActiveSection }) => (
       지역 음식 문화에 따뜻한 온기와 풍요를 더하고 있다.
       울진의 맛은 자연과 인간이 만들어낸 소중한 이야기다.
     </p>
-
-    {/* 버튼 그룹
-        - activeSection에 따라 버튼 스타일 변경
-        - 클릭 시 setActiveSection 호출하여 부모 상태 변경
-    */}
-    <div className="desc-buttons">
-      <button
-        className={activeSection === "restaurants" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("restaurants")}
-      >
-        음식점
-      </button>
-      <button
-        className={activeSection === "posts" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("posts")}
-      >
-        게시글
-      </button>
-    </div>
   </div>
 );
 

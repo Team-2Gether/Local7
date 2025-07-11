@@ -145,11 +145,11 @@ const HomeCardFeed = () => {
     setData(updated);
   };
 
-  // 카드별 총 좋아요 수 계산 (기본 좋아요 + 사용자 좋아요 합산)
+  // 카드별 총 좋아요 수 계산
   const getTotalLikes = (item) =>
     item.comments.reduce((sum, c) => sum + (likes[c.id] || c.likes), 0);
 
-  // 검색어 및 필터 조건에 따른 데이터 필터링 및 정렬
+  // 필터링 + 정렬
   const filteredData = data
     .filter((item) => item.name.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
@@ -162,9 +162,9 @@ const HomeCardFeed = () => {
     });
 
   return (
-    <div className="card-feed-container">
-      {/* 🔍 검색 + 필터 버튼 영역 */}
-      <div className="top-bar">
+    <div className="home-feed">
+      {/* 🔍 검색 + 필터 */}
+      <div className="search-filter-bar">
         <div className="search-bar">
           <input
             type="text"
@@ -197,13 +197,13 @@ const HomeCardFeed = () => {
         </div>
       </div>
 
-      {/* 🃏 카드 리스트 영역 */}
-      <div className="card-feed-grid">
+      {/* 🃏 카드 리스트 */}
+      <div className="restaurant-card-grid">
         {filteredData.map((item) => (
-          <div key={item.id} className="card">
-            {/* 카드 상단 : 이미지와 지도 */}
-            <div className="card-top">
-              <div className="card-image">
+          <div key={item.id} className="restaurant-card">
+            {/* 카드 상단 : 이미지 + 지도 */}
+            <div className="image-map-wrapper">
+              <div className="restaurant-image">
                 <img src={item.image} alt="thumbnail" />
                 <button
                   className="like-button"
@@ -212,13 +212,13 @@ const HomeCardFeed = () => {
                   {favorites[item.id] ? "♥" : "♡"}
                 </button>
               </div>
-              <div className="card-map">
+              <div className="restaurant-map">
                 <KakaoMap address={item.address} />
               </div>
             </div>
 
-            {/* 식당명, 주소 정보 */}
-            <div className="card-info">
+            {/* 식당명 + 주소 */}
+            <div className="restaurant-info">
               <div>
                 <strong>■ 식당명</strong>
                 <br />
@@ -231,22 +231,20 @@ const HomeCardFeed = () => {
               </div>
             </div>
 
-            {/* 댓글 목록 */}
-            <div className="card-comments">
+            {/* 댓글 리스트 */}
+            <div className="review-list">
               {item.comments.map((c) => (
-                <div className="comment" key={c.id}>
+                <div className="review-item" key={c.id}>
                   <img src={profile} alt="profile" className="profile" />
                   <span className="comment-id">{c.userId}</span>
 
-                  {/* 댓글 수정 모드일 경우 */}
                   {editingCommentId === c.id ? (
                     <>
                       <input
                         value={editingText}
                         onChange={(e) => setEditingText(e.target.value)}
                       />
-                      {/* 수정/취소 버튼 그룹 - comment-actions 클래스 적용 */}
-                      <div className="comment-actions">
+                      <div className="review-actions">
                         <button onClick={() => saveEditedComment(item.id, c.id)}>
                           저장
                         </button>
@@ -255,20 +253,18 @@ const HomeCardFeed = () => {
                     </>
                   ) : (
                     <>
-                      {/* 일반 댓글 표시 */}
                       <span className="comment-text">{c.text}</span>
-                       {/* 수정/삭제 버튼 그룹 - comment-actions 클래스 적용 */}
-                      <div className="comment-actions">
-                        <button onClick={() => startEditing(c.id, c.text)}>수정</button>
-                        <button onClick={() => deleteComment(item.id, c.id)}>삭제</button>
+                      <div className="review-actions">
+                        <button onClick={() => startEditing(c.id, c.text)}>
+                          수정
+                        </button>
+                        <button onClick={() => deleteComment(item.id, c.id)}>
+                          삭제
+                        </button>
                       </div>
-                      <span className="comment-like">
-                        {/* 좋아요 버튼 */}
+                      <span className="review-like">
                         <button onClick={() => likeComment(c.id)}>👍</button>{" "}
-                        {/* 좋아요 수 표시 */}
                         {likes[c.id] !== undefined ? likes[c.id] : c.likes}
-
-                        {/* 신고 버튼 */}
                         <button
                           onClick={() => reportComment(c.id)}
                           className="report-button"
@@ -277,23 +273,21 @@ const HomeCardFeed = () => {
                           신고
                         </button>
                       </span>
-
-                     
                     </>
                   )}
                 </div>
               ))}
             </div>
 
-            {/* 댓글 작성 영역 */}
-            <div className="card-footer">
+            {/* 댓글 입력 */}
+            <div className="review-input">
               <input
                 type="text"
                 value={commentInputs[item.id] || ""}
                 onChange={(e) => handleInputChange(item.id, e.target.value)}
                 placeholder="댓글달기"
               />
-              <button onClick={() => handleAddComment(item.id)}>리뷰작성</button>
+              <button onClick={() => handleAddComment(item.id)}>작성</button>
             </div>
           </div>
         ))}

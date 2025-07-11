@@ -18,25 +18,6 @@ const Goseong = ({ activeSection, setActiveSection }) => (
       그들의 삶과 정성은 음식 문화 속에 깊이 배어있다.
       고성의 맛은 자연과 인간이 함께 쌓아온 시간의 결실이다.
     </p>
-
-    {/* 버튼 영역
-        - activeSection 상태에 따라 활성 버튼은 yellow-btn, 비활성은 white-btn
-        - 클릭 시 부모에서 내려준 setActiveSection 호출하여 상태 변경
-    */}
-    <div className="desc-buttons">
-      <button
-        className={activeSection === "restaurants" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("restaurants")}
-      >
-        음식점
-      </button>
-      <button
-        className={activeSection === "posts" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("posts")}
-      >
-        스레드
-      </button>
-    </div>
   </div>
 );
 

@@ -18,25 +18,6 @@ const Sokcho = ({ activeSection, setActiveSection }) => (
       그들의 향수와 생활 방식이 음식 문화에 깊이 스며들어 있다.
       이곳의 음식은 단순한 맛을 넘어 역사와 삶의 이야기를 닮고 있다.
     </p>
-
-    {/* 버튼 그룹
-        - activeSection 값에 따라 버튼 스타일 변경
-        - 클릭 시 setActiveSection 함수 호출로 상태 변경
-    */}
-    <div className="desc-buttons">
-      <button
-        className={activeSection === "restaurants" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("restaurants")}
-      >
-        음식점
-      </button>
-      <button
-        className={activeSection === "posts" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("posts")}
-      >
-        스레드
-      </button>
-    </div>
   </div>
 );
 

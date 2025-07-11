@@ -18,25 +18,6 @@ const Samcheok = ({ activeSection, setActiveSection }) => (
       풍성한 맛과 따뜻한 이야기를 음식에 담아 전한다.
       삼척의 음식은 자연과 사람의 조화로운 삶의 흔적이다.
     </p>
-
-    {/* 버튼 그룹
-        - activeSection 상태에 따라 버튼 스타일 변경 (노란색/흰색)
-        - 클릭 시 setActiveSection 함수 호출하여 상태 변경
-    */}
-    <div className="desc-buttons">
-      <button
-        className={activeSection === "restaurants" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("restaurants")}
-      >
-        음식점
-      </button>
-      <button
-        className={activeSection === "posts" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("posts")}
-      >
-        스레드
-      </button>
-    </div>
   </div>
 );
 

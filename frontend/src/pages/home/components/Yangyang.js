@@ -19,25 +19,6 @@ const Yangyang = ({ activeSection, setActiveSection }) => (
       그 음식은 순수한 자연과 삶의 이야기를 담고 있다.
       양양의 맛은 자연과 인간이 함께 걸어온 길이다.
     </p>
-
-    {/* 버튼 그룹
-        - activeSection에 따라 버튼 스타일 변경
-        - 클릭 시 setActiveSection 호출해 부모 상태 변경
-    */}
-    <div className="desc-buttons">
-      <button
-        className={activeSection === "restaurants" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("restaurants")}
-      >
-        음식점
-      </button>
-      <button
-        className={activeSection === "posts" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("posts")}
-      >
-        스레드
-      </button>
-    </div>
   </div>
 );
 

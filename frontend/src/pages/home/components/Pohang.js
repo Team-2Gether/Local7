@@ -18,25 +18,6 @@ const Pohang = ({ activeSection, setActiveSection }) => (
       사람들은 바다의 신선한 선물과 열정을 음식으로 표현해 왔다.
       포항의 음식은 강인한 삶의 모습과 자연의 풍요로움을 닮았다.
     </p>
-
-    {/* 버튼 영역
-        - activeSection 값에 따라 버튼 스타일 동적 적용 (노란색/흰색)
-        - 클릭 시 setActiveSection 호출로 상태 변경
-    */}
-    <div className="desc-buttons">
-      <button
-        className={activeSection === "restaurants" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("restaurants")}
-      >
-        음식점
-      </button>
-      <button
-        className={activeSection === "posts" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("posts")}
-      >
-        스레드
-      </button>
-    </div>
   </div>
 );
 

@@ -18,25 +18,6 @@ const Gyeongju = ({ activeSection, setActiveSection }) => (
       음식은 그 시간을 잇는 매개체로서 과거와 현재의 이야기를 전한다.
       경주의 맛은 긴 시간 속에 쌓인 이야기의 향기다.
     </p>
-
-    {/* 버튼 영역
-        - activeSection 상태에 따라 활성 버튼은 yellow-btn, 비활성은 white-btn
-        - 클릭 시 부모에서 내려준 setActiveSection 호출하여 상태 변경
-    */}
-    <div className="desc-buttons">
-      <button
-        className={activeSection === "restaurants" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("restaurants")}
-      >
-        음식점
-      </button>
-      <button
-        className={activeSection === "posts" ? "yellow-btn" : "white-btn"}
-        onClick={() => setActiveSection("posts")}
-      >
-        스레드
-      </button>
-    </div>
   </div>
 );
 
