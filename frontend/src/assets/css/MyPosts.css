@@ -1,0 +1,125 @@
+/* src/assets/css/MyPosts.css */
+
+.my-posts-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    max-width: 800px; /* 적절한 최대 너비 설정 */
+    margin: 30px auto; /* 중앙 정렬 */
+    font-family: 'Arial', sans-serif; /* 일관된 폰트*/
+}
+
+.my-posts-title {
+    color: #333;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 2em;
+    border-bottom: 2px solid #eee; /* MyPage.css에 유사한 스타일이 있으므로 일관성 유지*/
+    padding-bottom: 15px;
+}
+
+/* 메시지 스타일 (로딩, 에러, 게시글 없음) */
+.loading-message,
+.error-message,
+.no-posts-message {
+    text-align: center;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.loading-message {
+    background-color: #e0f7fa;
+    color: #00796b;
+}
+
+.error-message {
+    background-color: #f8d7da; /* UserPage.css의 .message.error와 유사*/
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.no-posts-message {
+    background-color: #f0f0f0;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+/* 게시글 목록 스타일 */
+.post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.post-item {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.post-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.post-item h3 {
+    color: #007bff; /* MyPage.css의 .nav-link 색상과 유사하게*/
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+.post-item p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.post-meta {
+    font-size: 0.9em;
+    color: #888;
+    border-top: 1px dashed #e9e9e9;
+    padding-top: 10px;
+    margin-top: 15px;
+}
+
+/* 페이지네이션 컨트롤 스타일 */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.pagination-button {
+    background-color: #007bff; /* MyPage.css의 .nav-link.active 색상과 유사*/
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.pagination-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.pagination-button.active {
+    background-color: #0056b3; /* 현재 페이지 버튼은 더 진하게 */
+    font-weight: bold;
+}

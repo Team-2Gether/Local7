@@ -8,7 +8,6 @@ import Navbar from './components/Navbar';
 import Main from './pages/home/Main';
 import LoginForm from './pages/login/LoginForm';
 import NotFoundPage from './components/404page/NotFoundPage';
-
 import TermsOfServiceModal from './components/TermsOfServiceModal';
 import MyPage from './pages/user/MyPage';
 import UserPage from './pages/user/UserPage';

@@ -1,0 +1,35 @@
+/* UserInfoSection.css */
+.user-info-section {
+    flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-image-container {
+    margin-bottom: 20px;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ddd;
+}
+
+.user-details p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.user-details p strong {
+    color: #333;
+    width: 80px; /* 라벨 너비 고정 */
+    display: inline-block;
+}

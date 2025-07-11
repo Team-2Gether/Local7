@@ -78,34 +78,3 @@
 .links-container a:hover {
   color: #6a9cfd; /* Blue on hover for links */
 }
-
-.intro-button {
-  width: 100%;
-  max-width: 300px;
-  padding: 15px;
-  background-color: #ffc107; /* Yellow color for "사이트 소개 GO" button */
-  color: #000; /* Black text color */
-  border: none;
-  border-radius: 5px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: background-color 0.3s ease;
-}
-
-.intro-button span {
-  margin-right: 5px; /* Space between text and "GO" */
-}
-
-.intro-button .go-text {
-  font-size: 20px; /* Slightly larger "GO" */
-  font-weight: bolder;
-  margin-left: 5px;
-}
-
-.intro-button:hover {
-  background-color: #e0a800; /* Darker yellow on hover */
-}

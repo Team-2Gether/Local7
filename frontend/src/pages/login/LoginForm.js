@@ -3,7 +3,6 @@ import '../../assets/css/LoginForm.css';
 import AppLogo from './components/AppLogo';
 import LoginFormComponent from './components/LoginFormComponent';
 import LoginFormLinks from './components/LoginFormLinks';
-import IntroButton from './components/IntroButton';
 import useLogin from './hooks/useLogin';
 
 function LoginForm({ onLoginSuccess, onCloseModal, onOpenTermsModal }) { // onOpenTermsModal prop 추가
@@ -26,7 +25,6 @@ function LoginForm({ onLoginSuccess, onCloseModal, onOpenTermsModal }) { // onOp
         handleSubmit={handleSubmit}
       />
       <LoginFormLinks onCloseModal={onCloseModal} onOpenTermsModal={onOpenTermsModal} /> {/* onOpenTermsModal prop 전달 */}
-      <IntroButton />
     </div>
   );
 }

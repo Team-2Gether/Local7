@@ -77,7 +77,6 @@ function PostForm() {
         }
     };
 
-
     return (
         <div className="post-form-page">
             <div className="post-form-content-area">
