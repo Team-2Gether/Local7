@@ -2,10 +2,11 @@
     전체 레이아웃
 -------------------------------------------- */
 
+
 /* 전체를 좌측 사이드바 + 우측 본문 구조로 flex 배치 */
 .app-layout {
     display: flex;
-    height: 100vh;
+    /* height: 100vh; */
     background-color: #222; /* 전체 배경 어두운색 */
     color: #fff; /* 글씨 흰색 */
 }
