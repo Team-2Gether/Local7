@@ -384,13 +384,6 @@ function UserPage({ currentUser, onLogout }) { // onLogout prop 추가
             )}
 
             <div className="user-page-content"> {/* 새로운 div로 컨텐츠를 묶습니다. */}
-                <div className="user-page-navigation"> {/* 왼쪽에 배치될 네비게이션 섹션 */}
-                    <ul>
-                        <li><Link to="/mypage" className="nav-link">내 정보</Link></li> {/* MyPage 링크 추가 */}
-                        <li><Link to="/userpage" className="nav-link active">회원 정보 수정</Link></li> {/* UserPage 링크 (현재 페이지) */}
-                        {/* 다른 메뉴 항목들을 여기에 추가할 수 있습니다. */}
-                    </ul>
-                </div>
 
                 <div className="user-update-sections-wrapper"> {/* 기존 섹션들을 감싸는 div 추가 */}
                     

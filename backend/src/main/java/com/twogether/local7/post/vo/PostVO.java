@@ -23,6 +23,5 @@ public class PostVO {
     private String createdId;
     private LocalDateTime updatedDate;
     private String updatedId;
-
 }
 

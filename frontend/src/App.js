@@ -1,5 +1,6 @@
+// App.js
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom'; // Navigate 추가
 import axios from 'axios';
 import Modal from 'react-modal';
 
@@ -14,10 +15,12 @@ import UserPage from './pages/user/UserPage';
 import Sidebar from './components/Sidebar'; 
 import AiModal from './pages/ai/components/AiModal'; 
 
+
 import sea from './assets/images/sea.png';
 import ko from './assets/images/ko.png';
 import first from './assets/images/first.png';
 import './App.css';
+import MyPosts from './pages/user/MyPosts';
 
 Modal.setAppElement('#root');
 
@@ -148,21 +151,25 @@ function AppContent() {
                             </div>
                         )} />
 
+                        {/* MyPage와 그 자식 라우트들을 설정 */}
                         <Route path="/mypage" element={isLoggedIn ? (
                             <MyPage currentUser={currentUser} isLoggedIn={isLoggedIn} />
                         ) : (
                             <div className="initial-login-screen">
                                 로그인이 필요합니다. <button onClick={() => setIsLoginModalOpen(true)}>로그인</button>
                             </div>
-                        )} />
+                        )}>
+                            {/* MyPage 기본 경로로 접속 시 UserInfo 컴포넌트 렌더링 */}
+                            <Route index element={<UserInfo userData={currentUser} />} />
+                            {/* UserPage 링크에 연결될 라우트 (회원 정보 수정) */}
+                            <Route path="edit" element={<UserPage currentUser={currentUser} onLogout={handleLogout} />} /> {/* 실제 UserPage 컴포넌트로 대체 */}
+                            {/* 내가 쓴 글 라우트 */}
+                            <Route path="posts" element={<MyPosts />} />
+                        </Route>
 
-                        <Route path="/userpage" element={isLoggedIn ? (
-                            <UserPage currentUser={currentUser} onLogout={handleLogout} />
-                        ) : (
-                            <div className="initial-login-screen">
-                                로그인이 필요합니다. <button onClick={() => setIsLoginModalOpen(true)}>로그인</button>
-                            </div>
-                        )} />
+                        {/* 기존 UserPage 라우트는 /mypage/edit으로 이동했으므로 필요에 따라 제거하거나 리다이렉트 처리 */}
+                        <Route path="/userpage" element={<Navigate to="/mypage/edit" replace />} /> 
+
 
                         <Route path="/signup" element={<SignupForm />} />
 
@@ -197,6 +204,26 @@ function App() {
         <Router>
             <AppContent />
         </Router>
+    );
+}
+
+// App.js 내부에서 사용될 UserInfo 컴포넌트 정의 (MyPage.js에도 동일하게 정의되어 있어야 합니다.)
+function UserInfo({ userData }) {
+    if (!userData) return <p>사용자 정보를 불러올 수 없습니다.</p>;
+    return (
+        <div className="user-info-section">
+            <div className="profile-image-container">
+                <img src={userData.userProfileImageUrl || 'https://via.placeholder.com/150'} alt="프로필 이미지" className="profile-image" />
+            </div>
+            <div className="user-details">
+                <p><strong>아이디:</strong> {userData.userLoginId}</p>
+                <p><strong>닉네임:</strong> {userData.userNickname}</p>
+                <p><strong>이메일:</strong> {userData.userEmail}</p>
+                <p><strong>이름:</strong> {userData.userName}</p>
+                <p><strong>소개:</strong> {userData.userBio || '작성된 소개가 없습니다.'}</p>
+                <p><strong>가입일:</strong> {new Date(userData.createDate).toLocaleDateString()}</p>
+            </div>
+        </div>
     );
 }
 
