@@ -108,7 +108,7 @@ function AppContent() {
             setIsAiModalOpen(false);
 
             if (item === 'home') navigate('/');
-            else if (item === 'restaurants') navigate('/');
+            else if (item === 'restaurants') navigate('/restaurants');
             else if (item === 'posts') navigate('/posts');
             else if (item === 'add') navigate('/posts/new');
             else if (item === 'mypage') navigate('/mypage');
