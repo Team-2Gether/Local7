@@ -2,7 +2,7 @@ import React from "react";
 
 const Ulsan = () => (
     <div className="description-area">
-        <h2>울산<span>__ULSAN</span></h2>
+        <h2>울산<span><br></br>__ULSAN</span></h2>
         <p>
         울산은 산업과 자연이 공존하는 도시다.
         바다와 공장의 굉음 속에서도 사람들은 서로를 돌보며,

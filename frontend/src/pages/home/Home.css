@@ -2,34 +2,23 @@
     전체 레이아웃
 -------------------------------------------- */
 
-
 /* 전체를 좌측 사이드바 + 우측 본문 구조로 flex 배치 */
 .app-layout {
     display: flex;
-    /* height: 100vh; */
     background-color: #222; /* 전체 배경 어두운색 */
     color: #fff; /* 글씨 흰색 */
 }
 
-/* 사이드바 옆 본문 영역 */
-.main-content-area {
-    /* 현재 별도 설정은 없지만, 필요한 경우 여기에 */
-}
-
-
 /* -------------------------------------------
-    지도 + 버튼 + 설명 묶음 (가로로 나열)
+    지도 + 버튼 + 설명 묶음
 -------------------------------------------- */
 .map-description-container {
     display: flex;
-    align-items: flex-start; /* 위쪽 기준 정렬 */
-    gap: 20px; /* 요소 간 간격 */
-    flex-wrap: wrap; /* 줄 바꿈 허용 */
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
-/* -------------------------------------------
-    카카오 지도
--------------------------------------------- */
 #kakao-map {
     border-radius: 10px;
 }
@@ -39,14 +28,12 @@
 -------------------------------------------- */
 .grid-buttons {
     display: grid;
-    grid-template-columns: repeat(2, 60px); /* 2열 배치, 너비 60px */
-    gap: 4px;
+    grid-template-columns: repeat(2, 60px);
+    gap: 2px;
     background: #333;
     padding: 10px;
     border-radius: 20px;
 }
-
-/* 각 도시 버튼 스타일 */
 .grid-buttons button {
     background-color: #333;
     color: #ffffff;
@@ -56,58 +43,44 @@
     cursor: pointer;
     transition: background-color 0.2s;
 }
-
-/* hover 시 색상 변경 */
 .grid-buttons button:hover {
     background-color: #FFCC00;
     color: #000;
 }
-
-/* ✅ active(선택된) 버튼 유지 스타일 */
 .grid-buttons button.active {
     background-color: #FFCC00;
     color: #000;
 }
 
 /* -------------------------------------------
-    설명 영역 (도시 이름, 설명글, 버튼)
+    설명 영역
 -------------------------------------------- */
 .description-area {
     display: flex;
-    flex-direction: column; /* 세로 배치 */
+    flex-direction: column;
     justify-content: center;
-    padding-left: 30px; /* 왼쪽과 거리 두기 */
-    max-width: 400px; /* 최대 폭 제한 */
+    padding-left: 30px;
+    max-width: 400px;
 }
-
-/* 도시 이름 */
 .description-area h2 {
     font-size: 1.8em;
     margin-bottom: 10px;
     margin-right: 239px;
-    color: #18A0FB; /* 파란색 포인트 */
+    color: #9bd5fc;
 }
-
-/* 영어 이름 (작게) */
 .description-area h2 span {
     font-size: 0.7em;
     color: #ffffff;
 }
-
-/* 도시 설명 텍스트 */
 .description-area p {
     line-height: 1.5;
     margin-bottom: 20px;
     color: #ffffff;
 }
-
-/* 설명 하단 버튼 그룹 */
 .desc-buttons {
     display: flex;
-    gap: 10px; /* 버튼 간격 */
+    gap: 10px;
 }
-
-/* 맛집, 게시글 버튼 공통 */
 .desc-buttons .yellow-btn,
 .desc-buttons .white-btn {
     background: #fff;
@@ -118,8 +91,6 @@
     cursor: pointer;
     transition: background-color 0.2s;
 }
-
-/* hover 시 색상 변경 */
 .desc-buttons .yellow-btn:hover,
 .desc-buttons .white-btn:hover {
     background: #FFCC00;
@@ -129,40 +100,34 @@
     구분선
 -------------------------------------------- */
 .separator {
-    border-color: #faf2f2;
-    margin: 30px 0;
+    border-color: #383838;
+    margin: 10px 0;
 }
 
 /* -------------------------------------------
-    사진 strip (가로 나열)
+    사진 strip
 -------------------------------------------- */
 .photo-strip-line {
     display: flex;
     gap: 30px;
     flex-wrap: wrap;
 }
-
-/* 사진 아이템 */
 .photo-strip-line img {
     width: 23%;
     border-radius: 8px;
     transition: transform 0.3s;
 }
-
-/* hover 시 확대 효과 */
 .photo-strip-line img:hover {
     transform: scale(1.05);
 }
 
 /* -------------------------------------------
-    기존 검색, 홈 레이아웃 유지
+    기존 검색, 모달
 -------------------------------------------- */
 .home-container {
     padding: 20px;
     text-align: center;
 }
-
-/* 지도 포함 컨테이너 (예전 스타일) */
 .map-container {
     width: 800px;
     height: 600px;
@@ -171,18 +136,12 @@
     border-radius: 8px;
     overflow: hidden;
 }
-
-/* -------------------------------------------
-    검색 입력 UI
--------------------------------------------- */
 .search-area {
     margin-bottom: 20px;
     display: flex;
     justify-content: center;
     gap: 10px;
 }
-
-/* 입력창 */
 .search-input {
     padding: 10px 15px;
     border: 1px solid #ccc;
@@ -191,8 +150,6 @@
     max-width: 400px;
     font-size: 1em;
 }
-
-/* 검색 버튼 */
 .search-button {
     padding: 10px 15px;
     background-color: #007bff;
@@ -203,40 +160,46 @@
     font-size: 1em;
     transition: background-color 0.2s ease;
 }
-
-/* hover 시 색상 */
 .search-button:hover {
     background-color: #0056b3;
 }
-
-/* reset 버튼 */
 .search-button.reset-button {
     background-color: #6c757d;
 }
-
-/* reset hover */
 .search-button.reset-button:hover {
     background-color: #5a6268;
 }
-
-/* -------------------------------------------
-    AI 모달 (z-index)
--------------------------------------------- */
 .ReactModal__Overlay {
     z-index: 2000 !important;
 }
-
 .ReactModal__Content {
     z-index: 2001 !important;
 }
-/*배너 사진*/
+
+/* -------------------------------------------
+    배너 영역 - 위로 올라가는 슬라이드 모션
+-------------------------------------------- */
 .banner {
     display: flex;
     justify-content: center;
+    overflow: hidden;
+    height: 100px; /* 배너 높이 설정 */
     margin-bottom: 20px;
 }
+
+.slides-container-vertical {
+    display: flex;
+    flex-direction: column; /* 위로 쌓음 */
+    transition: transform 0.9s ease-in-out; /* 부드러운 모션 */
+}
+
+/* 무한 반복 시 순간 이동용 */
+.slides-container-vertical.no-transition {
+    transition: none !important;
+}
+
+/* 배너 이미지 - 기존 스타일 유지 */
 .banner-img {
     width: 570px;
     height: auto;
-    border-radius: 0px;
 }

@@ -2,7 +2,7 @@ import React from "react";
 
 const Sokcho = () => (
     <div className="description-area">
-        <h2>속초<span>__SOKCHO</span></h2>
+        <h2>속초<span><br></br>__SOKCHO</span></h2>
         <p>
         속초는 6.25 전쟁 당시 북한에서 내려온 피란민들이 정착한 곳으로,
         그들의 향수와 생활 방식이 음식 문화에 깊이 스며들어 있다.

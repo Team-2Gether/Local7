@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import banner1 from "../../assets/images/banner.png";
 import banner2 from "../../assets/images/banner2.png";
+import banner3 from "../../assets/images/banner3.png";
+import banner4 from "../../assets/images/banner4.png";
 
-// 도시별 컴포넌트 import
+// 도시 컴포넌트 import
 import Seven from "./components/Seven";
 import Busan from "./components/Busan";
 import Donghae from "./components/Donghae";
@@ -24,7 +26,12 @@ function Home() {
   const [selectedCity, setSelectedCity] = useState("속초");
   const [mapObj, setMapObj] = useState(null);
 
+  // ✅ 배너 슬라이드 상태
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slideCount = 3; // 위로 올라갈 div 묶음 개수
+
   useEffect(() => {
+    // ✅ 카카오 지도 로딩
     const script = document.createElement("script");
     script.src =
       "//dapi.kakao.com/v2/maps/sdk.js?appkey=690813b8710fce175e3acf9121422624&libraries=services";
@@ -39,53 +46,21 @@ function Home() {
       const map = new window.kakao.maps.Map(container, options);
       setMapObj(map);
 
-      // 도시들 데이터
       const cityPoints = [
-        { name: "고성", latlng: new window.kakao.maps.LatLng(38.38, 128.4676) },
-        {
-          name: "속초",
-          latlng: new window.kakao.maps.LatLng(38.2104, 128.5913),
-        },
-        {
-          name: "양양",
-          latlng: new window.kakao.maps.LatLng(38.0768, 128.6199),
-        },
-        {
-          name: "강릉",
-          latlng: new window.kakao.maps.LatLng(37.752, 128.8761),
-        },
-        {
-          name: "동해",
-          latlng: new window.kakao.maps.LatLng(37.5224, 129.1147),
-        },
-        {
-          name: "삼척",
-          latlng: new window.kakao.maps.LatLng(37.4475, 129.1651),
-        },
-        {
-          name: "울진",
-          latlng: new window.kakao.maps.LatLng(36.9932, 129.4005),
-        },
-        {
-          name: "영덕",
-          latlng: new window.kakao.maps.LatLng(36.3504, 129.3657),
-        },
-        { name: "포항", latlng: new window.kakao.maps.LatLng(35.9982, 129.4) },
-        {
-          name: "경주",
-          latlng: new window.kakao.maps.LatLng(35.8562, 129.2246),
-        },
-        {
-          name: "울산",
-          latlng: new window.kakao.maps.LatLng(35.5396, 129.311),
-        },
-        {
-          name: "부산",
-          latlng: new window.kakao.maps.LatLng(35.1796, 129.0756),
-        },
+        {name: "고성",latlng: new window.kakao.maps.LatLng(38.38, 128.4676)},
+        {name: "속초",latlng: new window.kakao.maps.LatLng(38.2104, 128.5913)},
+        {name: "양양",latlng: new window.kakao.maps.LatLng(38.0768, 128.6199)},
+        {name: "강릉",latlng: new window.kakao.maps.LatLng(37.752, 128.8761)},
+        {name: "동해",latlng: new window.kakao.maps.LatLng(37.5224, 129.1147)},
+        {name: "삼척",latlng: new window.kakao.maps.LatLng(37.4475, 129.1651)},
+        {name: "울진",latlng: new window.kakao.maps.LatLng(36.9932, 129.4005)},
+        {name: "영덕",latlng: new window.kakao.maps.LatLng(36.3504, 129.3657)},
+        {name: "포항",latlng: new window.kakao.maps.LatLng(35.9982, 129.4)},
+        {name: "경주",latlng: new window.kakao.maps.LatLng(35.8562, 129.2246)},
+        {name: "울산",latlng: new window.kakao.maps.LatLng(35.5396, 129.311)},
+        {name: "부산",latlng: new window.kakao.maps.LatLng(35.1796, 129.0756)},
       ];
 
-      // 경로 선
       const linePath = cityPoints.map((c) => c.latlng);
       const polyline = new window.kakao.maps.Polyline({
         path: linePath,
@@ -96,26 +71,13 @@ function Home() {
       });
       polyline.setMap(map);
 
-      // 각 도시 사각형
       cityPoints.forEach((city) => {
         const delta = 0.03;
         const polygonPath = [
-          new window.kakao.maps.LatLng(
-            city.latlng.getLat() - delta,
-            city.latlng.getLng() - delta
-          ),
-          new window.kakao.maps.LatLng(
-            city.latlng.getLat() - delta,
-            city.latlng.getLng() + delta
-          ),
-          new window.kakao.maps.LatLng(
-            city.latlng.getLat() + delta,
-            city.latlng.getLng() + delta
-          ),
-          new window.kakao.maps.LatLng(
-            city.latlng.getLat() + delta,
-            city.latlng.getLng() - delta
-          ),
+          new window.kakao.maps.LatLng(city.latlng.getLat() - delta, city.latlng.getLng() - delta),
+          new window.kakao.maps.LatLng(city.latlng.getLat() - delta, city.latlng.getLng() + delta),
+          new window.kakao.maps.LatLng(city.latlng.getLat() + delta, city.latlng.getLng() + delta),
+          new window.kakao.maps.LatLng(city.latlng.getLat() + delta, city.latlng.getLng() - delta),
         ];
 
         const polygon = new window.kakao.maps.Polygon({
@@ -133,10 +95,26 @@ function Home() {
     document.head.appendChild(script);
   }, []);
 
-  // 지도 중심 이동
+  // ✅ 슬라이드 자동 이동
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => prev + 1);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // ✅ 마지막 슬라이드 시 순간 이동
+  useEffect(() => {
+    if (currentSlide === slideCount) {
+      const timeout = setTimeout(() => {
+        setCurrentSlide(0);
+      }, 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [currentSlide]);
+
   const handleCityClick = (city) => {
     setSelectedCity(city);
-
     if (mapObj) {
       if (city === "전체") {
         mapObj.setCenter(new window.kakao.maps.LatLng(36.5, 127.75));
@@ -167,34 +145,36 @@ function Home() {
     <div className="app-layout">
       <div className="main-content-area">
         <div className="dark-box">
-          {/* 배너 */}
+
+          {/* ✅ 배너 영역 - 기존 가로 배치 유지 */}
           <div className="banner">
-            <img src={banner1} alt="배너1" className="banner-img" />
-            <img src={banner2} alt="배너2" className="banner-img" />
+            <div
+              className={`slides-container-vertical ${currentSlide === slideCount ? 'no-transition' : ''}`}
+              style={{ transform: `translateY(-${currentSlide * 105}px)` }}
+            >
+              <div style={{ display: "flex" }}>
+                <img src={banner1} alt="배너1" className="banner-img" />
+                <img src={banner2} alt="배너2" className="banner-img" />
+              </div>
+              <div style={{ display: "flex" }}>
+                <img src={banner3} alt="배너3" className="banner-img" />
+                <img src={banner4} alt="배너4" className="banner-img" />
+              </div>
+              <div style={{ display: "flex" }}>
+                <img src={banner1} alt="복제1" className="banner-img" />
+                <img src={banner2} alt="복제2" className="banner-img" />
+              </div>
+            </div>
           </div>
 
+          {/* ✅ 지도 + 버튼 + 도시별 컴포넌트 */}
           <div className="map-description-container">
             <div
               id="kakao-map"
-              style={{ width: "380px", height: "300px", borderRadius: "20px" }}
+              style={{ width: "380px", height: "300px", borderRadius: "100px" }}
             ></div>
-
             <div className="grid-buttons">
-              {[
-                "전체",
-                "고성",
-                "속초",
-                "양양",
-                "강릉",
-                "동해",
-                "삼척",
-                "울진",
-                "영덕",
-                "포항",
-                "경주",
-                "울산",
-                "부산",
-              ].map((city, idx) => (
+              {["전체","고성","속초","양양","강릉","동해","삼척","울진","영덕","포항","경주","울산","부산"].map((city, idx) => (
                 <button
                   key={idx}
                   className={selectedCity === city ? "active" : ""}
@@ -205,7 +185,6 @@ function Home() {
               ))}
             </div>
 
-            {/* 도시별 소개 컴포넌트 */}
             {selectedCity === "전체" && <Seven />}
             {selectedCity === "부산" && <Busan />}
             {selectedCity === "동해" && <Donghae />}

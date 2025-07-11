@@ -2,7 +2,7 @@ import React from "react";
 
 const Pohang = () => (
     <div className="description-area">
-        <h2>포항<span>__POHANG</span></h2>
+        <h2>포항<span><br></br>__POHANG</span></h2>
         <p>
         포항은 바다와 산업이 함께 어우러진 도시다.
         활기찬 항구와 굳건한 철강 산업 속에서,
