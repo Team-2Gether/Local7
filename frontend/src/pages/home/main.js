@@ -1,3 +1,4 @@
+// src/pages/Main.js
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Routes, Route } from 'react-router-dom';
@@ -20,7 +21,6 @@ function Main({ currentUser }) {
     const mapContainerRef = useRef(null);
     const mapInstanceRef = useRef(null);
 
-    // 지도 로딩
     useEffect(() => {
         if (window.kakao && window.kakao.maps) {
             initializeMapAndLoadData();
@@ -58,7 +58,6 @@ function Main({ currentUser }) {
         const map = new window.kakao.maps.Map(container, options);
         mapInstanceRef.current = map;
 
-        // 현재 위치
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
                 const locPosition = new window.kakao.maps.LatLng(
@@ -70,7 +69,6 @@ function Main({ currentUser }) {
             });
         }
 
-        // 음식점 불러오기
         axios.get('http://localhost:8080/api/restaurants')
             .then((response) => {
                 if (response.data?.status === 'success') {
@@ -131,7 +129,6 @@ function Main({ currentUser }) {
                 <Route path="/pick" element={<RestaurantVote currentUser={currentUser} />} />
             </Routes>
 
-            {/* 상세 모달 */}
             {selectedRestaurant && (
                 <RestaurantDetailModal
                     isOpen={isDetailModalOpen}
