@@ -1,9 +1,8 @@
-// src/pages/post/PostDetail.js
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import usePosts from '../../pages/post/hooks/usePost';
-import '../../assets/css/post.css'; // 기존 post.css 재활용
-import './PostDetail.css'; // MyPosts.css와 유사한 스타일을 위한 새 CSS
+import usePosts from '../hooks/usePost';
+import '../../../assets/css/post.css'; // 기존 post.css 재활용
+import '../../../assets/css/PostDetail.css'; // MyPosts.css와 유사한 스타일을 위한 새 CSS
 
 function PostDetail() {
     const { id } = useParams();
@@ -52,6 +51,32 @@ function PostDetail() {
                     <div className="post-detail-content">
                         <p>{post.postContent}</p>
                     </div>
+
+                    {/* post.images 배열이 있을 경우 (여러 이미지) */}
+                    {post.images && post.images.length > 0 && (
+                        <div className="post-detail-images">
+                            {post.images.map((image, index) => (
+                                <img
+                                    key={index}
+                                    src={`http://localhost:8080${image.imageUrl}`}
+                                    alt={`게시글 이미지 ${index + 1}`}
+                                    className="post-detail-image"
+                                />
+                            ))}
+                        </div>
+                    )}
+                    {/* firstImageUrl만 있는 경우 (images 배열이 비어있거나 없는 경우) */}
+                    {(!post.images || post.images.length === 0) && post.firstImageUrl && (
+                        <div className="post-detail-images">
+                            <img
+                                src={`http://localhost:8080${post.firstImageUrl}`}
+                                alt="게시글 대표 이미지"
+                                className="post-detail-image"
+                            />
+                        </div>
+                    )}
+
+
                     {post.locationTag && <p className="post-detail-location-tag">위치 태그: {post.locationTag}</p>}
                     <div className="post-detail-actions">
                         <button

@@ -64,7 +64,7 @@ function MyPosts() {
                     <ul className="post-list">
                         {posts.map((post) => (
                             <li key={post.postId} className="post-item">
-                                <Link to={`/post/${post.postId}`} className="post-link">
+                                <Link to={`/posts/${post.postId}`} className="post-link">
                                     <h3 className="post-item-title">{post.postTitle}</h3>
                                     <p className="post-item-date">{new Date(post.createdDate).toLocaleDateString()}</p>
                                 </Link>

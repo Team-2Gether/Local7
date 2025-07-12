@@ -36,6 +36,10 @@ function PostList({ currentUser }) {
         }
     }, [message, setMessage]);
 
+     const handlePostClick = (postId) => {
+        navigate(`/posts/${postId}`); // postId를 포함한 URL로 이동
+    };
+
     if (loading) return <div className="loading-message">게시글 로딩 중...</div>;
     if (error) return <div className="error-message">오류: {error}</div>;
 
@@ -59,7 +63,7 @@ function PostList({ currentUser }) {
                         {posts.map((post) => (
                             <li key={post.postId} className="post-card">
                                 {/* 게시글 상세 페이지로 이동 링크 */}
-                                <div onClick={() => navigate(`/posts/${post.postId}`)} style={{ cursor: 'pointer' }}>
+                                <div onClick={() => handlePostClick(post.postId)} style={{ cursor: 'pointer' }}>
                                     {/* 이미지 미리보기 추가 */}
                                     {post.firstImageUrl && (
                                         <div className="post-thumbnail">
@@ -90,13 +94,17 @@ function PostList({ currentUser }) {
                                     {currentUser && currentUser.userId === post.userId && (
                                         <>
                                             <button
-                                                onClick={() => navigate(`/posts/edit/${post.postId}`)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    navigate(`/posts/edit/${post.postId}`)}}
                                                 className="post-action-button edit"
                                             >
                                                 수정
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(post.postId)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDelete(post.postId)}}
                                                 className="post-action-button delete"
                                             >
                                                 삭제
