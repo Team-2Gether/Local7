@@ -25,6 +25,7 @@ public class PostVO {
     private String updatedId;
 
     private String userNickname;
+    private String firstImageUrl;
 
     private List<ImageVO> images;
 

@@ -1,31 +1,37 @@
+/* 전체 페이지 컨테이너 (게시글 상세/작성 페이지용) */
 .post-container {
     padding: 20px;
-    max-width: 800px; 
-    margin: 0 auto;
+    max-width: 800px;
+    margin: 20px auto; 
     border: 1px solid #eee;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    background-color: #fff; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
 }
 
-/* 제목 스타일 */
+/* 게시글 제목 (상세/작성 페이지용) */
 .post-title-heading {
     text-align: center;
     margin-bottom: 25px;
     color: #333;
+    font-size: 2em; 
+    border-bottom: 1px solid #eee; 
+    padding-bottom: 15px;
 }
 
 /* 메시지 (성공/에러) 스타일 */
 .post-message {
-    color: green;
+    color: #28a745; 
     text-align: center;
     margin-bottom: 15px;
+    font-weight: bold;
 }
 
 .post-error {
-    color: red;
+    color: #dc3545;
     text-align: center;
     margin-bottom: 15px;
+    font-weight: bold;
 }
 
 /* 폼 그룹 */
@@ -37,6 +43,7 @@
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+    color: #555;
 }
 
 .form-input,
@@ -45,20 +52,25 @@
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
+    font-size: 1em;
 }
 
 .form-textarea {
-    resize: vertical; 
+    resize: vertical;
+    min-height: 100px; 
 }
 
 /* 체크박스 그룹 */
 .checkbox-group {
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
 }
 
 .checkbox-input {
     margin-right: 8px;
+    transform: scale(1.2);
 }
 
 /* 버튼 공통 스타일 */
@@ -70,12 +82,18 @@
     cursor: pointer;
     font-size: 1.1em;
     width: 100%;
-    transition: background-color 0.2s ease;
+    margin-top: 5px; 
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .post-button:disabled {
-    opacity: 0.7;
+    opacity: 0.6;
     cursor: not-allowed;
+    background-color: #cccccc !important; 
+}
+
+.post-button:active {
+    transform: translateY(1px);
 }
 
 /* 게시글 작성/수정 버튼 */
@@ -90,15 +108,14 @@
 /* 목록으로 돌아가기 버튼 */
 .post-back-button {
     background-color: #6c757d;
-    margin-top: 10px;
 }
 
 .post-back-button:hover {
     background-color: #5a6268;
 }
 
-/* 새 게시글 작성 버튼 */
-.create-post-button {
+/* 새 게시글 작성 버튼 (PostList 상단) */
+.create-button { 
     padding: 10px 20px;
     background-color: #28a745;
     color: white;
@@ -107,60 +124,137 @@
     cursor: pointer;
     margin-bottom: 20px;
     transition: background-color 0.2s ease;
+    display: inline-block; 
+    width: auto; 
 }
 
-.new-post-button:hover {
+.create-button:hover {
     background-color: #218838;
 }
 
-/* 게시글 목록 */
-.post-list {
+/* 게시글 목록 컨테이너 (PostList.js) */
+.post-list-container {
+    padding: 20px;
+    max-width: 1200px; 
+    margin: 20px auto;
+}
+
+.post-list-title {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 2.5em;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 20px;
+}
+
+.post-actions-top {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+/* 게시글 그리드 레이아웃 */
+.post-grid { 
     list-style-type: none;
     padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 25px; 
 }
 
-/* 게시글 항목 */
-.post-list-item {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+/* 게시글 카드 항목 */
+.post-card { 
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    margin-bottom: 0; 
+    padding: 20px; 
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
 }
 
-.post-list-item h3 {
-    margin: 0 0 10px 0;
+.post-card:hover {
+    transform: translateY(-8px); 
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+}
+
+.post-card-title { 
+    font-size: 1.5em;
+    margin: 15px 0 10px 0;
     color: #333;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-.post-list-item .notice-tag {
-    margin-left: 10px;
-    font-size: 0.8em;
-    color: #007bff;
+.post-card-content { 
+    font-size: 0.95em;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    flex-grow: 1; 
 }
 
-.post-list-item .post-meta {
-    font-size: 0.9em;
-    color: #666;
+.post-card-meta { 
+    font-size: 0.85em;
+    color: #777;
     margin-bottom: 5px;
 }
 
-.post-list-item .post-content-preview {
-    font-size: 1em;
-    color: #444;
-    line-height: 1.5;
+.post-card .location-tag {
+    font-size: 0.85em;
+    color: #999;
+    margin-top: 5px;
 }
 
-.post-list-item .location-tag {
-    font-size: 0.9em;
+.post-card .notice-tag {
+    margin-left: 10px;
+    font-size: 0.8em;
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* 게시글 카드 내 이미지 미리보기 */
+.post-thumbnail {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+}
+
+.thumbnail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.post-thumbnail-placeholder {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e0e0e0;
     color: #888;
+    font-size: 14px;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
-.post-list-item-actions {
+.post-card-actions {
     margin-top: 15px;
     border-top: 1px solid #eee;
-    padding-top: 10px;
+    padding-top: 15px;
+    display: flex;
+    justify-content: flex-end; 
+    gap: 10px; 
 }
 
 /* 수정/삭제 버튼 */
@@ -171,11 +265,11 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    font-size: 0.9em;
 }
 
 .post-action-button.edit {
     background-color: #007bff;
-    margin-right: 10px;
 }
 
 .post-action-button.edit:hover {
@@ -191,29 +285,52 @@
 }
 
 /* 로딩/에러 메시지 스타일 */
-.post-loading,
-.post-error-message {
+.loading-message, 
+.error-message { 
     text-align: center;
     padding: 20px;
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
-.post-error-message {
+.error-message {
     color: red;
 }
+
+.success-message { /* PostList.js에 사용된 클래스명 */
+    color: green;
+    text-align: center;
+    padding: 10px;
+    background-color: #e6ffe6;
+    border: 1px solid #cce6cc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
 
 /* 게시글 없음 메시지 */
 .no-posts-message {
     text-align: center;
+    font-size: 1.1em;
+    color: #777;
+    padding: 30px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    margin-top: 20px;
 }
 
+/* 파일 입력 필드 */
 .form-input-file {
     margin-top: 10px;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
     background-color: #f8f8f8;
+    width: 100%;
+    box-sizing: border-box;
 }
 
+/* 이미지 미리보기 컨테이너 (PostForm 내) */
 .image-preview-container {
     margin-top: 20px;
     border-top: 1px solid #eee;
@@ -223,7 +340,8 @@
 .image-preview-container h4 {
     margin-bottom: 10px;
     color: #555;
-    font-size: 1em;
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
 .image-thumbnails {
@@ -246,12 +364,6 @@
     background-color: #f0f0f0;
 }
 
-.thumbnail-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
 .remove-image-button {
     position: absolute;
     top: 2px;
@@ -268,7 +380,8 @@
     align-items: center;
     cursor: pointer;
     padding: 0;
-    line-height: 1; 
+    line-height: 1;
+    z-index: 10; 
 }
 
 .remove-image-button:hover {
@@ -282,8 +395,9 @@
     margin-bottom: 15px;
 }
 
+/* 게시글 상세 페이지 이미지 갤러리 */
 .post-images-preview {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -291,59 +405,53 @@
 
 .post-main-image {
     width: 100%;
-    max-height: 250px;
-    object-fit: cover;
+    max-height: 350px; 
+    object-fit: contain; 
+    background-color: #f8f8f8; 
     border-radius: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .post-thumbnail-gallery {
     display: flex;
-    gap: 8px;
+    gap: 10px; 
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
 }
 
 .post-sub-image {
-    width: 80px;
-    height: 80px;
+    width: 90px; 
+    height: 90px;
     object-fit: cover;
     border-radius: 4px;
-    border: 1px solid #ddd;
+    border: 2px solid transparent; 
     cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.post-sub-image.active,
+.post-sub-image:hover {
+    border-color: #007bff; 
 }
 
 .more-images-overlay {
-    width: 80px;
-    height: 80px;
-    background-color: rgba(0, 0, 0, 0.5);
+    width: 90px; 
+    height: 90px;
+    background-color: rgba(0, 0, 0, 0.6); 
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 4px;
-    font-size: 1.2em;
+    font-size: 1.3em;
     cursor: pointer;
+    border: 2px solid transparent;
+    transition: background-color 0.2s ease;
 }
 
-.post-list-item {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    padding: 25px;
-    transition: transform 0.2s ease-in-out;
-    width: 100%; 
-    max-width: 600px; 
-    box-sizing: border-box; 
-}
-
-/* 게시글 내용과 이미지 간의 간격 조정 */
-.post-title {
-    margin-top: 15px; 
-    margin-bottom: 10px;
-    cursor: pointer;
+.more-images-overlay:hover {
+    background-color: rgba(0, 0, 0, 0.8);
 }

@@ -109,7 +109,7 @@ public class PostController {
                         Path filePath = uploadPath.resolve(uniqueFileName);
                         Files.copy(file.getInputStream(), filePath);
 
-                        String fileUrl = "/images/post_uploads/" + uniqueFileName;
+                        String fileUrl = "/uploads/" + uniqueFileName;
                         imageUrls.add(fileUrl);
                     }
                 }
@@ -187,7 +187,7 @@ public class PostController {
                         Path filePath = uploadPath.resolve(uniqueFileName);
                         Files.copy(file.getInputStream(), filePath);
 
-                        String fileUrl = "/images/post_uploads/" + uniqueFileName;
+                        String fileUrl = "/uploads/" + uniqueFileName;
                         imageUrls.add(fileUrl);
                     }
                 }
