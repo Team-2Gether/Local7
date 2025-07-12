@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
@@ -15,10 +14,7 @@ import UserPage from './pages/user/UserPage';
 import Sidebar from './components/Sidebar';
 import AiModal from './pages/ai/components/AiModal';
 
-// 새로 추가되거나 기존 라우트에 사용될 게시글 관련 컴포넌트들을 import 합니다.
-// 경로는 프로젝트 구조에 맞게 반드시 확인하고 수정해주세요.
 import PostForm from './pages/post/PostForm'; //
-
 
 import sea from './assets/images/sea.png';
 import ko from './assets/images/ko.png';
