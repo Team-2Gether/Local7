@@ -4,7 +4,6 @@
 
 <mapper namespace="com.twogether.local7.post.dao.PostDAO">
 
-    <!-- PostVO와 DB 컬럼 매핑 -->
     <resultMap id="postResultMap" type="com.twogether.local7.post.vo.PostVO">
         <id property="postId" column="POST_ID"/>
         <result property="userId" column="USER_ID"/>
@@ -17,29 +16,47 @@
         <result property="createdId" column="CREATED_ID"/>
         <result property="updatedDate" column="UPDATED_DATE"/>
         <result property="updatedId" column="UPDATED_ID"/>
+        <result property="userNickname" column="USER_NICKNAME"/>
+
+        <collection property="images" ofType="com.twogether.local7.post.vo.ImageVO">
+            <id property="imageId" column="IMAGE_ID"/>
+            <result property="postId" column="P_IMAGE_POST_ID"/> <result property="imageUrl" column="IMAGE_URL"/>
+            <result property="createdDate" column="I_CREATED_DATE"/>
+            <result property="createdId" column="I_CREATED_ID"/>
+            <result property="updatedDate" column="I_UPDATED_DATE"/>
+            <result property="updatedId" column="I_UPDATED_ID"/>
+        </collection>
     </resultMap>
 
-    <!-- 모든 게시글 조회 -->
     <select id="getAllPosts" resultMap="postResultMap">
         SELECT
-        POST_ID, USER_ID, RESTAURANT_ID, POST_TITLE, POST_CONTENT,
-        LOCATION_TAG, IS_NOTICE, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
-        FROM TB_POST
-        ORDER BY CREATED_DATE DESC
+        p.POST_ID, p.USER_ID, p.RESTAURANT_ID, p.POST_TITLE, p.POST_CONTENT,
+        p.LOCATION_TAG, p.IS_NOTICE, p.CREATED_DATE, p.CREATED_ID, p.UPDATED_DATE, p.UPDATED_ID,
+        u.USER_NICKNAME,
+        pi.IMAGE_ID, pi.POST_ID AS P_IMAGE_POST_ID, pi.IMAGE_URL,
+        pi.CREATED_DATE AS I_CREATED_DATE, pi.CREATED_ID AS I_CREATED_ID,
+        pi.UPDATED_DATE AS I_UPDATED_DATE, pi.UPDATED_ID AS I_UPDATED_ID
+        FROM TB_POST p
+        JOIN TB_USER u ON p.USER_ID = u.USER_ID
+        LEFT JOIN TB_POST_IMAGE pi ON p.POST_ID = pi.POST_ID
+        ORDER BY p.CREATED_DATE DESC
     </select>
 
-    <!-- 특정 게시글 ID로 조회 -->
     <select id="getPostById" resultMap="postResultMap">
         SELECT
-        POST_ID, USER_ID, RESTAURANT_ID, POST_TITLE, POST_CONTENT,
-        LOCATION_TAG, IS_NOTICE, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
-        FROM TB_POST
-        WHERE POST_ID = #{postId}
+        p.POST_ID, p.USER_ID, p.RESTAURANT_ID, p.POST_TITLE, p.POST_CONTENT,
+        p.LOCATION_TAG, p.IS_NOTICE, p.CREATED_DATE, p.CREATED_ID, p.UPDATED_DATE, p.UPDATED_ID,
+        u.USER_NICKNAME,
+        pi.IMAGE_ID, pi.POST_ID AS P_IMAGE_POST_ID, pi.IMAGE_URL,
+        pi.CREATED_DATE AS I_CREATED_DATE, pi.CREATED_ID AS I_CREATED_ID,
+        pi.UPDATED_DATE AS I_UPDATED_DATE, pi.UPDATED_ID AS I_UPDATED_ID
+        FROM TB_POST p
+        JOIN TB_USER u ON p.USER_ID = u.USER_ID
+        LEFT JOIN TB_POST_IMAGE pi ON p.POST_ID = pi.POST_ID
+        WHERE p.POST_ID = #{postId}
     </select>
 
-    <!-- 게시글 생성 -->
     <insert id="insertPost" parameterType="com.twogether.local7.post.vo.PostVO">
-        <!-- Oracle Sequence를 사용하여 POST_ID 자동 생성 및 VO에 설정 -->
         <selectKey keyProperty="postId" resultType="long" order="BEFORE">
             SELECT TB_POST_SEQ.NEXTVAL FROM DUAL
         </selectKey>
@@ -52,7 +69,6 @@
         )
     </insert>
 
-    <!-- 게시글 업데이트 -->
     <update id="updatePost" parameterType="com.twogether.local7.post.vo.PostVO">
         UPDATE TB_POST
         SET
@@ -62,13 +78,11 @@
         IS_NOTICE = #{isNotice},
         UPDATED_DATE = SYSTIMESTAMP,
         UPDATED_ID = #{updatedId}
-        WHERE POST_ID = #{postId}
-    </update>
+        WHERE POST_ID = #{postId} AND USER_ID = #{userId} </update>
 
-    <!-- 게시글 삭제 -->
-    <delete id="deletePost">
+    <delete id="deletePost" parameterType="map">
         DELETE FROM TB_POST
-        WHERE POST_ID = #{postId}
+        WHERE POST_ID = #{postId} AND USER_ID = #{userId}
     </delete>
 
 </mapper>

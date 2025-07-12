@@ -1,5 +1,7 @@
+// src/pages/post/hooks/usePost.js
 import { useState, useCallback } from 'react';
-import { fetchPosts, fetchPostById, createPost, updatePost, deletePost } from '../../../api/PostApi';
+import { fetchPosts, fetchPostById, createPost, updatePost as updatePostApi, deletePost } from '../../../api/PostApi';
+
 
 const usePosts = () => {
     const [posts, setPosts] = useState([]);
@@ -38,31 +40,31 @@ const usePosts = () => {
         }
     }, []);
 
-    // 게시글 생성 함수
-    const addPost = useCallback(async (postData) => {
+    // 게시글 생성 함수 (이미지 파일 인자 추가)
+    const addPost = useCallback(async (postData, imageFiles) => { // imageFiles 인자 추가
         setLoading(true);
         setError(null);
         setMessage(null);
         try {
-            const response = await createPost(postData);
-            setMessage(response.message || '게시글이 성공적으로 생성되었습니다.');
+            const response = await createPost(postData, imageFiles); // imageFiles 전달
+            setMessage(response.message || '게시글이 성공적으로 작성되었습니다.');
             return response.data; // 생성된 게시글 정보 반환
         } catch (err) {
-            setError(err.response?.data?.message || '게시글 생성에 실패했습니다.');
-            console.error('Failed to create post:', err);
-            throw err; // 에러를 호출자에게 다시 던져서 처리할 수 있도록 함
+            setError(err.response?.data?.message || '게시글 작성에 실패했습니다.');
+            console.error('Failed to add post:', err);
+            throw err;
         } finally {
             setLoading(false);
         }
     }, []);
 
-    // 게시글 업데이트 함수
-    const modifyPost = useCallback(async (postId, postData) => {
+    // 게시글 업데이트 함수 (새 이미지 파일 인자 추가)
+    const modifyPost = useCallback(async (postId, postData, newImageFiles) => { // newImageFiles 인자 추가
         setLoading(true);
         setError(null);
         setMessage(null);
         try {
-            const response = await updatePost(postId, postData);
+            const response = await updatePostApi(postId, postData, newImageFiles); // newImageFiles 전달
             setMessage(response.message || '게시글이 성공적으로 업데이트되었습니다.');
             return response.data; // 업데이트된 게시글 정보 반환
         } catch (err) {
@@ -102,10 +104,8 @@ const usePosts = () => {
         addPost,
         modifyPost,
         removePost,
-        setPost, 
-        setPosts, 
-        setError, 
-        setMessage 
+        setMessage,
+        setError
     };
 };
 

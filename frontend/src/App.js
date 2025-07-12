@@ -82,6 +82,7 @@ function AppContent() {
         setIsLoggedIn(true);
         setCurrentUser(userData);
         setIsLoginModalOpen(false);
+        console.log("로그인 성공", userData);
         navigate('/');
     };
 
@@ -158,17 +159,17 @@ function AppContent() {
                             </div>
                         )} />
 
-                        {/* 게시글 목록 페이지 라우트 추가 */}
-                        <Route path="/posts" element={<PostList />} />
+                        {/*  currentUser prop 추가 */}
+                        <Route path="/posts" element={<PostList currentUser={currentUser} />} />
 
-                        {/* 새 게시글 작성 페이지 라우트 추가 */}
-                        <Route path="/posts/new" element={<PostForm />} />
+                        {/* currentUser prop 추가 */}
+                        <Route path="/posts/new" element={<PostForm currentUser={currentUser} />} />
 
-                        {/* 게시글 수정 페이지 라우트 추가 (ID 파라미터 포함) */}
-                        <Route path="/posts/edit/:id" element={<PostForm />} />
+                        {/* currentUser prop 추가 */}
+                        <Route path="/posts/edit/:id" element={<PostForm currentUser={currentUser} />} />
 
-                        {/* 게시글 상세 페이지 라우트 추가 (ID 파라미터 포함) */}
-                        <Route path="/post/:id" element={<PostDetail />} />
+                        {/* 게시글 상세 페이지 라우트 */}
+                        <Route path="/post/:id" element={<PostDetail currentUser={currentUser} />} />
 
 
                         {/* MyPage와 그 자식 라우트들을 설정 */}

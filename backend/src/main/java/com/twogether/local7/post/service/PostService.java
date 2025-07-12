@@ -1,6 +1,7 @@
 package com.twogether.local7.post.service;
 
 import com.twogether.local7.post.vo.PostVO;
+import com.twogether.local7.post.vo.ImageVO;
 
 import java.util.List;
 
@@ -10,10 +11,13 @@ public interface PostService {
 
     PostVO getPostById(Long postId);
 
-    void createPost(PostVO post);
+    // 게시글 생성 메서드: PostVO와 이미지 URL 목록을 받음
+    void createPost(PostVO post, List<String> imageUrls);
 
-    void updatePost(PostVO post);
+    // 게시글 업데이트 메서드 수정: PostVO와 이미지 URL 목록을 받음
+    boolean updatePost(PostVO post, List<String> imageUrls, Long currentUserId);
 
-    void deletePost(Long postId);
+    // 게시글 삭제
+    void deletePost(Long postId, Long userId);
 
 }

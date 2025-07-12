@@ -22,6 +22,7 @@ public interface PostDAO {
     void updatePost(PostVO post);
 
     // 게시글 삭제
-    void deletePost(@Param("postId") Long postId);
+    // userId 파라미터 추가 및 @Param으로 이름 명시
+    void deletePost(@Param("postId") Long postId, @Param("userId") Long userId);
 }
 
