@@ -1,6 +1,6 @@
 // App.js
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom'; // Navigate 추가
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from 'react-modal';
 
@@ -12,15 +12,21 @@ import NotFoundPage from './components/404page/NotFoundPage';
 import TermsOfServiceModal from './components/TermsOfServiceModal';
 import MyPage from './pages/user/MyPage';
 import UserPage from './pages/user/UserPage';
-import Sidebar from './components/Sidebar'; 
-import AiModal from './pages/ai/components/AiModal'; 
+import Sidebar from './components/Sidebar';
+import AiModal from './pages/ai/components/AiModal';
+
+// 새로 추가되거나 기존 라우트에 사용될 게시글 관련 컴포넌트들을 import 합니다.
+// 경로는 프로젝트 구조에 맞게 반드시 확인하고 수정해주세요.
+import PostForm from './pages/post/PostForm'; //
 
 
 import sea from './assets/images/sea.png';
 import ko from './assets/images/ko.png';
 import first from './assets/images/first.png';
 import './App.css';
-import MyPosts from './pages/user/MyPosts';
+import MyPosts from './pages/user/MyPosts'; //
+import PostList from './pages/post/components/PostList';
+import PostDetail from './pages/user/PostDetail';
 
 Modal.setAppElement('#root');
 
@@ -29,8 +35,8 @@ function AppContent() {
     const [currentUser, setCurrentUser] = useState(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
-    const [isAiModalOpen, setIsAiModalOpen] = useState(false); 
-    const [activeContent, setActiveContent] = useState('home'); 
+    const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+    const [activeContent, setActiveContent] = useState('home');
 
     const navigate = useNavigate();
 
@@ -76,7 +82,7 @@ function AppContent() {
         setIsLoggedIn(true);
         setCurrentUser(userData);
         setIsLoginModalOpen(false);
-        navigate('/'); 
+        navigate('/');
     };
 
     const handleLogout = async () => {
@@ -87,7 +93,7 @@ function AppContent() {
                 alert(data.message);
                 setIsLoggedIn(false);
                 setCurrentUser(null);
-                navigate('/'); 
+                navigate('/');
             } else {
                 alert("로그아웃 실패: " + data.message);
             }
@@ -119,20 +125,21 @@ function AppContent() {
     return (
         <div className="app-layout">
             {isLoggedIn && (
-                <div className="navbar-container"> 
+                <div className="navbar-container">
                     <Navbar isLoggedIn={isLoggedIn} userNickname={currentUser?.userNickname} onLogout={handleLogout} />
                 </div>
             )}
 
-            <div className="main-content-area"> 
+            <div className="main-content-area">
                 {isLoggedIn && (
-                    <div className="sidebar-container"> 
+                    <div className="sidebar-container">
                         <Sidebar onMenuItemClick={handleSidebarClick} />
                     </div>
                 )}
-                
-                <div className="content-with-sidebar"> 
+
+                <div className="content-with-sidebar">
                     <Routes>
+                        {/* 로그인 상태에 따른 메인 페이지 라우트 */}
                         <Route path="/*" element={isLoggedIn ? (
                             <Main currentUser={currentUser} activeContent={activeContent} />
                         ) : (
@@ -151,6 +158,19 @@ function AppContent() {
                             </div>
                         )} />
 
+                        {/* 게시글 목록 페이지 라우트 추가 */}
+                        <Route path="/posts" element={<PostList />} />
+
+                        {/* 새 게시글 작성 페이지 라우트 추가 */}
+                        <Route path="/posts/new" element={<PostForm />} />
+
+                        {/* 게시글 수정 페이지 라우트 추가 (ID 파라미터 포함) */}
+                        <Route path="/posts/edit/:id" element={<PostForm />} />
+
+                        {/* 게시글 상세 페이지 라우트 추가 (ID 파라미터 포함) */}
+                        <Route path="/post/:id" element={<PostDetail />} />
+
+
                         {/* MyPage와 그 자식 라우트들을 설정 */}
                         <Route path="/mypage" element={isLoggedIn ? (
                             <MyPage currentUser={currentUser} isLoggedIn={isLoggedIn} />
@@ -162,17 +182,18 @@ function AppContent() {
                             {/* MyPage 기본 경로로 접속 시 UserInfo 컴포넌트 렌더링 */}
                             <Route index element={<UserInfo userData={currentUser} />} />
                             {/* UserPage 링크에 연결될 라우트 (회원 정보 수정) */}
-                            <Route path="edit" element={<UserPage currentUser={currentUser} onLogout={handleLogout} />} /> {/* 실제 UserPage 컴포넌트로 대체 */}
-                            {/* 내가 쓴 글 라우트 */}
+                            <Route path="edit" element={<UserPage currentUser={currentUser} onLogout={handleLogout} />} />
+                            {/* 내가 쓴 글 라우트 (MyPosts 컴포넌트 사용) */}
                             <Route path="posts" element={<MyPosts />} />
                         </Route>
 
                         {/* 기존 UserPage 라우트는 /mypage/edit으로 이동했으므로 필요에 따라 제거하거나 리다이렉트 처리 */}
-                        <Route path="/userpage" element={<Navigate to="/mypage/edit" replace />} /> 
+                        <Route path="/userpage" element={<Navigate to="/mypage/edit" replace />} />
 
 
                         <Route path="/signup" element={<SignupForm />} />
 
+                        {/* 정의되지 않은 모든 경로를 위한 404 페이지 */}
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </div>

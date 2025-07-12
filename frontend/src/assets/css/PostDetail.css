@@ -1,0 +1,220 @@
+/* src/pages/post/PostDetail.css */
+
+.post-detail-page {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    min-height: calc(100vh - 60px); /* Adjust based on your header/footer height */
+}
+
+.post-detail-content-area {
+    width: 100%;
+    max-width: 900px;
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.post-detail-container {
+    padding: 1.5rem;
+}
+
+.post-detail-container.loading,
+.post-detail-container.error-message,
+.post-detail-container.no-post {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #555;
+    padding: 2rem;
+}
+
+.post-detail-container.error-message {
+    color: #d9534f;
+    font-weight: bold;
+}
+
+.post-detail-title {
+    font-size: 2.2rem;
+    color: #333;
+    margin-bottom: 0.8rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.7rem;
+    word-break: break-word; /* 긴 제목이 넘치지 않도록 */
+}
+
+.post-detail-meta {
+    font-size: 0.95rem;
+    color: #777;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 1rem;
+}
+
+.post-detail-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #444;
+    margin-bottom: 2rem;
+    white-space: pre-wrap; /* 공백 및 줄바꿈 유지 */
+    word-break: break-word; /* 긴 내용이 넘치지 않도록 */
+}
+
+.post-detail-location-tag {
+    font-size: 0.95rem;
+    color: #5a5a5a;
+    background-color: #eef;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.post-detail-actions {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: flex-end;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.post-detail-button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    flex-shrink: 0; /* 버튼이 줄어들지 않도록 */
+}
+
+.post-detail-button.edit {
+    background-color: #007bff;
+    color: white;
+}
+
+.post-detail-button.edit:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.post-detail-button.delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.post-detail-button.delete:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.post-detail-button.back {
+    background-color: #6c757d;
+    color: white;
+}
+
+.post-detail-button.back:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* MyPosts.css의 일관된 스타일을 위한 추가 */
+.my-posts-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 2rem auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.my-posts-title {
+    font-size: 2em;
+    color: #333;
+    text-align: center;
+    margin-bottom: 1.5em;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5em;
+}
+
+.no-posts-message {
+    text-align: center;
+    color: #666;
+    font-size: 1.1em;
+    padding: 2em;
+}
+
+.post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.post-item {
+    background-color: #f8f8f8;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    margin-bottom: 1em;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.post-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    padding: 1.2em 1.5em;
+}
+
+.post-item-title {
+    font-size: 1.4em;
+    color: #007bff;
+    margin-top: 0;
+    margin-bottom: 0.5em;
+}
+
+.post-item-date {
+    font-size: 0.9em;
+    color: #888;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2em;
+    gap: 1em;
+}
+
+.pagination-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.7em 1.4em;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: background-color 0.3s ease;
+}
+
+.pagination-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.pagination-button:not(:disabled):hover {
+    background-color: #0056b3;
+}
+
+.page-info {
+    font-size: 1.1em;
+    color: #555;
+    min-width: 120px;
+    text-align: center;
+}

@@ -3,8 +3,8 @@ import banner1 from "../../assets/images/banner.png";
 import banner2 from "../../assets/images/banner2.png";
 import banner3 from "../../assets/images/banner3.png";
 import banner4 from "../../assets/images/banner4.png";
-import busan1 from "../../assets/images/busan.png";
-import busan2 from "../../assets/images/busan2.png";
+// import busan1 from "../../assets/images/busan.png";
+// import busan2 from "../../assets/images/busan2.png";
 
 import Seven from "./components/Seven";
 import Busan from "./components/Busan";

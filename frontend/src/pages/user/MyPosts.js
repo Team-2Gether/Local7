@@ -50,10 +50,6 @@ function MyPosts() {
         }
     };
 
-    if (loading) {
-        return <div className="my-posts-container">게시글을 불러오는 중입니다...</div>;
-    }
-
     if (error) {
         return <div className="my-posts-container error-message">{error}</div>;
     }
