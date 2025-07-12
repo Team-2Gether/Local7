@@ -9,6 +9,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        System.out.println("CORS Configuration is being applied!");
         registry.addMapping("/**") // 모든 API 경로에 대해 CORS 허용
                 .allowedOrigins("http://localhost:3000", "http://127.0.0.1:3000") // React 개발 서버의 출처 허용
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS") // 허용할 HTTP 메소드
