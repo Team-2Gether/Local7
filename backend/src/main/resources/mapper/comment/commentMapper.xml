@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.twogether.local7.comment.dao.CommentDAO">
+
+    <select id="selectCommentList" parameterType="long" resultType="com.twogether.local7.comment.vo.CommentVO">
+        SELECT
+            A.COMMENT_ID,
+            A.POST_ID,
+            A.USER_ID,
+            A.CONTENT,
+            A.CREATED_DATE,
+            A.UPDATED_DATE,
+            B.USER_NICKNAME,
+            B.USER_PROF_IMG_URL
+        FROM
+            TB_COMMENT A
+        JOIN
+            TB_USER B ON A.USER_ID = B.USER_ID
+        WHERE A.POST_ID = #{postId}
+        ORDER BY A.CREATED_DATE ASC
+    </select>
+
+    <insert id="insertComment" parameterType="com.twogether.local7.comment.vo.CommentVO">
+        <selectKey keyProperty="commentId" resultType="long" order="BEFORE">
+            SELECT SEQ_TB_COMMENT.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TB_COMMENT (
+            COMMENT_ID,
+            POST_ID,
+            USER_ID,
+            CONTENT
+        ) VALUES (
+            #{commentId},
+            #{postId},
+            #{userId},
+            #{content}
+        )
+    </insert>
+
+    <update id="updateComment" parameterType="com.twogether.local7.comment.vo.CommentVO">
+        UPDATE TB_COMMENT
+        SET
+            CONTENT = #{content},
+            UPDATED_DATE = SYSTIMESTAMP
+        WHERE COMMENT_ID = #{commentId}
+    </update>
+
+    <delete id="deleteComment" parameterType="long">
+        DELETE FROM TB_COMMENT
+        WHERE COMMENT_ID = #{commentId}
+    </delete>
+
+    <select id="selectComment" parameterType="long" resultType="com.twogether.local7.comment.vo.CommentVO">
+        SELECT * FROM TB_COMMENT WHERE COMMENT_ID = #{commentId}
+    </select>
+
+</mapper>

@@ -1,0 +1,125 @@
+.comment-section {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.comment-form textarea {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.comment-form button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.comment-form button:hover {
+  background-color: #0056b3;
+}
+
+.comment-list {
+  margin-top: 20px;
+}
+
+.comment-item {
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.profile-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.user-nickname {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.comment-date {
+  font-size: 0.8em;
+  color: #888;
+}
+
+.comment-content {
+  margin-left: 40px; /* 프로필 이미지와 닉네임 공간 */
+  line-height: 1.5;
+  white-space: pre-wrap; /* 줄 바꿈 유지 */
+}
+
+.comment-actions button {
+  background-color: #6c757d;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+  font-size: 0.8em;
+}
+
+.comment-actions button:hover {
+  background-color: #5a6268;
+}
+
+.editing-area textarea {
+  width: calc(100% - 20px);
+  padding: 8px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.editing-area button {
+  background-color: #28a745;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.editing-area button:hover {
+  background-color: #218838;
+}
+
+.editing-area button:last-child {
+  background-color: #dc3545;
+}
+.editing-area button:last-child:hover {
+  background-color: #c82333;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 15px;
+  font-weight: bold;
+}

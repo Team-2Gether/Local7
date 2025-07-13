@@ -165,7 +165,7 @@ function AppContent() {
                         <Route path="/posts/edit/:id" element={<PostForm currentUser={currentUser} />} />
 
                         {/* 게시글 상세 페이지 라우트 */}
-                        <Route path="/posts/:id" element={<PostDetail />} />
+                        <Route path="/posts/:id" element={<PostDetail currentUser={currentUser} />} />
 
 
                         {/* MyPage와 그 자식 라우트들을 설정 */}
