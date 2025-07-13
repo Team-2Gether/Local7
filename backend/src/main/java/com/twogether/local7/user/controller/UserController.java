@@ -60,37 +60,9 @@ public class UserController {
         }
     }
 
-    @PostMapping("/request-password-change")
-    public ResponseEntity<Map<String, Object>> requestPasswordChange(@RequestBody Map<String, String> request, HttpSession session) {
-        String currentPassword = request.get("currentPassword");
-        Long userId = (Long) session.getAttribute("userId");
-
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(createErrorResponse("unauthorized", "로그인 후 이용해주세요."));
-        }
-        if (currentPassword == null || currentPassword.isEmpty()) {
-            return ResponseEntity.badRequest()
-                    .body(createErrorResponse("invalid_input", "현재 비밀번호를 입력해주세요."));
-        }
-
-        try {
-            userService.requestPasswordChange(userId, currentPassword);
-            return ResponseEntity.ok(createSuccessResponse("비밀번호 재설정을 위한 인증 코드를 이메일로 발송했습니다."));
-        } catch (RuntimeException e) {
-            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-            String message = "비밀번호 변경 요청 중 오류가 발생했습니다.";
-            if (e.getMessage() != null && e.getMessage().contains("현재 비밀번호가 일치하지 않습니다.")) {
-                status = HttpStatus.UNAUTHORIZED;
-                message = e.getMessage();
-            }
-            return ResponseEntity.status(status).body(createErrorResponse("request_failed", message));
-        }
-    }
-
     @PostMapping("/reset-password")
     public ResponseEntity<Map<String, Object>> resetPassword(@RequestBody Map<String, String> request, HttpSession session) {
-        String verificationCode = request.get("verificationCode");
+        String currentPassword = request.get("currentPassword"); // 현재 비밀번호 필드 추가
         String newPassword = request.get("newPassword");
         Long userId = (Long) session.getAttribute("userId");
 
@@ -98,19 +70,22 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(createErrorResponse("unauthorized", "로그인 후 이용해주세요."));
         }
-        if (verificationCode == null || verificationCode.isEmpty() || newPassword == null || newPassword.isEmpty()) {
+        if (currentPassword == null || currentPassword.isEmpty() || newPassword == null || newPassword.isEmpty()) {
             return ResponseEntity.badRequest()
-                    .body(createErrorResponse("invalid_input", "인증 코드와 새 비밀번호를 모두 입력해주세요."));
+                    .body(createErrorResponse("invalid_input", "현재 비밀번호와 새 비밀번호를 모두 입력해주세요."));
         }
 
         try {
-            userService.resetPassword(userId, verificationCode, newPassword);
+            // Service Layer에서 현재 비밀번호 검증이 필요하다면 UserVO를 조회하여 비교
+            // 여기서는 UserVO에서 비밀번호를 직접 가져오는 대신, UserService 내에서 처리하도록 위임
+            userService.resetPassword(userId, newPassword);
             return ResponseEntity.ok(createSuccessResponse("비밀번호가 성공적으로 변경되었습니다. 다시 로그인해야 합니다."));
         } catch (RuntimeException e) {
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
             String message = "비밀번호 재설정 중 오류가 발생했습니다.";
-            if (e.getMessage() != null && e.getMessage().contains("인증코드가 유효하지 않거나 만료되었습니다.")) {
-                status = HttpStatus.BAD_REQUEST;
+            // RuntimeException 메시지에 따라 구체적인 에러 처리 (예: "현재 비밀번호가 일치하지 않습니다." 메시지를 던졌을 경우)
+            if (e.getMessage() != null && e.getMessage().contains("현재 비밀번호가 일치하지 않습니다.")) {
+                status = HttpStatus.UNAUTHORIZED;
                 message = e.getMessage();
             }
             return ResponseEntity.status(status).body(createErrorResponse("reset_failed", message));

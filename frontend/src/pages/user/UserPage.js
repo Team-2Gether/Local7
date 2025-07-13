@@ -12,8 +12,7 @@ function UserPage({ currentUser, onLogout }) { // onLogout prop 추가
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [verificationCode, setVerificationCode] = useState('');
-    const [passwordChangeRequested, setPasswordChangeRequested] = useState(false);
+    const [showNewPasswordFields, setShowNewPasswordFields] = useState(false); // 현재 비밀번호 확인 후 새 비밀번호 필드를 보여줄지 여부
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
     const [loginIdMessage, setLoginIdMessage] = useState('');
@@ -37,7 +36,6 @@ function UserPage({ currentUser, onLogout }) { // onLogout prop 추가
     // 중복 요청 방지를 위한 로딩 상태 추가
     const [isUpdatingLoginId, setIsUpdatingLoginId] = useState(false);
     const [isCheckingLoginId, setIsCheckingLoginId] = useState(false);
-    const [isRequestingPasswordChange, setIsRequestingPasswordChange] = useState(false);
     const [isResettingPassword, setIsResettingPassword] = useState(false);
     const [isCheckingNickname, setIsCheckingNickname] = useState(false);
     const [isUpdatingNickname, setIsUpdatingNickname] = useState(false);
@@ -184,49 +182,41 @@ function UserPage({ currentUser, onLogout }) { // onLogout prop 추가
         }
     };
 
-    const handleRequestPasswordChange = async (e) => {
+    // '현재 비밀번호 확인' 버튼 클릭 핸들러
+    const handleConfirmCurrentPassword = (e) => {
         e.preventDefault();
         if (!currentPassword) {
             displayPasswordMessage('현재 비밀번호를 입력해주세요.', 'error');
             return;
         }
-        setIsRequestingPasswordChange(true);
-        try {
-            const response = await axios.post('http://localhost:8080/api/user/request-password-change', { currentPassword });
-            if (response.data.status === 'success') {
-                setPasswordChangeRequested(true);
-                displayPasswordMessage(response.data.message, 'success');
-            } else {
-                displayPasswordMessage(response.data.message || '비밀번호 변경 요청에 실패했습니다.', 'error');
-            }
-        } catch (error) {
-            console.error("비밀번호 변경 요청 중 오류 발생:", error);
-            displayPasswordMessage(error.response?.data?.message || '비밀번호 변경 요청 중 오류가 발생했습니다.', 'error');
-        } finally {
-            setIsRequestingPasswordChange(false);
-        }
+        // 여기서는 클라이언트 측 유효성 검사만 수행하고,
+        // 실제 비밀번호 일치 여부는 '비밀번호 변경' 버튼 클릭 시 백엔드에서 검증합니다.
+        setShowNewPasswordFields(true);
+        setPasswordMessage(''); // 이전 비밀번호 메시지 초기화
+        setPasswordMessageType('');
     };
 
+    // 비밀번호 변경 핸들러
     const handleResetPassword = async (e) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
             displayPasswordMessage('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.', 'error');
             return;
         }
-        if (!verificationCode || !newPassword) {
-            displayPasswordMessage('인증 코드와 새 비밀번호를 모두 입력해주세요.', 'error');
+        if (!currentPassword || !newPassword) {
+            displayPasswordMessage('현재 비밀번호와 새 비밀번호를 모두 입력해주세요.', 'error');
             return;
         }
         setIsResettingPassword(true);
         try {
-            const response = await axios.post('http://localhost:8080/api/user/reset-password', { verificationCode, newPassword });
+            const response = await axios.post('http://localhost:8080/api/user/reset-password', { currentPassword, newPassword });
             if (response.data.status === 'success') {
                 displayMessage(response.data.message, 'success');
-                setPasswordChangeRequested(false);
+                // 비밀번호 변경 성공 후 입력 필드 및 상태 초기화
                 setCurrentPassword('');
                 setNewPassword('');
                 setConfirmPassword('');
-                setVerificationCode('');
+                setShowNewPasswordFields(false); // 새 비밀번호 필드 숨기기
             } else {
                 displayPasswordMessage(response.data.message || '비밀번호 재설정에 실패했습니다.', 'error');
             }
@@ -474,8 +464,13 @@ function UserPage({ currentUser, onLogout }) { // onLogout prop 추가
                     {/* 비밀번호 변경 섹션 */}
                     <div className="user-update-form">
                         <h3>비밀번호 변경</h3>
-                        {!passwordChangeRequested ? (
-                            <form onSubmit={handleRequestPasswordChange}>
+                        {passwordMessage && (
+                            <div className={`message ${passwordMessageType === 'success' ? 'success' : 'error'}`}>
+                                {passwordMessage}
+                            </div>
+                        )}
+                        {!showNewPasswordFields ? (
+                            <form onSubmit={handleConfirmCurrentPassword}>
                                 <div className="form-group">
                                     <label htmlFor="currentPassword">현재 비밀번호:</label>
                                     <input
@@ -485,31 +480,14 @@ function UserPage({ currentUser, onLogout }) { // onLogout prop 추가
                                         onChange={(e) => setCurrentPassword(e.target.value)}
                                         placeholder="현재 비밀번호를 입력해주세요"
                                         required
-                                        disabled={isRequestingPasswordChange} // 로딩 중 비활성화
                                     />
                                 </div>
-                                <button
-                                    type="submit"
-                                    className="submit-button"
-                                    disabled={isRequestingPasswordChange} // 로딩 중 비활성화
-                                >
-                                    {isRequestingPasswordChange ? '요청 중...' : '비밀번호 변경 요청'}
+                                <button type="submit" className="submit-button">
+                                    확인
                                 </button>
                             </form>
                         ) : (
                             <form onSubmit={handleResetPassword}>
-                                <div className="form-group">
-                                    <label htmlFor="verificationCode">인증 코드:</label>
-                                    <input
-                                        type="text"
-                                        id="verificationCode"
-                                        value={verificationCode}
-                                        onChange={(e) => setVerificationCode(e.target.value)}
-                                        placeholder="이메일로 받은 6자리 코드"
-                                        required
-                                        disabled={isResettingPassword} // 로딩 중 비활성화
-                                    />
-                                </div>
                                 <div className="form-group">
                                     <label htmlFor="newPassword">새 비밀번호:</label>
                                     <input
@@ -542,11 +520,6 @@ function UserPage({ currentUser, onLogout }) { // onLogout prop 추가
                                     {isResettingPassword ? '변경 중...' : '비밀번호 변경'}
                                 </button>
                             </form>
-                        )}
-                        {passwordMessage && (
-                            <div className={`message ${passwordMessageType === 'success' ? 'success' : 'error'}`}>
-                                {passwordMessage}
-                            </div>
                         )}
                     </div>
 

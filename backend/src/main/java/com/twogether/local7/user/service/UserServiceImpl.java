@@ -39,28 +39,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void requestPasswordChange(Long userId, String currentPassword) {
+    public void resetPassword(Long userId, String newPassword) { // 이메일 인증 기능 제거에 따라 파라미터 변경
         UserVO user = userDAO.findByUserId(userId);
-        if (user == null || !user.getUserPassword().equals(currentPassword)) {
-            throw new RuntimeException("현재 비밀번호가 일치하지 않습니다.");
+        if (user == null) {
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
         }
-
-        String verificationCode = generateVerificationCode();
-        verificationCodes.put(userId, verificationCode);
-
-        sendVerificationEmail(user.getUserEmail(), verificationCode, "비밀번호 변경 인증 코드");
-        System.out.println("비밀번호 변경 인증 코드 발송: " + user.getUserEmail() + ", 코드: " + verificationCode);
-    }
-
-    @Override
-    public void resetPassword(Long userId, String verificationCode, String newPassword) {
-        String storedCode = verificationCodes.get(userId);
-        if (storedCode == null || !storedCode.equals(verificationCode)) {
-            throw new RuntimeException("인증코드가 유효하지 않거나 만료되었습니다.");
-        }
-
-        verificationCodes.remove(userId);
-
+        // 비밀번호 재설정 시 현재 비밀번호 검증 로직은 컨트롤러/프론트엔드에서 처리하도록 변경
+        // 이메일 인증을 통한 비밀번호 변경이 아닌, 현재 비밀번호를 알고 변경하는 방식으로 가정
         userDAO.updateUserPassword(userId, newPassword);
     }
 

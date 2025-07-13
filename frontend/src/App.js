@@ -84,7 +84,7 @@ function AppContent() {
 
     const handleLogout = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/api/user/logout');
+            const response = await axios.post('http://localhost:8080/api/auth/logout');
             const data = response.data;
             if (response.status === 200) {
                 alert(data.message);

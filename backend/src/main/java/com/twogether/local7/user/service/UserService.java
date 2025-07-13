@@ -9,8 +9,7 @@ public interface UserService {
     // UserVO login(String credential, String password); // LoginService로 이동
     boolean checkLoginIdDuplicate(String userLoginId);
     void updateUserLoginId(Long userId, String newUserLoginId);
-    void requestPasswordChange(Long userId, String currentPassword);
-    void resetPassword(Long userId, String verificationCode, String newPassword);
+    void resetPassword(Long userId, String newPassword); // 이메일 인증 기능 제거에 따라 파라미터 변경
     boolean checkNicknameDuplicate(String userNickname);
     void updateUserNickname(Long userId, String newUserNickname);
     void requestWithdrawalVerification(Long userId);
