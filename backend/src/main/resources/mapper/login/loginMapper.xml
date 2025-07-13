@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.twogether.local7.login.dao.LoginDAO">
+
+    <resultMap id="userResultMap" type="com.twogether.local7.login.vo.LoginVO">
+        <id property="userId" column="USER_ID"/>
+        <result property="userLoginId" column="LOGIN_ID"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="userPassword" column="USER_PASSWORD"/>
+        <result property="userEmail" column="USER_EMAIL"/>
+        <result property="userNickname" column="USER_NICKNAME"/>
+        <result property="userProfileImageUrl" column="USER_PROF_IMG_URL"/>
+        <result property="userBio" column="USER_BIO"/>
+        <result property="ruleId" column="RULE_ID"/>
+        <result property="ruleName" column="RULE_NAME"/>
+        <result property="createDate" column="CREATE_DATE"/>
+        <result property="createdId" column="CREATED_ID"/>
+        <result property="updatedDate" column="UPDATED_DATE"/>
+        <result property="updatedId" column="UPDATED_ID"/>
+    </resultMap>
+
+    <select id="findByUserLoginId" parameterType="string" resultMap="userResultMap">
+        SELECT
+        T.USER_ID,
+        T.LOGIN_ID,
+        T.USER_NAME,
+        T.USER_PASSWORD,
+        T.USER_EMAIL,
+        T.USER_NICKNAME,
+        T.USER_PROF_IMG_URL,
+        T.USER_BIO,
+        T.RULE_ID,
+        R.RULE_NAME,
+        T.CREATE_DATE,
+        T.CREATED_ID,
+        T.UPDATED_DATE,
+        T.UPDATED_ID
+        FROM
+        TB_USER T
+        LEFT JOIN
+        TB_RULE R ON T.RULE_ID = R.RULE_ID
+        WHERE
+        T.LOGIN_ID = #{userLoginId}
+    </select>
+
+    <select id="findByUserEmail" parameterType="string" resultMap="userResultMap">
+        SELECT
+        T.USER_ID,
+        T.LOGIN_ID,
+        T.USER_NAME,
+        T.USER_PASSWORD,
+        T.USER_EMAIL,
+        T.USER_NICKNAME,
+        T.USER_PROF_IMG_URL,
+        T.USER_BIO,
+        T.RULE_ID,
+        R.RULE_NAME,
+        T.CREATE_DATE,
+        T.CREATED_ID,
+        T.UPDATED_DATE,
+        T.UPDATED_ID
+        FROM
+        TB_USER T
+        LEFT JOIN
+        TB_RULE R ON T.RULE_ID = R.RULE_ID
+        WHERE
+        T.USER_EMAIL = #{userEmail}
+    </select>
+</mapper>

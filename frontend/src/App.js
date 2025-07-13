@@ -40,7 +40,7 @@ function AppContent() {
 
     const checkLoginStatus = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/user/status');
+            const response = await axios.get('http://localhost:8080/api/auth/status');
             const data = response.data;
             if (response.status === 200 && data.isLoggedIn) {
                 setIsLoggedIn(true);

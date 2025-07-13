@@ -1,12 +1,11 @@
-// UserServiceImpl.java
 package com.twogether.local7.user.service;
 
 import com.twogether.local7.pagention.Pagination;
 import com.twogether.local7.user.dao.UserDAO;
 import com.twogether.local7.user.vo.UserVO;
 import com.twogether.local7.user.vo.PostVO;
-import com.twogether.local7.pagention.Pageable; // Custom Pageable import 추가
-import org.apache.ibatis.session.RowBounds; // RowBounds import 추가
+import com.twogether.local7.pagention.Pageable;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -28,32 +27,6 @@ public class UserServiceImpl implements UserService {
 
     // 임시로 인증 코드를 저장할 맵 (실제 앱에서는 DB나 Redis 사용)
     private final Map<Long, String> verificationCodes = new HashMap<>();
-
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-
-    @Override
-    public UserVO login(String credential, String password) {
-        UserVO user = null;
-        if (EMAIL_PATTERN.matcher(credential).matches()) {
-            user = userDAO.findByUserEmail(credential);
-        } else {
-            user = userDAO.findByUserLoginId(credential);
-        }
-
-        if (!isValidUser(user)) {
-            throw new RuntimeException("사용자 정보를 찾을 수 없거나 비밀번호가 일치하지 않습니다.");
-        }
-
-        if (!user.getUserPassword().equals(password)) {
-            throw new RuntimeException("사용자 정보를 찾을 수 없거나 비밀번호가 일치하지 않습니다.");
-        }
-
-        return user;
-    }
-
-    private boolean isValidUser(UserVO user) {
-        return user != null;
-    }
 
     @Override
     public boolean checkLoginIdDuplicate(String userLoginId) {
@@ -131,7 +104,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("인증코드가 유효하지 않거나 만료되었습니다.");
         }
 
-        verificationCodes.remove(userId); // 인증 성공 후 코드 삭제
+        verificationCodes.remove(userId);
 
         userDAO.deleteUser(userId);
     }
@@ -140,9 +113,9 @@ public class UserServiceImpl implements UserService {
         StringBuilder code = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < 6; i++) {
-            if (random.nextBoolean()) { // 50% 확률로 영문 대문자
+            if (random.nextBoolean()) {
                 code.append((char) ('A' + random.nextInt(26)));
-            } else { // 50% 확률로 숫자
+            } else {
                 code.append(random.nextInt(10));
             }
         }
@@ -157,17 +130,14 @@ public class UserServiceImpl implements UserService {
         mailSender.send(message);
     }
 
-    // 수정된 메서드 구현
     @Override
     public Pagination<PostVO> getPostsByUserId(Long userId, Pageable pageable) {
-        int totalPosts = userDAO.countPostsByUserId(userId); // 총 게시글 수 조회
-        // RowBounds를 사용하여 페이지네이션 처리
+        int totalPosts = userDAO.countPostsByUserId(userId);
         RowBounds rowBounds = new RowBounds((int) pageable.getOffset(), pageable.getPageSize());
-        List<PostVO> posts = userDAO.findPostsByUserId(userId, rowBounds); // 페이지네이션된 게시글 조회
-        return new Pagination<>(posts, pageable, totalPosts); // Pagination 객체 반환
+        List<PostVO> posts = userDAO.findPostsByUserId(userId, rowBounds);
+        return new Pagination<>(posts, pageable, totalPosts);
     }
 
-    // 추가된 메서드 구현
     @Override
     public int countPostsByUserId(Long userId) {
         return userDAO.countPostsByUserId(userId);

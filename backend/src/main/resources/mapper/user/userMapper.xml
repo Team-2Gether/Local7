@@ -36,54 +36,6 @@
         <result property="updatedId" column="UPDATED_ID"/>
     </resultMap>
 
-    <select id="findByUserLoginId" parameterType="string" resultMap="userResultMap">
-        SELECT
-        T.USER_ID,
-        T.LOGIN_ID,
-        T.USER_NAME,
-        T.USER_PASSWORD,
-        T.USER_EMAIL,
-        T.USER_NICKNAME,
-        T.USER_PROF_IMG_URL,
-        T.USER_BIO,
-        T.RULE_ID,
-        R.RULE_NAME,
-        T.CREATE_DATE,
-        T.CREATED_ID,
-        T.UPDATED_DATE,
-        T.UPDATED_ID
-        FROM
-        TB_USER T
-        LEFT JOIN
-        TB_RULE R ON T.RULE_ID = R.RULE_ID
-        WHERE
-        T.LOGIN_ID = #{userLoginId}
-    </select>
-
-    <select id="findByUserEmail" parameterType="string" resultMap="userResultMap">
-        SELECT
-        T.USER_ID,
-        T.LOGIN_ID,
-        T.USER_NAME,
-        T.USER_PASSWORD,
-        T.USER_EMAIL,
-        T.USER_NICKNAME,
-        T.USER_PROF_IMG_URL,
-        T.USER_BIO,
-        T.RULE_ID,
-        R.RULE_NAME,
-        T.CREATE_DATE,
-        T.CREATED_ID,
-        T.UPDATED_DATE,
-        T.UPDATED_ID
-        FROM
-        TB_USER T
-        LEFT JOIN
-        TB_RULE R ON T.RULE_ID = R.RULE_ID
-        WHERE
-        T.USER_EMAIL = #{userEmail}
-    </select>
-
     <select id="findByUserId" parameterType="long" resultMap="userResultMap">
         SELECT
         T.USER_ID,

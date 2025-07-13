@@ -1,9 +1,7 @@
 // MyPage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, Outlet } from 'react-router-dom'; // Outlet 추가
-import axios from 'axios';
 import '../../assets/css/MyPage.css'; // MyPage.css 파일을 import 합니다.
-import MyPosts from './MyPosts'; // MyPosts 컴포넌트 import
 
 // MyPage 컴포넌트는 currentUser와 isLoggedIn을 props로 받습니다.
 function MyPage({ currentUser, isLoggedIn }) {

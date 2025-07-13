@@ -10,10 +10,6 @@ import java.util.List;
 @Mapper
 @Repository
 public interface UserDAO {
-    UserVO findByUserLoginId(String userLoginId);
-
-    UserVO findByUserEmail(String userEmail);
-    // userId로 사용자 조회
     UserVO findByUserId(Long userId);
 
     int countByUserLoginId(String userLoginId);
