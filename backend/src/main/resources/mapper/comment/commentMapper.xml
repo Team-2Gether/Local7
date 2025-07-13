@@ -5,7 +5,18 @@
 
 <mapper namespace="com.twogether.local7.comment.dao.CommentDAO">
 
-    <select id="selectCommentList" parameterType="long" resultType="com.twogether.local7.comment.vo.CommentVO">
+    <resultMap id="commentResultMap" type="com.twogether.local7.comment.vo.CommentVO">
+        <id property="commentId" column="COMMENT_ID"/>
+        <result property="postId" column="POST_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="content" column="CONTENT"/>
+        <result property="createdDate" column="CREATED_DATE"/>
+        <result property="updatedDate" column="UPDATED_DATE"/>
+        <result property="userNickname" column="USER_NICKNAME"/>
+        <result property="userProfImgUrl" column="USER_PROF_IMG_URL"/>
+    </resultMap>
+
+    <select id="selectCommentList" parameterType="long" resultMap="commentResultMap">
         SELECT
             A.COMMENT_ID,
             A.POST_ID,
@@ -53,8 +64,19 @@
         WHERE COMMENT_ID = #{commentId}
     </delete>
 
-    <select id="selectComment" parameterType="long" resultType="com.twogether.local7.comment.vo.CommentVO">
-        SELECT * FROM TB_COMMENT WHERE COMMENT_ID = #{commentId}
+    <select id="selectComment" parameterType="long" resultMap="commentResultMap">
+        SELECT
+            A.COMMENT_ID,
+            A.POST_ID,
+            A.USER_ID,
+            A.CONTENT,
+            A.CREATED_DATE,
+            A.UPDATED_DATE,
+            B.USER_NICKNAME,
+            B.USER_PROF_IMG_URL
+        FROM TB_COMMENT A
+        JOIN TB_USER B ON A.USER_ID = B.USER_ID
+        WHERE A.COMMENT_ID = #{commentId}
     </select>
 
 </mapper>
