@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import usePosts from '../hooks/usePost';
+import usePost from '../hooks/usePost';
 import { fetchComments, createComment, updateComment, deleteComment } from '../../../api/CommentApi'; // comments API import
 import '../../../assets/css/post.css'; 
 import '../../../assets/css/PostDetail.css'; 
@@ -9,7 +9,7 @@ import './CommentSection.css';
 function PostDetail({ currentUser }) {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { post, loading, error, loadPostById, removePost, setMessage } = usePosts();
+    const { post, loading, error, loadPostById, removePost, setMessage } = usePost();
 
     const [comments, setComments] = useState([]);
     const [newCommentContent, setNewCommentContent] = useState('');

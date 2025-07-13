@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import usePosts from '../hooks/usePost';
+import usePost from '../hooks/usePost';
 
 import '../../../assets/css/post.css';
 
@@ -8,7 +8,7 @@ function PostList({ currentUser }) {
 
     console.log("currentUser:", currentUser);
 
-    const { posts, loading, error, message, loadAllPosts, removePost, setMessage } = usePosts();
+    const { posts, loading, error, message, loadAllPosts, removePost, setMessage } = usePost();
     const navigate = useNavigate();
 
     useEffect(() => {
