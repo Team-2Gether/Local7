@@ -60,7 +60,14 @@ function PostList({ currentUser }) {
                     <p className="no-posts-message">게시글이 없습니다.</p>
                 ) : (
                     <ul className="post-grid">
-                        {posts.map((post) => (
+                        {posts.map((post) => {
+                        
+                        console.log('PostList - currentUser:', currentUser);
+                        console.log('PostList - post:', post);
+                        console.log('PostList - isCurrentUser, UserId:', currentUser && currentUser.userId === post.userId);
+                            
+                        return (
+
                             <li key={post.postId} className="post-card">
                                 {/* 게시글 상세 페이지로 이동 링크 */}
                                 <div onClick={() => handlePostClick(post.postId)} style={{ cursor: 'pointer' }}>
@@ -87,10 +94,8 @@ function PostList({ currentUser }) {
                                     <p className="post-card-meta">작성일: {new Date(post.createdDate).toLocaleDateString()}</p>
                                     <p className="post-card-meta">위치: {post.locationTag}</p>
                                 </div>
-                                <div className="post-card-actions">
-                                    {console.log("currentUser.userId 타입:", typeof currentUser?.userId, "post.userId 타입:", typeof post.userId)}
-                                    {console.log("비교 결과:", currentUser && currentUser.userId === post.userId)}
 
+                                <div className="post-card-actions">
                                     {currentUser && currentUser.userId === post.userId && (
                                         <>
                                             <button
@@ -113,7 +118,8 @@ function PostList({ currentUser }) {
                                     )}
                                 </div>
                             </li>
-                        ))}
+                        );
+                        })}
                     </ul>
                 )}
             </div>
