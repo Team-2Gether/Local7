@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import usePost from '../hooks/usePost';
+import useLike from '../hooks/useLike';
 import CommentSection from './CommentSection'; 
 
 import '../../../assets/css/post.css';
@@ -9,7 +10,8 @@ import '../../../assets/css/PostDetail.css';
 function PostDetail({ currentUser }) {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { post, loading, error, loadPostById, removePost, setMessage } = usePost();
+    const { post, loading, error, loadPostById, removePost, setMessage, setPost } = usePost();
+    const { toggleLike, likeLoading, likeError, setLikeError } = useLike(); 
 
     useEffect(() => {
         if (id) {
@@ -30,6 +32,28 @@ function PostDetail({ currentUser }) {
         }
     };
 
+    // 좋아요 버튼 클릭 핸들러 (상세 페이지)
+    const handleToggleLike = async () => {
+        if (!currentUser) {
+            alert('로그인 후 좋아요를 누를 수 있습니다.');
+            return;
+        }
+
+        try {
+            const result = await toggleLike(post.postId); // 좋아요 토글 API 호출
+            // post 상태 업데이트 (좋아요 상태와 개수 반영)
+            setPost(prevPost => ({
+                ...prevPost,
+                liked: result.liked,
+                likeCount: result.likeCount
+            }));
+            setMessage(result.message); // 좋아요 성공/취소 메시지 표시
+        } catch (err) {
+            console.error('좋아요 처리 오류:', err);
+            setLikeError(err.message); // 에러 메시지 표시
+        }
+    };
+
     if (loading) {
         return <div className="post-detail-container loading">게시글을 불러오는 중...</div>;
     }
@@ -46,6 +70,8 @@ function PostDetail({ currentUser }) {
         <div className="post-detail-page">
             <div className="post-detail-content-area">
                 <div className="post-detail-container">
+                    {likeError && <div className="error-message">{likeError}</div>}
+
                     <h2 className="post-detail-title">{post.postTitle}</h2>
                     <p className="post-detail-meta">
                         작성자: {post.userNickname || '알 수 없음'} | 작성일: {new Date(post.createdDate).toLocaleString()}
@@ -80,28 +106,42 @@ function PostDetail({ currentUser }) {
                     </div>
 
                     {post.locationTag && <p className="post-detail-location-tag">위치 태그: {post.locationTag}</p>}
-                    <div className="post-detail-actions">
-                        <button
-                            onClick={() => navigate(`/posts/edit/${post.postId}`)}
-                            className="post-detail-button edit"
-                        >
-                            수정
-                        </button>
-                        <button
-                            onClick={handleDelete}
-                            className="post-detail-button delete"
-                        >
-                            삭제
-                        </button>
-                        <button
-                            onClick={() => navigate('/posts')}
-                            className="post-detail-button back"
-                        >
-                            목록으로 돌아가기
-                        </button>
-                    </div>
-                </div>
 
+                    <div className="post-detail-likes">
+                        <span
+                            className={`like-button ${post.liked ? 'liked' : ''}`}
+                            onClick={handleToggleLike}
+                            disabled={likeLoading}
+                        >
+                            {post.liked ? '❤️' : '🤍'}
+                        </span>
+                        <span className="like-count">{post.likeCount || 0}</span>
+                    </div>
+
+                    {currentUser && post.userId === currentUser.userId && ( 
+                        <div className="post-detail-actions">
+                            <button
+                                onClick={() => navigate(`/posts/edit/${post.postId}`)}
+                                className="post-detail-button edit"
+                            >
+                                수정
+                            </button>
+                            <button
+                                onClick={handleDelete}
+                                className="post-detail-button delete"
+                            >
+                                삭제
+                            </button>
+                        </div>
+                    )}
+                    <button
+                        onClick={() => navigate('/posts')}
+                        className="post-detail-button back"
+                    >
+                        목록으로 돌아가기
+                    </button>
+                </div>
+                
                 {/* CommentSection 컴포넌트 추가 */}
                 <CommentSection postId={post.postId} currentUser={currentUser} />
             </div>

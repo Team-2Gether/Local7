@@ -1,14 +1,17 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import usePost from '../hooks/usePost';
+import useLike from '../hooks/useLike';
 
 import '../../../assets/css/post.css';
+import '../../../assets/css/PostDetail.css'
 
 function PostList({ currentUser }) {
 
     console.log("currentUser:", currentUser);
 
-    const { posts, loading, error, message, loadAllPosts, removePost, setMessage } = usePost();
+    const { posts, loading, error, message, loadAllPosts, removePost, setMessage, setPosts } = usePost();
+    const { toggleLike, likeLoading, likeError, setLikeError } = useLike();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,6 +27,31 @@ function PostList({ currentUser }) {
                 console.error('게시글 삭제 오류:', err);
                 alert(err.response?.data?.message || '게시글 삭제에 실패했습니다. 권한을 확인해주세요.');
             }
+        }
+    };
+
+    // 좋아요 버튼 클릭 핸들러
+    const handleToggleLike = async (postId, e) => {
+        e.stopPropagation(); // 이벤트 버블링 방지 (게시글 상세 페이지로 이동하는 것을 막음)
+        if (!currentUser) {
+            alert('로그인 후 좋아요를 누를 수 있습니다.');
+            return;
+        }
+
+        try {
+            const result = await toggleLike(postId); // 좋아요 토글 API 호출
+            // posts 상태 업데이트
+            setPosts(prevPosts =>
+                prevPosts.map(post =>
+                    post.postId === postId
+                        ? { ...post, liked: result.liked, likeCount: result.likeCount }
+                        : post
+                )
+            );
+            setMessage(result.message); // 좋아요 성공/취소 메시지 표시
+        } catch (err) {
+            console.error('좋아요 처리 오류:', err);
+            alert(err.message); // 에러 메시지 표시
         }
     };
 
@@ -46,7 +74,10 @@ function PostList({ currentUser }) {
     return (
         <div className="post-list-container">
             <h1 className="post-list-title">게시글 목록</h1>
+
             {message && <div className="success-message">{message}</div>}
+            {likeError && <div className="error-message">{likeError}</div>} 
+
             <div className="post-actions-top">
                 <button
                     onClick={() => navigate('/posts/new')}
@@ -92,6 +123,16 @@ function PostList({ currentUser }) {
                                     <p className="post-card-content">{post.postContent}</p>
                                     <p className="post-card-meta">작성자: {post.userNickname}</p>
                                     <p className="post-card-meta">작성일: {new Date(post.createdDate).toLocaleDateString()}</p>
+                                    <p className="post-card-likes">
+                                        <span
+                                            className={`like-button ${post.liked ? 'liked' : ''}`}
+                                            onClick={(e) => handleToggleLike(post.postId, e)} // 좋아요 버튼 클릭 이벤트
+                                            disabled={likeLoading}
+                                        >
+                                            {post.liked ? '❤️' : '🤍'}
+                                        </span>
+                                        <span className="like-count">{post.likeCount || 0}</span>
+                                    </p>
                                     <p className="post-card-meta">위치: {post.locationTag}</p>
                                 </div>
 

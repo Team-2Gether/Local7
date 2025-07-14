@@ -1,8 +1,9 @@
 package com.twogether.local7.post.controller;
 
+import com.twogether.local7.like.service.LikeService;
 import com.twogether.local7.post.service.PostService;
 import com.twogether.local7.post.vo.PostVO;
-import jakarta.servlet.http.HttpSession; // HttpSession 임포트
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -29,15 +30,31 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private LikeService likeService;
+
     @Value("${file.upload-dir}")
     private String uploadDir;
 
     // 모든 게시글 조회 (GET /api/posts)
     @GetMapping({"", "/"})
-    public ResponseEntity<Map<String, Object>> getAllPosts() {
+    public ResponseEntity<Map<String, Object>> getAllPosts(HttpSession session) {
 
         List<PostVO> posts = postService.getAllPosts();
         Map<String, Object> response = new HashMap<>();
+
+        Long currentUserId = (Long) session.getAttribute("userId"); // 현재 사용자 ID 가져오기
+
+        for (PostVO post : posts) {
+            post.setLikeCount(likeService.getLikeCount(post.getPostId()));
+
+            if (currentUserId != null) {
+                post.setLiked(likeService.isLikedByUser(currentUserId, post.getPostId()));
+            } else {
+                post.setLiked(false);
+            }
+
+        }
 
         response.put("status", "success");
         response.put("message", "모든 게시글을 성공적으로 조회했습니다.");
@@ -49,21 +66,33 @@ public class PostController {
 
     // 특정 게시글 ID로 조회 (GET /api/posts/{id})
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getPostById(@PathVariable("id") Long postId) {
+    public ResponseEntity<Map<String, Object>> getPostById(@PathVariable("id") Long postId, HttpSession session) {
 
         PostVO post = postService.getPostById(postId);
         Map<String, Object> response = new HashMap<>();
 
-        if (post != null) {
-            response.put("status", "success");
-            response.put("message", "게시글을 성공적으로 조회했습니다.");
-            response.put("data", post);
-            return ResponseEntity.ok(response);
-        } else {
+        if (post == null) {
             response.put("status", "error");
             response.put("message", "게시글을 찾을 수 없습니다.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
+
+        int likeCount = likeService.getLikeCount(postId);
+        post.setLikeCount(likeCount);
+
+        Long currentUserId = (Long) session.getAttribute("userId");
+        boolean isLiked = false;
+
+        if (currentUserId != null) {
+            isLiked = likeService.isLikedByUser(currentUserId, postId);
+        }
+
+        post.setLiked(isLiked);
+
+        response.put("status", "success");
+        response.put("message", "게시글을 성공적으로 조회했습니다.");
+        response.put("data", post);
+        return ResponseEntity.ok(response);
 
     }
 
@@ -72,7 +101,7 @@ public class PostController {
     public ResponseEntity<Map<String, Object>> createPost(
             @RequestPart("post") PostVO post,
             @RequestPart(value = "images", required = false) List<MultipartFile> files,
-            HttpSession session) { // HttpSession 추가
+            HttpSession session) {
 
         Map<String, Object> response = new HashMap<>();
         List<String> imageUrls = new ArrayList<>();
@@ -243,8 +272,6 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
 
-        // 게시글 작성자와 현재 로그인한 사용자가 동일한지 확인 (관리자는 모든 글 삭제 가능하도록 하려면 여기 로직 수정)
-        // 현재는 작성자만 삭제 가능
         if (!existingPost.getUserId().equals(currentUserId)) {
             response.put("status", "error");
             response.put("message", "게시글을 삭제할 권한이 없습니다. 본인이 작성한 게시글만 삭제할 수 있습니다.");
@@ -259,6 +286,37 @@ public class PostController {
         } catch (Exception e) {
             response.put("status", "error");
             response.put("message", "게시글 삭제 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    // 좋아요/좋아요 취소 토글 API (POST /api/posts/{postId}/like)
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<Map<String, Object>> toggleLike(@PathVariable Long postId, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            response.put("status", "error");
+            response.put("message", "로그인이 필요합니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+
+        try {
+            boolean liked = likeService.toggleLike(userId, postId);
+
+            int updatedLikeCount = likeService.getLikeCount(postId);
+
+            response.put("status", "success");
+            response.put("liked", liked); // 좋아요 상태 (true: 좋아요, false: 좋아요 취소)
+            response.put("likeCount", updatedLikeCount); // 최신 좋아요 개수
+
+            String message = liked ? "게시글에 좋아요를 눌렀습니다." : "게시글 좋아요를 취소했습니다.";
+            response.put("message", message);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "좋아요 처리 중 오류가 발생했습니다: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

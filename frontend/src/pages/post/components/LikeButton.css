@@ -1,0 +1,31 @@
+.like-button {
+    cursor: pointer;
+    font-size: 24px; 
+    margin-right: 5px;
+    vertical-align: middle;
+    transition: transform 0.1s ease-in-out;
+}
+
+.like-button:hover {
+    transform: scale(1.1);
+}
+
+.like-button.liked {
+    color: red; 
+}
+
+.like-count {
+    font-size: 18px;
+    font-weight: bold;
+    vertical-align: middle;
+    color: #333;
+}
+
+/* 게시글 상세 페이지의 좋아요 섹션 */
+.post-detail-likes {
+    margin-top: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

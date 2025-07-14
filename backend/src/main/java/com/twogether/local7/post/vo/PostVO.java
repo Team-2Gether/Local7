@@ -29,5 +29,8 @@ public class PostVO {
 
     private List<ImageVO> images;
 
+    private int likeCount;
+    private boolean isLiked;
+
 }
 

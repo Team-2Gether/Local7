@@ -18,6 +18,7 @@
         <result property="updatedId" column="UPDATED_ID"/>
         <result property="userNickname" column="USER_NICKNAME"/>
         <result property="firstImageUrl" column="FIRST_IMAGE_URL"/>
+        <result property="likeCount" column="LIKE_COUNT"/>
 
         <collection property="images" ofType="com.twogether.local7.post.vo.ImageVO">
             <id property="imageId" column="IMAGE_ID"/>

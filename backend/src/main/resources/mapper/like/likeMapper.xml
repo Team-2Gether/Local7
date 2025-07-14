@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.twogether.local7.like.dao.LikeDAO">
+
+    <resultMap id="likeResultMap" type="com.twogether.local7.like.vo.LikeVO">
+        <id property="likeId" column="LIKE_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="postId" column="POST_ID"/>
+        <result property="likeDate" column="LIKE_DATE"/>
+    </resultMap>
+
+    <insert id="insertLike">
+        <selectKey keyProperty="likeId" resultType="long" order="BEFORE">
+            SELECT SEQ_TB_LIKE.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TB_LIKE (LIKE_ID, USER_ID, POST_ID, LIKE_DATE)
+        VALUES (#{likeId}, #{userId}, #{postId}, SYSDATE)
+    </insert>
+
+    <delete id="deleteLike">
+        DELETE FROM TB_LIKE
+        WHERE USER_ID = #{userId} AND POST_ID = #{postId}
+    </delete>
+
+    <select id="checkLikeStatus" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_LIKE
+        WHERE USER_ID = #{userId} AND POST_ID = #{postId}
+    </select>
+
+    <select id="countLikesByPostId" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_LIKE
+        WHERE POST_ID = #{postId}
+    </select>
+
+</mapper>
