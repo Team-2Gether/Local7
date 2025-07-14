@@ -1,4 +1,3 @@
-// src/pages/Main.js
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Routes, Route } from 'react-router-dom';
@@ -168,6 +167,7 @@ function Main({ currentUser }) {
           isOpen={isDetailModalOpen}
           onRequestClose={() => setIsDetailModalOpen(false)}
           restaurant={selectedRestaurant}
+          currentUser={currentUser}
         />
       )}
     </>

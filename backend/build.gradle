@@ -50,7 +50,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 	// https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
-	compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
+	// compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
 
 	// 테스트 관련 의존성
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

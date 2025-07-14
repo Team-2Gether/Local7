@@ -1,87 +1,167 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import './RestaurantDetailModal.css'; // 모달 스타일을 위한 CSS 파일
+import axios from 'axios';
+import ReviewForm from '../review/ReviewForm'; // ReviewForm 임포트 경로 확인!
 
-// 모달이 앱의 루트 요소에 바인딩되도록 설정
+import './RestaurantDetailModal.css';
+
 Modal.setAppElement('#root');
 
-function RestaurantDetailModal({ isOpen, onRequestClose, restaurant }) {
-    if (!restaurant) {
-        return null; // restaurant 객체가 없으면 아무것도 렌더링하지 않음
-    }
+function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser }) {
+    const [reviews, setReviews] = useState([]);
+    const [loadingReviews, setLoadingReviews] = useState(true);
+    const [reviewError, setReviewError] = useState(null);
+    const [showReviewForm, setShowReviewForm] = useState(false);
+    const [editingReview, setEditingReview] = useState(null); 
 
-    // 주소 필드들을 조합
-    const fullAddress = `${restaurant.addrSido || ''} ${restaurant.addrSigungu || ''} ${restaurant.addrDong || ''} ${restaurant.addrDetail || ''}`.trim();
+    // restaurantId가 변경될 때마다 리뷰를 다시 로드
+    useEffect(() => {
+        if (isOpen && restaurant?.restaurantId) {
+            fetchReviews(restaurant.restaurantId);
+            setShowReviewForm(false); // 모달 열릴 때 리뷰 폼 숨김
+            setEditingReview(null); // 수정 모드 초기화
+        } else {
+            setReviews([]); // 모달 닫힐 때 리뷰 초기화
+            setReviewError(null);
+        }
+    }, [isOpen, restaurant?.restaurantId]);
 
-    // 영업 시간과 브레이크 타임 표시 함수
-    const formatTime = (hour, minute) => {
-        if (hour == null || minute == null) return '정보 없음';
-        return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    const fetchReviews = async (restaurantId) => {
+        setLoadingReviews(true);
+        setReviewError(null);
+        try {
+            const response = await axios.get(`http://localhost:8080/api/reviews/restaurant/${restaurantId}`);
+            if (response.data?.status === 'success') {
+                setReviews(response.data.data);
+            } else {
+                setReviewError(response.data?.message || '리뷰를 불러오는 데 실패했습니다.');
+            }
+        } catch (err) {
+            console.error('리뷰 불러오기 오류:', err);
+            setReviewError('리뷰를 불러오는 중 네트워크 오류가 발생했습니다.');
+        } finally {
+            setLoadingReviews(false);
+        }
     };
 
-    const displayOperatingHours = () => {
-        const open = formatTime(restaurant.openHour, restaurant.openMinute);
-        const close = formatTime(restaurant.closeHour, restaurant.closeMinute);
-        let hours = `매일 ${open} - ${close}`;
+    const handleReviewSubmitted = () => {
+        setShowReviewForm(false); // 폼 제출 후 폼 숨기기
+        setEditingReview(null); // 수정 모드 해제
+        fetchReviews(restaurant.restaurantId); // 리뷰 목록 새로고침
+    };
 
-        if (restaurant.breakStartHour != null && restaurant.breakEndHour != null) {
-            const breakStart = formatTime(restaurant.breakStartHour, restaurant.breakStartMinute);
-            const breakEnd = formatTime(restaurant.breakEndHour, restaurant.breakEndMinute);
-            hours += ` (브레이크타임 ${breakStart} - ${breakEnd})`;
+    const handleEditReview = (review) => {
+        setEditingReview(review); // 수정할 리뷰 설정
+        setShowReviewForm(true); // 리뷰 폼 표시
+    };
+
+    const handleDeleteReview = async (reviewId) => {
+        if (window.confirm('정말로 이 리뷰를 삭제하시겠습니까?')) {
+            try {
+                const response = await axios.delete(`http://localhost:8080/api/reviews/${reviewId}`);
+                if (response.data?.status === 'success') {
+                    alert(response.data.message);
+                    fetchReviews(restaurant.restaurantId); // 리뷰 목록 새로고침
+                } else {
+                    alert(response.data?.message || '리뷰 삭제에 실패했습니다.');
+                }
+            } catch (err) {
+                console.error('리뷰 삭제 오류:', err);
+                alert('리뷰 삭제 중 네트워크 오류가 발생했습니다.');
+            }
         }
-        return hours;
+    };
+
+    const handleCancelEdit = () => {
+        setEditingReview(null);
+        setShowReviewForm(false);
+    };
+
+    // 모달 닫기 요청 시 폼 상태 초기화
+    const handleRequestClose = () => {
+        setShowReviewForm(false);
+        setEditingReview(null);
+        onRequestClose();
     };
 
     return (
         <Modal
             isOpen={isOpen}
-            onRequestClose={onRequestClose}
-            contentLabel="음식점 상세 정보"
+            onRequestClose={handleRequestClose}
             className="restaurant-detail-modal"
             overlayClassName="restaurant-detail-overlay"
+            contentLabel="Restaurant Details"
         >
             <div className="modal-header-kakao">
                 <div className="title-section">
                     <h3>{restaurant.restaurantName}</h3>
-                    <span className="category">{restaurant.restaurantCategory}</span>
+                    <p className="category">{restaurant.restaurantCategory}</p>
                 </div>
-                <button onClick={onRequestClose} className="close-button-kakao">&times;</button>
+                <button onClick={handleRequestClose} className="close-button">&times;</button>
             </div>
-            <div className="modal-body-kakao">
-                <div className="info-item">
-                    <span className="info-label">주소</span>
-                    <span className="info-content">{fullAddress}</span>
-                </div>
-                <div className="info-item">
-                    <span className="info-label">전화</span>
-                    <span className="info-content">{restaurant.phoneNumber || '정보 없음'}</span>
-                </div>
-                <div className="info-item">
-                    <span className="info-label">영업시간</span>
-                    <span className="info-content">{displayOperatingHours()}</span>
-                </div>
-                {restaurant.restaurantHoliday && (
-                    <div className="info-item">
-                        <span className="info-label">휴무일</span>
-                        <span className="info-content">{restaurant.restaurantHoliday}</span>
-                    </div>
+
+            <div className="modal-body">
+                <p><strong>주소:</strong> {`${restaurant.addrSido || ''} ${restaurant.addrSigungu || ''} ${restaurant.addrDong || ''} ${restaurant.addrDetail || ''}`}</p>
+                <p><strong>전화번호:</strong> {restaurant.phoneNumber || '정보 없음'}</p>
+                <p><strong>영업 시간:</strong> {restaurant.openHour !== null ? `${restaurant.openHour}:${String(restaurant.openMinute).padStart(2, '0')} ~ ${restaurant.closeHour}:${String(restaurant.closeMinute).padStart(2, '0')}` : '정보 없음'}</p>
+                {restaurant.breakStartHour !== null && (
+                    <p><strong>브레이크 타임:</strong> {`${restaurant.breakStartHour}:${String(restaurant.breakStartMinute).padStart(2, '0')} ~ ${restaurant.breakEndHour}:${String(restaurant.breakEndMinute).padStart(2, '0')}`}</p>
                 )}
-                {restaurant.parkingInfo && (
-                    <div className="info-item">
-                        <span className="info-label">주차</span>
-                        <span className="info-content">{restaurant.parkingInfo}</span>
-                    </div>
-                )}
-                <div className="link-section">
-                    <a
-                        href={`https://map.kakao.com/link/map/${restaurant.restaurantName},${restaurant.restaurantLat},${restaurant.restaurantLon}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="kakao-map-full-link"
-                    >
-                        <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapilogo/places_management.png" alt="카카오맵 아이콘" />
-                        큰 지도 보기
-                    </a>
+                <p><strong>휴무일:</strong> {restaurant.restaurantHoliday || '정보 없음'}</p>
+                <p><strong>주차 정보:</strong> {restaurant.parkingInfo || '정보 없음'}</p>
+
+                <hr />
+
+                <div className="review-section">
+                    <h4>리뷰</h4>
+                    {currentUser && ( // 로그인된 사용자만 리뷰 작성 버튼 표시
+                        <button onClick={() => setShowReviewForm(!showReviewForm)} className="toggle-review-form-button">
+                            {showReviewForm ? '리뷰 폼 숨기기' : (editingReview ? '리뷰 수정 폼' : '리뷰 작성')}
+                        </button>
+                    )}
+
+                    {showReviewForm && (
+                        <ReviewForm
+                            restaurantId={restaurant.restaurantId}
+                            onReviewSubmitted={handleReviewSubmitted}
+                            editingReview={editingReview}
+                            onCancelEdit={handleCancelEdit}
+                            currentUser={currentUser} // 현재 사용자 정보를 ReviewForm에 전달
+                        />
+                    )}
+
+                    {loadingReviews ? (
+                        <p>리뷰 로딩 중...</p>
+                    ) : reviewError ? (
+                        <p className="error-message">{reviewError}</p>
+                    ) : reviews.length === 0 ? (
+                        <p>아직 작성된 리뷰가 없습니다.</p>
+                    ) : (
+                        <ul className="review-list">
+                            {reviews.map((review) => (
+                                <li key={review.reviewId} className="review-item">
+                                    <div className="review-header">
+                                        {/* TODO: review.userId를 사용하여 사용자 닉네임/ID 표시 */}
+                                        <span className="review-user">{review.userNickname || `사용자 ${review.userId}`}</span>
+                                        <span className="review-rating">
+                                            {'★'.repeat(Math.floor(review.reviewRating))}
+                                            {'☆'.repeat(5 - Math.floor(review.reviewRating))}
+                                        </span>
+                                        <span className="review-date">{new Date(review.createdDate).toLocaleDateString()}</span>
+                                    </div>
+                                    <p className="review-content">{review.reviewContent}</p>
+                                    {review.aiSummary && <p className="review-ai-summary">**AI 요약:** {review.aiSummary}</p>}
+                                    {review.aiKeywords && <p className="review-ai-keywords">**키워드:** {review.aiKeywords}</p>}
+                                    {currentUser && currentUser.userId === review.userId && (
+                                        <div className="review-actions">
+                                            <button onClick={() => handleEditReview(review)}>수정</button>
+                                            <button onClick={() => handleDeleteReview(review.reviewId)}>삭제</button>
+                                        </div>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
             </div>
         </Modal>

@@ -1,5 +1,3 @@
-/* RestaurantDetailModal.css */
-
 .restaurant-detail-overlay {
     position: fixed;
     top: 0;
@@ -16,22 +14,26 @@
 .restaurant-detail-modal {
     background: white;
     border-radius: 8px;
-    max-width: 450px; /* 카카오맵 정보창과 유사한 너비 */
+    max-width: 450px;
     width: 90%;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     position: relative;
     outline: none;
-    overflow: hidden; /* 내용이 넘치지 않도록 */
+    overflow: hidden; 
+    display: flex; 
+    flex-direction: column; 
+    max-height: 90vh; 
 }
 
 /* 카카오맵 스타일 유사하게 변경 */
 .modal-header-kakao {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start; /* 상단 정렬 */
+    align-items: flex-start; 
     padding: 15px 20px;
     border-bottom: 1px solid #f0f0f0;
     background-color: #fcfcfc;
+    flex-shrink: 0; 
 }
 
 .modal-header-kakao .title-section {
@@ -42,106 +44,236 @@
 
 .modal-header-kakao h3 {
     margin: 0;
-    font-size: 22px;
+    font-size: 1.2em; 
     color: #333;
-    font-weight: bold;
-    line-height: 1.3;
 }
 
 .modal-header-kakao .category {
-    font-size: 14px;
+    font-size: 0.85em;
     color: #888;
     margin-top: 5px;
 }
 
-.close-button-kakao {
+.close-button {
     background: none;
     border: none;
-    font-size: 32px;
-    cursor: pointer;
+    font-size: 1.8em;
     color: #999;
+    cursor: pointer;
     padding: 0;
     line-height: 1;
-    margin-left: 15px;
-    transition: color 0.2s ease;
+    margin-left: 10px; 
 }
 
-.close-button-kakao:hover {
-    color: #333;
+.close-button:hover {
+    color: #555;
 }
 
-.modal-body-kakao {
+.modal-body {
     padding: 20px;
+    font-size: 0.95em;
+    color: #555;
+    overflow-y: auto; 
+    flex-grow: 1; 
 }
 
-.info-item {
-    display: flex;
-    margin-bottom: 12px;
-    font-size: 15px;
+.modal-body p {
+    margin-bottom: 8px;
 }
 
-.info-item .info-label {
-    flex-shrink: 0; /* 라벨이 줄어들지 않도록 */
-    width: 80px; /* 라벨 너비 고정 */
-    color: #666;
-    font-weight: normal;
-}
-
-.info-item .info-content {
-    flex-grow: 1;
+.modal-body strong {
     color: #333;
-    word-break: break-word; /* 긴 텍스트 줄바꿈 */
 }
 
-.link-section {
-    text-align: center;
-    padding-top: 15px;
-    border-top: 1px dashed #eee; /* 점선 구분선 */
+.review-section {
+    margin-top: 20px;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 20px;
+}
+
+.review-section h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.toggle-review-form-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    transition: background-color 0.2s;
+}
+
+.toggle-review-form-button:hover {
+    background-color: #0056b3;
+}
+
+.review-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.review-item {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.review-item .review-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.review-item .review-user {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 1.1em;
+    margin-right: 10px;
+}
+
+.review-item .review-rating {
+    color: gold;
+    font-size: 1.2em;
+}
+
+.review-item .review-date {
+    font-size: 0.85em;
+    color: #888;
+    margin-left: auto; 
+}
+
+.review-item .review-content {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+    margin-bottom: 10px;
+    white-space: pre-wrap; 
+}
+
+.review-item .review-ai-summary,
+.review-item .review-ai-keywords {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.review-item .review-ai-summary {
+    font-style: italic;
+}
+
+.review-item .review-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.review-item .review-actions button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: background-color 0.2s;
+}
+
+.review-item .review-actions button:hover {
+    background-color: #0056b3;
+}
+
+/* ReviewForm 스타일 */
+.review-form-container {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+.review-form-container h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.review-form-container .form-group {
+    margin-bottom: 15px;
+}
+
+.review-form-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.review-form-container select,
+.review-form-container textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box; 
+}
+
+.review-form-container textarea {
+    resize: vertical; 
+    min-height: 80px;
+}
+
+.review-form-container .error-message {
+    color: #dc3545;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.review-form-container .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
     margin-top: 20px;
 }
 
-.kakao-map-full-link {
-    display: inline-flex; /* 아이콘과 텍스트 정렬 */
-    align-items: center;
-    gap: 8px; /* 아이콘과 텍스트 사이 간격 */
+.review-form-container .form-actions button {
+    background-color: #28a745; 
+    color: white;
+    border: none;
     padding: 10px 20px;
-    background-color: #FEE500; /* 카카오 노란색 */
-    color: #3C1E1E;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 16px;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s;
 }
 
-.kakao-map-full-link:hover {
-    background-color: #FAD100;
-    transform: translateY(-1px); /* 살짝 위로 이동 효과 */
+.review-form-container .form-actions button:hover:not(:disabled) {
+    background-color: #218838;
 }
 
-.kakao-map-full-link img {
-    width: 20px; /* 아이콘 크기 */
-    height: 20px;
+.review-form-container .form-actions button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
 }
 
-/* 추가적인 반응형 디자인 고려 (필요시) */
-@media (max-width: 600px) {
-    .restaurant-detail-modal {
-        max-width: 95%;
-        margin: 10px;
-    }
-    .modal-header-kakao h3 {
-        font-size: 20px;
-    }
-    .close-button-kakao {
-        font-size: 28px;
-    }
-    .info-item {
-        flex-direction: column; /* 작은 화면에서는 세로로 정렬 */
-        align-items: flex-start;
-    }
-    .info-item .info-label {
-        width: auto;
-        margin-bottom: 5px;
-    }
+.review-form-container .form-actions button:last-child { 
+    background-color: #6c757d;
+}
+
+.review-form-container .form-actions button:last-child:hover:not(:disabled) {
+    background-color: #5a6268;
 }
