@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import './VotePage.css';
 import VotePage_comItem from './VotePage_comItem';
-import VotePage_add_com from './VotePage_add_com';
-import VotePage_sampleCom from './VotePage_sampleCom';
+import VotePage_comAdd from './VotePage_comAdd';
+import { commentSamples } from './VotePage_samples';
 
 //댓글 메인섹션 로직
 function VotePage_comSection() {
-  const [comments, setComments] = useState(VotePage_sampleCom);
+  const [comments, setComments] = useState(commentSamples);
   const [input, setInput] = useState('');
 
   //add 댓글 로직
   const handleSubmit = () => {
-    VotePage_add_com(input, setInput, comments, setComments);
+    VotePage_comAdd(input, setInput, comments, setComments);
   };
 
   return (

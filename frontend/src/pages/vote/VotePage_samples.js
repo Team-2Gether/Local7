@@ -1,6 +1,6 @@
 // DB 연결 전 샘플 데이터
 
-const VotePage_sampleCom = [
+export const commentSamples = [
   {
     id: 1,
     nickName: 'test1',
@@ -27,4 +27,18 @@ const VotePage_sampleCom = [
   },
 ];
 
-export default VotePage_sampleCom;
+// 지역명 샘플 데이터
+export const regionNames = [
+  '고성',
+  '속초',
+  '양양',
+  '강릉',
+  '동해',
+  '삼척',
+  '울진',
+  '영덕',
+  '포항',
+  '경주',
+  '울산',
+  '부산',
+];

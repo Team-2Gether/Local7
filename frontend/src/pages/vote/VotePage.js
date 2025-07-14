@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import VotePage_comSection from './VotePage_comSection';
+import { regionNames } from './VotePage_samples';
 import './VotePage.css';
 
 // 투표지역 항목 자동 생성 필드(추가된 항목 개수가 일치해야함)
@@ -10,41 +11,28 @@ const initialVotes = Array.from({ length: 12 }, (_, i) =>
   return acc;
 }, {});
 
+// 지역 항목 맵핑
+const regions = regionNames.map((name, i) => ({
+  key: String.fromCharCode(65 + i),
+  name,
+}));
+
 // 투표 메인 함수
-function RestaurantVote() {
+function VotePage() {
   const [votes, setVotes] = useState(initialVotes);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [hasVoted, setHasVoted] = useState(false);
 
-  // 투표 카운트 함수
-  const handleVote = (option) => {
-    setVotes((prevVotes) => ({
-      ...prevVotes,
-      [option]: prevVotes[option] + 1,
-    }));
-    setSelectedOption(option);
+  // 투표 상태 확인
+  const handleVoteClick = () => {
+    if (selectedOption && !hasVoted) {
+      setVotes((prevVotes) => ({
+        ...prevVotes,
+        [selectedOption]: prevVotes[selectedOption] + 1,
+      }));
+      setHasVoted(true);
+    }
   };
-
-  // 지역 리스트(항목 추가하려면 같은 양식으로 지역 추가하면 됨)(DB연결전 임시)
-  const regionNames = [
-    '고성',
-    '속초',
-    '양양',
-    '강릉',
-    '동해',
-    '삼척',
-    '울진',
-    '영덕',
-    '포항',
-    '경주',
-    '울산',
-    '부산',
-  ];
-
-  // 지역 항목 맵핑
-  const regions = regionNames.map((name, i) => ({
-    key: String.fromCharCode(65 + i),
-    name,
-  }));
 
   return (
     <div className="vote-container">
@@ -54,23 +42,35 @@ function RestaurantVote() {
       </div>
 
       <h2>이달의 여행지를 투표해주세요</h2>
+
+      {/* 해당 각 지역 선택 버튼 */}
       <div className="vote-buttons">
         {regions.map((region) => (
           <button
             key={region.key}
-            onClick={() => handleVote(region.key)}
+            onClick={() => setSelectedOption(region.key)}
             className={selectedOption === region.key ? 'selected' : ''}
+            disabled={hasVoted}
           >
             {region.name} ({votes[region.key]})
           </button>
         ))}
       </div>
+      <br />
 
-      <button className="vote-todo-Button">투표하기</button>
+      {/* 투표 버튼 */}
+      <button
+        className="vote-todo-Button"
+        onClick={handleVoteClick}
+        disabled={hasVoted || !selectedOption}
+      >
+        투표하기
+      </button>
 
+      {/* 댓글 컴포넌트 */}
       <VotePage_comSection />
     </div>
   );
 }
 
-export default RestaurantVote;
+export default VotePage;

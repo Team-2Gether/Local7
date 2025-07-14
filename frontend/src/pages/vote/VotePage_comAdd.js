@@ -1,4 +1,4 @@
-function VotePage_add_com(input, setInput, comments, setComments) {
+function VotePage_comAdd(input, setInput, comments, setComments) {
   if (input.trim() === '') return;
 
   const newComment = {
@@ -13,4 +13,4 @@ function VotePage_add_com(input, setInput, comments, setComments) {
   setInput('');
 }
 
-export default VotePage_add_com;
+export default VotePage_comAdd;
