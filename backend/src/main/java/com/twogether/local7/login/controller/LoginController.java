@@ -2,7 +2,7 @@ package com.twogether.local7.login.controller;
 
 import com.twogether.local7.login.service.LoginService;
 import com.twogether.local7.login.vo.LoginVO;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession; // HttpSession import는 일단 유지, 사용하지 않을 예정
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping("/login")
-    public ResponseEntity<? extends Map<String,? extends Object>> login(@RequestBody Map<String, String> loginRequest, HttpSession session) {
+    public ResponseEntity<? extends Map<String,? extends Object>> login(@RequestBody Map<String, String> loginRequest) { // HttpSession 제거
         String credential = loginRequest.get("credential");
         String password = loginRequest.get("password");
 
@@ -31,72 +31,53 @@ public class LoginController {
         try {
             LoginVO user = loginService.login(credential, password);
 
-            session.setAttribute("isLoggedIn", true);
-            session.setAttribute("userId", user.getUserId());
-            session.setAttribute("userLoginId", user.getUserLoginId());
-            session.setAttribute("userName", user.getUserName());
-            session.setAttribute("userNickname", user.getUserNickname());
-            session.setAttribute("userRule", user.getRuleName());
-            session.setAttribute("userEmail",user.getUserEmail());
-            session.setAttribute("userProfileImageUrl", user.getUserProfileImageUrl());
-            session.setAttribute("userBio", user.getUserBio());
-            session.setAttribute("createDate", user.getCreateDate());
-            session.setAttribute("createdId", user.getCreatedId());
-            session.setAttribute("updatedDate", user.getUpdatedDate());
-            session.setAttribute("updatedId", user.getUpdatedId());
+            // 세션 스토리지 사용으로 변경됨에 따라 서버 측 HttpSession에 사용자 정보를 저장하지 않습니다.
+            // 클라이언트(React)에서 로그인 성공 후 응답받은 사용자 정보를 sessionStorage에 직접 저장합니다.
 
-            Map<String, Object> successResponse = new HashMap<>();
-            successResponse.put("status", "success");
-            successResponse.put("message", "로그인 성공!");
-            successResponse.put("user", user);
-            return ResponseEntity.ok(successResponse);
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("message", "로그인 성공");
+            // 클라이언트에 사용자 정보 반환 (sessionStorage 저장을 위해 필요)
+            response.put("isLoggedIn", true);
+            response.put("userId", user.getUserId());
+            response.put("userLoginId", user.getUserLoginId());
+            response.put("userName", user.getUserName());
+            response.put("userNickname", user.getUserNickname());
+            response.put("userEmail", user.getUserEmail());
+            response.put("userProfileImageUrl", user.getUserProfileImageUrl());
+            response.put("userBio", user.getUserBio());
+            response.put("ruleId", user.getRuleId());
+            response.put("createDate", user.getCreateDate());
+            response.put("createdId", user.getCreatedId());
+            response.put("updatedDate", user.getUpdatedDate());
+            response.put("updatedId", user.getUpdatedId());
+
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            System.err.println("Login error: " + e.getMessage());
-            if (e.getMessage() != null) {
-                if (e.getMessage().contains("User not found") || e.getMessage().contains("사용자 정보를 찾을 수 없거나 비밀번호가 일치하지 않습니다.")) {
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                            .body(createErrorResponse("user_not_found", "아이디/이메일 또는 비밀번호가 일치하지 않습니다."));
-                } else if (e.getMessage().contains("Password mismatch")) {
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                            .body(createErrorResponse("password_mismatch", "비밀번호가 일치하지 않습니다."));
-                }
-            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(createErrorResponse("login_failed", e.getMessage()));
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(createErrorResponse("internal_error", "로그인 처리 중 서버 오류가 발생했습니다."));
+                    .body(createErrorResponse("server_error", "로그인 중 서버 오류가 발생했습니다."));
         }
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Map<String, String>> logout(HttpSession session) {
-        session.invalidate();
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "로그아웃 되었습니다.");
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Map<String, Object>> logout() { // HttpSession 제거
+        // 클라이언트(React)에서 sessionStorage를 직접 지우므로, 서버에서는 특별히 할 일 없음
+        // 만약 서버 측 세션 ID 기반의 쿠키를 사용했다면 여기서 세션 무효화 로직이 필요하지만,
+        // 현재는 클라이언트에서 상태를 관리하므로 단순 성공 응답만 반환
+        return ResponseEntity.ok(createSuccessResponse("로그아웃되었습니다."));
     }
 
     @GetMapping("/status")
-    public ResponseEntity<Map<String, Object>> getLoginStatus(HttpSession session) {
+    public ResponseEntity<Map<String, ?>> checkLoginStatus() { // HttpSession 제거
         Map<String, Object> response = new HashMap<>();
-        if (session.getAttribute("isLoggedIn") != null && (Boolean) session.getAttribute("isLoggedIn")) {
-            response.put("isLoggedIn", true);
-            response.put("userId", session.getAttribute("userId"));
-            response.put("userLoginId", session.getAttribute("userLoginId"));
-            response.put("userName", session.getAttribute("userName"));
-            response.put("userNickname", session.getAttribute("userNickname"));
-            response.put("userRule", session.getAttribute("userRule"));
-            response.put("userEmail",session.getAttribute("userEmail"));
-            response.put("userProfileImageUrl", session.getAttribute("userProfileImageUrl"));
-            response.put("userBio", session.getAttribute("userBio"));
-            response.put("createDate", session.getAttribute("createDate"));
-            response.put("createdId", session.getAttribute("createdId"));
-            response.put("updatedDate", session.getAttribute("updatedDate"));
-            response.put("updatedId", session.getAttribute("updatedId"));
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("isLoggedIn", false);
-            return ResponseEntity.ok(response);
-        }
+        // 클라이언트에서 sessionStorage를 통해 로그인 상태를 관리하므로,
+        // 서버는 기본적으로 로그인되지 않은 상태를 반환합니다.
+        // 실제 애플리케이션에서는 JWT 등 토큰 기반 인증을 사용하여 상태를 검증해야 합니다.
+        response.put("isLoggedIn", false);
+        return ResponseEntity.ok(response);
     }
 
     private Map<String, Object> createErrorResponse(String code, String message) {

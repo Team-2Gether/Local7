@@ -14,21 +14,25 @@ import UserPage from './pages/user/UserPage';
 import Sidebar from './components/Sidebar';
 import AiModal from './pages/ai/components/AiModal';
 
-import PostForm from './pages/post/PostForm'; //
+import PostForm from './pages/post/PostForm';
 
 import sea from './assets/images/sea.png';
 import ko from './assets/images/ko.png';
 import first from './assets/images/first.png';
 import './App.css';
-import MyPosts from './pages/user/MyPosts'; //
+import MyPosts from './pages/user/MyPosts';
 import PostList from './pages/post/components/PostList';
 import PostDetail from './pages/post/components/PostDetail';
 
 Modal.setAppElement('#root');
 
 function AppContent() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [currentUser, setCurrentUser] = useState(null);
+    // sessionStorage에서 로그인 상태와 사용자 정보를 불러와 초기 상태 설정
+    const initialCurrentUser = JSON.parse(sessionStorage.getItem('currentUser')) || null;
+    const initialIsLoggedIn = initialCurrentUser !== null;
+
+    const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn);
+    const [currentUser, setCurrentUser] = useState(initialCurrentUser);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
     const [isAiModalOpen, setIsAiModalOpen] = useState(false);
@@ -39,12 +43,19 @@ function AppContent() {
     axios.defaults.withCredentials = true;
 
     const checkLoginStatus = async () => {
+        // 이미 sessionStorage에 사용자 정보가 있다면 API 호출 없이 사용
+        if (sessionStorage.getItem('currentUser')) {
+            setIsLoggedIn(true);
+            setCurrentUser(JSON.parse(sessionStorage.getItem('currentUser')));
+            return;
+        }
+
         try {
             const response = await axios.get('http://localhost:8080/api/auth/status');
             const data = response.data;
             if (response.status === 200 && data.isLoggedIn) {
                 setIsLoggedIn(true);
-                setCurrentUser({
+                const userData = {
                     userId: data.userId,
                     userLoginId: data.userLoginId,
                     userName: data.userName,
@@ -52,21 +63,25 @@ function AppContent() {
                     userBio: data.userBio,
                     userEmail: data.userEmail,
                     ruleId: data.ruleId,
-                    userRule: data.userRule,
                     userProfileImageUrl: data.userProfileImageUrl,
                     createDate: data.createDate,
                     createdId: data.createdId,
                     updatedDate: data.updatedDate,
                     updatedId: data.updatedId
-                });
+                };
+                setCurrentUser(userData);
+                // 로그인 상태가 확인되면 sessionStorage에 저장
+                sessionStorage.setItem('currentUser', JSON.stringify(userData));
             } else {
                 setIsLoggedIn(false);
                 setCurrentUser(null);
+                sessionStorage.removeItem('currentUser'); // 로그아웃 상태면 제거
             }
         } catch (error) {
             console.error("로그인 상태를 가져오지 못했습니다:", error);
             setIsLoggedIn(false);
             setCurrentUser(null);
+            sessionStorage.removeItem('currentUser'); // 에러 발생 시 제거
         }
     };
 
@@ -78,6 +93,7 @@ function AppContent() {
         setIsLoggedIn(true);
         setCurrentUser(userData);
         setIsLoginModalOpen(false);
+        sessionStorage.setItem('currentUser', JSON.stringify(userData)); // 로그인 성공 시 sessionStorage에 저장
         console.log("로그인 성공", userData);
         navigate('/');
     };
@@ -90,6 +106,7 @@ function AppContent() {
                 alert(data.message);
                 setIsLoggedIn(false);
                 setCurrentUser(null);
+                sessionStorage.removeItem('currentUser'); // 로그아웃 시 sessionStorage에서 제거
                 navigate('/');
             } else {
                 alert("로그아웃 실패: " + data.message);
@@ -155,7 +172,7 @@ function AppContent() {
                             </div>
                         )} />
 
-                        {/*  currentUser prop 추가 */}
+                        {/* currentUser prop 추가 */}
                         <Route path="/posts" element={<PostList currentUser={currentUser} />} />
 
                         {/* currentUser prop 추가 */}
