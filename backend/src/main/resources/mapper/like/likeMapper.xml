@@ -6,15 +6,14 @@
         <id property="likeId" column="LIKE_ID"/>
         <result property="userId" column="USER_ID"/>
         <result property="postId" column="POST_ID"/>
-        <result property="likeDate" column="LIKE_DATE"/>
+        <result property="likeDate" column="CREATED_DATE"/>
     </resultMap>
 
     <insert id="insertLike">
         <selectKey keyProperty="likeId" resultType="long" order="BEFORE">
             SELECT SEQ_TB_LIKE.NEXTVAL FROM DUAL
         </selectKey>
-        INSERT INTO TB_LIKE (LIKE_ID, USER_ID, POST_ID, LIKE_DATE)
-        VALUES (#{likeId}, #{userId}, #{postId}, SYSDATE)
+        INSERT INTO TB_LIKE (LIKE_ID, USER_ID, POST_ID, CREATED_DATE) VALUES (#{likeId}, #{userId}, #{postId}, SYSDATE)
     </insert>
 
     <delete id="deleteLike">

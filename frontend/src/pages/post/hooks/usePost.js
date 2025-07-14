@@ -94,6 +94,7 @@ const usePost = () => {
 
     return {
         posts,
+        setPosts,
         post,
         loading,
         error,

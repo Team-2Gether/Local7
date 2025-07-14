@@ -4,7 +4,6 @@ import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
 import CommentSection from './CommentSection'; 
 
-import '../../../assets/css/post.css';
 import '../../../assets/css/PostDetail.css';
 
 function PostDetail({ currentUser }) {
@@ -115,7 +114,7 @@ function PostDetail({ currentUser }) {
                         >
                             {post.liked ? '❤️' : '🤍'}
                         </span>
-                        <span className="like-count">{post.likeCount || 0}</span>
+                        <span className="like-count">❤️{post.likeCount || 0}</span>
                     </div>
 
                     {currentUser && post.userId === currentUser.userId && ( 
@@ -140,10 +139,11 @@ function PostDetail({ currentUser }) {
                     >
                         목록으로 돌아가기
                     </button>
+                    {/* CommentSection 컴포넌트 추가 */}
+                    <CommentSection postId={post.postId} currentUser={currentUser} />   
                 </div>
                 
-                {/* CommentSection 컴포넌트 추가 */}
-                <CommentSection postId={post.postId} currentUser={currentUser} />
+                
             </div>
         </div>
     );

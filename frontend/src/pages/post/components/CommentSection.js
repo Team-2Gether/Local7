@@ -112,7 +112,7 @@ function CommentSection({ postId, currentUser }) {
     };
 
     return (
-        <div className="comment-section">
+        <div className="comment-section1">
             <h3>댓글</h3>
             {message && <div className="success-message">{message}</div>} 
             {commentError && <p className="error-message">{commentError}</p>}

@@ -13,6 +13,6 @@ public class LikeVO {
     private Long likeId;
     private Long userId;
     private Long postId;
-    private LocalDateTime likeDate;
+    private LocalDateTime createdDate;
 
 }
