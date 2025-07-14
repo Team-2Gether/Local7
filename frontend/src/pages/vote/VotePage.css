@@ -7,17 +7,42 @@ h2 {
   margin-top: 60px;
 }
 
+.vote-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  justify-items: center;
+  max-width: 600px;
+  margin: auto;
+}
+
 .vote-buttons button {
   font-size: 20px;
   padding: 10px 20px;
   margin: 10px;
   border-radius: 20px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.selected {
-  color: blueviolet;
-  border-color: blueviolet;
+.vote-buttons button:hover {
+  background-color: #999;
+}
+
+.vote-todo-Button {
+  background-color: #ffcc00;
+  width: fit-content;
+  font-size: 20px;
+  padding: 10px 60px;
+  margin: 10px;
+  border-radius: 20px;
+  color: #ffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.vote-todo-Button:enabled:hover {
+  background-color: darkgoldenrod;
 }
 
 .tap-contents {
@@ -27,7 +52,7 @@ h2 {
 }
 
 .tap-contents > div {
-  background-color: #ffcc00;
+  background-color: darkgoldenrod;
   flex: auto;
   width: fit-content;
   font-size: 20px;
@@ -37,8 +62,16 @@ h2 {
   cursor: pointer;
 }
 
-.tap-contents > div:hover {
-  background-color: darkgoldenrod;
+.selected-region {
+  color: blueviolet;
+  border: solid 3px blueviolet;
+  font-weight: bold;
+}
+
+.selected-tap {
+  background-color: #ffcc00 !important;
+  font-weight: 1000;
+  transition: all 0.3s ease;
 }
 
 /* 댓글 css -----------------------------------------*/
@@ -94,8 +127,22 @@ h2 {
   margin-left: 8px;
 }
 
-.report:hover {
+.report {
+  font-size: 11px;
+  text-align: right;
   color: red;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.report:hover {
+  color: darkred;
+}
+
+.reported {
+  color: gray;
+  cursor: default;
+  pointer-events: none;
 }
 
 .comment-input {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import VotePage_comSection from './VotePage_comSection';
-import { regionNames } from './VotePage_samples';
+import VotePage_comSection from './components/VotePage_comSection';
+import { regionNames } from './components/VotePage_samples';
 import './VotePage.css';
 
 // 투표지역 항목 자동 생성 필드(추가된 항목 개수가 일치해야함)
@@ -21,6 +21,7 @@ const regions = regionNames.map((name, i) => ({
 function VotePage() {
   const [votes, setVotes] = useState(initialVotes);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedTap, setSelectedTap] = useState('place');
   const [hasVoted, setHasVoted] = useState(false);
 
   // 투표 상태 확인
@@ -34,11 +35,25 @@ function VotePage() {
     }
   };
 
+  const handleTapClick = (tap) => {
+    setSelectedTap(tap);
+  };
+
   return (
     <div className="vote-container">
       <div className="tap-contents">
-        <div>이달의 여행지</div>
-        <div>이달의 게시물</div>
+        <div
+          className={selectedTap === 'place' ? 'tap selected-tap' : 'tap'}
+          onClick={() => handleTapClick('place')}
+        >
+          이달의 여행지
+        </div>
+        <div
+          className={selectedTap === 'post' ? 'tap selected-tap' : 'tap'}
+          onClick={() => handleTapClick('post')}
+        >
+          이달의 게시물
+        </div>
       </div>
 
       <h2>이달의 여행지를 투표해주세요</h2>
@@ -49,7 +64,7 @@ function VotePage() {
           <button
             key={region.key}
             onClick={() => setSelectedOption(region.key)}
-            className={selectedOption === region.key ? 'selected' : ''}
+            className={selectedOption === region.key ? 'selected-region' : ''}
             disabled={hasVoted}
           >
             {region.name} ({votes[region.key]})
