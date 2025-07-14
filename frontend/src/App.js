@@ -27,12 +27,9 @@ import PostDetail from './pages/post/components/PostDetail';
 Modal.setAppElement('#root');
 
 function AppContent() {
-    // sessionStorage에서 로그인 상태와 사용자 정보를 불러와 초기 상태 설정
-    const initialCurrentUser = JSON.parse(sessionStorage.getItem('currentUser')) || null;
-    const initialIsLoggedIn = initialCurrentUser !== null;
-
-    const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn);
-    const [currentUser, setCurrentUser] = useState(initialCurrentUser);
+    // sessionStorage 대신 초기 상태는 기본값으로 설정하고, 서버에서 가져오도록 변경
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
     const [isAiModalOpen, setIsAiModalOpen] = useState(false);
@@ -40,16 +37,9 @@ function AppContent() {
 
     const navigate = useNavigate();
 
-    axios.defaults.withCredentials = true;
+    axios.defaults.withCredentials = true; // 서버 세션(쿠키)을 사용하기 위해 필요
 
     const checkLoginStatus = async () => {
-        // 이미 sessionStorage에 사용자 정보가 있다면 API 호출 없이 사용
-        if (sessionStorage.getItem('currentUser')) {
-            setIsLoggedIn(true);
-            setCurrentUser(JSON.parse(sessionStorage.getItem('currentUser')));
-            return;
-        }
-
         try {
             const response = await axios.get('http://localhost:8080/api/auth/status');
             const data = response.data;
@@ -70,30 +60,29 @@ function AppContent() {
                     updatedId: data.updatedId
                 };
                 setCurrentUser(userData);
-                // 로그인 상태가 확인되면 sessionStorage에 저장
-                sessionStorage.setItem('currentUser', JSON.stringify(userData));
+                // sessionStorage 사용 로직 제거
             } else {
                 setIsLoggedIn(false);
                 setCurrentUser(null);
-                sessionStorage.removeItem('currentUser'); // 로그아웃 상태면 제거
+                // sessionStorage 사용 로직 제거
             }
         } catch (error) {
             console.error("로그인 상태를 가져오지 못했습니다:", error);
             setIsLoggedIn(false);
             setCurrentUser(null);
-            sessionStorage.removeItem('currentUser'); // 에러 발생 시 제거
+            // sessionStorage 사용 로직 제거
         }
     };
 
     useEffect(() => {
         checkLoginStatus();
-    }, []);
+    }, []); // 컴포넌트 마운트 시 한 번만 실행
 
     const handleLoginSuccess = (userData) => {
         setIsLoggedIn(true);
         setCurrentUser(userData);
         setIsLoginModalOpen(false);
-        sessionStorage.setItem('currentUser', JSON.stringify(userData)); // 로그인 성공 시 sessionStorage에 저장
+        // sessionStorage 사용 로직 제거
         console.log("로그인 성공", userData);
         navigate('/');
     };
@@ -106,7 +95,7 @@ function AppContent() {
                 alert(data.message);
                 setIsLoggedIn(false);
                 setCurrentUser(null);
-                sessionStorage.removeItem('currentUser'); // 로그아웃 시 sessionStorage에서 제거
+                // sessionStorage 사용 로직 제거
                 navigate('/');
             } else {
                 alert("로그아웃 실패: " + data.message);
