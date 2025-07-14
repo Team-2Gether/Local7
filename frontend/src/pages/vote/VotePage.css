@@ -7,6 +7,15 @@ h2 {
   margin-top: 60px;
 }
 
+.vote-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  justify-items: center;
+  max-width: 600px;
+  margin: auto;
+}
+
 .vote-buttons button {
   font-size: 20px;
   padding: 10px 20px;
@@ -15,9 +24,19 @@ h2 {
   cursor: pointer;
 }
 
-.selected {
-  color: blueviolet;
-  border-color: blueviolet;
+.vote-todo-Button {
+  background-color: #ffcc00;
+  width: fit-content;
+  font-size: 20px;
+  padding: 10px 60px;
+  margin: 10px;
+  border-radius: 20px;
+  color: #ffff;
+  cursor: pointer;
+}
+
+.vote-todo-Button:enabled:hover {
+  background-color: darkgoldenrod;
 }
 
 .tap-contents {
@@ -27,7 +46,7 @@ h2 {
 }
 
 .tap-contents > div {
-  background-color: #ffcc00;
+  background-color: darkgoldenrod;
   flex: auto;
   width: fit-content;
   font-size: 20px;
@@ -37,8 +56,15 @@ h2 {
   cursor: pointer;
 }
 
-.tap-contents > div:hover {
-  background-color: darkgoldenrod;
+.selected-region {
+  color: blueviolet;
+  border: solid 3px blueviolet;
+  font-weight: bold;
+}
+
+.selected-tap {
+  background-color: #ffcc00 !important;
+  font-weight: 1000;
 }
 
 /* 댓글 css -----------------------------------------*/
