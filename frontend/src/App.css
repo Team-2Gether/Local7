@@ -7,6 +7,7 @@ html, body {
     padding-top: 26px; /* navbar 높이만큼 */
     margin-left: 40px;
     box-sizing: border-box; /* 모든 요소의 박스 모델을 border-box로 설정 */
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .app-layout {

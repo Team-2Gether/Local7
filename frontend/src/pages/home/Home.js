@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
+// 배너 이미지 임포트
 import banner1 from "../../assets/images/banner.png";
 import banner2 from "../../assets/images/banner2.png";
 import banner3 from "../../assets/images/banner3.png";
 import banner4 from "../../assets/images/banner4.png";
-// import busan1 from "../../assets/images/busan.png";
-// import busan2 from "../../assets/images/busan2.png";
 
+// 각 도시별 소개글 컴포넌트 임포트
 import Seven from "./components/Seven";
 import Busan from "./components/Busan";
 import Donghae from "./components/Donghae";
@@ -20,31 +20,40 @@ import Ulsan from "./components/Ulsan";
 import Yangyang from "./components/Yangyang";
 import Yeongdeok from "./components/Yeongdeok";
 
-import "./Home.css";
-import HomeCardFeed from "./HomeCardFeed";
-import PostList from "../post/components/PostList";
+import "./Home.css"; // 스타일 시트 임포트
+import HomeCardFeed from "./HomeCardFeed"; // 음식점 카드 리스트 컴포넌트
+import PostList from "../post/components/PostList"; // 게시글 리스트 컴포넌트
 
 function Home() {
+  // 선택된 도시 상태 (기본값: '속초')
   const [selectedCity, setSelectedCity] = useState("속초");
+  // 카카오 지도 객체를 상태로 저장
   const [mapObj, setMapObj] = useState(null);
-  const [activeSection, setActiveSection] = useState("restaurants"); // 음식점 or 스레드
+  // 현재 활성화된 섹션 상태: 음식점(restaurants) 또는 스레드(posts)
+  const [activeSection, setActiveSection] = useState("restaurants");
+  // 배너 슬라이드 인덱스 상태
   const [currentSlide, setCurrentSlide] = useState(0);
+  // 슬라이드 개수 설정 (0~3까지 총 4개 중 3개를 기준으로 순환)
   const slideCount = 3;
 
+  // 컴포넌트 마운트 시 한 번 실행: 카카오 지도 스크립트 로드 및 지도 초기화
   useEffect(() => {
+    // 카카오 지도 스크립트 동적 생성 및 추가
     const script = document.createElement("script");
     script.src =
       "//dapi.kakao.com/v2/maps/sdk.js?appkey=690813b8710fce175e3acf9121422624&libraries=services";
     script.async = true;
     script.onload = () => {
-      const container = document.getElementById("kakao-map");
+      // 스크립트 로드 완료 후 지도 초기화
+      const container = document.getElementById("kakao-map"); // 지도를 띄울 div
       const options = {
-        center: new window.kakao.maps.LatLng(36.5, 127.75),
-        level: 14,
+        center: new window.kakao.maps.LatLng(36.5, 127.75), // 지도 중심 좌표 (대한민국 중부)
+        level: 14, // 지도 줌 레벨
       };
       const map = new window.kakao.maps.Map(container, options);
-      setMapObj(map);
+      setMapObj(map); // 지도 객체 상태에 저장
 
+      // 지도 위에 표시할 각 도시의 좌표와 이름 배열
       const cityPoints = [
         { name: "고성", latlng: new window.kakao.maps.LatLng(38.38, 128.4676) },
         { name: "속초", latlng: new window.kakao.maps.LatLng(38.2104, 128.5913) },
@@ -60,6 +69,7 @@ function Home() {
         { name: "부산", latlng: new window.kakao.maps.LatLng(35.1796, 129.0756) },
       ];
 
+      // 도시 좌표들을 이어주는 폴리라인 생성 (노란색 선)
       const linePath = cityPoints.map((c) => c.latlng);
       const polyline = new window.kakao.maps.Polyline({
         path: linePath,
@@ -67,10 +77,11 @@ function Home() {
         strokeColor: "#FFCC00",
         strokeOpacity: 0.8,
       });
-      polyline.setMap(map);
+      polyline.setMap(map); // 지도에 폴리라인 표시
 
+      // 각 도시에 빨간색 사각형 폴리곤 표시 (지역 강조용)
       cityPoints.forEach((city) => {
-        const delta = 0.03;
+        const delta = 0.03; // 사각형 크기 반경
         const polygonPath = [
           new window.kakao.maps.LatLng(city.latlng.getLat() - delta, city.latlng.getLng() - delta),
           new window.kakao.maps.LatLng(city.latlng.getLat() - delta, city.latlng.getLng() + delta),
@@ -80,35 +91,43 @@ function Home() {
         const polygon = new window.kakao.maps.Polygon({
           path: polygonPath,
           strokeWeight: 3,
-          strokeColor: "#FF0000",
+          strokeColor: "#ff6a6aff",
           strokeOpacity: 0.7,
-          fillOpacity: 0.5,
+          fillOpacity: 0,
         });
-        polygon.setMap(map);
+        polygon.setMap(map); // 지도에 폴리곤 추가
       });
     };
-    document.head.appendChild(script);
-  }, []);
+    document.head.appendChild(script); // 스크립트 태그 문서에 추가
+  }, []); // 빈 배열: 최초 1회만 실행
 
+  // 배너 슬라이드 자동 전환 타이머 설정 (3초마다 currentSlide 증가)
   useEffect(() => {
     const interval = setInterval(() => setCurrentSlide((prev) => prev + 1), 3000);
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // 컴포넌트 언마운트 시 타이머 정리
   }, []);
+
+  // currentSlide가 최대값에 도달하면 0으로 초기화하는 타이머
   useEffect(() => {
     if (currentSlide === slideCount) {
       const timeout = setTimeout(() => setCurrentSlide(0), 500);
-      return () => clearTimeout(timeout);
+      return () => clearTimeout(timeout); // 클린업
     }
   }, [currentSlide]);
 
+  // 도시 버튼 클릭 처리 함수
   const handleCityClick = (city) => {
-    setSelectedCity(city);
-    setActiveSection("restaurants");
+    setSelectedCity(city); // 선택된 도시 상태 변경
+    setActiveSection("restaurants"); // 음식점 탭으로 전환
+
     if (mapObj) {
+      // 지도 중심 좌표 및 줌 레벨 설정
       if (city === "전체") {
+        // 전체 선택 시 기본 중심과 줌
         mapObj.setCenter(new window.kakao.maps.LatLng(36.5, 127.75));
         mapObj.setLevel(14);
       } else {
+        // 각 도시에 맞는 좌표 설정
         const cityLatLng = {
           고성: [38.38, 128.4676],
           속초: [38.2104, 128.5913],
@@ -125,7 +144,7 @@ function Home() {
         };
         const [lat, lng] = cityLatLng[city];
         mapObj.setCenter(new window.kakao.maps.LatLng(lat, lng));
-        mapObj.setLevel(10);
+        mapObj.setLevel(10); // 좀 더 확대된 레벨
       }
     }
   };
@@ -134,12 +153,13 @@ function Home() {
     <div className="app-layout">
       <div className="main-content-area">
         <div className="dark-box">
-          {/* 배너 */}
+          {/* 배너 영역 */}
           <div className="banner">
             <div
               className={`slides-container-vertical ${currentSlide === slideCount ? "no-transition" : ""}`}
-              style={{ transform: `translateY(-${currentSlide * 105}px)` }}
+              style={{ transform: `translateY(-${currentSlide * 105}px)` }} // 슬라이드 애니메이션 (세로 방향)
             >
+              {/* 배너 이미지 2개씩 묶음 3개 (마지막은 첫 두개 복제본으로 무한루프 구현) */}
               <div style={{ display: "flex" }}>
                 <img src={banner1} alt="배너1" className="banner-img" />
                 <img src={banner2} alt="배너2" className="banner-img" />
@@ -155,9 +175,12 @@ function Home() {
             </div>
           </div>
 
-          {/* 지도 + 버튼 + 소개글 */}
+          {/* 지도 및 도시 선택 버튼, 소개글 영역 */}
           <div className="map-description-container">
+            {/* 카카오 지도 div: 스타일은 width, height, 둥근 테두리 적용 */}
             <div id="kakao-map" style={{ width: "380px", height: "300px", borderRadius: "100px" }}></div>
+
+            {/* 도시 선택 버튼들 */}
             <div className="grid-buttons">
               {[
                 "전체",
@@ -184,7 +207,7 @@ function Home() {
               ))}
             </div>
 
-            {/* 소개글 컴포넌트 */}
+            {/* 선택된 도시에 따른 소개글 컴포넌트 조건부 렌더링 */}
             {selectedCity === "전체" && (
               <Seven activeSection={activeSection} setActiveSection={setActiveSection} />
             )}
@@ -226,7 +249,7 @@ function Home() {
             )}
           </div>
 
-          {/* 음식점 / 스레드 토글 버튼 */}
+          {/* 음식점 / 게시글(스레드) 탭 선택 버튼 */}
           <div className="section-tabs" style={{ margin: "20px 0" }}>
             <button
               className={`tab-button ${activeSection === "restaurants" ? "active" : ""}`}
@@ -241,22 +264,25 @@ function Home() {
               스레드
             </button>
           </div>
-             {/* 사진 스트립 */}
+
+          {/* 사진 스트립: 하단에 여러 이미지가 가로로 나열된 영역 */}
           <div className="photo-strip-line">
             <img src="/images/Busan.png" alt="부산낭만" />
             <img src="../../images/Busan2.png" alt="부산낭만" />
             <img src="../images/sea.png" alt="바다" />
             <img src="../images/ulsan.png" alt="불고기" />
           </div>
-          {/* 선택된 콘텐츠 */}
+
+          {/* 현재 활성 섹션에 따라 컴포넌트 렌더링
+              여기서 HomeCardFeed에 selectedCity, setSelectedCity 전달 */}
           <div className="page-content">
-            {activeSection === "restaurants" && <HomeCardFeed />}
+            {activeSection === "restaurants" && (
+              <HomeCardFeed selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
+            )}
             {activeSection === "posts" && <PostList />}
           </div>
 
           <hr className="separator" />
-
-         
         </div>
       </div>
     </div>

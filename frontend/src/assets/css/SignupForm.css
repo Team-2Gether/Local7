@@ -1,6 +1,8 @@
 /* src/pages/signup/SignupForm.css */
 /* 기존 SignupForm.css 내용 */
+
 .signup-container {
+ 
   max-width: 500px;
   margin: 50px auto;
   padding: 30px;
