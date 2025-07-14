@@ -1,9 +1,8 @@
-// src/pages/post/hooks/usePost.js
 import { useState, useCallback } from 'react';
 import { fetchPosts, fetchPostById, createPost, updatePost as updatePostApi, deletePost } from '../../../api/PostApi';
 
 
-const usePosts = () => {
+const usePost = () => {
     const [posts, setPosts] = useState([]);
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -109,4 +108,4 @@ const usePosts = () => {
     };
 };
 
-export default usePosts;
+export default usePost;

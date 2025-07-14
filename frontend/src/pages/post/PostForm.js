@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import usePosts from './hooks/usePost';
+import usePost from './hooks/usePost';
 import '../../assets/css/post.css';
 
 // currentUser prop을 받도록 수정
@@ -9,7 +9,7 @@ function PostForm({ currentUser }) {
     const navigate = useNavigate();
     const isEditMode = !!id;
 
-    const { post, loading, error, message, loadPostById, addPost, modifyPost, setMessage, setError } = usePosts();
+    const { post, loading, error, message, loadPostById, addPost, modifyPost, setMessage, setError } = usePost();
 
     const [formData, setFormData] = useState({
         postTitle: '',

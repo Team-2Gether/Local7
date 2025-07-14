@@ -17,6 +17,7 @@
     align-items: flex-start; /* 지도 + 버튼들이 위쪽 정렬 */
     gap: 20px; /* 지도와 버튼 사이 간격 */
     flex-wrap: wrap; /* 작으면 줄바꿈 */
+    margin-left:50px;
 }
 
 #kakao-map {
@@ -31,7 +32,7 @@
     grid-template-columns: repeat(2, 60px); /* 2열 그리드 */
     gap: 2px; /* 버튼 사이 간격 */
     background: #333;
-    padding: 10px;
+    padding: 20px;
     border-radius: 20px;
 }
 .grid-buttons button {
@@ -206,6 +207,6 @@
     transition: none !important;
 }
 .banner-img {
-    width: 570px;
+    width: 589px;
     height: auto;
 }
