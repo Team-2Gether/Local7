@@ -7,13 +7,17 @@ function VotePage_comItem({ comment }) {
       <img src={comment.profileImg} alt="profile" className="profile-img" />
       <div className="comment-content">
         <div className="top-line">
-          <span className="nickname">{comment.nickName}</span>
-          <span className="time">{comment.time}</span>
-          <div className="report">신고</div>
-          <div className="date">{comment.date}</div>
-        </div>
+          <div>
+            <span className="nickName">{comment.nickName}</span>
+            <span className="time">{comment.time}</span>
+          </div>
 
-        <div className="text">{comment.text}</div>
+          <div>
+            <span className="report">신고</span>
+            <span className="date">{comment.date}</span>
+          </div>
+        </div>
+        <span className="text">{comment.text}</span>
       </div>
     </div>
   );
