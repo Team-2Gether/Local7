@@ -1,5 +1,6 @@
 // DB 연결 전 샘플 데이터
 
+// 댓글 샘플 데이터
 export const commentSamples = [
   {
     id: 1,

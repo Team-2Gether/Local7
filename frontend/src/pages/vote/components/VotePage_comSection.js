@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './VotePage.css';
+import '../VotePage.css';
 import VotePage_comItem from './VotePage_comItem';
 import VotePage_comAdd from './VotePage_comAdd';
 import { commentSamples } from './VotePage_samples';

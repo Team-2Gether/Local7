@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import VotePage_comSection from './VotePage_comSection';
-import { regionNames } from './VotePage_samples';
+import VotePage_comSection from './components/VotePage_comSection';
+import { regionNames } from './components/VotePage_samples';
 import './VotePage.css';
 
 // 투표지역 항목 자동 생성 필드(추가된 항목 개수가 일치해야함)

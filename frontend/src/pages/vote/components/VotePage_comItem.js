@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './VotePage.css';
+import '../VotePage.css';
 
 // 댓글 양식 컴포넌트
 function VotePage_comItem({ comment }) {
