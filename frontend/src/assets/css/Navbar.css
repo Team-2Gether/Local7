@@ -17,6 +17,21 @@
   font-weight: bold;
 }
 
+/* LOCAL 스타일 */
+.local {
+  font-family: 'Faster One', cursive;
+  font-size: 2.5rem;
+  color: #79AAFF;
+}
+
+
+/* R7 스타일 */
+.r7 {
+  font-family: 'Faster One', sans-serif;
+  font-size: 2.5rem;
+  color: #FFCC00; /* 파랑 */
+}
+
 .navbar-nav {
   list-style: none;
   margin: 0;

@@ -10,8 +10,11 @@ function Navbar({ isLoggedIn, userNickname, onLogout }) {
 
   return (
     <nav className="navbar">
-      <div className="navbar-brand">
-        <Link to="/">My App</Link>
+     <div className="navbar-brand">
+        <Link to="/">
+          <span className="local">LOCAL</span>
+          <span className="r7">R7</span>
+        </Link>
       </div>
       <ul className="navbar-nav">
         {isLoggedIn ? (
