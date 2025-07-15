@@ -1,4 +1,4 @@
-package com.twogether.local7.pagention; // 패키지 경로 변경
+package com.twogether.local7.pagintion; // 패키지 경로 변경
 
 public interface Pageable {
     int getPageNumber();
