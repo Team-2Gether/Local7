@@ -1,10 +1,10 @@
 package com.twogether.local7.user.service;
 
-import com.twogether.local7.pagention.Pagination;
+import com.twogether.local7.pagintion.Pagination;
 import com.twogether.local7.user.dao.UserDAO;
 import com.twogether.local7.user.vo.UserVO;
 import com.twogether.local7.user.vo.PostVO;
-import com.twogether.local7.pagention.Pageable;
+import com.twogether.local7.pagintion.Pageable;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService {

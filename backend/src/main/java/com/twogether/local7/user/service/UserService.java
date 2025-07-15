@@ -1,9 +1,9 @@
 package com.twogether.local7.user.service;
 
-import com.twogether.local7.pagention.Pagination;
+import com.twogether.local7.pagintion.Pagination;
 import com.twogether.local7.user.vo.UserVO;
 import com.twogether.local7.user.vo.PostVO;
-import com.twogether.local7.pagention.Pageable;
+import com.twogether.local7.pagintion.Pageable;
 
 public interface UserService {
     // UserVO login(String credential, String password); // LoginService로 이동

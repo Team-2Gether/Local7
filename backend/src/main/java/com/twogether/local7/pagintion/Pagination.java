@@ -1,9 +1,9 @@
-package com.twogether.local7.pagention; // 패키지 경로 변경
+package com.twogether.local7.pagintion; // 패키지 경로 변경
 
 import java.util.List;
 
 // org.springframework.data.domain.Pageable 대신 local7.pagention.Pageable 사용
-import com.twogether.local7.pagention.Pageable;
+
 
 public class Pagination<T> {
     private final List<T> content;

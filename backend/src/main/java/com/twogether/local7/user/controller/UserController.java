@@ -1,7 +1,7 @@
 package com.twogether.local7.user.controller;
 
-import com.twogether.local7.pagention.Pagination;
-import com.twogether.local7.pagention.SimplePageable;
+import com.twogether.local7.pagintion.Pagination;
+import com.twogether.local7.pagintion.SimplePageable;
 import com.twogether.local7.user.service.UserService;
 import com.twogether.local7.user.vo.PostVO;
 import com.twogether.local7.user.vo.UserVO; // UserVO import 추가
