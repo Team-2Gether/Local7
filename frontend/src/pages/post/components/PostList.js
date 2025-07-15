@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
 
-import '../../../assets/css/post.css';
+import './PostList.css'; 
 
 function PostList({ currentUser }) {
 
@@ -16,12 +16,14 @@ function PostList({ currentUser }) {
     }, [loadAllPosts]);
 
     const handleDelete = async (postId) => {
+        // alert 대신 커스텀 모달 UI 사용 권장
         if (window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
             try {
                 await removePost(postId);
                 loadAllPosts();
             } catch (err) {
                 console.error('게시글 삭제 오류:', err);
+                // alert 대신 커스텀 모달 UI 사용 권장
                 alert(err.response?.data?.message || '게시글 삭제에 실패했습니다. 권한을 확인해주세요.');
             }
         }
@@ -32,6 +34,7 @@ function PostList({ currentUser }) {
         e.stopPropagation(); // 이벤트 버블링 방지 (게시글 상세 페이지로 이동하는 것을 막음)
 
         if (!currentUser) {
+            // alert 대신 커스텀 모달 UI 사용 권장
             alert('로그인 후 좋아요를 누를 수 있습니다.');
             return;
         }
@@ -49,6 +52,7 @@ function PostList({ currentUser }) {
             setMessage(result.message); // 좋아요 성공/취소 메시지 표시
         } catch (err) {
             console.error('좋아요 처리 오류:', err);
+            // alert 대신 커스텀 모달 UI 사용 권장
             alert(err.message); // 에러 메시지 표시
         }
     };
@@ -74,7 +78,7 @@ function PostList({ currentUser }) {
             <h1 className="post-list-title">게시글 목록</h1>
 
             {message && <div className="success-message">{message}</div>}
-            {likeError && <div className="error-message">{likeError}</div>} 
+            {likeError && <div className="error-message">{likeError}</div>}
 
             <div className="post-actions-top">
                 <button
@@ -89,7 +93,7 @@ function PostList({ currentUser }) {
                     <p className="no-posts-message">게시글이 없습니다.</p>
                 ) : (
                     <ul className="post-grid">
-                        {posts.map((post) => {       
+                        {posts.map((post) => {
                         return (
 
                             <li key={post.postId} className="post-card">
