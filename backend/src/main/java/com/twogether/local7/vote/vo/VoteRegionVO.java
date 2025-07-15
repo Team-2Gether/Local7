@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class VoteRegionVO {
-    private String id;     // A ~ L
-    private String name;   // 지역 이름
+    private Long regionId;
+    private String krName; //region_description쿼리 별칭
 }
