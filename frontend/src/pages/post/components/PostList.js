@@ -89,12 +89,7 @@ function PostList({ currentUser }) {
                     <p className="no-posts-message">게시글이 없습니다.</p>
                 ) : (
                     <ul className="post-grid">
-                        {posts.map((post) => {
-                        
-                        console.log('PostList - currentUser:', currentUser);
-                        console.log('PostList - post:', post);
-                        console.log('PostList - isCurrentUser, UserId:', currentUser && currentUser.userId === post.userId);
-                            
+                        {posts.map((post) => {       
                         return (
 
                             <li key={post.postId} className="post-card">
@@ -135,26 +130,29 @@ function PostList({ currentUser }) {
                                 </div>
 
                                 <div className="post-card-actions">
-                                    {currentUser && currentUser.userId === post.userId && (
-                                        <>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    navigate(`/posts/edit/${post.postId}`)}}
-                                                className="post-action-button edit"
-                                            >
-                                                수정
-                                            </button>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleDelete(post.postId)}}
-                                                className="post-action-button delete"
-                                            >
-                                                삭제
-                                            </button>
-                                        </>
-                                    )}
+                                {currentUser && (currentUser.userId === post.userId || currentUser.userLoginId === 'admin') && (
+
+                                    <>
+                                    <button
+                                        onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(`/posts/edit/${post.postId}`);
+                                        }}
+                                        className="post-action-button edit"
+                                    >
+                                        수정
+                                    </button>
+                                    <button
+                                        onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDelete(post.postId);
+                                        }}
+                                        className="post-action-button delete"
+                                    >
+                                        삭제
+                                    </button>
+                                    </>
+                                )}
                                 </div>
                             </li>
                         );

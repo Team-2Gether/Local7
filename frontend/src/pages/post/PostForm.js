@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import usePost from './hooks/usePost';
-import '../../assets/css/post.css';
+import './PostForm.css';
 
 // currentUser prop을 받도록 수정
 function PostForm({ currentUser }) {
