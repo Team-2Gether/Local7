@@ -11,7 +11,6 @@
         <result property="postTitle" column="POST_TITLE"/>
         <result property="postContent" column="POST_CONTENT"/>
         <result property="locationTag" column="LOCATION_TAG"/>
-        <result property="isNotice" column="IS_NOTICE"/>
         <result property="createdDate" column="CREATED_DATE"/>
         <result property="createdId" column="CREATED_ID"/>
         <result property="updatedDate" column="UPDATED_DATE"/>
@@ -39,7 +38,6 @@
             p.POST_TITLE,
             p.POST_CONTENT,
             p.LOCATION_TAG,
-            p.IS_NOTICE,
             p.CREATED_DATE,
             p.CREATED_ID,
             p.UPDATED_DATE,
@@ -65,7 +63,7 @@
     <select id="getPostById" resultMap="postResultMap">
         SELECT
             p.POST_ID, p.USER_ID, p.RESTAURANT_ID, p.POST_TITLE, p.POST_CONTENT,
-            p.LOCATION_TAG, p.IS_NOTICE, p.CREATED_DATE, p.CREATED_ID, p.UPDATED_DATE, p.UPDATED_ID,
+            p.LOCATION_TAG, p.CREATED_DATE, p.CREATED_ID, p.UPDATED_DATE, p.UPDATED_ID,
             u.USER_NICKNAME,
             pi.IMAGE_ID, pi.POST_ID AS P_IMAGE_POST_ID, pi.IMAGE_URL,
             pi.CREATED_DATE AS I_CREATED_DATE, pi.CREATED_ID AS I_CREATED_ID,
@@ -82,10 +80,10 @@
         </selectKey>
         INSERT INTO TB_POST (
             POST_ID, USER_ID, RESTAURANT_ID, POST_TITLE, POST_CONTENT,
-            LOCATION_TAG, IS_NOTICE, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
+            LOCATION_TAG, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
         ) VALUES (
             #{postId}, #{userId}, #{restaurantId}, #{postTitle}, #{postContent},
-            #{locationTag}, #{isNotice}, SYSTIMESTAMP, #{createdId}, SYSTIMESTAMP, #{updatedId}
+            #{locationTag}, SYSTIMESTAMP, #{createdId}, SYSTIMESTAMP, #{updatedId}
         )
     </insert>
 
@@ -95,7 +93,6 @@
             POST_TITLE = #{postTitle},
             POST_CONTENT = #{postContent},
             LOCATION_TAG = #{locationTag},
-            IS_NOTICE = #{isNotice},
             UPDATED_DATE = SYSTIMESTAMP,
             UPDATED_ID = #{updatedId}
         WHERE POST_ID = #{postId} AND USER_ID = #{userId} </update>

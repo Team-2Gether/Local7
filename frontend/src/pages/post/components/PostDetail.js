@@ -2,15 +2,15 @@ import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
-import CommentSection from './CommentSection'; 
+import CommentSection from './CommentSection';
 
-import '../../../assets/css/PostDetail.css';
+import './PostDetail.css'; 
 
 function PostDetail({ currentUser }) {
     const { id } = useParams();
     const navigate = useNavigate();
     const { post, loading, error, loadPostById, removePost, setMessage, setPost } = usePost();
-    const { toggleLike, likeLoading, likeError, setLikeError } = useLike(); 
+    const { toggleLike, likeLoading, likeError, setLikeError } = useLike();
 
     useEffect(() => {
         if (id) {
@@ -19,9 +19,11 @@ function PostDetail({ currentUser }) {
     }, [id, loadPostById]);
 
     const handleDelete = async () => {
+        // alert 대신 커스텀 모달 UI 사용 권장
         if (window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
             try {
                 await removePost(parseInt(id));
+                // alert 대신 커스텀 모달 UI 사용 권장
                 alert('게시글이 성공적으로 삭제되었습니다.');
                 navigate('/posts'); // 삭제 후 게시글 목록으로 이동
             } catch (err) {
@@ -34,6 +36,7 @@ function PostDetail({ currentUser }) {
     // 좋아요 버튼 클릭 핸들러 (상세 페이지)
     const handleToggleLike = async () => {
         if (!currentUser) {
+            // alert 대신 커스텀 모달 UI 사용 권장
             alert('로그인 후 좋아요를 누를 수 있습니다.');
             return;
         }
@@ -117,7 +120,7 @@ function PostDetail({ currentUser }) {
                         <span className="like-count">❤️{post.likeCount || 0}</span>
                     </div>
 
-                    {currentUser && post.userId === currentUser.userId && ( 
+                    {currentUser && post.userId === currentUser.userId && (
                         <div className="post-detail-actions">
                             <button
                                 onClick={() => navigate(`/posts/edit/${post.postId}`)}
@@ -140,10 +143,10 @@ function PostDetail({ currentUser }) {
                         목록으로 돌아가기
                     </button>
                     {/* CommentSection 컴포넌트 추가 */}
-                    <CommentSection postId={post.postId} currentUser={currentUser} />   
+                    <CommentSection postId={post.postId} currentUser={currentUser} />
                 </div>
-                
-                
+
+
             </div>
         </div>
     );
