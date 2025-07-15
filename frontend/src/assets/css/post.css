@@ -259,88 +259,231 @@
     background-color: #c82333; 
 }
 
-/* (태블릿 및 모바일) */
-@media (max-width: 768px) {
-    .post-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-        gap: 20px;
-    }
-
-    .post-list-container {
-        padding: 15px;
-        margin: 15px auto;
-    }
-
-    .post-list-title {
-        font-size: 2em;
-        margin-bottom: 20px;
-    }
-
-    .post-button.create-button {
-        padding: 8px 15px;
-        font-size: 0.9em;
-    }
-
-    .post-card-title {
-        font-size: 1.3em;
-        margin: 10px 10px 8px 10px;
-    }
-
-    .post-card-content {
-        font-size: 0.9em;
-        margin: 0 10px 8px 10px;
-    }
-
-    .post-card-meta {
-        font-size: 0.8em;
-        margin: 4px 10px;
-    }
-
-    .post-card-likes {
-        margin: 8px 10px 10px 10px;
-        padding-top: 8px;
-    }
-
-    .like-button {
-        font-size: 1.3em;
-    }
-
-    .like-count {
-        font-size: 0.9em;
-    }
-
-    .post-card-actions {
-        padding: 10px;
-    }
-
-    .post-action-button {
-        padding: 6px 12px;
-        font-size: 0.85em;
-    }
+/* 게시글 폼 전체 페이지 컨테이너 */
+.post-form-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* 상단 정렬 */
+    min-height: calc(100vh - 80px); /* Navbar 높이 제외 */
+    padding: 20px;
+    background-color: #f0f2f5; /* 배경색 변경 */
 }
 
-/* (모바일) */
-@media (max-width: 480px) {
-    .post-grid {
-        grid-template-columns: 1fr; 
-        gap: 15px;
-    }
+/* 게시글 폼 컨테이너 */
+.post-form-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px; /* 폼의 최대 너비 설정 */
+    box-sizing: border-box;
+}
 
-    .post-list-container {
-        padding: 10px;
-        margin: 10px auto;
-    }
+/* 폼 래퍼 (내부 여백 및 제목 스타일) */
+.post-form-wrapper h2 {
+    text-align: center;
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    display: inline-block;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-    .post-list-title {
-        font-size: 1.8em;
-        margin-bottom: 15px;
-    }
+/* 폼 그룹 (라벨 + 입력 필드) */
+.form-group {
+    margin-bottom: 20px;
+}
 
-    .post-actions-top {
-        justify-content: center; 
-    }
+/* 폼 라벨 */
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: bold;
+    font-size: 0.95em;
+}
 
-    .post-card {
-        margin-bottom: 15px; 
-    }
+/* 텍스트 입력 필드 */
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    color: #333;
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.form-textarea {
+    resize: vertical; /* 세로 크기 조절 가능 */
+    min-height: 150px;
+}
+
+/* 파일 입력 필드 */
+.form-input-file {
+    width: 100%;
+    padding: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-size: 0.95em;
+    color: #555;
+}
+
+.form-input-file::-webkit-file-upload-button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: background-color 0.2s ease;
+}
+
+.form-input-file::-webkit-file-upload-button:hover {
+    background-color: #0056b3;
+}
+
+/* 이미지 미리보기 컨테이너 */
+.image-preview-container {
+    margin-top: 20px;
+    border: 1px dashed #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #fcfcfc;
+}
+
+.image-preview-container h4 {
+    color: #333;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.image-thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.thumbnail-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.thumbnail-wrapper .thumbnail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-image-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(220, 53, 69, 0.8); /* Red with transparency */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.remove-image-button:hover {
+    background-color: #dc3545;
+}
+
+.help-text {
+    font-size: 0.85em;
+    color: #777;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* 체크박스 그룹 */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.checkbox-input {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.checkbox-group .form-label { /* 체크박스 라벨 스타일 */
+    margin-bottom: 0;
+    font-weight: normal;
+    font-size: 1em;
+    color: #333;
+    cursor: pointer;
+}
+
+
+/* 폼 제출 및 뒤로가기 버튼 */
+.post-button { /* 기존 post-button 스타일 재활용 */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+    margin-top: 10px; /* 버튼 간격 */
+}
+
+.post-submit-button {
+    background-color: #28a745; /* Green for submit */
+    color: white;
+    margin-right: 10px;
+}
+
+.post-submit-button:hover {
+    background-color: #218838;
+}
+
+.post-submit-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.post-back-button {
+    background-color: #6c757d; /* Gray for back */
+    color: white;
+}
+
+.post-back-button:hover {
+    background-color: #5a6268;
 }
