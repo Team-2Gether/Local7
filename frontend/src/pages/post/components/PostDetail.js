@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
 import CommentSection from './CommentSection';
 
-import './PostDetail.css'; 
+import './Post.css'; 
 
 function PostDetail({ currentUser }) {
     const { id } = useParams();
@@ -57,12 +57,12 @@ function PostDetail({ currentUser }) {
     };
 
      // 댓글 수 업데이트 핸들러
-    const handleCommentCountChange = (newCommentCount) => {
+    const handleCommentCountChange = useCallback((newCommentCount) => {
         setPost(prevPost => ({
             ...prevPost,
             commentCount: newCommentCount
         }));
-    };
+    }, [setPost]);
 
     if (loading) {
         return <div className="post-detail-container loading">게시글을 불러오는 중...</div>;
@@ -120,7 +120,7 @@ function PostDetail({ currentUser }) {
 
                     <div className="post-detail-likes">
                         <button
-                            className={`like-button1 ${post.liked ? 'liked' : ''}`}
+                            className={`like-button ${post.liked ? 'liked' : ''}`}
                             onClick={handleToggleLike}
                             disabled={likeLoading}
                         >

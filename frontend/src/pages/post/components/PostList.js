@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
 
-import './PostList.css'; 
+import './Post.css'; 
 
 function PostList({ currentUser }) {
 
