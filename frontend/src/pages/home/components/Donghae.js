@@ -9,7 +9,7 @@ const Donghae = ({ activeSection, setActiveSection }) => (
     {/* 도시 이름 및 영어 표기 */}
     <h2>
       동해
-      <span>__DONGHAE</span>
+      <span>_DONGHAE</span>
     </h2>
 
     {/* 도시 설명 문구 */}

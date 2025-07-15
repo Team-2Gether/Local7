@@ -9,7 +9,7 @@ const Gangneung = ({ activeSection, setActiveSection }) => (
     {/* 도시 이름 및 영어 표기 */}
     <h2>
       강릉
-      <span>__GANGNEUNG</span>
+      <span>_GANGNEUNG</span>
     </h2>
 
     {/* 도시 설명 문구 */}

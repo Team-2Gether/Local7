@@ -9,7 +9,7 @@ const Yangyang = ({ activeSection, setActiveSection }) => (
     {/* 도시명 및 영어 표기 */}
     <h2>
       양양
-      <span>__YANGYANG</span>
+      <span>_YANGYANG</span>
     </h2>
 
     {/* 도시 소개 텍스트 */}

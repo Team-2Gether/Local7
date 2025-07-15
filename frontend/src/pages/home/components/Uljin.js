@@ -10,7 +10,7 @@ const Uljin = ({ activeSection, setActiveSection }) => (
     <h2>
       울진
       <br />
-      <span>__ULJIN</span>
+      <span>_ULJIN</span>
     </h2>
 
     {/* 도시 소개 텍스트 */}
