@@ -8,13 +8,22 @@ import com.twogether.local7.pagention.Pageable;
 public interface UserService {
     // UserVO login(String credential, String password); // LoginService로 이동
     boolean checkLoginIdDuplicate(String userLoginId);
+
     void updateUserLoginId(Long userId, String newUserLoginId);
     void resetPassword(Long userId, String newPassword); // 이메일 인증 기능 제거에 따라 파라미터 변경
     boolean checkNicknameDuplicate(String userNickname);
+
     void updateUserNickname(Long userId, String newUserNickname);
     void requestWithdrawalVerification(Long userId);
+
     void deleteUser(Long userId, String password, String verificationCode);
 
     Pagination<PostVO> getPostsByUserId(Long userId, Pageable pageable);
     int countPostsByUserId(Long userId);
+
+    // 새로운 기능 추가: 로그인 ID로 사용자 프로필 조회
+    UserVO getUserProfileByLoginId(String userLoginId);
+
+    // 새로운 기능 추가: 닉네임으로 사용자 프로필 조회
+    UserVO getUserProfileByNickname(String userNickname);
 }

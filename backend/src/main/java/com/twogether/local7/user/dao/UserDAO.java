@@ -29,4 +29,10 @@ public interface UserDAO {
 
     // 추가된 메서드: 특정 사용자의 총 게시글 수 조회
     int countPostsByUserId(Long userId);
+
+    // 새로운 기능 추가: 로그인 ID로 사용자 정보 조회
+    UserVO findByUserLoginId(String userLoginId);
+
+    // 새로운 기능 추가: 닉네임으로 사용자 정보 조회
+    UserVO findByUserNickname(String userNickname);
 }

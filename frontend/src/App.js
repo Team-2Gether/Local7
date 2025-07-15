@@ -1,3 +1,4 @@
+// App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
@@ -187,7 +188,7 @@ function AppContent() {
                             {/* UserPage 링크에 연결될 라우트 (회원 정보 수정) */}
                             <Route path="edit" element={<UserPage currentUser={currentUser} onLogout={handleLogout} />} />
                             {/* 내가 쓴 글 라우트 (MyPosts 컴포넌트 사용) */}
-                            <Route path="posts" element={<MyPosts />} />
+                            <Route path="posts" element={<MyPosts currentUser={currentUser} />} /> {/* currentUser prop 추가 */}
                         </Route>
 
                         {/* 기존 UserPage 라우트는 /mypage/edit으로 이동했으므로 필요에 따라 제거하거나 리다이렉트 처리 */}
@@ -237,7 +238,7 @@ function UserInfo({ userData }) {
     return (
         <div className="user-info-section">
             <div className="profile-image-container">
-                <img src={userData.userProfileImageUrl || 'https://via.placeholder.com/150'} alt="프로필 이미지" className="profile-image" />
+                <img src={userData.userProfileImageUrl || 'https://via.placeholder.com/150'} alt="프로필 이미지" className="profile-6.profile-image" />
             </div>
             <div className="user-details">
                 <p><strong>아이디:</strong> {userData.userLoginId}</p>
