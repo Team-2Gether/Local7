@@ -128,8 +128,10 @@ function PostList({ currentUser }) {
                                         >
                                             {post.liked ? '❤️' : '🤍'}
                                         </span>
-                                        <span className="like-count">{post.likeCount || 0}</span>
+                                        <span className="like-count">❤️{post.likeCount || 0}</span>
+                                        <span className="comment-count">💬 {post.commentCount}</span>
                                     </p>
+
                                     <p className="post-card-meta">위치: {post.locationTag}</p>
                                 </div>
 

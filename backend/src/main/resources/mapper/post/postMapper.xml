@@ -18,6 +18,7 @@
         <result property="userNickname" column="USER_NICKNAME"/>
         <result property="firstImageUrl" column="FIRST_IMAGE_URL"/>
         <result property="likeCount" column="LIKE_COUNT"/>
+        <result property="commentCount" column="COMMENT_COUNT"/>
 
         <collection property="images" ofType="com.twogether.local7.post.vo.ImageVO">
             <id property="imageId" column="IMAGE_ID"/>
@@ -43,6 +44,7 @@
             p.UPDATED_DATE,
             p.UPDATED_ID,
             u.USER_NICKNAME,
+            p.COMMENT_COUNT,
             pi.IMAGE_URL AS FIRST_IMAGE_URL
         FROM
             TB_POST p
@@ -64,7 +66,7 @@
         SELECT
             p.POST_ID, p.USER_ID, p.RESTAURANT_ID, p.POST_TITLE, p.POST_CONTENT,
             p.LOCATION_TAG, p.CREATED_DATE, p.CREATED_ID, p.UPDATED_DATE, p.UPDATED_ID,
-            u.USER_NICKNAME,
+            p.COMMENT_COUNT,u.USER_NICKNAME,
             pi.IMAGE_ID, pi.POST_ID AS P_IMAGE_POST_ID, pi.IMAGE_URL,
             pi.CREATED_DATE AS I_CREATED_DATE, pi.CREATED_ID AS I_CREATED_ID,
             pi.UPDATED_DATE AS I_UPDATED_DATE, pi.UPDATED_ID AS I_UPDATED_ID
@@ -80,10 +82,10 @@
         </selectKey>
         INSERT INTO TB_POST (
             POST_ID, USER_ID, RESTAURANT_ID, POST_TITLE, POST_CONTENT,
-            LOCATION_TAG, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
+            LOCATION_TAG, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID, COMMENT_COUNT
         ) VALUES (
             #{postId}, #{userId}, #{restaurantId}, #{postTitle}, #{postContent},
-            #{locationTag}, SYSTIMESTAMP, #{createdId}, SYSTIMESTAMP, #{updatedId}
+            #{locationTag}, SYSTIMESTAMP, #{createdId}, SYSTIMESTAMP, #{updatedId}, 0
         )
     </insert>
 

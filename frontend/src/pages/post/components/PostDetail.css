@@ -240,3 +240,9 @@
         font-size: 0.9em;
     }
 }
+
+.post-detail-meta .post-detail-comment-count {
+    margin-left: 10px; 
+    font-weight: bold;
+    color: #007bff; 
+}

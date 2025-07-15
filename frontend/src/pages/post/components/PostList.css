@@ -275,3 +275,14 @@
     margin: 20px auto;
     max-width: 1200px;
 }
+
+.comment-count {
+    font-size: 1.3em;
+    color: #fff;
+    display: flex;
+    align-items: center;
+}
+
+.comment-count span {
+    margin-right: 3px; 
+}

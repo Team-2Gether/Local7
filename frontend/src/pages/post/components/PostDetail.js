@@ -77,6 +77,7 @@ function PostDetail({ currentUser }) {
                     <h2 className="post-detail-title">{post.postTitle}</h2>
                     <p className="post-detail-meta">
                         작성자: {post.userNickname || '알 수 없음'} | 작성일: {new Date(post.createdDate).toLocaleString()}
+                        <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
                     </p>
 
                     {/* post.images 배열이 있을 경우 (여러 이미지) */}
@@ -118,6 +119,7 @@ function PostDetail({ currentUser }) {
                             {post.liked ? '❤️' : '🤍'}
                         </span>
                         <span className="like-count">❤️{post.likeCount || 0}</span>
+                        <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
                     </div>
 
                     {currentUser && post.userId === currentUser.userId && (
