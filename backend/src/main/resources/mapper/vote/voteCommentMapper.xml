@@ -5,7 +5,8 @@
 <mapper namespace="com.twogether.local7.vote.dao.VoteCommentDAO">
 
     <select id="getAllComments" resultType="com.twogether.local7.vote.vo.VoteCommentVO">
-        SELECT * FROM tb_comment ORDER BY created_data DESC
+        SELECT user_id, content, TO_CHAR(created_date, 'YY/MM/DD') AS date,
+        TO_CHAR(created_date, 'HH24:MI') AS time  FROM tb_comment ORDER BY created_data DESC
     </select>
 
     <insert id="insertComment" parameterType="com.twogether.local7.vote.vo.VoteCommentVO">
