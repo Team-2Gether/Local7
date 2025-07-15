@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
@@ -24,6 +23,8 @@ import './App.css';
 import MyPosts from './pages/user/MyPosts';
 import PostList from './pages/post/components/PostList';
 import PostDetail from './pages/post/components/PostDetail';
+import Notice from './pages/notice/Notice';
+
 
 Modal.setAppElement('#root');
 
@@ -123,6 +124,7 @@ function AppContent() {
             else if (item === 'add') navigate('/posts/new');
             else if (item === 'mypage') navigate('/mypage');
             else if (item === 'pick') navigate('/pick');
+            else if (item === 'notice') navigate('/notice');
         }
     };
 
@@ -190,6 +192,15 @@ function AppContent() {
                             {/* 내가 쓴 글 라우트 (MyPosts 컴포넌트 사용) */}
                             <Route path="posts" element={<MyPosts currentUser={currentUser} />} /> {/* currentUser prop 추가 */}
                         </Route>
+
+                        {/* 공지사항 페이지 라우트 추가 */}
+                        <Route path="/notice" element={isLoggedIn ? (
+                            <Notice currentUser={currentUser} />
+                        ) : (
+                            <div className="initial-login-screen">
+                                로그인이 필요합니다. <button onClick={() => setIsLoginModalOpen(true)}>로그인</button>
+                            </div>
+                        )} />
 
                         {/* 기존 UserPage 라우트는 /mypage/edit으로 이동했으므로 필요에 따라 제거하거나 리다이렉트 처리 */}
                         <Route path="/userpage" element={<Navigate to="/mypage/edit" replace />} />
