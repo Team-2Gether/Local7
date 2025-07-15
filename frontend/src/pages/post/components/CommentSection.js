@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import useComment from '../hooks/useComment';
 import './CommentSection.css';
 
-function CommentSection({ postId, currentUser }) {
+function CommentSection({ postId, currentUser, onCommentCountChange }) {
     const {
         comments,
         commentsLoading,
@@ -36,6 +36,12 @@ function CommentSection({ postId, currentUser }) {
         }
     }, [message, setMessage]);
 
+    useEffect(() => {
+        if (onCommentCountChange) {
+            onCommentCountChange(comments.length);
+        }
+    }, [comments, onCommentCountChange]);
+
     // 댓글 작성
     const handleCreateComment = async (e) => {
         e.preventDefault();
@@ -52,6 +58,10 @@ function CommentSection({ postId, currentUser }) {
             await addComment(postId, newCommentContent);
             setNewCommentContent('');
             loadComments(postId); // 댓글 목록 새로고침
+
+            if (onCommentCountChange) {
+                onCommentCountChange(comments.length + 1); 
+            }
         } catch (err) {
             console.log("err:", err);
         }
@@ -89,6 +99,10 @@ function CommentSection({ postId, currentUser }) {
             setEditingCommentId(null);
             setEditingContent('');
             loadComments(postId); // 댓글 목록 새로고침
+
+            if (onCommentCountChange) {
+                onCommentCountChange(comments.length - 1); // 예상되는 새 댓글 수
+            }
         } catch (err) {
             console.log("err:", err);
         }

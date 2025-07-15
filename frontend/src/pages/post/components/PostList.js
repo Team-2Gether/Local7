@@ -8,7 +8,7 @@ import './PostList.css';
 function PostList({ currentUser }) {
 
     const { posts, loading, error, message, loadAllPosts, removePost, setMessage, setPosts } = usePost();
-    const { toggleLike, likeLoading, likeError, setLikeError } = useLike();
+    const { toggleLike, likeLoading, likeError } = useLike();
     const navigate = useNavigate();
 
     useEffect(() => {

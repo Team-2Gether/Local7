@@ -56,6 +56,14 @@ function PostDetail({ currentUser }) {
         }
     };
 
+     // 댓글 수 업데이트 핸들러
+    const handleCommentCountChange = (newCommentCount) => {
+        setPost(prevPost => ({
+            ...prevPost,
+            commentCount: newCommentCount
+        }));
+    };
+
     if (loading) {
         return <div className="post-detail-container loading">게시글을 불러오는 중...</div>;
     }
@@ -111,13 +119,13 @@ function PostDetail({ currentUser }) {
                     {post.locationTag && <p className="post-detail-location-tag">위치 태그: {post.locationTag}</p>}
 
                     <div className="post-detail-likes">
-                        <span
-                            className={`like-button ${post.liked ? 'liked' : ''}`}
+                        <button
+                            className={`like-button1 ${post.liked ? 'liked' : ''}`}
                             onClick={handleToggleLike}
                             disabled={likeLoading}
                         >
-                            {post.liked ? '❤️' : '🤍'}
-                        </span>
+                            <span role="img" aria-label="heart">{post.liked ? '❤️' : '🤍'}</span>
+                        </button>
                         <span className="like-count">❤️{post.likeCount || 0}</span>
                         <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
                     </div>
@@ -145,7 +153,7 @@ function PostDetail({ currentUser }) {
                         목록으로 돌아가기
                     </button>
                     {/* CommentSection 컴포넌트 추가 */}
-                    <CommentSection postId={post.postId} currentUser={currentUser} />
+                    <CommentSection postId={post.postId} currentUser={currentUser} onCommentCountChange={handleCommentCountChange}/>
                 </div>
 
 
