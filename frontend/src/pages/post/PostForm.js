@@ -109,11 +109,6 @@ function PostForm({ currentUser }) {
                 updatedId: currentUser.userLoginId // 로그인 ID를 updatedId로 설정
             };
 
-            // ruleId가 1이 아닌 경우 공지사항 여부 강제로 'N'으로 설정
-            if (currentUser.ruleId !== 1) { //
-                dataToSubmit.isNotice = 'N';
-            }
-
             if (isEditMode) {
                 // 수정 모드: 게시글 ID와 함께 업데이트
                 await modifyPost(parseInt(id), dataToSubmit, selectedFiles);
@@ -127,7 +122,6 @@ function PostForm({ currentUser }) {
                     postTitle: '',
                     postContent: '',
                     locationTag: '',
-                    isNotice: 'N',
                     userId: currentUser.userId, // 초기화 시 현재 사용자 ID 유지
                     restaurantId: 1
                 });
@@ -244,20 +238,7 @@ function PostForm({ currentUser }) {
                                 </div>
                             )}
                         </div>
-                        {/* ruleId가 1일 때만 공지사항 여부 체크박스 렌더링 */}
-                        {currentUser && currentUser.ruleId === 1 && ( //
-                            <div className="checkbox-group">
-                                <input
-                                    type="checkbox"
-                                    id="isNotice"
-                                    name="isNotice"
-                                    checked={formData.isNotice === 'Y'}
-                                    onChange={handleChange}
-                                    className="checkbox-input"
-                                />
-                                <label htmlFor="isNotice" className="form-label">공지사항 여부</label>
-                            </div>
-                        )}
+                        
                         <button
                             type="submit"
                             disabled={loading}

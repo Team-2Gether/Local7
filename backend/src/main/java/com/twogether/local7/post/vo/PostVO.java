@@ -18,7 +18,6 @@ public class PostVO {
     private String postTitle;
     private String postContent;
     private String locationTag;
-    private String isNotice;
     private LocalDateTime createdDate;
     private String createdId;
     private LocalDateTime updatedDate;
