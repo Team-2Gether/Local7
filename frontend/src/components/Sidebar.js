@@ -1,5 +1,5 @@
 import React from 'react';
-import {FaHome, FaUser, FaRobot, FaAward, FaListAlt, FaUtensils} from 'react-icons/fa';
+import {FaHome, FaUser, FaRobot, FaAward, FaListAlt, FaUtensils, FaBullhorn} from 'react-icons/fa';
 
 const Sidebar = ({onMenuItemClick}) => {
 
@@ -30,10 +30,17 @@ const Sidebar = ({onMenuItemClick}) => {
                 <FaUser className="sidebar-icon"/>
                 <span>마이</span>
             </button>
+
+            <button className="sidebar-button" onClick={() => onMenuItemClick('notice')}>
+                <FaBullhorn className="sidebar-icon"/>
+                <span>공지사항</span>
+            </button>
+
             <button className="sidebar-button" onClick={() => onMenuItemClick('ai')}>
                 <FaRobot className="sidebar-icon"/>
                 <span>AI</span>
             </button>
+
         </div>
     );
 };
