@@ -14,7 +14,6 @@
         <result property="userProfileImageUrl" column="USER_PROF_IMG_URL"/>
         <result property="userBio" column="USER_BIO"/>
         <result property="ruleId" column="RULE_ID"/>
-        <result property="ruleName" column="RULE_NAME"/>
         <result property="createDate" column="CREATE_DATE"/>
         <result property="createdId" column="CREATED_ID"/>
         <result property="updatedDate" column="UPDATED_DATE"/>
@@ -24,8 +23,7 @@
     <resultMap id="postResultMap" type="com.twogether.local7.user.vo.PostVO">
         <id property="postId" column="POST_ID"/>
         <result property="userId" column="USER_ID"/>
-        <result property="userLoginId" column="LOGIN_ID"/>
-        <result property="restaurantId" column="RESTAURANT_ID"/>
+        <result property="userLoginId" column="LOGIN_ID"/> <result property="restaurantId" column="RESTAURANT_ID"/>
         <result property="postTitle" column="POST_TITLE"/>
         <result property="postContent" column="POST_CONTENT"/>
         <result property="locationTag" column="LOCATION_TAG"/>
@@ -38,26 +36,11 @@
 
     <select id="findByUserId" parameterType="long" resultMap="userResultMap">
         SELECT
-        T.USER_ID,
-        T.LOGIN_ID,
-        T.USER_NAME,
-        T.USER_PASSWORD,
-        T.USER_EMAIL,
-        T.USER_NICKNAME,
-        T.USER_PROF_IMG_URL,
-        T.USER_BIO,
-        T.RULE_ID,
-        R.RULE_NAME,
-        T.CREATE_DATE,
-        T.CREATED_ID,
-        T.UPDATED_DATE,
-        T.UPDATED_ID
-        FROM
-        TB_USER T
-        LEFT JOIN
-        TB_RULE R ON T.RULE_ID = R.RULE_ID
-        WHERE
-        T.USER_ID = #{userId}
+        USER_ID, RULE_ID, LOGIN_ID, USER_NAME, USER_PASSWORD, USER_EMAIL,
+        USER_NICKNAME, USER_PROF_IMG_URL, USER_BIO, CREATE_DATE, CREATED_ID,
+        UPDATED_DATE, UPDATED_ID
+        FROM TB_USER
+        WHERE USER_ID = #{userId}
     </select>
 
     <select id="countByUserLoginId" parameterType="string" resultType="int">
@@ -119,8 +102,6 @@
         TB_USER U ON P.USER_ID = U.USER_ID
         WHERE
         P.USER_ID = #{userId}
-        ORDER BY
-        P.CREATED_DATE DESC
     </select>
 
     <select id="countPostsByUserId" parameterType="long" resultType="int">
@@ -128,4 +109,23 @@
         FROM TB_POST
         WHERE USER_ID = #{userId}
     </select>
+
+    <select id="findByUserLoginId" parameterType="string" resultMap="userResultMap">
+        SELECT
+        USER_ID, RULE_ID, LOGIN_ID, USER_NAME, USER_PASSWORD, USER_EMAIL,
+        USER_NICKNAME, USER_PROF_IMG_URL, USER_BIO, CREATE_DATE, CREATED_ID,
+        UPDATED_DATE, UPDATED_ID
+        FROM TB_USER
+        WHERE LOGIN_ID = #{userLoginId}
+    </select>
+
+    <select id="findByUserNickname" parameterType="string" resultMap="userResultMap">
+        SELECT
+        USER_ID, RULE_ID, LOGIN_ID, USER_NAME, USER_PASSWORD, USER_EMAIL,
+        USER_NICKNAME, USER_PROF_IMG_URL, USER_BIO, CREATE_DATE, CREATED_ID,
+        UPDATED_DATE, UPDATED_ID
+        FROM TB_USER
+        WHERE USER_NICKNAME = #{userNickname}
+    </select>
+
 </mapper>

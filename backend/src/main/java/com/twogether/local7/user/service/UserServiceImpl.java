@@ -39,13 +39,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(Long userId, String newPassword) { // 이메일 인증 기능 제거에 따라 파라미터 변경
-        UserVO user = userDAO.findByUserId(userId);
-        if (user == null) {
-            throw new RuntimeException("사용자를 찾을 수 없습니다.");
-        }
-        // 비밀번호 재설정 시 현재 비밀번호 검증 로직은 컨트롤러/프론트엔드에서 처리하도록 변경
-        // 이메일 인증을 통한 비밀번호 변경이 아닌, 현재 비밀번호를 알고 변경하는 방식으로 가정
+    public void resetPassword(Long userId, String newPassword) {
+        // 현재는 직접 비밀번호를 업데이트합니다.
         userDAO.updateUserPassword(userId, newPassword);
     }
 
@@ -61,29 +56,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void requestWithdrawalVerification(Long userId) {
+        // 실제 이메일 인증 프로세스:
+        // 1. userId를 통해 사용자 이메일 주소를 조회
         UserVO user = userDAO.findByUserId(userId);
-        if (user == null) {
-            throw new RuntimeException("사용자를 찾을 수 없습니다.");
+        if (user == null || user.getUserEmail() == null) {
+            throw new IllegalArgumentException("사용자 정보를 찾을 수 없거나 이메일이 등록되지 않았습니다.");
         }
 
+        // 2. 인증 코드 생성 및 저장
         String verificationCode = generateVerificationCode();
-        verificationCodes.put(userId, verificationCode);
+        verificationCodes.put(userId, verificationCode); // 임시 저장
 
-        sendVerificationEmail(user.getUserEmail(), verificationCode, "local seven 회원 탈퇴 인증 코드");
-        System.out.println("회원 탈퇴 인증 코드 발송: " + user.getUserEmail() + ", 코드: " + verificationCode);
+        // 3. 이메일 발송
+        sendVerificationEmail(user.getUserEmail(), verificationCode, "[TwoGether] 회원 탈퇴 인증 코드");
     }
 
     @Override
     public void deleteUser(Long userId, String password, String verificationCode) {
+        // 1. 사용자 비밀번호 확인 (실제로는 암호화된 비밀번호와 대조)
         UserVO user = userDAO.findByUserId(userId);
-        if (user == null) {
-            throw new RuntimeException("사용자를 찾을 수 없습니다.");
+        if (user == null || !user.getUserPassword().equals(password)) { // 실제로는 암호화 비교
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        if (!user.getUserPassword().equals(password)) {
-            throw new RuntimeException("비밀번호가 일치하지 않아 회원 탈퇴를 진행할 수 없습니다.");
-        }
-
+        // 2. 인증 코드 확인
         String storedCode = verificationCodes.get(userId);
         if (storedCode == null || !storedCode.equals(verificationCode)) {
             throw new RuntimeException("인증코드가 유효하지 않거나 만료되었습니다.");
@@ -126,5 +122,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public int countPostsByUserId(Long userId) {
         return userDAO.countPostsByUserId(userId);
+    }
+
+    @Override
+    public UserVO getUserProfileByLoginId(String userLoginId) {
+        return userDAO.findByUserLoginId(userLoginId);
+    }
+
+    @Override
+    public UserVO getUserProfileByNickname(String userNickname) {
+        return userDAO.findByUserNickname(userNickname);
     }
 }

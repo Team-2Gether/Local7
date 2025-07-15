@@ -41,7 +41,7 @@ class KakaoMapCrawler:
             {"name": "고성 (강원)", "latitude": 38.333333, "longitude": 128.500000}
         ]
         self.category_codes = ["FD6"] # 음식점
-        self.radius = 1000 # 검색 반경 (미터)
+        self.radius = 5000 # 검색 반경 (미터) -> 1000에서 5000으로 변경
 
     def connect_db(self):
         """Oracle 데이터베이스에 연결합니다."""
@@ -97,8 +97,6 @@ class KakaoMapCrawler:
             error_obj, = e.args
             print(f"음식점 중복 확인 중 오류 발생: {error_obj.message}")
             return False # 오류 발생 시 중복되지 않은 것으로 간주 (혹은 True로 처리하여 삽입 방지)
-
-    # _generate_random_phone_number 메서드는 사용자가 제외를 요청했으므로 삭제
 
     def _parse_address(self, full_address):
         """
@@ -348,7 +346,7 @@ class KakaoMapCrawler:
         try:
             cursor = self.connection.cursor()
             for location in self.locations:
-                print(f"\n--- 위치 처리 중: {location['name']} ---")
+                print(f"\n--- 위치 처리 중: {location['name']} ---") # 지역명 출력 추가
                 for category_code in self.category_codes:
                     page = 1
                     is_end = False
@@ -367,6 +365,7 @@ class KakaoMapCrawler:
                             data = response.json()
 
                             if not data.get('documents'):
+                                print(f"  [{location['name']}] 페이지 {page}: 검색 결과 없음.") # 검색 결과 없을 때 메시지 추가
                                 is_end = True
                                 continue
 
@@ -432,6 +431,13 @@ if __name__ == "__main__":
         'password': "7777", # Oracle DB 비밀번호
         'dsn': "116.36.205.25:1524/XE" # Oracle DSN (Data Source Name)
     }
+    
+    # # 2. Oracle DB 연결 정보 설정 (필수)
+    # DB_CONFIG = {
+    #     'user': "sevenlocal",    # Oracle DB 사용자 이름
+    #     'password': "7777", # Oracle DB 비밀번호
+    #     'dsn': "localhost:1521/XE" # Oracle DSN (Data Source Name)
+    # }
 
     # Instant Client 라이브러리 경로 설정 (필요한 경우만 사용)
     # oracledb.init_oracle_client(lib_dir="C:/oracle/instantclient_21_9") # Windows 예시

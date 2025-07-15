@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.twogether.local7.follow.dao.FollowDAO">
+
+    <resultMap id="followResultMap" type="com.twogether.local7.follow.vo.FollowVO">
+        <id property="followerId" column="FOLLOWER_ID"/>
+        <id property="followingId" column="FOLLOWING_ID"/>
+        <result property="createdDate" column="CREATED_DATE"/>
+        <result property="createdId" column="CREATED_ID"/>
+        <result property="updatedDate" column="UPDATED_DATE"/>
+        <result property="updatedId" column="UPDATED_ID"/>
+        <result property="followerUserName" column="FOLLOWER_USER_NAME"/>
+        <result property="followerUserNickname" column="FOLLOWER_USER_NICKNAME"/>
+        <result property="followingUserName" column="FOLLOWING_USER_NAME"/>
+        <result property="followingUserNickname" column="FOLLOWING_USER_NICKNAME"/>
+    </resultMap>
+
+    <insert id="insertFollow" parameterType="com.twogether.local7.follow.vo.FollowVO">
+        INSERT INTO TB_FOLLOW (
+        FOLLOWER_ID,
+        FOLLOWING_ID,
+        CREATED_DATE,
+        CREATED_ID,
+        UPDATED_DATE,
+        UPDATED_ID
+        ) VALUES (
+        #{followerId},
+        #{followingId},
+        SYSTIMESTAMP,
+        #{createdId},
+        SYSTIMESTAMP,
+        #{updatedId}
+        )
+    </insert>
+
+    <delete id="deleteFollow" parameterType="com.twogether.local7.follow.vo.FollowVO">
+        DELETE FROM TB_FOLLOW
+        WHERE FOLLOWER_ID = #{followerId} AND FOLLOWING_ID = #{followingId}
+    </delete>
+
+    <select id="countFollow" parameterType="com.twogether.local7.follow.vo.FollowVO" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_FOLLOW
+        WHERE FOLLOWER_ID = #{followerId} AND FOLLOWING_ID = #{followingId}
+    </select>
+
+    <select id="selectFollowers" parameterType="int" resultMap="followResultMap">
+        SELECT
+        TF.FOLLOWER_ID,
+        TF.FOLLOWING_ID,
+        TF.CREATED_DATE,
+        TF.CREATED_ID,
+        TF.UPDATED_DATE,
+        TF.UPDATED_ID,
+        TU_FOLLOWER.USER_NAME AS FOLLOWER_USER_NAME,
+        TU_FOLLOWER.USER_NICKNAME AS FOLLOWER_USER_NICKNAME,
+        TU_FOLLOWING.USER_NAME AS FOLLOWING_USER_NAME,
+        TU_FOLLOWING.USER_NICKNAME AS FOLLOWING_USER_NICKNAME
+        FROM TB_FOLLOW TF
+        LEFT JOIN TB_USER TU_FOLLOWER ON TF.FOLLOWER_ID = TU_FOLLOWER.USER_ID
+        LEFT JOIN TB_USER TU_FOLLOWING ON TF.FOLLOWING_ID = TU_FOLLOWING.USER_ID
+        WHERE TF.FOLLOWING_ID = #{followingId}
+    </select>
+
+    <select id="selectFollowings" parameterType="int" resultMap="followResultMap">
+        SELECT
+        TF.FOLLOWER_ID,
+        TF.FOLLOWING_ID,
+        TF.CREATED_DATE,
+        TF.CREATED_ID,
+        TF.UPDATED_DATE,
+        TF.UPDATED_ID,
+        TU_FOLLOWER.USER_NAME AS FOLLOWER_USER_NAME,
+        TU_FOLLOWER.USER_NICKNAME AS FOLLOWER_USER_NICKNAME,
+        TU_FOLLOWING.USER_NAME AS FOLLOWING_USER_NAME,
+        TU_FOLLOWING.USER_NICKNAME AS FOLLOWING_USER_NICKNAME
+        FROM TB_FOLLOW TF
+        LEFT JOIN TB_USER TU_FOLLOWER ON TF.FOLLOWER_ID = TU_FOLLOWER.USER_ID
+        LEFT JOIN TB_USER TU_FOLLOWING ON TF.FOLLOWING_ID = TU_FOLLOWING.USER_ID
+        WHERE TF.FOLLOWER_ID = #{followerId}
+    </select>
+
+    <select id="countFollowers" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_FOLLOW
+        WHERE FOLLOWING_ID = #{userId}
+    </select>
+
+    <select id="countFollowings" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_FOLLOW
+        WHERE FOLLOWER_ID = #{userId}
+    </select>
+
+</mapper>
