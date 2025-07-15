@@ -19,7 +19,7 @@ public class VoteCommentController {
         return voteCommentService.getAllComments();
     }
 
-    @PostMapping
+    @PostMapping("/comments")
     public void postComment(@RequestBody VoteCommentVO comment) {
         voteCommentService.insertComment(comment);
     }
