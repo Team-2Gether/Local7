@@ -36,24 +36,21 @@ function Home() {
   // 슬라이드 개수 설정 (0~3까지 총 4개 중 3개를 기준으로 순환)
   const slideCount = 3;
 
-  // 컴포넌트 마운트 시 한 번 실행: 카카오 지도 스크립트 로드 및 지도 초기화
   useEffect(() => {
-    // 카카오 지도 스크립트 동적 생성 및 추가
     const script = document.createElement("script");
     script.src =
       "//dapi.kakao.com/v2/maps/sdk.js?appkey=690813b8710fce175e3acf9121422624&libraries=services";
     script.async = true;
     script.onload = () => {
-      // 스크립트 로드 완료 후 지도 초기화
-      const container = document.getElementById("kakao-map"); // 지도를 띄울 div
+      const container = document.getElementById("kakao-map");
       const options = {
-        center: new window.kakao.maps.LatLng(36.5, 127.75), // 지도 중심 좌표 (대한민국 중부)
-        level: 14, // 지도 줌 레벨
+        center: new window.kakao.maps.LatLng(36.5, 127.75),
+        level: 14,
       };
       const map = new window.kakao.maps.Map(container, options);
-      setMapObj(map); // 지도 객체 상태에 저장
+      setMapObj(map);
 
-      // 지도 위에 표시할 각 도시의 좌표와 이름 배열
+      // 도시 좌표 및 이름 배열
       const cityPoints = [
         { name: "고성", latlng: new window.kakao.maps.LatLng(38.38, 128.4676) },
         { name: "속초", latlng: new window.kakao.maps.LatLng(38.2104, 128.5913) },
@@ -69,7 +66,7 @@ function Home() {
         { name: "부산", latlng: new window.kakao.maps.LatLng(35.1796, 129.0756) },
       ];
 
-      // 도시 좌표들을 이어주는 폴리라인 생성 (노란색 선)
+      // 도시 좌표들을 잇는 노란색 폴리라인
       const linePath = cityPoints.map((c) => c.latlng);
       const polyline = new window.kakao.maps.Polyline({
         path: linePath,
@@ -77,57 +74,67 @@ function Home() {
         strokeColor: "#FFCC00",
         strokeOpacity: 0.8,
       });
-      polyline.setMap(map); // 지도에 폴리라인 표시
+      polyline.setMap(map);
 
-      // 각 도시에 빨간색 사각형 폴리곤 표시 (지역 강조용)
+      // 원형 폴리곤(Circle) 및 도시명 오버레이 추가
       cityPoints.forEach((city) => {
-        const delta = 0.03; // 사각형 크기 반경
-        const polygonPath = [
-          new window.kakao.maps.LatLng(city.latlng.getLat() - delta, city.latlng.getLng() - delta),
-          new window.kakao.maps.LatLng(city.latlng.getLat() - delta, city.latlng.getLng() + delta),
-          new window.kakao.maps.LatLng(city.latlng.getLat() + delta, city.latlng.getLng() + delta),
-          new window.kakao.maps.LatLng(city.latlng.getLat() + delta, city.latlng.getLng() - delta),
-        ];
-        const polygon = new window.kakao.maps.Polygon({
-          path: polygonPath,
+        // 원형 폴리곤 (반경 1000m)
+        const circle = new window.kakao.maps.Circle({
+          center: city.latlng,
+          radius: 1000, // 미터 단위
           strokeWeight: 3,
           strokeColor: "#ff6a6aff",
           strokeOpacity: 0.7,
-          fillOpacity: 0,
+          fillColor: "#ff6a6aff",
+          fillOpacity: 0.3,
         });
-        polygon.setMap(map); // 지도에 폴리곤 추가
+        circle.setMap(map);
+
+        // 도시 이름 텍스트 오버레이
+        const overlayContent = `<div style="
+          padding: 4px 8px;
+          background: rgba(255, 255, 255, 0.8);
+          border: 1px solid #ff6a6a;
+          border-radius: 6px;
+          font-weight: bold;
+          color: #d33;
+          white-space: nowrap;
+          font-size: 13px;
+          text-align: center;
+        ">${city.name}</div>`;
+
+        const customOverlay = new window.kakao.maps.CustomOverlay({
+          position: city.latlng,
+          content: overlayContent,
+          yAnchor: 1.2, // 텍스트를 원형 아래쪽에 붙이기 위해 조정
+        });
+        customOverlay.setMap(map);
       });
     };
-    document.head.appendChild(script); // 스크립트 태그 문서에 추가
-  }, []); // 빈 배열: 최초 1회만 실행
-
-  // 배너 슬라이드 자동 전환 타이머 설정 (3초마다 currentSlide 증가)
-  useEffect(() => {
-    const interval = setInterval(() => setCurrentSlide((prev) => prev + 1), 3000);
-    return () => clearInterval(interval); // 컴포넌트 언마운트 시 타이머 정리
+    document.head.appendChild(script);
   }, []);
 
-  // currentSlide가 최대값에 도달하면 0으로 초기화하는 타이머
+  useEffect(() => {
+    const interval = setInterval(() => setCurrentSlide((prev) => prev + 1), 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     if (currentSlide === slideCount) {
       const timeout = setTimeout(() => setCurrentSlide(0), 500);
-      return () => clearTimeout(timeout); // 클린업
+      return () => clearTimeout(timeout);
     }
   }, [currentSlide]);
 
-  // 도시 버튼 클릭 처리 함수
   const handleCityClick = (city) => {
-    setSelectedCity(city); // 선택된 도시 상태 변경
-    setActiveSection("restaurants"); // 음식점 탭으로 전환
+    setSelectedCity(city);
+    setActiveSection("restaurants");
 
     if (mapObj) {
-      // 지도 중심 좌표 및 줌 레벨 설정
       if (city === "전체") {
-        // 전체 선택 시 기본 중심과 줌
         mapObj.setCenter(new window.kakao.maps.LatLng(36.5, 127.75));
         mapObj.setLevel(14);
       } else {
-        // 각 도시에 맞는 좌표 설정
         const cityLatLng = {
           고성: [38.38, 128.4676],
           속초: [38.2104, 128.5913],
@@ -144,7 +151,7 @@ function Home() {
         };
         const [lat, lng] = cityLatLng[city];
         mapObj.setCenter(new window.kakao.maps.LatLng(lat, lng));
-        mapObj.setLevel(10); // 좀 더 확대된 레벨
+        mapObj.setLevel(10);
       }
     }
   };
@@ -157,9 +164,8 @@ function Home() {
           <div className="banner">
             <div
               className={`slides-container-vertical ${currentSlide === slideCount ? "no-transition" : ""}`}
-              style={{ transform: `translateY(-${currentSlide * 105}px)` }} // 슬라이드 애니메이션 (세로 방향)
+              style={{ transform: `translateY(-${currentSlide * 105}px)` }}
             >
-              {/* 배너 이미지 2개씩 묶음 3개 (마지막은 첫 두개 복제본으로 무한루프 구현) */}
               <div style={{ display: "flex" }}>
                 <img src={banner1} alt="배너1" className="banner-img" />
                 <img src={banner2} alt="배너2" className="banner-img" />
@@ -177,10 +183,8 @@ function Home() {
 
           {/* 지도 및 도시 선택 버튼, 소개글 영역 */}
           <div className="map-description-container">
-            {/* 카카오 지도 div: 스타일은 width, height, 둥근 테두리 적용 */}
             <div id="kakao-map" style={{ width: "380px", height: "300px", borderRadius: "100px" }}></div>
 
-            {/* 도시 선택 버튼들 */}
             <div className="grid-buttons">
               {[
                 "전체",
@@ -265,7 +269,7 @@ function Home() {
             </button>
           </div>
 
-          {/* 사진 스트립: 하단에 여러 이미지가 가로로 나열된 영역 */}
+          {/* 사진 스트립 */}
           <div className="photo-strip-line">
             <img src="/images/Busan.png" alt="부산낭만" />
             <img src="../../images/Busan2.png" alt="부산낭만" />
@@ -273,8 +277,7 @@ function Home() {
             <img src="../images/ulsan.png" alt="불고기" />
           </div>
 
-          {/* 현재 활성 섹션에 따라 컴포넌트 렌더링
-              여기서 HomeCardFeed에 selectedCity, setSelectedCity 전달 */}
+          {/* 활성 섹션에 따른 컴포넌트 렌더링 */}
           <div className="page-content">
             {activeSection === "restaurants" && (
               <HomeCardFeed selectedCity={selectedCity} setSelectedCity={setSelectedCity} />

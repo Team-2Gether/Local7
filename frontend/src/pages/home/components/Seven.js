@@ -8,7 +8,7 @@ const Seven = ({ activeSection, setActiveSection }) => (
     {/* 제목과 영어 표기 */}
     <h2>
       7번 국도
-      <span>__StateRoute7</span>
+      <span>_STATE ROUTE7</span>
     </h2>
 
     {/* 설명 문구 */}

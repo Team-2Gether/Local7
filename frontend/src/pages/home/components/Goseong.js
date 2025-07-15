@@ -8,7 +8,7 @@ const Goseong = ({ activeSection, setActiveSection }) => (
     {/* 도시 이름과 영어 표기 */}
     <h2>
       고성
-      <span>__GOSEONG</span>
+      <span>_GOSEONG</span>
     </h2>
 
     {/* 도시 설명 */}

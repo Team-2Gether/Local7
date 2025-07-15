@@ -8,8 +8,8 @@ const Busan = ({ activeSection, setActiveSection }) => (
   <div className="description-area">
     {/* 도시 이름 및 영어 표기 */}
     <h2>
-      BUSAN
-      <span>__BUSAN</span>
+      부산<br></br>
+      <span>_BUSAN</span>
     </h2>
 
     {/* 도시 설명 문구 */}

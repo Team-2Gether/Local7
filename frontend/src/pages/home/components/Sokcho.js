@@ -9,7 +9,7 @@ const Sokcho = ({ activeSection, setActiveSection }) => (
     <h2>
       속초
       <br />
-      <span>__SOKCHO</span>
+      <span>_SOKCHO</span>
     </h2>
 
     {/* 도시 소개 문구 */}

@@ -10,7 +10,7 @@ const Ulsan = ({ activeSection, setActiveSection }) => (
     <h2>
       울산
       <br />
-      <span>__ULSAN</span>
+      <span>_ULSAN</span>
     </h2>
 
     {/* 도시 소개 텍스트 */}
