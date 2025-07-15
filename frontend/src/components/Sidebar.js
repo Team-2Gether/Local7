@@ -30,14 +30,15 @@ const Sidebar = ({onMenuItemClick}) => {
                 <FaUser className="sidebar-icon"/>
                 <span>마이</span>
             </button>
-            <button className="sidebar-button" onClick={() => onMenuItemClick('ai')}>
-                <FaRobot className="sidebar-icon"/>
-                <span>AI</span>
-            </button>
 
             <button className="sidebar-button" onClick={() => onMenuItemClick('notice')}>
                 <FaBullhorn className="sidebar-icon"/>
                 <span>공지사항</span>
+            </button>
+
+            <button className="sidebar-button" onClick={() => onMenuItemClick('ai')}>
+                <FaRobot className="sidebar-icon"/>
+                <span>AI</span>
             </button>
 
         </div>
