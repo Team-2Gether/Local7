@@ -8,7 +8,7 @@ const Pohang = ({ activeSection, setActiveSection }) => (
     <h2>
       포항
       <br />
-      <span>__POHANG</span>
+      <span>_POHANG</span>
     </h2>
 
     {/* 도시 설명 */}

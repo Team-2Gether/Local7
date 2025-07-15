@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
 import CommentSection from './CommentSection';
 
-import './PostDetail.css'; 
+import './Post.css'; 
 
 function PostDetail({ currentUser }) {
     const { id } = useParams();
@@ -56,6 +56,14 @@ function PostDetail({ currentUser }) {
         }
     };
 
+     // 댓글 수 업데이트 핸들러
+    const handleCommentCountChange = useCallback((newCommentCount) => {
+        setPost(prevPost => ({
+            ...prevPost,
+            commentCount: newCommentCount
+        }));
+    }, [setPost]);
+
     if (loading) {
         return <div className="post-detail-container loading">게시글을 불러오는 중...</div>;
     }
@@ -77,6 +85,7 @@ function PostDetail({ currentUser }) {
                     <h2 className="post-detail-title">{post.postTitle}</h2>
                     <p className="post-detail-meta">
                         작성자: {post.userNickname || '알 수 없음'} | 작성일: {new Date(post.createdDate).toLocaleString()}
+                        <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
                     </p>
 
                     {/* post.images 배열이 있을 경우 (여러 이미지) */}
@@ -110,14 +119,15 @@ function PostDetail({ currentUser }) {
                     {post.locationTag && <p className="post-detail-location-tag">위치 태그: {post.locationTag}</p>}
 
                     <div className="post-detail-likes">
-                        <span
+                        <button
                             className={`like-button ${post.liked ? 'liked' : ''}`}
                             onClick={handleToggleLike}
                             disabled={likeLoading}
                         >
-                            {post.liked ? '❤️' : '🤍'}
-                        </span>
+                            <span role="img" aria-label="heart">{post.liked ? '❤️' : '🤍'}</span>
+                        </button>
                         <span className="like-count">❤️{post.likeCount || 0}</span>
+                        <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
                     </div>
 
                     {currentUser && post.userId === currentUser.userId && (
@@ -143,7 +153,7 @@ function PostDetail({ currentUser }) {
                         목록으로 돌아가기
                     </button>
                     {/* CommentSection 컴포넌트 추가 */}
-                    <CommentSection postId={post.postId} currentUser={currentUser} />
+                    <CommentSection postId={post.postId} currentUser={currentUser} onCommentCountChange={handleCommentCountChange}/>
                 </div>
 
 

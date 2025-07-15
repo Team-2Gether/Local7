@@ -8,7 +8,7 @@ const Samcheok = ({ activeSection, setActiveSection }) => (
     {/* 도시 이름 및 영어 표기 */}
     <h2>
       삼척
-      <span>__SAMCHEOK</span>
+      <span>_SAMCHEOK</span>
     </h2>
 
     {/* 도시 설명 */}

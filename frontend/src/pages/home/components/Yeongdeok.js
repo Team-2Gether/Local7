@@ -9,7 +9,7 @@ const Yeongdeok = ({ activeSection, setActiveSection }) => (
     {/* 도시명 및 영어 표기 */}
     <h2>
       영덕
-      <span>__YEONGDEOK</span>
+      <span>_YEONGDEOK</span>
     </h2>
 
     {/* 도시 소개 문구 */}

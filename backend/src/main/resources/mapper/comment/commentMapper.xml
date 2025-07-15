@@ -79,4 +79,16 @@
         WHERE A.COMMENT_ID = #{commentId}
     </select>
 
+    <update id="incrementCommentCount">
+        UPDATE TB_POST
+        SET COMMENT_COUNT = COMMENT_COUNT + 1
+        WHERE POST_ID = #{postId}
+    </update>
+
+    <update id="decrementCommentCount">
+        UPDATE TB_POST
+        SET COMMENT_COUNT = COMMENT_COUNT - 1
+        WHERE POST_ID = #{postId}
+    </update>
+
 </mapper>

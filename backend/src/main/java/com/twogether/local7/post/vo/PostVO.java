@@ -31,5 +31,7 @@ public class PostVO {
     private int likeCount;
     private boolean isLiked;
 
+    private int commentCount;
+
 }
 

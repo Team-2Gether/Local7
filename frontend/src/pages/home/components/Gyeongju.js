@@ -8,7 +8,7 @@ const Gyeongju = ({ activeSection, setActiveSection }) => (
     {/* 도시 이름과 영어 표기 */}
     <h2>
       경주
-      <span>__GYEONGJU</span>
+      <span>_GYEONGJU</span>
     </h2>
 
     {/* 도시 설명 */}

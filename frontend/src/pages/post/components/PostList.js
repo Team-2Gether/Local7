@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
 
-import './PostList.css'; 
+import './Post.css'; 
 
 function PostList({ currentUser }) {
 
     const { posts, loading, error, message, loadAllPosts, removePost, setMessage, setPosts } = usePost();
-    const { toggleLike, likeLoading, likeError, setLikeError } = useLike();
+    const { toggleLike, likeLoading, likeError } = useLike();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -128,8 +128,10 @@ function PostList({ currentUser }) {
                                         >
                                             {post.liked ? '❤️' : '🤍'}
                                         </span>
-                                        <span className="like-count">{post.likeCount || 0}</span>
+                                        <span className="like-count">❤️{post.likeCount || 0}</span>
+                                        <span className="comment-count">💬 {post.commentCount}</span>
                                     </p>
+
                                     <p className="post-card-meta">위치: {post.locationTag}</p>
                                 </div>
 
