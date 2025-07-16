@@ -74,7 +74,11 @@ const useUserNickname = (currentUser, onLogout) => {
 
         setIsUpdatingNickname(true);
         try {
-            const response = await axios.post('http://localhost:8080/api/user/update-nickname', { newUserNickname: newUserNickname });
+            const response = await axios.post('http://localhost:8080/api/user/update-nickname', null, { 
+                params: {
+                    userId: currentUser.userId,
+                    newUserNickname: newUserNickname 
+                }});
             if (response.status === 200 && response.data.status === 'success') {
                 displayNicknameMessage('닉네임이 성공적으로 변경되었습니다. 다시 로그인해야 적용됩니다.', 'success');
                 setIsNicknameChecked(false);
