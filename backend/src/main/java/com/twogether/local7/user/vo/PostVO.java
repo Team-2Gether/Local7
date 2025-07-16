@@ -13,9 +13,9 @@ public class PostVO {
     private String postTitle;
     private String postContent;
     private String locationTag;
-    private String isNotice;
     private Timestamp createdDate;
     private String createdId;
     private Timestamp updatedDate;
     private String updatedId;
+    private int commentCount; // COMMENT_COUNT 필드 추가
 }

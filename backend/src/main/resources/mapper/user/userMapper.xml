@@ -27,7 +27,6 @@
         <result property="postTitle" column="POST_TITLE"/>
         <result property="postContent" column="POST_CONTENT"/>
         <result property="locationTag" column="LOCATION_TAG"/>
-        <result property="isNotice" column="IS_NOTICE"/>
         <result property="createdDate" column="CREATED_DATE"/>
         <result property="createdId" column="CREATED_ID"/>
         <result property="updatedDate" column="UPDATED_DATE"/>
@@ -36,9 +35,19 @@
 
     <select id="findByUserId" parameterType="long" resultMap="userResultMap">
         SELECT
-        USER_ID, RULE_ID, LOGIN_ID, USER_NAME, USER_PASSWORD, USER_EMAIL,
-        USER_NICKNAME, USER_PROF_IMG_URL, USER_BIO, CREATE_DATE, CREATED_ID,
-        UPDATED_DATE, UPDATED_ID
+        USER_ID,
+        RULE_ID,
+        LOGIN_ID,
+        USER_NAME,
+        USER_PASSWORD,
+        USER_EMAIL,
+        USER_NICKNAME,
+        USER_PROF_IMG_URL,
+        USER_BIO,
+        CREATE_DATE,
+        CREATED_ID,
+        UPDATED_DATE,
+        UPDATED_ID
         FROM TB_USER
         WHERE USER_ID = #{userId}
     </select>
@@ -91,13 +100,11 @@
         P.POST_TITLE,
         P.POST_CONTENT,
         P.LOCATION_TAG,
-        P.IS_NOTICE,
         P.CREATED_DATE,
         P.CREATED_ID,
         P.UPDATED_DATE,
-        P.UPDATED_ID
-        FROM
-        TB_POST P
+        P.UPDATED_ID,
+        P.COMMENT_COUNT  FROM  TB_POST P
         JOIN
         TB_USER U ON P.USER_ID = U.USER_ID
         WHERE
