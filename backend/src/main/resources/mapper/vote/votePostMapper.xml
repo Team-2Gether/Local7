@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.twogether.local7.vote.dao.VotePostDAO">
+
+    <resultMap id="votePostMap" type="com.twogether.local7.vote.vo.VotePostVO">
+        <id property="postId" column="POST_ID"/>
+        <result property="postTitle" column="POST_TITLE"/>
+        <result property="postContent" column="POST_CONTENT"/>
+        <result property="createdDate" column="CREATE_DATE"/>
+    </resultMap>
+
+    <select id="getAllPosts" resultMap="votePostMap">
+
+    </select>
+
+</mapper>
+

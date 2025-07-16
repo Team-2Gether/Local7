@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import VotePageComSection from './components/VotePage_comSection';
-import './VotePage.css';
+import VotePagePost from './components/VotePage_post';
 import axios from 'axios';
+import './VotePage.css';
 
 // 투표 메인 함수
 function VotePage() {
@@ -14,7 +15,7 @@ function VotePage() {
   // 최초 1회 DB에서 지역 데이터 받아오기
   useEffect(() => {
     axios
-      .get('http://localhost:8080/api/voteRegions')
+      .get('http://localhost:8080/api/vote/regions')
       .then((res) => {
         // DB에서 regionId와 regionDescription 받아옴
         const mappedRegions = res.data.map((region) => ({
@@ -49,6 +50,7 @@ function VotePage() {
   };
 
   return (
+    // 탭 선택 영역
     <div className="vote-container">
       <div className="tap-contents">
         <div
@@ -65,34 +67,46 @@ function VotePage() {
         </div>
       </div>
 
-      <h2>이달의 여행지를 투표해주세요</h2>
+      {/* 탭 전환에 따른 내용 표시 */}
+      {selectedTap === 'place' ? (
+        <>
+          <h2>이달의 여행지를 투표해주세요</h2>
 
-      {/* 해당 각 지역 선택 버튼 */}
-      <div className="vote-buttons">
-        {regions.map((region) => (
+          {/* 해당 각 지역 선택 버튼 */}
+          <div className="vote-buttons">
+            {regions.map((region) => (
+              <button
+                key={region.key}
+                onClick={() => setSelectedOption(region.key)}
+                className={
+                  selectedOption === region.key ? 'selected-region' : ''
+                }
+                disabled={hasVoted}
+              >
+                {region.name} ({votes[region.key] ?? 0})
+              </button>
+            ))}
+          </div>
+          <br />
+
+          {/* 투표 버튼 */}
           <button
-            key={region.key}
-            onClick={() => setSelectedOption(region.key)}
-            className={selectedOption === region.key ? 'selected-region' : ''}
-            disabled={hasVoted}
+            className="vote-todo-Button"
+            onClick={handleVoteClick}
+            disabled={hasVoted || !selectedOption}
           >
-            {region.name} ({votes[region.key] ?? 0})
+            투표하기
           </button>
-        ))}
-      </div>
-      <br />
 
-      {/* 투표 버튼 */}
-      <button
-        className="vote-todo-Button"
-        onClick={handleVoteClick}
-        disabled={hasVoted || !selectedOption}
-      >
-        투표하기
-      </button>
-
-      {/* 댓글 컴포넌트 */}
-      <VotePageComSection />
+          {/* 댓글 컴포넌트 */}
+          <VotePageComSection />
+        </>
+      ) : (
+        <>
+          {/* 이달의 게시물 컴포넌트 */}
+          <VotePagePost />
+        </>
+      )}
     </div>
   );
 }
