@@ -106,7 +106,7 @@ public class PostController {
     }
 
     // 게시글 생성 (POST /api/posts) - 이미지 파일 추가
-    @PostMapping(consumes = {"multipart/form-data"})
+    @PostMapping({"", "/"})
     public ResponseEntity<Map<String, Object>> createPost(
             @RequestPart("post") PostVO post,
             @RequestPart(value = "images", required = false) List<MultipartFile> files,
