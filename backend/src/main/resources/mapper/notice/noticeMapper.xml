@@ -36,6 +36,9 @@
 
     <!-- 등록 -->
     <insert id="insertNotice" parameterType="com.twogether.local7.notice.vo.NoticeVO">
+        <selectKey keyProperty="noticeId" resultType="long" order="BEFORE">
+            SELECT SEQ_TB_NOTICE.NEXTVAL FROM DUAL
+        </selectKey>
         INSERT INTO TB_NOTICE (
         NOTICE_ID,
         USER_ID,
@@ -46,7 +49,7 @@
         UPDATED_DATE,
         UPDATED_ID
         ) VALUES (
-        SEQ_NOTICE_ID.NEXTVAL,
+        SEQ_TB_NOTICE.NEXTVAL,
         #{userId},
         #{noticeTitle},
         #{noticeContent},

@@ -24,9 +24,10 @@ function Notice({ currentUser }) {
   const loadNotices = async () => {
     try {
       const data = await getNoticeList();
-      setNotices(data);
+      setNotices(Array.isArray(data) ? data.filter((n) => n !== null) : []);
     } catch (error) {
       console.error("공지사항 불러오기 실패:", error);
+      setNotices([]); // 에러 발생 시 빈 배열로 초기화
     }
   };
 
@@ -84,17 +85,22 @@ function Notice({ currentUser }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {notices.map((notice) => (
+                  {notices.map((notice, index) => (
                     <tr
                       key={notice.noticeId}
                       onClick={() => navigate(`/notice/${notice.noticeId}`)}
                       className="notice-row"
                     >
-                      <td className="notice-col-id">{notice.noticeId}</td>
+                      {/* 번호: 아래가 1번, 위로 갈수록 번호 커짐 */}
+                      <td className="notice-col-id">
+                        {notices.length - index}
+                      </td>
                       <td>{notice.noticeTitle}</td>
                       <td className="notice-col-writer">{notice.createdId}</td>
                       <td className="notice-col-date">
-                        {notice.createdDate?.substring(0, 10)}
+                        {notice.createdDate
+                          ? new Date(notice.createdDate).toLocaleDateString()
+                          : ""}
                       </td>
                     </tr>
                   ))}
