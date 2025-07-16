@@ -71,7 +71,7 @@ function PostDetail({ currentUser }) {
     }
 
     console.log('Post images:', post.images);
-    
+
     return (
         <div className="post-detail-page">
             <div className="post-detail-content-area">
