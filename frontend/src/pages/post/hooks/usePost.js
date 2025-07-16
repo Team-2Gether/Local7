@@ -9,15 +9,14 @@ const usePost = () => {
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
 
-    // 모든 게시글을 불러오는 함수
-    const loadAllPosts = useCallback(async () => {
+    // 모든 게시글을 불러오는 함수 (sortBy 파라미터 추가)
+    const loadAllPosts = useCallback(async (sortBy = 'latest') => { 
         setLoading(true);
         setError(null);
         try {
-            const data = await fetchPosts();
+            const data = await fetchPosts(sortBy); 
             setPosts(data);
         } catch (err) {
-            setError('게시글 목록을 불러오는 데 실패했습니다.');
             console.error('Failed to fetch posts:', err);
         } finally {
             setLoading(false);

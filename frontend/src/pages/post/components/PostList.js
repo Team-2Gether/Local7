@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
@@ -10,10 +10,11 @@ function PostList({ currentUser }) {
     const { posts, loading, error, message, loadAllPosts, removePost, setMessage, setPosts } = usePost();
     const { toggleLike, likeLoading, likeError } = useLike();
     const navigate = useNavigate();
+    const [sortBy, setSortBy] = useState('latest');
 
     useEffect(() => {
-        loadAllPosts();
-    }, [loadAllPosts]);
+        loadAllPosts(sortBy);
+    }, [loadAllPosts, sortBy]);
 
     const handleDelete = async (postId) => {
         // alert 대신 커스텀 모달 UI 사용 권장
@@ -81,6 +82,15 @@ function PostList({ currentUser }) {
             {likeError && <div className="error-message">{likeError}</div>}
 
             <div className="post-actions-top">
+                {/* 정렬 드롭다운 추가 */}
+                <div className="sort-options">
+                    <label htmlFor="sortBy">정렬:</label>
+                    <select id="sortBy" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                        <option value="latest">최신순</option>
+                        <option value="likes">좋아요순</option>
+                        <option value="comments">댓글순</option>
+                    </select>
+                </div>
                 <button
                     onClick={() => navigate('/posts/new')}
                     className="post-button create-button"
