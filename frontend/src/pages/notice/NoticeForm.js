@@ -8,17 +8,12 @@ import {
   deleteNotice,
 } from "../../api/NoticeApi";
 
-function NoticeForm({ currentUser }) {
+function NoticeForm({ currentUser, noticeId }) {
   const navigate = useNavigate();
-  const { id } = useParams(); // 수정 시 id 있음
+  const { id: paramId } = useParams(); // 수정 시 id 있음
+  const id = noticeId || paramId;
   const isEdit = !!id;
 
-  //  로그 찍기
-  console.log("NoticeForm 렌더링됨");
-  console.log("currentUser:", currentUser);
-  console.log("isEdit:", isEdit);
-
-  //  관리자 권한이 아니면 접근 차단
   useEffect(() => {
     if (!currentUser || currentUser.ruleId !== 1) {
       alert("관리자만 접근 가능합니다.");
@@ -96,7 +91,6 @@ function NoticeForm({ currentUser }) {
                 name="noticeTitle"
                 value={notice.noticeTitle}
                 onChange={handleChange}
-                style={{ width: "100%" }}
               />
             </td>
           </tr>
@@ -108,50 +102,24 @@ function NoticeForm({ currentUser }) {
                 value={notice.noticeContent}
                 onChange={handleChange}
                 rows="15"
-                style={{ width: "100%" }}
               ></textarea>
-            </td>
-          </tr>
-          <tr>
-            <td>첨부파일</td>
-            <td>
-              <input type="file" disabled />
-              <span> (파일 기능 미구현)</span>
             </td>
           </tr>
         </tbody>
       </table>
 
-      <div style={{ textAlign: "right", marginTop: "20px" }}>
+      <div className="notice-form-buttons">
         <button className="btn-write" onClick={handleSubmit}>
           {isEdit ? "수정" : "등록"}
         </button>
 
         {isEdit && (
-          <button
-            onClick={handleDelete}
-            style={{
-              backgroundColor: "#dc3545",
-              color: "white",
-              marginLeft: "10px",
-              padding: "6px 12px",
-              borderRadius: "20px",
-            }}
-          >
+          <button className="btn-delete" onClick={handleDelete}>
             삭제
           </button>
         )}
 
-        <button
-          onClick={() => navigate("/notice")}
-          style={{
-            marginLeft: "10px",
-            backgroundColor: "#6c757d",
-            color: "white",
-            padding: "6px 12px",
-            borderRadius: "20px",
-          }}
-        >
+        <button className="btn-cancel" onClick={() => navigate("/notice")}>
           목록
         </button>
       </div>

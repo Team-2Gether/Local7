@@ -9,6 +9,9 @@ public interface PostService {
 
     List<PostVO> getAllPosts();
 
+    // 게시글 필터링을 위한 오버로드된 메서드 추가
+    List<PostVO> getAllPosts(String sortBy);
+
     PostVO getPostById(Long postId);
 
     // 게시글 생성 메서드: PostVO와 이미지 URL 목록을 받음

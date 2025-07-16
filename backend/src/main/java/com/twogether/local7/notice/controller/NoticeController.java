@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/notice")
-@CrossOrigin(origins = "*") // CORS 허용 (개발용)
 public class NoticeController {
 
     @Autowired

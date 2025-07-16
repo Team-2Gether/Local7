@@ -269,14 +269,6 @@ function Home() {
             </button>
           </div>
 
-          {/* 사진 스트립 */}
-          <div className="photo-strip-line">
-            <img src="/images/Busan.png" alt="부산낭만" />
-            <img src="../../images/Busan2.png" alt="부산낭만" />
-            <img src="../images/sea.png" alt="바다" />
-            <img src="../images/ulsan.png" alt="불고기" />
-          </div>
-
           {/* 활성 섹션에 따른 컴포넌트 렌더링 */}
           <div className="page-content">
             {activeSection === "restaurants" && (

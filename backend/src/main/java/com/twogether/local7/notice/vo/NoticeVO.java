@@ -3,77 +3,77 @@ package com.twogether.local7.notice.vo;
 import java.sql.Timestamp;
 
 public class NoticeVO {
-    private Long noticeId;
-    private Long userId;
-    private String noticeTitle;
-    private String noticeContent;
-    private Timestamp createdDate;
-    private String createdId;
-    private Timestamp updatedDate;
-    private String updatedId;
+    private Long notice_Id;
+    private Long user_Id;
+    private String notice_Title;
+    private String notice_Content;
+    private Timestamp created_Date;
+    private String created_Id;
+    private Timestamp updated_Date;
+    private String updated_Id;
 
     public Long getNoticeId() {
-        return noticeId;
+        return notice_Id;
     }
 
     public void setNoticeId(Long noticeId) {
-        this.noticeId = noticeId;
+        this.notice_Id = noticeId;
     }
 
     public Long getUserId() {
-        return userId;
+        return user_Id;
     }
 
     public void setUserId(Long userId) {
-        this.userId = userId;
+        this.user_Id = userId;
     }
 
     public String getNoticeTitle() {
-        return noticeTitle;
+        return notice_Title;
     }
 
     public void setNoticeTitle(String noticeTitle) {
-        this.noticeTitle = noticeTitle;
+        this.notice_Title = noticeTitle;
     }
 
     public String getNoticeContent() {
-        return noticeContent;
+        return notice_Content;
     }
 
     public void setNoticeContent(String noticeContent) {
-        this.noticeContent = noticeContent;
+        this.notice_Content = noticeContent;
     }
 
     public Timestamp getCreatedDate() {
-        return createdDate;
+        return created_Date;
     }
 
     public void setCreatedDate(Timestamp createdDate) {
-        this.createdDate = createdDate;
+        this.created_Date = createdDate;
     }
 
     public String getCreatedId() {
-        return createdId;
+        return created_Id;
     }
 
     public void setCreatedId(String createdId) {
-        this.createdId = createdId;
+        this.created_Id = createdId;
     }
 
     public Timestamp getUpdatedDate() {
-        return updatedDate;
+        return updated_Date;
     }
 
     public void setUpdatedDate(Timestamp updatedDate) {
-        this.updatedDate = updatedDate;
+        this.updated_Date = updatedDate;
     }
 
     public String getUpdatedId() {
-        return updatedId;
+        return updated_Id;
     }
 
     public void setUpdatedId(String updatedId) {
-        this.updatedId = updatedId;
+        this.updated_Id = updatedId;
     }
 }
 

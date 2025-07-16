@@ -11,10 +11,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class VotePostVO {
     private Long postId;
-    private Long userId;
-    private Long restaurantId;
     private String postTitle;
     private String postContent;
+    private String createdDate;
     private String locationTag;
-    private LocalDateTime createdDate;
+    private Long userCount;
+    private String userNickname;
+    private String userProfImgUrl;
+    private String imageUrl;
 }
