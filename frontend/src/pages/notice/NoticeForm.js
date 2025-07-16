@@ -8,9 +8,10 @@ import {
   deleteNotice,
 } from "../../api/NoticeApi";
 
-function NoticeForm({ currentUser }) {
+function NoticeForm({ currentUser, noticeId }) {
   const navigate = useNavigate();
-  const { id } = useParams(); // 수정 시 id 있음
+  const { id: paramId } = useParams(); // 수정 시 id 있음
+  const id = noticeId || paramId;
   const isEdit = !!id;
 
   useEffect(() => {
