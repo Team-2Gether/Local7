@@ -21,14 +21,6 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    @Transactional
-    public void saveImages(List<ImageVO> images) {
-        if (images != null && !images.isEmpty()) {
-            imageDAO.insertImages(images);
-        }
-    }
-
-    @Override
     public List<ImageVO> getImagesByPostId(Long postId) {
         return imageDAO.getImagesByPostId(postId);
     }
