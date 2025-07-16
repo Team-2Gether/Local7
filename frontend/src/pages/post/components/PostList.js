@@ -78,7 +78,7 @@ function PostList({ currentUser }) {
         <div className="post-list-container">
             <h1 className="post-list-title">쓰레드 목록</h1>
 
-            {message && <div className="success-message">{message}</div>}
+            {/*{message && <div className="success-message">{message}</div>}*/}
             {likeError && <div className="error-message">{likeError}</div>}
 
             <div className="post-actions-top">
