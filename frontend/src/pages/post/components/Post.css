@@ -19,7 +19,6 @@
 .post-detail-page {
     display: flex;
     justify-content: center;
-    padding: 2rem;
     background-color: #1a1a1a; 
     min-height: calc(100vh - 60px); 
     color: #e0e0e0;
@@ -28,11 +27,8 @@
 /* 게시글 내용 영역 (PostDetail) */
 .post-detail-content-area {
     width: 100%;
-    max-width: 900px;
-    background-color: #282828;
-    padding: 2.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    background-color: #222;
+    padding: 3.0rem;
 }
 
 /* 로딩, 에러, 게시글 없음 메시지 컨테이너 (PostList & PostDetail 공통) */
@@ -93,24 +89,23 @@
 
 /* 게시글 상세 제목 */
 .post-detail-title {
-    font-size: 2.2rem;
+    font-size: 2.0rem;
     color: #f0f0f0;
     margin-bottom: 0.8rem;
-    border-bottom: 2px solid #444;
     padding-bottom: 0.7rem;
     word-break: break-word;
 }
 
 /* 게시글 메타 정보 (작성자, 작성일) */
 .post-detail-meta {
-    font-size: 0.95rem;
-    color: #a0a0a0;
+    font-size: 1rem;
+    color: #b1b1b1;
     margin-bottom: 1.5rem;
 }
 .post-detail-meta .post-detail-comment-count { /* PostDetail.css의 특정 스타일 */
     margin-left: 10px;
     font-weight: bold;
-    color: #007bff;
+    color: #ffffff;
 }
 
 /* 공통 댓글 수 표시 */
@@ -252,7 +247,6 @@
     gap: 10px; 
     margin-top: 10px; 
     padding-top: 6px; 
-    border-top: 1px solid #444;
 }
 
 /* 좋아요 버튼 (통합된 스타일) */
@@ -386,7 +380,7 @@
 .post-detail-button {
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 1em;
     transition: background-color 0.2s ease, color 0.2s ease;
@@ -416,9 +410,11 @@
 /* 목록으로 돌아가기 버튼 (PostDetail) */
 .post-detail-button.back {
     display: block;
-    width: 100%;
-    margin-top: 20px;
-    background-color: #6c757d;
+    width: 20%;
+    margin-left:665px;
+    margin-top:-44px;
+    background-color: #414141;
+    border-radius: 20px;
     color: white;
     text-align: center;
 }

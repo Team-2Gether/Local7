@@ -233,19 +233,20 @@ function CommentSection({ postId, currentUser, onCommentCountChange }) {
                             )}
 
                             <div className="comment-footer">
-                                <button 
-                                    className={`like-button1 ${comment.likedByCurrentUser ? 'liked' : ''}`}
-                                    onClick={() => handleToggleLike(comment.commentId)}
-                                    disabled={!currentUser}
-                                >
-                                    ❤️ {comment.likeCount || 0}
-                                </button>
+                                
 
                                 {/* 수정/삭제 버튼은 현재 로그인한 사용자의 댓글에만 표시 (관리자 포함) */}
                                 {currentUser && (currentUser.userId === comment.userId || currentUser.userLoginId === 'admin') && editingCommentId !== comment.commentId && (
                                     <div className="comment-actions">
-                                        <button onClick={() => handleUpdateCommentClick(comment)}>수정</button>
+                                        <button onClick={() => handleUpdateCommentClick(comment)}>수정</button>                  
                                         <button onClick={() => handleDeleteComment(comment.commentId)}>삭제</button>
+                                        <button 
+                                        className={`like-button1 ${comment.likedByCurrentUser ? 'liked' : ''}`}
+                                        onClick={() => handleToggleLike(comment.commentId)}
+                                        disabled={!currentUser}
+                                    >
+                                        ❤️ {comment.likeCount || 0}
+                                    </button>
                                     </div>
                                 )}
                             </div>
