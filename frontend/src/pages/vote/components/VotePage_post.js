@@ -20,13 +20,20 @@ function VotePagePost() {
       <h2>이달의 게시물 인기순</h2>
       <ul className="post-list">
         {posts.map((post) => (
-          <li key={post.postId} className="post-item">
-            <h2>{post.locationTag}</h2>
-            <h4>{post.postTitle}</h4>
+          <div key={post.postId} className="post-item">
+            <p>{post.locationTag}</p>
+            <p>{post.postTitle}</p>
+            <p>{post.userName}</p>
+            <img
+              src={post.userProfImgUrl}
+              alt="프로필 이미지"
+              width="50"
+              height="50"
+            />
             <p>{post.postContent}</p>
             <p>{post.createdDate}</p>
-            <small>{post.userCount} like</small>
-          </li>
+            <p>{post.userCount} like</p>
+          </div>
         ))}
       </ul>
     </div>

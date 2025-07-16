@@ -11,23 +11,29 @@
         <result property="createdDate" column="CREATED_DATE"/>
         <result property="locationTag" column="LOCATION_TAG"/>
         <result property="userCount" column="USER_COUNT"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="userProfImgUrl" column="USER_PROF_IMG_URL"/>
     </resultMap>
 
     <select id="getAllPosts" resultMap="votePostMap">
         SELECT *
         FROM (
-        SELECT p.post_id,
+        SELECT
+        p.post_id,
         p.post_title,
         p.post_content,
-        p.created_date,
+        TO_CHAR(p.created_date, 'YY.MM.DD') AS created_date,
         p.location_tag,
-        l.user_count
+        l.user_count,
+        u.user_name,
+        u.user_prof_img_url
         FROM (
         SELECT post_id, COUNT(user_id) AS user_count
         FROM tb_like
         GROUP BY post_id
         ) l
         JOIN tb_post p ON l.post_id = p.post_id
+        JOIN tb_user u ON p.user_id = u.user_id
         ORDER BY l.user_count DESC
         )
         WHERE ROWNUM &lt;= 10
