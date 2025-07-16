@@ -1,0 +1,9 @@
+<mapper namespace="com.twogether.local7.region.dao.RegionDAO">
+
+    <select id="getAllRegionNames" resultType="string">
+        SELECT REGION_NAME
+        FROM TB_REGION
+        ORDER BY REGION_NAME ASC
+    </select>
+
+</mapper>
