@@ -21,9 +21,11 @@ function VotePagePost() {
       <ul className="post-list">
         {posts.map((post) => (
           <li key={post.postId} className="post-item">
-            <h4>{post.title}</h4>
-            <p>{post.summary}</p>
-            <small>작성자: {post.author}</small>
+            <h2>{post.locationTag}</h2>
+            <h4>{post.postTitle}</h4>
+            <p>{post.postContent}</p>
+            <p>{post.createdDate}</p>
+            <small>{post.userCount} like</small>
           </li>
         ))}
       </ul>

@@ -8,7 +8,7 @@
         <id property="postId" column="POST_ID"/>
         <result property="postTitle" column="POST_TITLE"/>
         <result property="postContent" column="POST_CONTENT"/>
-        <result property="createdDate" column="CREATE_DATE"/>
+        <result property="createdDate" column="CREATED_DATE"/>
         <result property="locationTag" column="LOCATION_TAG"/>
         <result property="userCount" column="USER_COUNT"/>
     </resultMap>
