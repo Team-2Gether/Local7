@@ -38,30 +38,39 @@ public class PostController {
 
     // 모든 게시글 조회 (GET /api/posts)
     @GetMapping({"", "/"})
-    public ResponseEntity<Map<String, Object>> getAllPosts(HttpSession session) {
+    public ResponseEntity<Map<String, Object>> getAllPosts(
+            @RequestParam(required = false) String sortBy, // <-- 이 라인 추가: sortBy 파라미터 받기
+            HttpSession session) {
 
-        List<PostVO> posts = postService.getAllPosts();
+        List<PostVO> posts;
+
+        // sortBy 값에 따라 다른 서비스 메서드 호출
+        if (sortBy != null && !sortBy.isEmpty()) {
+            posts = postService.getAllPosts(sortBy); // <-- 수정: sortBy를 인자로 전달
+        } else {
+            posts = postService.getAllPosts(); // 기본 정렬 (최신순)
+        }
+
         Map<String, Object> response = new HashMap<>();
 
         Long currentUserId = (Long) session.getAttribute("userId"); // 현재 사용자 ID 가져오기
 
-        for (PostVO post : posts) {
-            post.setLikeCount(likeService.getLikeCount(post.getPostId()));
-
+        // 각 게시글에 대해 좋아요 상태와 좋아요 개수 설정
+        List<PostVO> postsWithLikeStatus = posts.stream().map(post -> {
+            post.setLikeCount(likeService.getLikeCount(post.getPostId())); // 좋아요 개수 설정
             if (currentUserId != null) {
-                post.setLiked(likeService.isLikedByUser(currentUserId, post.getPostId()));
+                post.setLiked(likeService.isLikedByUser(currentUserId, post.getPostId())); // 좋아요 상태 설정
             } else {
-                post.setLiked(false);
+                post.setLiked(false); // 로그인되지 않은 경우 항상 false
             }
-
-        }
+            return post;
+        }).collect(Collectors.toList());
 
         response.put("status", "success");
         response.put("message", "모든 게시글을 성공적으로 조회했습니다.");
-        response.put("data", posts);
+        response.put("data", postsWithLikeStatus); // <-- 수정: postsWithLikeStatus를 반환
 
         return ResponseEntity.ok(response);
-
     }
 
     // 특정 게시글 ID로 조회 (GET /api/posts/{id})

@@ -62,6 +62,45 @@
             p.CREATED_DATE DESC
     </select>
 
+    <select id="getAllPostsSorted" parameterType="string" resultMap="postResultMap">
+        SELECT
+            p.POST_ID, p.USER_ID, p.RESTAURANT_ID, p.POST_TITLE, p.POST_CONTENT,
+            p.LOCATION_TAG, p.CREATED_DATE, p.CREATED_ID, p.UPDATED_DATE, p.UPDATED_ID,
+            u.USER_NICKNAME,
+            pi.IMAGE_URL AS FIRST_IMAGE_URL,
+            COALESCE(lc.LIKE_COUNT, 0) AS LIKE_COUNT,
+            p.COMMENT_COUNT
+        FROM TB_POST p
+        JOIN TB_USER u ON p.USER_ID = u.USER_ID
+        LEFT JOIN (
+            SELECT
+                PI2.POST_ID,
+                PI2.IMAGE_URL,
+                ROW_NUMBER() OVER (PARTITION BY PI2.POST_ID ORDER BY PI2.IMAGE_ID) as rn
+            FROM
+                TB_POST_IMAGE PI2
+        ) pi ON p.POST_ID = pi.POST_ID AND pi.rn = 1
+        LEFT JOIN (
+            SELECT
+                POST_ID,
+                COUNT(*) AS LIKE_COUNT
+            FROM
+                TB_LIKE
+        GROUP BY POST_ID
+        ) lc ON p.POST_ID = lc.POST_ID
+        <choose>
+            <when test="sortBy == 'likes'">
+                ORDER BY LIKE_COUNT DESC, p.CREATED_DATE DESC
+            </when>
+            <when test="sortBy == 'comments'">
+                ORDER BY p.COMMENT_COUNT DESC, p.CREATED_DATE DESC
+            </when>
+            <otherwise>
+                ORDER BY p.CREATED_DATE DESC
+            </otherwise>
+        </choose>
+    </select>
+
     <select id="getPostById" resultMap="postResultMap">
         SELECT
             p.POST_ID, p.USER_ID, p.RESTAURANT_ID, p.POST_TITLE, p.POST_CONTENT,

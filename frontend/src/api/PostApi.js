@@ -10,12 +10,17 @@ const api = axios.create({
 
 /**
  * 모든 게시글 조회
+ * @param {string} [sortBy] - 정렬 기준 ('latest', 'likes', 'comments'). 선택 사항.
  * @returns {Promise<Array<Post>>} 게시글 배열
  */
-export const fetchPosts = async () => {
+export const fetchPosts = async (sortBy) => { // sortBy 파라미터 추가
     try {
-        const response = await api.get('/');
-        return response.data.data;
+        const params = {};
+        if (sortBy) { // sortBy 값이 있을 경우에만 파라미터에 추가
+            params.sortBy = sortBy;
+        }
+        const response = await api.get('/', { params }); // params 객체를 사용하여 쿼리 파라미터 전달
+        return response.data.data; // 백엔드에서 'data' 키로 게시글 목록을 반환한다고 가정
     } catch (error) {
         console.error('게시글 목록 조회 실패:', error);
         throw error;
