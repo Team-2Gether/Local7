@@ -1,41 +1,38 @@
 import React, { useEffect, useState } from "react";
-// 배너 이미지 임포트
+import axios from "axios";
+
+// 🖼️ 배너 이미지들
 import banner1 from "../../assets/images/banner.png";
 import banner2 from "../../assets/images/banner2.png";
 import banner3 from "../../assets/images/banner3.png";
 import banner4 from "../../assets/images/banner4.png";
 
-// 각 도시별 소개글 컴포넌트 임포트
+// 📌 "전체" 선택 시 표시할 Seven 컴포넌트
 import Seven from "./components/Seven";
-import Busan from "./components/Busan";
-import Donghae from "./components/Donghae";
-import Gangneung from "./components/Gangneung";
-import Goseong from "./components/Goseong";
-import Gyeongju from "./components/Gyeongju";
-import Pohang from "./components/Pohang";
-import Samcheok from "./components/Samcheok";
-import Sokcho from "./components/Sokcho";
-import Uljin from "./components/Uljin";
-import Ulsan from "./components/Ulsan";
-import Yangyang from "./components/Yangyang";
-import Yeongdeok from "./components/Yeongdeok";
 
-import "./Home.css"; // 스타일 시트 임포트
-import HomeCardFeed from "./HomeCardFeed"; // 음식점 카드 리스트 컴포넌트
-import PostList from "../post/components/PostList"; // 게시글 리스트 컴포넌트
+// 🍽️ 음식점 카드 컴포넌트
+import HomeCardFeed from "./HomeCardFeed";
+
+// 📝 게시글(스레드) 컴포넌트
+import PostList from "../post/components/PostList";
+
+// 🎨 CSS
+import "./Home.css";
 
 function Home() {
-  // 선택된 도시 상태 (기본값: '속초')
+  // 👉 선택된 도시 (기본은 "속초")
   const [selectedCity, setSelectedCity] = useState("속초");
-  // 카카오 지도 객체를 상태로 저장
+  // 👉 DB에서 불러온 지역 정보 (regionName, regionDescription, viewCount)
+  const [regionInfo, setRegionInfo] = useState(null);
+  // 👉 카카오 지도 객체
   const [mapObj, setMapObj] = useState(null);
-  // 현재 활성화된 섹션 상태: 음식점(restaurants) 또는 스레드(posts)
+  // 👉 음식점 / 게시글 탭 상태
   const [activeSection, setActiveSection] = useState("restaurants");
-  // 배너 슬라이드 인덱스 상태
+  // 👉 배너 슬라이드 인덱스
   const [currentSlide, setCurrentSlide] = useState(0);
-  // 슬라이드 개수 설정 (0~3까지 총 4개 중 3개를 기준으로 순환)
   const slideCount = 3;
 
+  // ✅ 카카오 지도 초기 세팅
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -44,13 +41,13 @@ function Home() {
     script.onload = () => {
       const container = document.getElementById("kakao-map");
       const options = {
-        center: new window.kakao.maps.LatLng(36.5, 127.75),
+        center: new window.kakao.maps.LatLng(36.5, 127.75), // 대한민국 중심
         level: 14,
       };
       const map = new window.kakao.maps.Map(container, options);
       setMapObj(map);
 
-      // 도시 좌표 및 이름 배열
+      // ✅ 주요 도시 포인트 및 원 표시
       const cityPoints = [
         { name: "고성", latlng: new window.kakao.maps.LatLng(38.38, 128.4676) },
         { name: "속초", latlng: new window.kakao.maps.LatLng(38.2104, 128.5913) },
@@ -66,7 +63,7 @@ function Home() {
         { name: "부산", latlng: new window.kakao.maps.LatLng(35.1796, 129.0756) },
       ];
 
-      // 도시 좌표들을 잇는 노란색 폴리라인
+      // ✅ 도시들을 잇는 노란 라인
       const linePath = cityPoints.map((c) => c.latlng);
       const polyline = new window.kakao.maps.Polyline({
         path: linePath,
@@ -76,12 +73,11 @@ function Home() {
       });
       polyline.setMap(map);
 
-      // 원형 폴리곤(Circle) 및 도시명 오버레이 추가
+      // ✅ 각 도시에 원, 오버레이 이름
       cityPoints.forEach((city) => {
-        // 원형 폴리곤 (반경 1000m)
         const circle = new window.kakao.maps.Circle({
           center: city.latlng,
-          radius: 1000, // 미터 단위
+          radius: 1000,
           strokeWeight: 3,
           strokeColor: "#ff6a6aff",
           strokeOpacity: 0.7,
@@ -90,7 +86,6 @@ function Home() {
         });
         circle.setMap(map);
 
-        // 도시 이름 텍스트 오버레이
         const overlayContent = `<div style="
           padding: 4px 8px;
           background: rgba(255, 255, 255, 0.8);
@@ -106,7 +101,7 @@ function Home() {
         const customOverlay = new window.kakao.maps.CustomOverlay({
           position: city.latlng,
           content: overlayContent,
-          yAnchor: 1.2, // 텍스트를 원형 아래쪽에 붙이기 위해 조정
+          yAnchor: 1.2,
         });
         customOverlay.setMap(map);
       });
@@ -114,11 +109,13 @@ function Home() {
     document.head.appendChild(script);
   }, []);
 
+  // ✅ 배너 자동 슬라이드
   useEffect(() => {
     const interval = setInterval(() => setCurrentSlide((prev) => prev + 1), 3000);
     return () => clearInterval(interval);
   }, []);
 
+  // ✅ 슬라이드 3개 넘어가면 처음으로
   useEffect(() => {
     if (currentSlide === slideCount) {
       const timeout = setTimeout(() => setCurrentSlide(0), 500);
@@ -126,10 +123,26 @@ function Home() {
     }
   }, [currentSlide]);
 
-  const handleCityClick = (city) => {
-    setSelectedCity(city);
-    setActiveSection("restaurants");
+  // ✅ 도시 버튼 클릭 시
+  const handleCityClick = async (city) => {
+    setSelectedCity(city); // 도시 변경
+    setActiveSection("restaurants"); // 음식점으로 탭 초기화
 
+    if (city === "전체") {
+      setRegionInfo(null); // Seven 컴포넌트만 보여주게
+    } else {
+      try {
+        const res = await axios.get(`/api/region/getRegionInfoByName`, {
+          params: { regionName: city },
+        });
+        setRegionInfo(res.data); // DB에서 지역 정보 세팅
+      } catch (error) {
+        console.error("지역 정보 불러오기 실패:", error);
+        setRegionInfo(null);
+      }
+    }
+
+    // ✅ 지도 위치 이동
     if (mapObj) {
       if (city === "전체") {
         mapObj.setCenter(new window.kakao.maps.LatLng(36.5, 127.75));
@@ -160,7 +173,7 @@ function Home() {
     <div className="app-layout">
       <div className="main-content-area">
         <div className="dark-box">
-          {/* 배너 영역 */}
+          {/* 🔸 배너 영역 */}
           <div className="banner">
             <div
               className={`slides-container-vertical ${currentSlide === slideCount ? "no-transition" : ""}`}
@@ -181,10 +194,14 @@ function Home() {
             </div>
           </div>
 
-          {/* 지도 및 도시 선택 버튼, 소개글 영역 */}
+          {/* 🔸 지도 + 버튼 + 도시 설명 */}
           <div className="map-description-container">
-            <div id="kakao-map" style={{ width: "380px", height: "300px", borderRadius: "100px" }}></div>
+            <div
+              id="kakao-map"
+              style={{ width: "380px", height: "300px", borderRadius: "100px" }}
+            ></div>
 
+            {/* 도시 버튼 */}
             <div className="grid-buttons">
               {[
                 "전체",
@@ -211,49 +228,22 @@ function Home() {
               ))}
             </div>
 
-            {/* 선택된 도시에 따른 소개글 컴포넌트 조건부 렌더링 */}
+            {/* 도시 정보 (전체 아닐 때만) */}
+            {selectedCity !== "전체" && regionInfo && (
+              <div className="region-description">
+                <h3>{regionInfo.regionName}</h3>
+                <p>{regionInfo.regionDescription}</p>
+                <p>조회수: {regionInfo.viewCount}</p>
+              </div>
+            )}
+
+            {/* 전체 선택 시 Seven 컴포넌트 */}
             {selectedCity === "전체" && (
               <Seven activeSection={activeSection} setActiveSection={setActiveSection} />
             )}
-            {selectedCity === "부산" && (
-              <Busan activeSection={activeSection} setActiveSection={setActiveSection} />
-            )}
-            {selectedCity === "동해" && (
-              <Donghae activeSection={activeSection} setActiveSection={setActiveSection} />
-            )}
-            {selectedCity === "강릉" && (
-              <Gangneung activeSection={activeSection} setActiveSection={setActiveSection} />
-            )}
-            {selectedCity === "고성" && (
-              <Goseong activeSection={activeSection} setActiveSection={setActiveSection} />
-            )}
-            {selectedCity === "경주" && (
-              <Gyeongju activeSection={activeSection} setActiveSection={setActiveSection} />
-            )}
-            {selectedCity === "포항" && (
-              <Pohang activeSection={activeSection} setActiveSection={setActiveSection} />
-            )}
-            {selectedCity === "삼척" && (
-              <Samcheok activeSection={activeSection} setActiveSection={setActiveSection} />
-            )}
-            {selectedCity === "속초" && (
-              <Sokcho activeSection={activeSection} setActiveSection={setActiveSection} />
-            )}
-            {selectedCity === "울진" && (
-              <Uljin activeSection={activeSection} setActiveSection={setActiveSection} />
-            )}
-            {selectedCity === "울산" && (
-              <Ulsan activeSection={activeSection} setActiveSection={setActiveSection} />
-            )}
-            {selectedCity === "양양" && (
-              <Yangyang activeSection={activeSection} setActiveSection={setActiveSection} />
-            )}
-            {selectedCity === "영덕" && (
-              <Yeongdeok activeSection={activeSection} setActiveSection={setActiveSection} />
-            )}
           </div>
 
-          {/* 음식점 / 게시글(스레드) 탭 선택 버튼 */}
+          {/* 🔸 음식점 / 스레드 탭 */}
           <div className="section-tabs" style={{ margin: "20px 0" }}>
             <button
               className={`tab-button ${activeSection === "restaurants" ? "active" : ""}`}
@@ -269,15 +259,7 @@ function Home() {
             </button>
           </div>
 
-          {/* 사진 스트립 */}
-          <div className="photo-strip-line">
-            <img src="/images/Busan.png" alt="부산낭만" />
-            <img src="../../images/Busan2.png" alt="부산낭만" />
-            <img src="../images/sea.png" alt="바다" />
-            <img src="../images/ulsan.png" alt="불고기" />
-          </div>
-
-          {/* 활성 섹션에 따른 컴포넌트 렌더링 */}
+          {/* 🔸 음식점 or 스레드 표시 */}
           <div className="page-content">
             {activeSection === "restaurants" && (
               <HomeCardFeed selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
