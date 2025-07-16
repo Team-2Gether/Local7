@@ -10,27 +10,83 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-brand a {
-  color: white;
-  text-decoration: none;
-  font-size: 1.5em;
-  font-weight: bold;
+.navbar-brand {
+  position: relative;
+  display: inline-block;
 }
 
-/* LOCAL 스타일 */
-.local {
+/* 공통 스타일: 샤샤샥 그림자 + 글자 간격 */
+.navbar-brand span {
+  display: inline-block;
+  text-shadow: 3px 0 5px rgba(0,0,0,0.4), -6px 0 4px rgba(0,0,0,0.2);
+}
+
+/* L - 가장 위 */
+.navbar-brand .l {
+  position: relative;
+  z-index: 7;
   font-family: 'Faster One', cursive;
   font-size: 2.5rem;
   color: #79AAFF;
 }
 
+/* O */
+.navbar-brand .o {
+  position: relative;
+  z-index: 6;
+  font-family: 'Faster One', cursive;
+  font-size: 2.5rem;
+  color: #79AAFF;
+}
 
-/* R7 스타일 */
-.r7 {
+/* C */
+.navbar-brand .c {
+  position: relative;
+  z-index: 5;
+  font-family: 'Faster One', cursive;
+  font-size: 2.5rem;
+  color: #79AAFF;
+}
+
+/* A */
+.navbar-brand .a {
+  position: relative;
+  z-index: 4;
+  font-family: 'Faster One', cursive;
+  font-size: 2.5rem;
+  color: #79AAFF;
+}
+
+/* L2 */
+.navbar-brand .l2 {
+  position: relative;
+  z-index: 3;
+  font-family: 'Faster One', cursive;
+  font-size: 2.5rem;
+  color: #79AAFF;
+}
+
+/* R */
+.navbar-brand .r {
+  position: relative;
+  z-index: 2;
   font-family: 'Faster One', sans-serif;
   font-size: 2.5rem;
-  color: #FFCC00; /* 파랑 */
+  color: #FFCC00;
 }
+
+/* 7 */
+.navbar-brand .seven {
+  position: relative;
+  z-index: 1;
+  font-family: 'Faster One', sans-serif;
+  font-size: 2.5rem;
+  color: #FFCC00;
+}
+
+
+
+
 
 .navbar-nav {
   list-style: none;
