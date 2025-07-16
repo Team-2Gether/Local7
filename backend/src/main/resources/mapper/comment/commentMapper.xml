@@ -14,9 +14,11 @@
         <result property="updatedDate" column="UPDATED_DATE"/>
         <result property="userNickname" column="USER_NICKNAME"/>
         <result property="userProfImgUrl" column="USER_PROF_IMG_URL"/>
+        <result property="likeCount" column="LIKE_COUNT"/>
+        <result property="likedByCurrentUser" column="LIKED_BY_CURRENT_USER" javaType="boolean"/>
     </resultMap>
 
-    <select id="selectCommentList" parameterType="long" resultMap="commentResultMap">
+    <select id="selectCommentList" resultMap="commentResultMap">
         SELECT
             A.COMMENT_ID,
             A.POST_ID,
@@ -24,14 +26,23 @@
             A.CONTENT,
             A.CREATED_DATE,
             A.UPDATED_DATE,
-            B.USER_NICKNAME,
-            B.USER_PROF_IMG_URL
+            A.LIKE_COUNT, B.USER_NICKNAME,
+            B.USER_PROF_IMG_URL,
+            CASE WHEN TBL.USER_ID IS NOT NULL THEN 1 ELSE 0 END AS LIKED_BY_CURRENT_USER
         FROM
             TB_COMMENT A
         JOIN
             TB_USER B ON A.USER_ID = B.USER_ID
+        LEFT JOIN
+            TB_COMMENT_LIKE TBL ON A.COMMENT_ID = TBL.COMMENT_ID AND TBL.USER_ID = #{currentUserId}
         WHERE A.POST_ID = #{postId}
-        ORDER BY A.CREATED_DATE ASC
+        <choose>
+            <when test="sortOrder == 'likes'">
+                ORDER BY A.LIKE_COUNT DESC, A.CREATED_DATE DESC
+            </when>
+            <otherwise> ORDER BY A.CREATED_DATE DESC
+            </otherwise>
+        </choose>
     </select>
 
     <insert id="insertComment" parameterType="com.twogether.local7.comment.vo.CommentVO">
@@ -42,12 +53,14 @@
             COMMENT_ID,
             POST_ID,
             USER_ID,
-            CONTENT
+            CONTENT,
+            LIKE_COUNT
         ) VALUES (
             #{commentId},
             #{postId},
             #{userId},
-            #{content}
+            #{content},
+            0
         )
     </insert>
 
@@ -72,16 +85,17 @@
             A.CONTENT,
             A.CREATED_DATE,
             A.UPDATED_DATE,
-            B.USER_NICKNAME,
+            A.LIKE_COUNT, B.USER_NICKNAME,
             B.USER_PROF_IMG_URL
         FROM TB_COMMENT A
-        JOIN TB_USER B ON A.USER_ID = B.USER_ID
+            JOIN TB_USER B ON A.USER_ID = B.USER_ID
         WHERE A.COMMENT_ID = #{commentId}
     </select>
 
     <update id="incrementCommentCount">
         UPDATE TB_POST
-        SET COMMENT_COUNT = COMMENT_COUNT + 1
+        SET
+            COMMENT_COUNT = COMMENT_COUNT + 1
         WHERE POST_ID = #{postId}
     </update>
 
@@ -90,5 +104,49 @@
         SET COMMENT_COUNT = COMMENT_COUNT - 1
         WHERE POST_ID = #{postId}
     </update>
+
+    <select id="checkCommentLike" resultType="boolean">
+        SELECT COUNT(*)  FROM TB_COMMENT_LIKE
+        WHERE COMMENT_ID = #{commentId} AND USER_ID = #{userId}
+    </select>
+
+    <insert id="insertCommentLike">
+        <selectKey keyProperty="commentLikeId" resultType="long" order="BEFORE">
+            SELECT SEQ_TB_COMMENT_LIKE.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TB_COMMENT_LIKE (
+            COMMENT_LIKE_ID,
+            COMMENT_ID,
+            USER_ID
+        ) VALUES (
+            #{commentLikeId},
+            #{commentId},
+            #{userId}
+        )
+    </insert>
+
+    <delete id="deleteCommentLike">
+        DELETE FROM TB_COMMENT_LIKE
+        WHERE COMMENT_ID = #{commentId} AND USER_ID = #{userId}
+    </delete>
+
+    <update id="incrementCommentLikeCount">
+        UPDATE TB_COMMENT
+        SET
+            LIKE_COUNT = LIKE_COUNT + 1
+        WHERE COMMENT_ID = #{commentId}
+    </update>
+
+    <update id="decrementCommentLikeCount">
+        UPDATE TB_COMMENT
+        SET
+            LIKE_COUNT = LIKE_COUNT - 1
+        WHERE COMMENT_ID = #{commentId}
+    </update>
+
+    <delete id="deleteCommentLikesByCommentId">
+        DELETE FROM TB_COMMENT_LIKE
+        WHERE COMMENT_ID = #{commentId}
+    </delete>
 
 </mapper>

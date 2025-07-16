@@ -15,4 +15,9 @@ public class CommentVO {
 
     private String userNickname;
     private String userProfImgUrl;
+
+    private int likeCount;
+
+    private boolean likedByCurrentUser;
+
 }
