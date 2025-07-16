@@ -12,6 +12,9 @@ public interface PostDAO {
     // 모든 게시글 조회
     List<PostVO> getAllPosts();
 
+    // 게시글 필터링을 위한 메서드 추가
+    List<PostVO> getAllPostsSorted(@Param("sortBy") String sortBy);
+
     // 특정 게시글 ID로 조회
     PostVO getPostById(@Param("postId") Long postId);
 
