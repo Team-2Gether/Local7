@@ -27,19 +27,3 @@ export const commentSamples = [
     profileImg: 'https://via.placeholder.com/40',
   },
 ];
-
-// 지역명 샘플 데이터
-export const regionNames = [
-  '고성',
-  '속초',
-  '양양',
-  '강릉',
-  '동해',
-  '삼척',
-  '울진',
-  '영덕',
-  '포항',
-  '경주',
-  '울산',
-  '부산',
-];

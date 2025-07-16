@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import VotePageComSection from './components/VotePage_comSection';
-// import { regionNames } from './components/VotePage_samples';
 import './VotePage.css';
 import axios from 'axios';
 
@@ -15,12 +14,12 @@ function VotePage() {
   // 최초 1회 DB에서 지역 데이터 받아오기
   useEffect(() => {
     axios
-      .get('/api/voteRegions')
+      .get('http://localhost:8080/api/voteRegions')
       .then((res) => {
         // DB에서 regionId와 regionDescription 받아옴
         const mappedRegions = res.data.map((region) => ({
           key: region.regionId, // DB에서 받은 region_id 사용
-          name: region.krName, // DB에서 받은 region_description 사용
+          name: region.krName, // DB에서 받은 region_description(krName) 사용
         }));
         setRegions(mappedRegions);
 
