@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom'; // Link 추가
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
 import CommentSection from './CommentSection';
@@ -19,13 +19,11 @@ function PostDetail({ currentUser }) {
     }, [id, loadPostById]);
 
     const handleDelete = async () => {
-        // alert 대신 커스텀 모달 UI 사용 권장
         if (window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
             try {
                 await removePost(parseInt(id));
-                // alert 대신 커스텀 모달 UI 사용 권장
                 alert('게시글이 성공적으로 삭제되었습니다.');
-                navigate('/posts'); // 삭제 후 게시글 목록으로 이동
+                navigate('/posts');
             } catch (err) {
                 console.error('게시글 삭제 오류:', err);
                 setMessage('게시글 삭제에 실패했습니다.');
@@ -33,30 +31,26 @@ function PostDetail({ currentUser }) {
         }
     };
 
-    // 좋아요 버튼 클릭 핸들러 (상세 페이지)
     const handleToggleLike = async () => {
         if (!currentUser) {
-            // alert 대신 커스텀 모달 UI 사용 권장
             alert('로그인 후 좋아요를 누를 수 있습니다.');
             return;
         }
 
         try {
-            const result = await toggleLike(post.postId); // 좋아요 토글 API 호출
-            // post 상태 업데이트 (좋아요 상태와 개수 반영)
+            const result = await toggleLike(post.postId);
             setPost(prevPost => ({
                 ...prevPost,
                 liked: result.liked,
                 likeCount: result.likeCount
             }));
-            setMessage(result.message); // 좋아요 성공/취소 메시지 표시
+            setMessage(result.message);
         } catch (err) {
             console.error('좋아요 처리 오류:', err);
-            setLikeError(err.message); // 에러 메시지 표시
+            setLikeError(err.message);
         }
     };
 
-     // 댓글 수 업데이트 핸들러
     const handleCommentCountChange = useCallback((newCommentCount) => {
         setPost(prevPost => ({
             ...prevPost,
@@ -85,14 +79,14 @@ function PostDetail({ currentUser }) {
                     <h2 className="post-detail-title">{post.postTitle}</h2>
                     <p className="post-detail-meta">
                         작성자:
-                        <Link to={`/user/profile/${post.userLoginId}`} className="author-link"> {/* */}
-                            {currentUser.userNickname || '알 수 없음'}
+                        <Link to={`/user/profile/${post.userLoginId}`} className="author-link">
+                            {/* 이 부분을 수정했습니다. currentUser가 null일 경우 안전하게 접근합니다. */}
+                            {currentUser?.userNickname || '알 수 없음'}
                         </Link>
                         | 작성일: {new Date(post.createdDate).toLocaleString()}
                         <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
                     </p>
 
-                    {/* post.images 배열이 있을 경우 (여러 이미지) */}
                     {post.images && post.images.length > 0 && (
                         <div className="post-detail-images">
                             {post.images.map((image, index) => (
@@ -105,7 +99,6 @@ function PostDetail({ currentUser }) {
                             ))}
                         </div>
                     )}
-                    {/* firstImageUrl만 있는 경우 (images 배열이 비어있거나 없는 경우) */}
                     {(!post.images || post.images.length === 0) && post.firstImageUrl && (
                         <div className="post-detail-images">
                             <img
@@ -159,8 +152,6 @@ function PostDetail({ currentUser }) {
                     {/* CommentSection 컴포넌트 추가 */}
                     <CommentSection postId={post.postId} currentUser={currentUser} onCommentCountChange={handleCommentCountChange}/>
                 </div>
-
-
             </div>
         </div>
     );

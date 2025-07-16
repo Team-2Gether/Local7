@@ -8,7 +8,7 @@
     color: #e0e0e0; 
 }
 
-.comment-section h3 {
+.comment-section1 h3 {
     font-size: 26px; 
     color: #f0f0f0; 
     margin-bottom: 20px;
@@ -237,6 +237,87 @@
     background-color: #555; 
     border-color: #007bff; 
 }
+
+.comment-sort-options {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    text-align: right; /* 버튼 정렬을 오른쪽으로 */
+}
+
+.comment-sort-options button {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    margin-left: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.comment-sort-options button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.comment-footer {
+    display: flex;
+    justify-content: space-between; /* 좋아요 버튼과 액션 버튼을 양쪽으로 정렬 */
+    align-items: center;
+    margin-top: 10px;
+}
+
+.like-button1 {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 0;
+    color: #666;
+    display: flex;
+    align-items: center;
+}
+
+.like-button1.liked {
+    color: #ff4d4d; /* 좋아요 눌렀을 때 색상 */
+}
+
+.like-button1:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.comment-filter-options {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    gap: 10px;
+    font-size: 0.95em;
+    color: #ddd;
+}
+
+.comment-filter-options label {
+    font-weight: bold;
+}
+
+.comment-filter-options select {
+    padding: 6px 10px;
+    background-color: #444;
+    color: #f0f0f0;
+    border: 1px solid #666;
+    border-radius: 5px;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.comment-filter-options select:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #3a3a3a;
+}
+
 
 /* (모바일) */
 @media (max-width: 768px) {

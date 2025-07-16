@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { fetchComments, createComment, updateComment, deleteComment } from '../../../api/CommentApi';
+import { fetchComments, createComment, updateComment, deleteComment, toggleLikeComment } from '../../../api/CommentApi'; 
 
 const useComment = () => {
     const [comments, setComments] = useState([]);
@@ -7,11 +7,12 @@ const useComment = () => {
     const [commentError, setCommentError] = useState(null);
     const [message, setMessage] = useState(null); // 성공 메시지 추가
 
-    const loadComments = useCallback(async (postId) => {
+    // loadComments 함수에 sortOrder 매개변수 추가
+    const loadComments = useCallback(async (postId, sortOrder = 'latest') => { 
         setCommentsLoading(true);
         setCommentError(null);
         try {
-            const data = await fetchComments(postId);
+            const data = await fetchComments(postId, sortOrder); 
             setComments(data);
             return data; // 댓글 데이터 반환
         } catch (err) {
@@ -68,6 +69,22 @@ const useComment = () => {
         }
     }, []);
 
+    // (추가) 댓글 좋아요 토글 함수
+    const toggleCommentLike = useCallback(async (commentId, userId) => {
+        setCommentError(null);
+        setMessage(null);
+        try {
+            const response = await toggleLikeComment(commentId, userId);
+            setMessage(response.message); // CommentApi에서 반환하는 메시지를 사용
+            return response;
+        } catch (err) {
+            const errorMsg = err.response?.data?.message || err.message || '좋아요 처리 중 오류가 발생했습니다.';
+            setCommentError(errorMsg);
+            console.error('Failed to toggle comment like:', err);
+            throw new Error(errorMsg);
+        }
+    }, []);
+
     return {
         comments,
         commentsLoading,
@@ -80,6 +97,7 @@ const useComment = () => {
         addComment,
         modifyComment,
         removeComment,
+        toggleCommentLike, 
     };
 };
 
