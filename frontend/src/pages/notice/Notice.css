@@ -24,6 +24,10 @@ font-weight: bold;
 cursor: pointer;
 }
 
+.btn-write:hover {
+background-color: #0056b3;
+}
+
 .notice-table {
 width: 100%;
 border-collapse: collapse;
@@ -37,6 +41,7 @@ overflow: hidden;
 padding: 12px;
 text-align: center;
 border-bottom: 1px solid #ddd;
+color: #000;
 }
 
 .notice-row:hover {
@@ -44,12 +49,7 @@ background-color: #e0e0e0;
 cursor: pointer;
 }
 
-.content-container {
-padding: 20px;
-}
-
-/* 열 별 클래스 추가 */
-
+/* 열 별 클래스 */
 .notice-col-id {
 width: 60px;
 }
@@ -62,3 +62,46 @@ width: 100px;
 width: 120px;
 }
 
+/* 글쓰기/수정 폼 테이블 */
+.notice-form-table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+}
+
+.notice-form-table td {
+padding: 10px;
+border: 1px solid #ccc;
+vertical-align: top;
+}
+
+.notice-form-table input[type="text"],
+.notice-form-table textarea {
+width: 100%;
+padding: 8px;
+font-size: 16px;
+box-sizing: border-box;
+}
+
+.notice-form-buttons {
+text-align: right;
+margin-top: 20px;
+}
+
+.notice-form-buttons button {
+margin-left: 10px;
+padding: 6px 12px;
+border-radius: 20px;
+border: none;
+cursor: pointer;
+}
+
+.notice-form-buttons .btn-cancel {
+background-color: #6c757d;
+color: white;
+}
+
+.notice-form-buttons .btn-delete {
+background-color: #dc3545;
+color: white;
+}
