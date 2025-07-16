@@ -65,7 +65,6 @@ function Notice({ currentUser }) {
 
         <div className="content-container">
           <Routes>
-            {/* 공지사항 목록 */}
             <Route
               path=""
               element={
@@ -94,7 +93,9 @@ function Notice({ currentUser }) {
                       {notices.map((notice, index) => (
                         <tr
                           key={notice.noticeId}
-                          onClick={() => navigate(`/notice/${notice.noticeId}`)}
+                          onClick={() =>
+                            navigate(`/notice/${notice.noticeId}`)
+                          }
                           className="notice-row"
                         >
                           <td className="notice-col-id">
@@ -119,7 +120,6 @@ function Notice({ currentUser }) {
               }
             />
 
-            {/* 공지사항 등록 */}
             <Route
               path="new"
               element={
@@ -130,7 +130,6 @@ function Notice({ currentUser }) {
               }
             />
 
-            {/* 공지사항 수정 */}
             <Route
               path=":id"
               element={
@@ -142,6 +141,21 @@ function Notice({ currentUser }) {
             />
           </Routes>
         </div>
+      </div>
+
+      {/* 오른쪽에 고객센터 문의 박스 추가 */}
+      <div className="customer-support-box">
+        <h3>고객센터 문의</h3>
+        <p>이용 중 궁금하신 점이 있다면<br/>abcd1010@localr.com<br>
+        </br>으로 문의 주시면 됩니다.</p>
+        <p>예시:<br></br>Q:
+            안녕하세요! 혹시 포항 구룡포 쪽 맛집도 등록 계획 있으신가요? 
+            제가 직접 가본 집이 있는데 공유하고 싶어서요.<br></br><br></br>
+            Q:가게 사장님인데 우리 가게도 사이트에 등록하고 싶어요. 
+            비용이 발생하나요?<br></br><br></br>
+            Q:해킹을 당했는데 어떻게 해야 하나요?<br></br><br></br></p>
+
+        
       </div>
     </div>
   );
