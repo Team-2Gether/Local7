@@ -13,7 +13,9 @@ public class VotePostVO {
     private Long postId;
     private String postTitle;
     private String postContent;
-    private LocalDateTime createdDate;
+    private String createdDate;
     private String locationTag;
     private Long userCount;
+    private String userName;
+    private String userProfImgUrl;
 }
