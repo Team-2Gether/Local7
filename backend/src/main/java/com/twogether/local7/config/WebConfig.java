@@ -21,4 +21,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowCredentials(true) // 자격 증명 (쿠키, 인증 헤더 등) 허용
                 .maxAge(3600); // Pre-flight 요청 결과를 캐싱할 시간 (초)
     }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:///C:/dev/upload_images/");
+    }
+
 }

@@ -70,6 +70,8 @@ function PostDetail({ currentUser }) {
         return <div className="post-detail-container no-post">게시글을 찾을 수 없습니다.</div>;
     }
 
+    console.log('Post images:', post.images);
+    
     return (
         <div className="post-detail-page">
             <div className="post-detail-content-area">

@@ -173,6 +173,7 @@ public class UserController {
         }
     }
 
+    // 현재
     // 게시글 ID로 단일 게시글 조회 엔드포인트 추가
     @GetMapping("/posts/{postId}") // 새로운 엔드포인트 경로: /api/user/posts/{postId}
     public ResponseEntity<Map<String, Object>> getPostDetailById(@PathVariable Long postId) {

@@ -78,6 +78,7 @@ public class PostController {
     public ResponseEntity<Map<String, Object>> getPostById(@PathVariable("id") Long postId, HttpSession session) {
 
         PostVO post = postService.getPostById(postId);
+
         Map<String, Object> response = new HashMap<>();
 
         if (post == null) {

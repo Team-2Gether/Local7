@@ -1,8 +1,10 @@
 package com.twogether.local7.user.vo;
 
+import com.twogether.local7.post.vo.ImageVO;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 public class PostVO {
@@ -18,4 +20,8 @@ public class PostVO {
     private Timestamp updatedDate;
     private String updatedId;
     private int commentCount; // COMMENT_COUNT 필드 추가
+
+    // 현재
+    private List<ImageVO> images;
+
 }

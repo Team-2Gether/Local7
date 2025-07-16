@@ -1,6 +1,8 @@
 package com.twogether.local7.user.service;
 
 import com.twogether.local7.pagintion.Pagination;
+import com.twogether.local7.post.service.ImageService;
+import com.twogether.local7.post.vo.ImageVO;
 import com.twogether.local7.user.dao.UserDAO;
 import com.twogether.local7.user.vo.UserVO;
 import com.twogether.local7.user.vo.PostVO;
@@ -127,8 +129,18 @@ public class UserServiceImpl implements UserService {
         return userDAO.findByUserNickname(userNickname);
     }
 
+    @Autowired
+    private ImageService imageService;
+
+
+    // 현재
     @Override
     public PostVO getPostById(Long postId) {
-        return userDAO.findPostById(postId); // UserDAO에서 findPostById 호출
+        PostVO post = userDAO.findPostById(postId);
+        if (post != null) {
+            List<ImageVO> images = imageService.getImagesByPostId(postId);
+            post.setImages(images);
+        }
+        return post;
     }
 }
