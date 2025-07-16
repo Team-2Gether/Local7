@@ -23,7 +23,7 @@ const Sidebar = ({onMenuItemClick}) => {
 
             <button className="sidebar-button" onClick={() => onMenuItemClick('posts')}>
                 <FaListAlt className="sidebar-icon"/>
-                <span>게시글</span>
+                <span>스레드</span>
             </button>
 
             <button className="sidebar-button" onClick={() => onMenuItemClick('mypage')}>
@@ -33,12 +33,12 @@ const Sidebar = ({onMenuItemClick}) => {
 
             <button className="sidebar-button" onClick={() => onMenuItemClick('notice')}>
                 <FaBullhorn className="sidebar-icon"/>
-                <span>공지사항</span>
+                <span>공지/문의</span>
             </button>
 
             <button className="sidebar-button" onClick={() => onMenuItemClick('ai')}>
                 <FaRobot className="sidebar-icon"/>
-                <span>AI</span>
+                <span>7봇</span>
             </button>
 
         </div>
