@@ -1,10 +1,10 @@
 import React, { useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom'; // Link 추가
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
 import CommentSection from './CommentSection';
 
-import './Post.css'; 
+import './Post.css';
 
 function PostDetail({ currentUser }) {
     const { id } = useParams();
@@ -84,7 +84,11 @@ function PostDetail({ currentUser }) {
 
                     <h2 className="post-detail-title">{post.postTitle}</h2>
                     <p className="post-detail-meta">
-                        작성자: {post.userNickname || '알 수 없음'} | 작성일: {new Date(post.createdDate).toLocaleString()}
+                        작성자:
+                        <Link to={`/user/profile/${post.userLoginId}`} className="author-link"> {/* */}
+                            {currentUser.userNickname || '알 수 없음'}
+                        </Link>
+                        | 작성일: {new Date(post.createdDate).toLocaleString()}
                         <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
                     </p>
 

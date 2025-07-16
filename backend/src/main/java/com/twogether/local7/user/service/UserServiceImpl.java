@@ -38,12 +38,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(Long userId, String newPassword) {
-        // 현재는 직접 비밀번호를 업데이트합니다.
-        userDAO.updateUserPassword(userId, newPassword);
-    }
-
-    @Override
     public boolean checkNicknameDuplicate(String userNickname) {
         return userDAO.countByUserNickname(userNickname) > 0;
     }
@@ -55,38 +49,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void requestWithdrawalVerification(Long userId) {
-        // 실제 이메일 인증 프로세스:
-        // 1. userId를 통해 사용자 이메일 주소를 조회
         UserVO user = userDAO.findByUserId(userId);
-        if (user == null || user.getUserEmail() == null) {
-            throw new IllegalArgumentException("사용자 정보를 찾을 수 없거나 이메일이 등록되지 않았습니다.");
+        if (user == null) {
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
         }
 
-        // 2. 인증 코드 생성 및 저장
         String verificationCode = generateVerificationCode();
-        verificationCodes.put(userId, verificationCode); // 임시 저장
+        verificationCodes.put(userId, verificationCode); // 인증 코드 저장
 
-        // 3. 이메일 발송
+        // 이메일 발송
         sendVerificationEmail(user.getUserEmail(), verificationCode, "[TwoGether] 회원 탈퇴 인증 코드");
     }
 
     @Override
     public void deleteUser(Long userId, String password, String verificationCode) {
-        // 1. 사용자 비밀번호 확인 (실제로는 암호화된 비밀번호와 대조)
         UserVO user = userDAO.findByUserId(userId);
-        if (user == null || !user.getUserPassword().equals(password)) { // 실제로는 암호화 비교
+        if (user == null) {
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+        }
+
+        // 비밀번호 확인 (실제 앱에서는 비밀번호 해싱 후 비교)
+        if (!user.getUserPassword().equals(password)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        // 2. 인증 코드 확인
+        // 인증 코드 확인
         String storedCode = verificationCodes.get(userId);
         if (storedCode == null || !storedCode.equals(verificationCode)) {
-            throw new RuntimeException("인증코드가 유효하지 않거나 만료되었습니다.");
+            throw new IllegalArgumentException("유효하지 않거나 만료된 인증 코드입니다.");
         }
 
-        verificationCodes.remove(userId);
-
         userDAO.deleteUser(userId);
+        verificationCodes.remove(userId); // 사용된 인증 코드 삭제
     }
 
     private String generateVerificationCode() {
@@ -131,5 +125,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserVO getUserProfileByNickname(String userNickname) {
         return userDAO.findByUserNickname(userNickname);
+    }
+
+    @Override
+    public PostVO getPostById(Long postId) {
+        return userDAO.findPostById(postId); // UserDAO에서 findPostById 호출
     }
 }

@@ -24,6 +24,7 @@ import MyPosts from "./pages/user/MyPosts";
 import PostList from "./pages/post/components/PostList";
 import PostDetail from "./pages/post/components/PostDetail";
 import Notice from "./pages/notice/Notice";
+import OtherUser from "./pages/user/OtherUser"; // OtherUser 컴포넌트 import
 
 Modal.setAppElement("#root");
 
@@ -117,19 +118,19 @@ function AppContent() {
             setActiveContent(item);
             setIsAiModalOpen(false);
 
-            if (item === "home") 
+            if (item === "home")
                 navigate("/");
-            else if (item === "restaurants") 
+            else if (item === "restaurants")
                 navigate("/restaurants");
-            else if (item === "posts") 
+            else if (item === "posts")
                 navigate("/posts");
-            else if (item === "add") 
+            else if (item === "add")
                 navigate("/posts/new");
-            else if (item === "mypage") 
+            else if (item === "mypage")
                 navigate("/mypage");
-            else if (item === "pick") 
+            else if (item === "pick")
                 navigate("/pick");
-            else if (item === "notice") 
+            else if (item === "notice")
                 navigate("/notice");
             }
         };
@@ -248,6 +249,9 @@ function AppContent() {
                             {/* currentUser prop 추가 */}
                         </Route>
 
+                        {/* 다른 사용자 프로필 페이지 라우트 추가 */}
+                        <Route path="/user/profile/:userLoginId" element={<OtherUser currentUser={currentUser} />} />
+
                         {/* 공지사항 페이지 라우트 추가 */}
                         <Route
                             path="/notice/*"
@@ -299,7 +303,7 @@ function App() {
 
 // App.js 내부에서 사용될 UserInfo 컴포넌트 정의 (MyPage.js에도 동일하게 정의되어 있어야 합니다.)
 function UserInfo({userData}) {
-    if (!userData) 
+    if (!userData)
         return <p>사용자 정보를 불러올 수 없습니다.</p>;
     return (
         <div className="user-info-section">

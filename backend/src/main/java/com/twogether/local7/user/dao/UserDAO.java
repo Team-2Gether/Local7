@@ -16,7 +16,6 @@ public interface UserDAO {
 
     void updateUserLoginId(Long userId, String newUserLoginId);
 
-    void updateUserPassword(Long userId, String newPassword);
     // 닉네임 중복 확인
     int countByUserNickname(String userNickname);
     // 닉네임 변경
@@ -30,9 +29,12 @@ public interface UserDAO {
     // 추가된 메서드: 특정 사용자의 총 게시글 수 조회
     int countPostsByUserId(Long userId);
 
-    // 새로운 기능 추가: 로그인 ID로 사용자 정보 조회
+    // 로그인 ID로 사용자 정보 조회
     UserVO findByUserLoginId(String userLoginId);
 
-    // 새로운 기능 추가: 닉네임으로 사용자 정보 조회
+    // 닉네임으로 사용자 정보 조회
     UserVO findByUserNickname(String userNickname);
+
+    // 게시글 ID로 단일 게시글 조회 추가
+    PostVO findPostById(Long postId); // 메서드 이름 변경: findById -> findPostById (충돌 방지)
 }

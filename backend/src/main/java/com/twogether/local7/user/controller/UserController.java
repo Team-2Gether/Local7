@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/user") // '/api/user' 기본 경로 유지
 public class UserController {
 
     @Autowired
@@ -36,25 +36,15 @@ public class UserController {
         }
     }
 
-    @PostMapping("/update-loginid")
-    public ResponseEntity<Map<String, Object>> updateUserLoginId(@RequestParam Long userId, @RequestParam String newUserLoginId) {
+    @PatchMapping("/update-loginid")
+    public ResponseEntity<Map<String, Object>> updateLoginId(@RequestParam Long userId, @RequestParam String newUserLoginId) {
         try {
+            // 여기에 현재 로그인된 사용자가 userId와 일치하는지 확인하는 로직 추가 필요 (보안 강화)
             userService.updateUserLoginId(userId, newUserLoginId);
-            return ResponseEntity.ok(createSuccessResponse("아이디가 성공적으로 변경되었습니다."));
+            return ResponseEntity.ok(createSuccessResponse("로그인 아이디가 성공적으로 변경되었습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(createErrorResponse("update_failed", "아이디 변경 중 오류가 발생했습니다."));
-        }
-    }
-
-    @PostMapping("/reset-password")
-    public ResponseEntity<Map<String, Object>> resetPassword(@RequestParam Long userId, @RequestParam String newPassword) {
-        try {
-            userService.resetPassword(userId, newPassword);
-            return ResponseEntity.ok(createSuccessResponse("비밀번호가 성공적으로 재설정되었습니다."));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(createErrorResponse("reset_failed", "비밀번호 재설정 중 오류가 발생했습니다."));
+                    .body(createErrorResponse("update_failed", "로그인 아이디 변경 중 오류가 발생했습니다."));
         }
     }
 
@@ -73,9 +63,10 @@ public class UserController {
         }
     }
 
-    @PostMapping("/update-nickname")
-    public ResponseEntity<Map<String, Object>> updateUserNickname(@RequestParam Long userId, @RequestParam String newUserNickname) {
+    @PatchMapping("/update-nickname")
+    public ResponseEntity<Map<String, Object>> updateNickname(@RequestParam Long userId, @RequestParam String newUserNickname) {
         try {
+            // 여기에 현재 로그인된 사용자가 userId와 일치하는지 확인하는 로직 추가 필요 (보안 강화)
             userService.updateUserNickname(userId, newUserNickname);
             return ResponseEntity.ok(createSuccessResponse("닉네임이 성공적으로 변경되었습니다."));
         } catch (Exception e) {
@@ -87,72 +78,60 @@ public class UserController {
     @PostMapping("/request-withdrawal")
     public ResponseEntity<Map<String, Object>> requestWithdrawalVerification(@RequestParam Long userId) {
         try {
+            // 여기에 현재 로그인된 사용자가 userId와 일치하는지 확인하는 로직 추가 필요 (보안 강화)
             userService.requestWithdrawalVerification(userId);
-            return ResponseEntity.ok(createSuccessResponse("탈퇴 인증 코드가 이메일로 발송되었습니다."));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(createErrorResponse("invalid_request", e.getMessage()));
+            return ResponseEntity.ok(createSuccessResponse("회원 탈퇴를 위한 인증 코드가 이메일로 발송되었습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(createErrorResponse("email_send_failed", "인증 이메일 발송 중 오류가 발생했습니다."));
+                    .body(createErrorResponse("withdrawal_request_failed", "회원 탈퇴 인증 코드 발송 중 오류가 발생했습니다."));
         }
     }
 
-    @DeleteMapping("/delete-user")
-    public ResponseEntity<Map<String, Object>> deleteUser(
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<Map<String, Object>> withdrawUser(
             @RequestParam Long userId,
             @RequestParam String password,
-            @RequestParam String verificationCode
-    ) {
+            @RequestParam String verificationCode,
+            HttpSession session) {
         try {
+            // 여기에 현재 로그인된 사용자가 userId와 일치하는지 확인하는 로직 추가 필요 (보안 강화)
             userService.deleteUser(userId, password, verificationCode);
+            session.invalidate(); // 세션 무효화
             return ResponseEntity.ok(createSuccessResponse("회원 탈퇴가 성공적으로 완료되었습니다."));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(createErrorResponse("invalid_credentials", e.getMessage()));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(createErrorResponse("verification_failed", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(createErrorResponse("validation_error", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(createErrorResponse("delete_failed", "회원 탈퇴 중 오류가 발생했습니다."));
+                    .body(createErrorResponse("withdrawal_failed", "회원 탈퇴 중 오류가 발생했습니다."));
         }
     }
 
     @GetMapping("/{userId}/posts")
-    public ResponseEntity<Map<String, Object>> getPostsByUserId(
-            @PathVariable Long userId,
+    public ResponseEntity<Pagination<PostVO>> getUserPosts(
+            @PathVariable("userId") Long userId,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            HttpSession session // 세션 정보를 받아 사용자 인증에 활용 가능
-    ) {
-        // 실제 애플리케이션에서는 세션 또는 JWT 토큰 등을 통해 사용자 인증 및 권한 확인 로직 추가 필요
-        // 예시: Long loggedInUserId = (Long) session.getAttribute("loggedInUserId");
-        // if (loggedInUserId == null) {
-        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-        //             .body(createErrorResponse("unauthorized", "로그인 후 이용해주세요."));
-        // }
+            @RequestParam(defaultValue = "10") int pageSize) {
+        SimplePageable pageable = new SimplePageable(page, pageSize);
+        Pagination<PostVO> posts = userService.getPostsByUserId(userId, pageable);
+        return ResponseEntity.ok(posts);
+    }
 
+    @GetMapping("/{userId}/posts/count")
+    public ResponseEntity<Map<String, Object>> getUserPostCount(@PathVariable("userId") Long userId) {
+        Map<String, Object> response = new HashMap<>();
         try {
-            SimplePageable pageable = new SimplePageable(page, size);
-            Pagination<PostVO> userPosts = userService.getPostsByUserId(userId, pageable);
-
-            Map<String, Object> response = new HashMap<>();
+            int postCount = userService.countPostsByUserId(userId);
             response.put("status", "success");
-            response.put("message", "사용자가 작성한 게시글 목록을 성공적으로 조회했습니다.");
-            response.put("pagination", userPosts);
+            response.put("postCount", postCount);
             return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(createErrorResponse("invalid_pagination_parameters", e.getMessage()));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(createErrorResponse("post_retrieval_failed", "게시글 조회 중 오류가 발생했습니다."));
+                    .body(createErrorResponse("count_failed", "게시글 수 조회 중 오류가 발생했습니다."));
         }
     }
 
-    // 새로운 기능 추가: 로그인 ID로 사용자 프로필 조회
+    // 로그인 ID로 사용자 프로필 조회 엔드포인트
     @GetMapping("/profile/loginid/{userLoginId}")
     public ResponseEntity<Map<String, Object>> getUserProfileByLoginId(@PathVariable String userLoginId) {
         Map<String, Object> response = new HashMap<>();
@@ -173,7 +152,7 @@ public class UserController {
         }
     }
 
-    // 새로운 기능 추가: 닉네임으로 사용자 프로필 조회
+    // 닉네임으로 사용자 프로필 조회 엔드포인트
     @GetMapping("/profile/nickname/{userNickname}")
     public ResponseEntity<Map<String, Object>> getUserProfileByNickname(@PathVariable String userNickname) {
         Map<String, Object> response = new HashMap<>();
@@ -191,6 +170,27 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(createErrorResponse("profile_retrieval_failed", "사용자 프로필 조회 중 오류가 발생했습니다."));
+        }
+    }
+
+    // 게시글 ID로 단일 게시글 조회 엔드포인트 추가
+    @GetMapping("/posts/{postId}") // 새로운 엔드포인트 경로: /api/user/posts/{postId}
+    public ResponseEntity<Map<String, Object>> getPostDetailById(@PathVariable Long postId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            PostVO post = userService.getPostById(postId);
+            if (post != null) {
+                response.put("status", "success");
+                response.put("message", "게시글을 성공적으로 조회했습니다.");
+                response.put("post", post);
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(createErrorResponse("post_not_found", "해당 게시글을 찾을 수 없습니다."));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(createErrorResponse("post_retrieval_failed", "게시글 조회 중 오류가 발생했습니다."));
         }
     }
 

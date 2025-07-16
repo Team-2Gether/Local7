@@ -31,59 +31,39 @@
         <result property="createdId" column="CREATED_ID"/>
         <result property="updatedDate" column="UPDATED_DATE"/>
         <result property="updatedId" column="UPDATED_ID"/>
+        <result property="commentCount" column="COMMENT_COUNT"/>
     </resultMap>
 
     <select id="findByUserId" parameterType="long" resultMap="userResultMap">
         SELECT
-        USER_ID,
-        RULE_ID,
-        LOGIN_ID,
-        USER_NAME,
-        USER_PASSWORD,
-        USER_EMAIL,
-        USER_NICKNAME,
-        USER_PROF_IMG_URL,
-        USER_BIO,
-        CREATE_DATE,
-        CREATED_ID,
-        UPDATED_DATE,
-        UPDATED_ID
+        USER_ID, RULE_ID, LOGIN_ID, USER_NAME, USER_PASSWORD, USER_EMAIL,
+        USER_NICKNAME, USER_PROF_IMG_URL, USER_BIO, CREATE_DATE, CREATED_ID,
+        UPDATED_DATE, UPDATED_ID
         FROM TB_USER
         WHERE USER_ID = #{userId}
     </select>
 
-    <select id="countByUserLoginId" parameterType="string" resultType="int">
-        SELECT COUNT(*) FROM TB_USER WHERE LOGIN_ID = #{userLoginId}
-    </select>
-
     <update id="updateUserLoginId" parameterType="map">
         UPDATE TB_USER
-        SET
-        LOGIN_ID = #{newUserLoginId},
-        UPDATED_DATE = SYSTIMESTAMP,
-        UPDATED_ID = #{userId}
+        SET LOGIN_ID = #{newUserLoginId}, UPDATED_DATE = SYSTIMESTAMP
         WHERE USER_ID = #{userId}
     </update>
 
-    <update id="updateUserPassword" parameterType="map">
-        UPDATE TB_USER
-        SET
-        USER_PASSWORD = #{newPassword},
-        UPDATED_DATE = SYSTIMESTAMP,
-        UPDATED_ID = #{userId}
-        WHERE USER_ID = #{userId}
-    </update>
+    <select id="countByUserLoginId" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_USER
+        WHERE LOGIN_ID = #{userLoginId}
+    </select>
 
     <select id="countByUserNickname" parameterType="string" resultType="int">
-        SELECT COUNT(*) FROM TB_USER WHERE USER_NICKNAME = #{userNickname}
+        SELECT COUNT(*)
+        FROM TB_USER
+        WHERE USER_NICKNAME = #{userNickname}
     </select>
 
     <update id="updateUserNickname" parameterType="map">
         UPDATE TB_USER
-        SET
-        USER_NICKNAME = #{newUserNickname},
-        UPDATED_DATE = SYSTIMESTAMP,
-        UPDATED_ID = #{userId}
+        SET USER_NICKNAME = #{newUserNickname}, UPDATED_DATE = SYSTIMESTAMP
         WHERE USER_ID = #{userId}
     </update>
 
@@ -135,4 +115,21 @@
         WHERE USER_NICKNAME = #{userNickname}
     </select>
 
+    <select id="findPostById" parameterType="long" resultMap="postResultMap">
+        SELECT
+        P.POST_ID,
+        P.USER_ID,
+        U.LOGIN_ID, P.RESTAURANT_ID,
+        P.POST_TITLE,
+        P.POST_CONTENT,
+        P.LOCATION_TAG,
+        P.CREATED_DATE,
+        P.CREATED_ID,
+        P.UPDATED_DATE,
+        P.UPDATED_ID,
+        P.COMMENT_COUNT
+        FROM TB_POST P
+        JOIN TB_USER U ON P.USER_ID = U.USER_ID
+        WHERE P.POST_ID = #{postId}
+    </select>
 </mapper>
