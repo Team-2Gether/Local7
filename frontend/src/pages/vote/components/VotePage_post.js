@@ -4,6 +4,7 @@ import axios from 'axios';
 function VotePagePost() {
   const [posts, setPosts] = useState([]);
 
+  //벡엔드 호출
   useEffect(() => {
     axios
       .get('http://localhost:8080/api/vote/posts') //
@@ -21,18 +22,26 @@ function VotePagePost() {
       <ul className="post-list">
         {posts.map((post) => (
           <div key={post.postId} className="post-item">
-            <p>{post.locationTag}</p>
+            <div>
+              <img
+                src={post.imageUrl}
+                alt="게시물 이미지"
+                width="100"
+                height="100"
+              />
+            </div>
             <p>{post.postTitle}</p>
-            <p>{post.userName}</p>
             <img
               src={post.userProfImgUrl}
               alt="프로필 이미지"
               width="50"
               height="50"
             />
+            <p>{post.userNickname}</p>
+            <p>{post.userCount} like</p>
+            <p>{post.locationTag}</p>
             <p>{post.postContent}</p>
             <p>{post.createdDate}</p>
-            <p>{post.userCount} like</p>
           </div>
         ))}
       </ul>

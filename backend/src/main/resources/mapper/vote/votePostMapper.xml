@@ -11,8 +11,9 @@
         <result property="createdDate" column="CREATED_DATE"/>
         <result property="locationTag" column="LOCATION_TAG"/>
         <result property="userCount" column="USER_COUNT"/>
-        <result property="userName" column="USER_NAME"/>
+        <result property="userNickname" column="USER_NICKNAME"/>
         <result property="userProfImgUrl" column="USER_PROF_IMG_URL"/>
+        <result property="imageUrl" column="IMAGE_URL"/>
     </resultMap>
 
     <select id="getAllPosts" resultMap="votePostMap">
@@ -25,8 +26,9 @@
         TO_CHAR(p.created_date, 'YY.MM.DD') AS created_date,
         p.location_tag,
         l.user_count,
-        u.user_name,
-        u.user_prof_img_url
+        u.user_nickname,
+        u.user_prof_img_url,
+        pi.image_url
         FROM (
         SELECT post_id, COUNT(user_id) AS user_count
         FROM tb_like
@@ -34,12 +36,11 @@
         ) l
         JOIN tb_post p ON l.post_id = p.post_id
         JOIN tb_user u ON p.user_id = u.user_id
+        LEFT JOIN tb_post_image pi ON p.post_id = pi.post_id
         ORDER BY l.user_count DESC
         )
         WHERE ROWNUM &lt;= 10
     </select>
-
-
 
 </mapper>
 
