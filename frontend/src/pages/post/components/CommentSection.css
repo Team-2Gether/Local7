@@ -1,10 +1,7 @@
 .comment-section1 {
     margin-top: 30px;
-    padding: 100px; 
-    border-top: 1px solid #444;
     background-color: #282828; 
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); 
     color: #e0e0e0; 
 }
 
@@ -12,6 +9,7 @@
     font-size: 26px; 
     color: #f0f0f0; 
     margin-bottom: 20px;
+    margin-left: 20px;
     border-bottom: 2px solid #007bff; 
     padding-bottom: 10px;
     display: inline-block;
@@ -44,18 +42,13 @@
 /* 댓글 작성 폼 */
 .comment-form {
     display: flex;
-    flex-direction: column;
-    gap: 15px; 
+    gap: 10px; 
     margin-bottom: 30px;
-    padding: 20px; 
-    background-color: #333; 
-    border: 1px solid #444; 
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-left: 80px;
 }
 
 .comment-form textarea {
-    width: 100%;
+    width: 80%;
     padding: 12px; 
     border: 1px solid #555; 
     border-radius: 5px;
@@ -78,11 +71,12 @@
 }
 
 .comment-form button {
-    padding: 12px 20px; 
-    background-color: #007bff;
-    color: white;
+    padding: 10px 12px; 
+    margin-left: 20px;
+    background-color: #FFCC00;
+    color: rgb(0, 0, 0);
     border: none;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 1em;
     font-weight: bold;
@@ -118,52 +112,60 @@
 
 /* 개별 댓글 아이템 */
 .comment-item {
-    background-color: #333; 
-    border: 1px solid #444; 
-    border-radius: 8px;
+    background-color: #2e2e2e; 
     padding: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 2px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    /* ✅ 긴 댓글 내용이 카드 양쪽을 밀어 깨지지 않도록 보호 */
+    overflow-wrap: anywhere;  /* 공백 없는 긴 문자열도 어디서든 줄바꿈 */
+    word-break: break-word;   /* 일반 단어도 박스 너비 안에서 적절히 줄바꿈 */
 }
+
 
 /* 댓글 헤더 (프로필, 닉네임, 날짜) */
 .comment-header {
     display: flex;
-    align-items: center;
+    align-items: center; /* 수직 중앙정렬 */
+    gap: 10px;
     margin-bottom: 10px;
-    gap: 10px; 
 }
 
+
 .comment-header .profile-img {
-    width: 35px; 
-    height: 35px; 
-    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    border-radius: 30%;
     object-fit: cover;
-    border: 2px solid #007bff; 
+    border: 2px solid #79AAFF;
 }
 
 .comment-header .user-nickname {
     font-weight: bold;
     color: #f0f0f0; 
-    font-size: 1.1em;
+    font-size: 1.0em;
 }
 
 .comment-header .comment-date {
-    font-size: 0.85em;
+    font-size: 0.8em;
     color: #a0a0a0; 
-    margin-left: auto; 
 }
 
 /* 댓글 내용 */
+.comment-content-wrapper {
+    text-align: center; /* 이 안에 있는 인라인 블럭들을 가운데 정렬 */
+}
+
 .comment-content {
-    color: #e0e0e0; 
+    color: #e0e0e0;
     line-height: 1.6;
     margin-top: 0;
     margin-bottom: 15px;
-    white-space: pre-wrap; 
-    word-break: break-word; 
+    white-space: pre-wrap; /* 줄바꿈 및 공백 유지 */
+    word-break: break-word; /* 긴 단어 줄바꿈 (주요) */
+    overflow-wrap: anywhere; /* 긴 URL 자동 줄바꿈 */
+    width: 50%; /* 부모 내부에서 꽉 차도록 */
+    box-sizing: border-box; /* padding, border 포함한 크기 계산 */
 }
-
 /* 댓글 수정 영역 */
 .editing-area {
     display: flex;
@@ -225,7 +227,7 @@
 .comment-actions button {
     padding: 7px 14px; 
     border: 1px solid #555; 
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 14px;
     background-color: #444; 
@@ -271,12 +273,13 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1em;
-    padding: 0;
+    font-size: 1.2em;
+    padding: 2;
     color: #666;
     display: flex;
     align-items: center;
 }
+
 
 .like-button1.liked {
     color: #ff4d4d; /* 좋아요 눌렀을 때 색상 */
@@ -303,6 +306,7 @@
 
 .comment-filter-options select {
     padding: 6px 10px;
+    margin-right:30px;
     background-color: #444;
     color: #f0f0f0;
     border: 1px solid #666;
