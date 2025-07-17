@@ -12,10 +12,10 @@ public interface CommentService {
     void createComment(CommentVO comment);
 
     // 댓글 수정
-    boolean updateComment(Long commentId, CommentVO comment, Long userId);
+    boolean updateComment(Long commentId, CommentVO comment, Long userId, Long ruleId);
 
     // 댓글 삭제
-    boolean deleteComment(Long commentId, Long userId);
+    boolean deleteComment(Long commentId, Long userId, Long ruleId);
 
     // 댓글 좋아요 토글
     String toggleCommentLike(Long commentId, Long userId); //

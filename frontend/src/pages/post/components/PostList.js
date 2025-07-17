@@ -5,18 +5,35 @@ import useLike from '../hooks/useLike';
 
 import './Post.css'; 
 
-function PostList({ currentUser }) {
+function PostList({ currentUser, selectedCity }) {
 
     const { posts, loading, error, message, loadAllPosts, removePost, setMessage, setPosts } = usePost();
     const { toggleLike, likeLoading, likeError } = useLike();
     const navigate = useNavigate();
     const [sortBy, setSortBy] = useState('latest');
-
+    const [filteredPosts, setFilteredPosts] = useState([]);
+    
     useEffect(() => {
         loadAllPosts(sortBy);
     }, [loadAllPosts, sortBy]);
 
+    useEffect(() => {
+        if (posts.length > 0) {
+            if (selectedCity === '전체') {
+            // '전체'가 선택되면 필터링 없이 모든 게시글 표시
+            setFilteredPosts(posts);
+        } else {
+            // 선택된 도시에 따라 게시글 필터링
+            const filtered = posts.filter(post => post.locationTag === selectedCity);
+            setFilteredPosts(filtered);
+        }
+        } else {
+            setFilteredPosts([]);
+        }
+    }, [posts, selectedCity]);
+
     const handleDelete = async (postId) => {
+        console.log('Current User:', currentUser);
         // alert 대신 커스텀 모달 UI 사용 권장
         if (window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
             try {
@@ -75,6 +92,7 @@ function PostList({ currentUser }) {
     if (error) return <div className="error-message">오류: {error}</div>;
 
     return (
+
         <div className="post-list-container">
             <h1 className="post-list-title">쓰레드 목록</h1>
 
@@ -99,13 +117,12 @@ function PostList({ currentUser }) {
                 </button>
             </div>
             <div className="post-grid-wrapper">
-                {posts.length === 0 ? (
+                {filteredPosts.length === 0 ? (
                     <p className="no-posts-message">게시글이 없습니다.</p>
                 ) : (
                     <ul className="post-grid">
-                        {posts.map((post) => {
+                        {filteredPosts.map((post) => {
                         return (
-
                             <li key={post.postId} className="post-card">
                                 {/* 게시글 상세 페이지로 이동 링크 */}
                                 <div onClick={() => handlePostClick(post.postId)} style={{ cursor: 'pointer' }}>
@@ -146,6 +163,7 @@ function PostList({ currentUser }) {
                                 </div>
 
                                 <div className="post-card-actions">
+
                                 {currentUser && (currentUser.userId === post.userId || currentUser.userLoginId === 'admin') && (
 
                                     <>

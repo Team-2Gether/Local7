@@ -136,7 +136,8 @@
             LOCATION_TAG = #{locationTag},
             UPDATED_DATE = SYSTIMESTAMP,
             UPDATED_ID = #{updatedId}
-        WHERE POST_ID = #{postId} AND USER_ID = #{userId} </update>
+        WHERE POST_ID = #{postId} AND USER_ID = #{userId}
+    </update>
 
     <delete id="deletePost" parameterType="map">
         DELETE FROM TB_POST

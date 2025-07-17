@@ -20,10 +20,11 @@
         <result property="updatedId" column="UPDATED_ID"/>
     </resultMap>
 
-    <resultMap id="postResultMap" type="com.twogether.local7.user.vo.PostVO">
+    <resultMap id="postResultMap" type="com.twogether.local7.user.vo.PostDetailVO">
         <id property="postId" column="POST_ID"/>
         <result property="userId" column="USER_ID"/>
-        <result property="userLoginId" column="LOGIN_ID"/> <result property="restaurantId" column="RESTAURANT_ID"/>
+        <result property="userLoginId" column="LOGIN_ID"/>
+        <result property="restaurantId" column="RESTAURANT_ID"/>
         <result property="postTitle" column="POST_TITLE"/>
         <result property="postContent" column="POST_CONTENT"/>
         <result property="locationTag" column="LOCATION_TAG"/>
@@ -119,7 +120,8 @@
         SELECT
         P.POST_ID,
         P.USER_ID,
-        U.LOGIN_ID, P.RESTAURANT_ID,
+        U.LOGIN_ID,
+        P.RESTAURANT_ID,
         P.POST_TITLE,
         P.POST_CONTENT,
         P.LOCATION_TAG,

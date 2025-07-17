@@ -2,7 +2,7 @@ package com.twogether.local7.user.service;
 
 import com.twogether.local7.pagintion.Pagination;
 import com.twogether.local7.user.vo.UserVO;
-import com.twogether.local7.user.vo.PostVO;
+import com.twogether.local7.user.vo.PostDetailVO;
 import com.twogether.local7.pagintion.Pageable;
 
 public interface UserService {
@@ -18,7 +18,7 @@ public interface UserService {
 
     void deleteUser(Long userId, String password, String verificationCode);
 
-    Pagination<PostVO> getPostsByUserId(Long userId, Pageable pageable);
+    Pagination<PostDetailVO> getPostsByUserId(Long userId, Pageable pageable); // PostDetailVO로 변경
     int countPostsByUserId(Long userId);
 
     // 로그인 ID로 사용자 프로필 조회
@@ -28,5 +28,5 @@ public interface UserService {
     UserVO getUserProfileByNickname(String userNickname);
 
     // 게시글 ID로 단일 게시글 조회 추가
-    PostVO getPostById(Long postId);
+    PostDetailVO getPostById(Long postId);
 }

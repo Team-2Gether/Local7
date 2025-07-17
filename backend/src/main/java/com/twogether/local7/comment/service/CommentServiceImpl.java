@@ -2,6 +2,8 @@ package com.twogether.local7.comment.service;
 
 import com.twogether.local7.comment.dao.CommentDAO;
 import com.twogether.local7.comment.vo.CommentVO;
+import com.twogether.local7.user.dao.UserDAO;
+import com.twogether.local7.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,36 +30,35 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public boolean updateComment(Long commentId, CommentVO comment, Long userId) {
+    public boolean updateComment(Long commentId, CommentVO comment, Long userId, Long ruleId) {
         CommentVO originalComment = commentDAO.selectComment(commentId);
 
-        if (originalComment != null && originalComment.getUserId().equals(userId)) {
+        if (originalComment != null && (originalComment.getUserId().equals(userId) || (ruleId != null && ruleId == 1))) {
             comment.setCommentId(commentId);
             commentDAO.updateComment(comment);
             return true;
         }
-
         return false;
     }
 
     @Override
     @Transactional
-    public boolean deleteComment(Long commentId, Long userId) {
-        CommentVO comment = commentDAO.selectComment(commentId);
+    public boolean deleteComment(Long commentId, Long userId, Long ruleId) {
+        CommentVO originalComment = commentDAO.selectComment(commentId);
 
-        if (comment != null && comment.getUserId().equals(userId)) {
+        // 원본 작성자이거나 ruleId가 1인 경우에만 허용
+        if (originalComment != null && (originalComment.getUserId().equals(userId) || (ruleId != null && ruleId == 1))) {
             commentDAO.deleteComment(commentId);
-            commentDAO.decrementCommentCount(comment.getPostId());
-            // 댓글 삭제 시 해당 댓글의 좋아요도 모두 삭제
+            commentDAO.decrementCommentCount(originalComment.getPostId());
             commentDAO.deleteCommentLikesByCommentId(commentId);
             return true;
         }
         return false;
     }
 
+    // 댓글 좋아요 토글
     @Override
     @Transactional
-    // 댓글 좋아요 토글
     public String toggleCommentLike(Long commentId, Long userId) {
         // 이미 좋아요를 눌렀는지 확인
         boolean alreadyLiked = commentDAO.checkCommentLike(commentId, userId);

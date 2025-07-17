@@ -1,7 +1,7 @@
 package com.twogether.local7.user.dao;
 
 import com.twogether.local7.user.vo.UserVO;
-import com.twogether.local7.user.vo.PostVO;
+import com.twogether.local7.user.vo.PostDetailVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds; // RowBounds import 추가
 import org.springframework.stereotype.Repository;
@@ -24,7 +24,7 @@ public interface UserDAO {
     void deleteUser(Long userId);
 
     // 수정된 메서드: Pagination을 위한 RowBounds 추가
-    List<PostVO> findPostsByUserId(Long userId, RowBounds rowBounds); // RowBounds 파라미터 추가
+    List<PostDetailVO> findPostsByUserId(Long userId, RowBounds rowBounds); // RowBounds 파라미터 추가
 
     // 추가된 메서드: 특정 사용자의 총 게시글 수 조회
     int countPostsByUserId(Long userId);
@@ -36,5 +36,5 @@ public interface UserDAO {
     UserVO findByUserNickname(String userNickname);
 
     // 게시글 ID로 단일 게시글 조회 추가
-    PostVO findPostById(Long postId); // 메서드 이름 변경: findById -> findPostById (충돌 방지)
+    PostDetailVO findPostById(Long postId); // 메서드 이름 변경: findById -> findPostById (충돌 방지)
 }

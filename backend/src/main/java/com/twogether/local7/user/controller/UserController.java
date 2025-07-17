@@ -3,8 +3,8 @@ package com.twogether.local7.user.controller;
 import com.twogether.local7.pagintion.Pagination;
 import com.twogether.local7.pagintion.SimplePageable;
 import com.twogether.local7.user.service.UserService;
-import com.twogether.local7.user.vo.PostVO;
-import com.twogether.local7.user.vo.UserVO; // UserVO import 추가
+import com.twogether.local7.user.vo.PostDetailVO;
+import com.twogether.local7.user.vo.UserVO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/user") // '/api/user' 기본 경로 유지
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -108,13 +108,17 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/posts")
-    public ResponseEntity<Pagination<PostVO>> getUserPosts(
-            @PathVariable("userId") Long userId,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int pageSize) {
+    public ResponseEntity<Map<String, Object>> getUserPosts( // 반환 타입을 Map으로 변경
+                                                             @PathVariable("userId") Long userId,
+                                                             @RequestParam(defaultValue = "1") int page,
+                                                             @RequestParam(defaultValue = "10") int pageSize) {
         SimplePageable pageable = new SimplePageable(page, pageSize);
-        Pagination<PostVO> posts = userService.getPostsByUserId(userId, pageable);
-        return ResponseEntity.ok(posts);
+        Pagination<PostDetailVO> posts = userService.getPostsByUserId(userId, pageable);
+
+        Map<String, Object> response = new HashMap<>(); // 응답 Map 생성
+        response.put("status", "success"); // status 필드 추가
+        response.put("pagination", posts); // pagination 필드에 PostDetailVO 리스트 할당
+        return ResponseEntity.ok(response); // 수정된 Map 반환
     }
 
     @GetMapping("/{userId}/posts/count")
@@ -173,13 +177,12 @@ public class UserController {
         }
     }
 
-    // 현재
     // 게시글 ID로 단일 게시글 조회 엔드포인트 추가
-    @GetMapping("/posts/{postId}") // 새로운 엔드포인트 경로: /api/user/posts/{postId}
+    @GetMapping("/posts/{postId}")
     public ResponseEntity<Map<String, Object>> getPostDetailById(@PathVariable Long postId) {
         Map<String, Object> response = new HashMap<>();
         try {
-            PostVO post = userService.getPostById(postId);
+            PostDetailVO post = userService.getPostById(postId);
             if (post != null) {
                 response.put("status", "success");
                 response.put("message", "게시글을 성공적으로 조회했습니다.");

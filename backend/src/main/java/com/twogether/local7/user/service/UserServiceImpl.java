@@ -5,7 +5,7 @@ import com.twogether.local7.post.service.ImageService;
 import com.twogether.local7.post.vo.ImageVO;
 import com.twogether.local7.user.dao.UserDAO;
 import com.twogether.local7.user.vo.UserVO;
-import com.twogether.local7.user.vo.PostVO;
+import com.twogether.local7.user.vo.PostDetailVO;
 import com.twogether.local7.pagintion.Pageable;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,10 +107,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Pagination<PostVO> getPostsByUserId(Long userId, Pageable pageable) {
+    public Pagination<PostDetailVO> getPostsByUserId(Long userId, Pageable pageable) { // PostDetailVO로 변경
         int totalPosts = userDAO.countPostsByUserId(userId);
         RowBounds rowBounds = new RowBounds((int) pageable.getOffset(), pageable.getPageSize());
-        List<PostVO> posts = userDAO.findPostsByUserId(userId, rowBounds);
+        List<PostDetailVO> posts = userDAO.findPostsByUserId(userId, rowBounds); // PostDetailVO로 변경
         return new Pagination<>(posts, pageable, totalPosts);
     }
 
@@ -135,8 +135,8 @@ public class UserServiceImpl implements UserService {
 
     // 현재
     @Override
-    public PostVO getPostById(Long postId) {
-        PostVO post = userDAO.findPostById(postId);
+    public PostDetailVO getPostById(Long postId) {
+        PostDetailVO post = userDAO.findPostById(postId);
         if (post != null) {
             List<ImageVO> images = imageService.getImagesByPostId(postId);
             post.setImages(images);
