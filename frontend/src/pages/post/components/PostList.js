@@ -17,6 +17,7 @@ function PostList({ currentUser }) {
     }, [loadAllPosts, sortBy]);
 
     const handleDelete = async (postId) => {
+        console.log('Current User:', currentUser);
         // alert 대신 커스텀 모달 UI 사용 권장
         if (window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
             try {
@@ -75,6 +76,7 @@ function PostList({ currentUser }) {
     if (error) return <div className="error-message">오류: {error}</div>;
 
     return (
+
         <div className="post-list-container">
             <h1 className="post-list-title">쓰레드 목록</h1>
 
@@ -105,7 +107,6 @@ function PostList({ currentUser }) {
                     <ul className="post-grid">
                         {posts.map((post) => {
                         return (
-
                             <li key={post.postId} className="post-card">
                                 {/* 게시글 상세 페이지로 이동 링크 */}
                                 <div onClick={() => handlePostClick(post.postId)} style={{ cursor: 'pointer' }}>
@@ -146,6 +147,7 @@ function PostList({ currentUser }) {
                                 </div>
 
                                 <div className="post-card-actions">
+
                                 {currentUser && (currentUser.userId === post.userId || currentUser.userLoginId === 'admin') && (
 
                                     <>

@@ -20,27 +20,56 @@ function Main({ currentUser }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
 
-  useEffect(() => {
-    if (window.kakao && window.kakao.maps) {
-      initializeMapAndLoadData();
-    } else {
-      const script = document.createElement('script');
-      script.src =
-        '//dapi.kakao.com/v2/maps/sdk.js?appkey=690813b8710fce175e3acf9121422624&libraries=services';
-      script.async = true;
-      document.head.appendChild(script);
-
-      script.onload = () => {
-        window.kakao.maps.load(() => {
-          initializeMapAndLoadData();
-        });
-      };
+  // 지도에 마커를 추가하고, 목록을 업데이트하는 함수
+  const updateMapAndList = (fetchedRestaurants) => {
+    // 기존 마커 제거
+    if (mapInstanceRef.current) {
+        const map = mapInstanceRef.current;
+        if (map.markerList) { // 이전에 저장된 마커 리스트가 있다면 모두 제거
+            map.markerList.forEach(marker => marker.setMap(null));
+        }
     }
-  }, []);
 
-  const handleRestaurantClick = (restaurant) => {
-    setSelectedRestaurant(restaurant);
-    setIsDetailModalOpen(true);
+    const map = mapInstanceRef.current;
+    const bounds = new window.kakao.maps.LatLngBounds();
+    const markers = [];
+
+    fetchedRestaurants.forEach((r) => {
+      if (r.restaurantLat && r.restaurantLon) {
+        const pos = new window.kakao.maps.LatLng(
+          parseFloat(r.restaurantLat),
+          parseFloat(r.restaurantLon)
+        );
+        const marker = new window.kakao.maps.Marker({
+          map,
+          position: pos,
+          title: r.restaurantName,
+        });
+        markers.push(marker);
+        bounds.extend(pos);
+      }
+    });
+
+    if (fetchedRestaurants.length > 0) map.setBounds(bounds);
+    setRestaurants(fetchedRestaurants);
+    map.markerList = markers; // 새로운 마커 리스트를 지도 객체에 저장
+  };
+
+  // 백엔드 API에서 특정 위치 주변의 음식점을 가져와서 지도에 렌더링하는 함수
+  const fetchAndRenderRestaurants = (lat, lon, radius) => {
+    axios
+      .get(`http://localhost:8080/api/restaurants?lat=${lat}&lon=${lon}&radius=${radius}`)
+      .then((response) => {
+        if (response.data?.status === 'success') {
+          const fetched = response.data.data.filter(Boolean);
+          updateMapAndList(fetched);
+        } else {
+          setError('음식점 데이터를 가져오지 못했습니다.');
+        }
+      })
+      .catch((err) => {
+        setError('데이터 가져오기 오류: ' + err.message);
+      });
   };
 
   const initializeMapAndLoadData = () => {
@@ -52,12 +81,14 @@ function Main({ currentUser }) {
     }
 
     const options = {
-      center: new window.kakao.maps.LatLng(37.5665, 126.978),
+      // 초기 지도를 강원도 시청 위치로 설정
+      center: new window.kakao.maps.LatLng(37.8847, 127.7290),
       level: 3,
     };
     const map = new window.kakao.maps.Map(container, options);
     mapInstanceRef.current = map;
 
+    // 현재 위치를 표시하는 기능은 그대로 유지
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const locPosition = new window.kakao.maps.LatLng(
@@ -73,37 +104,40 @@ function Main({ currentUser }) {
       });
     }
 
-    axios
-      .get('http://localhost:8080/api/restaurants')
-      .then((response) => {
-        if (response.data?.status === 'success') {
-          const fetched = response.data.data.filter(Boolean);
-          setRestaurants(fetched);
+    // 지도 클릭 시 마커 표시 및 검색 기능 추가 (선택 사항)
+    window.kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+      const latlng = mouseEvent.latLng;
+      const lat = latlng.getLat();
+      const lon = latlng.getLng();
+      fetchAndRenderRestaurants(lat, lon, 2000); // 클릭한 위치 반경 2km 검색
+      map.setCenter(latlng);
+    });
+  };
 
-          const bounds = new window.kakao.maps.LatLngBounds();
-          fetched.forEach((r) => {
-            if (r.restaurantLat && r.restaurantLon) {
-              const pos = new window.kakao.maps.LatLng(
-                parseFloat(r.restaurantLat),
-                parseFloat(r.restaurantLon)
-              );
-              new window.kakao.maps.Marker({
-                map,
-                position: pos,
-                title: r.restaurantName,
-              });
-              bounds.extend(pos);
-            }
-          });
+  useEffect(() => {
+    if (window.kakao && window.kakao.maps) {
+      initializeMapAndLoadData();
+      // 컴포넌트 마운트 시 강원도 시청 주변 음식점을 조회
+      fetchAndRenderRestaurants(37.8847, 127.7290, 2000);
+    } else {
+      const script = document.createElement('script');
+      script.src =
+        '//dapi.kakao.com/v2/maps/sdk.js?appkey=690813b8710fce175e3acf9121422624&libraries=services';
+      script.async = true;
+      document.head.appendChild(script);
 
-          if (fetched.length > 0) map.setBounds(bounds);
-        } else {
-          setError('음식점 데이터를 가져오지 못했습니다.');
-        }
-      })
-      .catch((err) => {
-        setError('데이터 가져오기 오류: ' + err.message);
-      });
+      script.onload = () => {
+        window.kakao.maps.load(() => {
+          initializeMapAndLoadData();
+          fetchAndRenderRestaurants(37.8847, 127.7290, 2000);
+        });
+      };
+    }
+  }, []);
+
+  const handleRestaurantClick = (restaurant) => {
+    setSelectedRestaurant(restaurant);
+    setIsDetailModalOpen(true);
   };
 
   return (
