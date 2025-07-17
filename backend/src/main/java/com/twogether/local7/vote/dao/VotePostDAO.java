@@ -1,11 +1,11 @@
 package com.twogether.local7.vote.dao;
 
-import com.twogether.local7.vote.vo.VotePostVO;
+import com.twogether.local7.vote.vo.VoteVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
 public interface VotePostDAO {
-    List<VotePostVO> getAllPosts();
+    List<VoteVO> getAllPosts();
 }

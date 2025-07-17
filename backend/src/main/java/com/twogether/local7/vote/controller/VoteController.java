@@ -2,8 +2,7 @@ package com.twogether.local7.vote.controller;
 
 import com.twogether.local7.vote.service.VoteRegionService;
 import com.twogether.local7.vote.service.VotePostService;
-import com.twogether.local7.vote.vo.VotePostVO;
-import com.twogether.local7.vote.vo.VoteRegionVO;
+import com.twogether.local7.vote.vo.VoteVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,18 +17,18 @@ public class VoteController {
     //지역 
     @Autowired
     private VoteRegionService voteRegionService;
+
+    @GetMapping("/regions")
+    public List<VoteVO> getRegions() {
+        return voteRegionService.getAllRegions();
+    }
+
     //게시글
     @Autowired
     private VotePostService votePostService;
 
-    //지역
-    @GetMapping("/regions")
-    public List<VoteRegionVO> getRegions() {
-        return voteRegionService.getAllRegions();
-    }
-    //게시글
     @GetMapping("/posts")
-    public List<VotePostVO> getPosts() {
+    public List<VoteVO> getPosts() {
         return votePostService.getAllPosts();
     }
 }

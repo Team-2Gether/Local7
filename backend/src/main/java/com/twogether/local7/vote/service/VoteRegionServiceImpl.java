@@ -1,7 +1,7 @@
 package com.twogether.local7.vote.service;
 
 import com.twogether.local7.vote.dao.VoteRegionDAO;
-import com.twogether.local7.vote.vo.VoteRegionVO;
+import com.twogether.local7.vote.vo.VoteVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class VoteRegionServiceImpl implements VoteRegionService {
     private VoteRegionDAO voteRegionDAO;
 
     @Override
-    public List<VoteRegionVO> getAllRegions() {
+    public List<VoteVO> getAllRegions() {
         return voteRegionDAO.getAllRegions();
     }
 }
