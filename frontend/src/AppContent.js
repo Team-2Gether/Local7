@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import {Routes, Route, useNavigate, Navigate} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import axios from "axios";
 import Modal from "react-modal";
 
@@ -124,7 +124,7 @@ export function AppContent() {
                             isLoggedIn={isLoggedIn}
                             userNickname={currentUser
                                 ?.userNickname}
-                            onLogout={handleLogout}/>
+                            onLogout={handleLogout} />
                     </div>
                 )
             }
@@ -133,7 +133,7 @@ export function AppContent() {
                 {
                     isLoggedIn && (
                         <div className="sidebar-container">
-                            <Sidebar onMenuItemClick={handleSidebarMenuItemClick}/> {/* onMenuItemClick 전달 */}
+                            <Sidebar onMenuItemClick={handleSidebarMenuItemClick} /> {/* onMenuItemClick 전달 */}
                         </div>
                     )
                 }
@@ -145,14 +145,14 @@ export function AppContent() {
                             path="/"
                             element={isLoggedIn
                                 ? (
-                                    <Home currentUser={currentUser} selectedCity={selectedCity} setSelectedCity={setSelectedCity}/> // Home 컴포넌트에 selectedCity와 setSelectedCity 전달
+                                    <Home currentUser={currentUser} selectedCity={selectedCity} setSelectedCity={setSelectedCity} /> // Home 컴포넌트에 selectedCity와 setSelectedCity 전달
                                 )
                                 : (
                                     <div className="initial-login-screen">
                                         <div className="login-image-wrapper">
-                                            <img src={sea} alt="sea" className="login-background-image"/>
-                                            <img src={ko} alt="ko" className="overlay-image ko-image"/>
-                                            <img src={first} alt="first" className="overlay-image first-image"/>
+                                            <img src={sea} alt="sea" className="login-background-image" />
+                                            <img src={ko} alt="ko" className="overlay-image ko-image" />
+                                            <img src={first} alt="first" className="overlay-image first-image" />
                                             <button
                                                 className="login-trigger-button"
                                                 onClick={() => setIsLoginModalOpen(true)}>
@@ -160,42 +160,42 @@ export function AppContent() {
                                             </button>
                                         </div>
                                     </div>
-                                )}/>
+                                )} />
                         {/* /restaurants 라우트 (Main 컴포넌트가 담당) */}
-                        <Route path="/restaurants" element={<Main currentUser={currentUser}/>}/>
+                        <Route path="/restaurants" element={<Main currentUser={currentUser} />} />
                         <Route
                             path="/pick"
-                            element={<RestaurantVote currentUser={currentUser}/>}
+                            element={<RestaurantVote currentUser={currentUser} />}
                         />
                         <Route
                             path="/posts"
-                            element={<PostList currentUser={currentUser} selectedCity={selectedCity}/>}
+                            element={<PostList currentUser={currentUser} selectedCity={selectedCity} />}
                         />
                         <Route
                             path="/posts/new"
-                            element={<PostForm currentUser = {
+                            element={<PostForm currentUser={
                                 currentUser
-                            }/>
+                            } />
                             }
                         />
                         <Route
                             path="/posts/edit/:id"
-                            element={<PostForm currentUser = {
+                            element={<PostForm currentUser={
                                 currentUser
-                            }/>
+                            } />
                             }
                         />
                         <Route
                             path="/posts/:id"
-                            element={<PostDetail currentUser = {
+                            element={<PostDetail currentUser={
                                 currentUser
-                            }/>
+                            } />
                             }
                         />
                         <Route
                             path="/mypage"
                             element={isLoggedIn
-                                ? (<MyPage currentUser={currentUser} isLoggedIn={isLoggedIn}/>)
+                                ? (<MyPage currentUser={currentUser} isLoggedIn={isLoggedIn} />)
                                 : (
                                     <div className="initial-login-screen">
                                         로그인이 필요합니다.{" "}
@@ -206,36 +206,36 @@ export function AppContent() {
                                 )}>
                             <Route
                                 index="index"
-                                element={<UserInfo userData = {
+                                element={<UserInfo userData={
                                     currentUser
-                                }/>
+                                } />
                                 }
                             />
                             <Route
                                 path="edit"
-                                element={<UserPage currentUser = {
+                                element={<UserPage currentUser={
                                     currentUser
                                 }
-                                onLogout = {
-                                    handleLogout
-                                }/>
+                                    onLogout={
+                                        handleLogout
+                                    } />
                                 }
                             />
                             <Route
                                 path="posts"
-                                element={<MyPosts currentUser = {
+                                element={<MyPosts currentUser={
                                     currentUser
-                                }/>
+                                } />
                                 }
                             />
                         </Route>
 
-                        <Route path="/user/profile/:userLoginId" element={<OtherUser currentUser={currentUser}/>}/>
+                        <Route path="/user/profile/:userLoginId" element={<OtherUser currentUser={currentUser} />} />
 
                         <Route
                             path="/notice/*"
                             element={isLoggedIn
-                                ? (<Notice currentUser={currentUser}/>)
+                                ? (<Notice currentUser={currentUser} />)
                                 : (
                                     <div className="initial-login-screen">
                                         로그인이 필요합니다.{" "}
@@ -243,11 +243,11 @@ export function AppContent() {
                                             로그인
                                         </button>
                                     </div>
-                                )}/>
-                        <Route path="/userpage" element={<Navigate to = "/mypage/edit" replace />}/>
+                                )} />
+                        <Route path="/userpage" element={<Navigate to="/mypage/edit" replace />} />
 
-                        <Route path="/signup" element={<SignupForm />}/>
-                        <Route path="*" element={<NotFoundPage />}/>
+                        <Route path="/signup" element={<SignupForm />} />
+                        <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </div>
             </div>
@@ -261,20 +261,20 @@ export function AppContent() {
                 <LoginForm
                     onLoginSuccess={handleLoginSuccess}
                     onCloseModal={() => setIsLoginModalOpen(false)}
-                    onOpenTermsModal={openTermsModal}/>
+                    onOpenTermsModal={openTermsModal} />
             </Modal>
 
             <TermsOfServiceModal
                 isOpen={isTermsModalOpen}
                 onClose={closeTermsModal}
-                showAgreeButton={false}/>
+                showAgreeButton={false} />
 
-            <AiModal isOpen={isAiModalOpen} onRequestClose={() => setIsAiModalOpen(false)}/>
+            <AiModal isOpen={isAiModalOpen} onRequestClose={() => setIsAiModalOpen(false)} />
         </div>
     );
 }
 
-function UserInfo({userData}) {
+function UserInfo({ userData }) {
     if (!userData)
         return <p>사용자 정보를 불러올 수 없습니다.</p>;
     return (
@@ -282,9 +282,9 @@ function UserInfo({userData}) {
             <div className="profile-image-container">
                 <img
                     src={userData.userProfileImageUrl || "https://via.placeholder.com/150"
-}
+                    }
                     alt="프로필 이미지"
-                    className="profile-image"/>
+                    className="profile-image" />
             </div>
             <div className="user-details">
                 <p>

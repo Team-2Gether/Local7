@@ -48,10 +48,10 @@ const Sidebar = ({onMenuItemClick}) => {
                 <span>주변 맛집</span>
             </button>
 
-            <button className="sidebar-button" onClick={() => handleSidebarClick('posts')}>
+            {/* <button className="sidebar-button" onClick={() => handleSidebarClick('posts')}>
                 <FaListAlt className="sidebar-icon"/>
                 <span>스레드</span>
-            </button>
+            </button> */}
 
             <button className="sidebar-button" onClick={() => handleSidebarClick('mypage')}>
                 <FaUser className="sidebar-icon"/>
