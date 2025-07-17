@@ -10,7 +10,7 @@ public interface UserService {
     boolean checkLoginIdDuplicate(String userLoginId);
 
     void updateUserLoginId(Long userId, String newUserLoginId);
-    void resetPassword(Long userId, String newPassword); // 이메일 인증 기능 제거에 따라 파라미터 변경
+
     boolean checkNicknameDuplicate(String userNickname);
 
     void updateUserNickname(Long userId, String newUserNickname);
@@ -21,9 +21,12 @@ public interface UserService {
     Pagination<PostVO> getPostsByUserId(Long userId, Pageable pageable);
     int countPostsByUserId(Long userId);
 
-    // 새로운 기능 추가: 로그인 ID로 사용자 프로필 조회
+    // 로그인 ID로 사용자 프로필 조회
     UserVO getUserProfileByLoginId(String userLoginId);
 
-    // 새로운 기능 추가: 닉네임으로 사용자 프로필 조회
+    // 닉네임으로 사용자 프로필 조회
     UserVO getUserProfileByNickname(String userNickname);
+
+    // 게시글 ID로 단일 게시글 조회 추가
+    PostVO getPostById(Long postId);
 }

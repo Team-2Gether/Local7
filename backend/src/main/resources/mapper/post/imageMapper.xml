@@ -4,7 +4,6 @@
 
 <mapper namespace="com.twogether.local7.post.dao.ImageDAO">
 
-    <!-- ImageVO와 DB 컬럼 매핑 -->
     <resultMap id="imageResultMap" type="com.twogether.local7.post.vo.ImageVO">
         <id property="imageId" column="IMAGE_ID"/>
         <result property="postId" column="POST_ID"/>
@@ -15,32 +14,17 @@
         <result property="updatedId" column="UPDATED_ID"/>
     </resultMap>
 
-    <!-- 단일 이미지 정보 삽입 -->
     <insert id="insertImage" parameterType="com.twogether.local7.post.vo.ImageVO">
         <selectKey keyProperty="imageId" resultType="long" order="BEFORE">
-            SELECT SEQ_TB_POST_IMAGE.NEXTVAL FROM DUAL <!-- 시퀀스 이름 변경 -->
+            SELECT SEQ_TB_POST_IMAGE.NEXTVAL FROM DUAL
         </selectKey>
         INSERT INTO TB_POST_IMAGE (
-            IMAGE_ID, POST_ID, IMAGE_URL, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
+        IMAGE_ID, POST_ID, IMAGE_URL, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
         ) VALUES (
-            #{imageId}, #{postId}, #{imageUrl}, SYSTIMESTAMP, #{createdId}, SYSTIMESTAMP, #{updatedId}
+        #{imageId}, #{postId}, #{imageUrl}, SYSTIMESTAMP, #{createdId}, SYSTIMESTAMP, #{updatedId}
         )
     </insert>
 
-    <!-- 여러 이미지 정보 삽입 (foreach 사용) -->
-    <insert id="insertImages" parameterType="java.util.List">
-        INSERT ALL
-        <foreach collection="imageList" item="image" separator=" ">
-            INTO TB_POST_IMAGE (
-                IMAGE_ID, POST_ID, IMAGE_URL, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
-            ) VALUES (
-                SEQ_TB_POST_IMAGE.NEXTVAL, #{image.postId}, #{image.imageUrl}, SYSTIMESTAMP, #{image.createdId}, SYSTIMESTAMP, #{image.updatedId} <!-- 시퀀스 이름 변경 -->
-            )
-        </foreach>
-        SELECT * FROM DUAL
-    </insert>
-
-    <!-- 특정 게시글 ID에 해당하는 이미지들 조회 -->
     <select id="getImagesByPostId" resultMap="imageResultMap">
         SELECT
             IMAGE_ID, POST_ID, IMAGE_URL, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
@@ -49,7 +33,6 @@
         ORDER BY IMAGE_ID ASC
     </select>
 
-    <!-- 특정 게시글 ID에 해당하는 모든 이미지 삭제 -->
     <delete id="deleteImagesByPostId" parameterType="long">
         DELETE FROM TB_POST_IMAGE
         WHERE POST_ID = #{postId}

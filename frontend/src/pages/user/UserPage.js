@@ -3,7 +3,6 @@ import React from 'react';
 import '../../assets/css/UserPage.css';import { FaLock } from 'react-icons/fa';
 import UserLoginIdSection from '../user/components/UserLoginIdSection'; // 경로 변경됨
 import UserNicknameSection from '../user/components/UserNicknameSection'; // 경로 변경됨
-import UserPasswordSection from '../user/components/UserPasswordSection'; // 경로 변경됨
 import UserWithdrawalSection from '../user/components/UserWithdrawalSection'; // 경로 변경됨
 import useMessageDisplay from '../user/hook/useMessageDisplay'; // 경로 변경됨
 
@@ -26,9 +25,6 @@ function UserPage({ currentUser, onLogout }) {
 
                     {/* 아이디 변경 섹션 */}
                     <UserLoginIdSection currentUser={currentUser} onLogout={onLogout} />
-
-                    {/* 비밀번호 변경 섹션 */}
-                    <UserPasswordSection />
 
                     {/* 회원 탈퇴 섹션 */}
                     <UserWithdrawalSection onLogout={onLogout} />

@@ -78,6 +78,7 @@ public class PostController {
     public ResponseEntity<Map<String, Object>> getPostById(@PathVariable("id") Long postId, HttpSession session) {
 
         PostVO post = postService.getPostById(postId);
+
         Map<String, Object> response = new HashMap<>();
 
         if (post == null) {
@@ -106,7 +107,7 @@ public class PostController {
     }
 
     // 게시글 생성 (POST /api/posts) - 이미지 파일 추가
-    @PostMapping(consumes = {"multipart/form-data"})
+    @PostMapping({"", "/"})
     public ResponseEntity<Map<String, Object>> createPost(
             @RequestPart("post") PostVO post,
             @RequestPart(value = "images", required = false) List<MultipartFile> files,
