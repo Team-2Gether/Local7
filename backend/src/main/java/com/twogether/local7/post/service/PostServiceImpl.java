@@ -25,9 +25,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostVO> getAllPosts(String sortBy) { // <-- 이 메서드 추가
+    public List<PostVO> getAllPosts(String sortBy) {
         // 정렬 기준에 따라 DAO 메서드 호출
-        // PostDAO에 getAllPostsSorted(String sortBy) 메서드가 있다고 가정합니다.
         return postDAO.getAllPostsSorted(sortBy);
     }
 
