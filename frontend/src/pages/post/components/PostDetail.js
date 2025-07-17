@@ -128,7 +128,7 @@ function PostDetail({ currentUser }) {
                         <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
                     </div>
 
-                    {currentUser && post.userId === currentUser.userId && (
+                    {currentUser && (currentUser.userId === post.userId || currentUser.userLoginId === 'admin') && (
                         <div className="post-detail-actions">
                             <button
                                 onClick={() => navigate(`/posts/edit/${post.postId}`)}
