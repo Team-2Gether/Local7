@@ -1,3 +1,4 @@
+/* 투표 css --------------------------------------- */
 h2 {
   color: #ffff;
 }
@@ -165,4 +166,19 @@ h2 {
   padding: 6px 12px;
   border-radius: 0 6px 6px 0;
   cursor: pointer;
+}
+
+/* 게시물 ----------------------------------------------- */
+.post-section {
+  background-color: burlywood;
+}
+
+.post-list {
+  background-color: aquamarine;
+}
+
+.post-item {
+  background-color: #999;
+  width: fit-content;
+  margin: auto;
 }

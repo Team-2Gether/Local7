@@ -19,23 +19,18 @@ function VotePagePost() {
   return (
     <div className="post-section">
       <h2>이달의 게시물 인기순</h2>
-      <ul className="post-list">
-        {posts.map((post) => (
+      <div className="post-list">
+        {posts.map((post, index) => (
           <div key={post.postId} className="post-item">
-            <div>
-              <img
-                src={post.imageUrl}
-                alt="게시물 이미지"
-                width="100"
-                height="100"
-              />
+            <p className="rank">NO.{index + 1}</p> {/*순위 표시*/}
+            <div className="post-item-img">
+              <img className="post-img" src={post.imageUrl} alt="post" />
             </div>
             <p>{post.postTitle}</p>
             <img
+              className="profile-img"
               src={post.userProfImgUrl}
-              alt="프로필 이미지"
-              width="50"
-              height="50"
+              alt="profile"
             />
             <p>{post.userNickname}</p>
             <p>{post.userCount} like</p>
@@ -44,7 +39,7 @@ function VotePagePost() {
             <p>{post.createdDate}</p>
           </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
