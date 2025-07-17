@@ -29,10 +29,10 @@
         WHERE user_id = #{userId, jdbcType=BIGINT}
     </update>
 
-    <select id="getAllVotes" resultMap="voteMap">
-        SELECT region_id, SUBSTR(REGION_DESCRIPTION, 1, 2) AS krName, view_count
-        FROM tb_region
-    </select>
+<!--    <select id="getAllVotes" resultMap="voteMap">-->
+<!--        SELECT region_id, SUBSTR(REGION_DESCRIPTION, 1, 2) AS krName, view_count-->
+<!--        FROM tb_region-->
+<!--    </select>-->
 
     <select id="getUserById" resultMap="userMap">
         SELECT

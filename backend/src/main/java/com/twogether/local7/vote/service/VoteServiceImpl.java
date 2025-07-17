@@ -36,11 +36,6 @@ public class VoteServiceImpl implements VoteService{
     }
 
     @Override
-    public List<VoteVO> getAllVotes() {
-        return voteDAO.getAllVotes();
-    }
-
-    @Override
     public List<VoteVO> getUserById(Long userId) {
         return voteDAO.getUserById(userId);
     }

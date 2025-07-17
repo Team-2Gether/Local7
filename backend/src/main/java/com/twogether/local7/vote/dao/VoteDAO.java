@@ -8,16 +8,19 @@ import java.util.List;
 
 @Mapper
 public interface VoteDAO {
-    //view_count 추가
+    //view_count 증가
     void increaseViewCount(@Param("regionId") Long regionId);
-    List<VoteVO> getAllVotes();
-    // 투표하는 DB에서 user_id 가져오기
-    List<VoteVO> getUserById(Long userId);
-    //투표 완표 표시
-    void updateHasVoted(Long userId);
 
+    //투표 여부 조회
+    List<VoteVO> getUserById(Long userId);
+
+    //투표 완료시 has_voted 값을 'Y'로 번경
+    void updateHasVoted(Long userId);
+    
+    //전체 지역 리스트 조회
     List<VoteVO> getAllRegions();
 
+    //게시글 목록 불러오기
     List<VoteVO> getAllPosts();
 
 }
