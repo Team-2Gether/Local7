@@ -18,13 +18,15 @@ const Sidebar = ({onMenuItemClick}) => {
 
             <button className="sidebar-button" onClick={() => onMenuItemClick('restaurants')}>
                 <FaUtensils className="sidebar-icon" />
-                <span>음식점</span>
+                <span>주변 맛집</span>
             </button>
 
+            {/*
             <button className="sidebar-button" onClick={() => onMenuItemClick('posts')}>
                 <FaListAlt className="sidebar-icon"/>
                 <span>스레드</span>
             </button>
+             */}
 
             <button className="sidebar-button" onClick={() => onMenuItemClick('mypage')}>
                 <FaUser className="sidebar-icon"/>
