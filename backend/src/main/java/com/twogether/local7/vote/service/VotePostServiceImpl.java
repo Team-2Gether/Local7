@@ -1,7 +1,7 @@
 package com.twogether.local7.vote.service;
 
 import com.twogether.local7.vote.dao.VotePostDAO;
-import com.twogether.local7.vote.vo.VotePostVO;
+import com.twogether.local7.vote.vo.VoteVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class VotePostServiceImpl implements VotePostService {
     private VotePostDAO votePostDAO;
 
     @Override
-    public List<VotePostVO> getAllPosts() {
+    public List<VoteVO> getAllPosts() {
         return votePostDAO.getAllPosts();
     }
 }

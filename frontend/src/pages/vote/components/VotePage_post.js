@@ -18,7 +18,7 @@ function VotePagePost() {
 
   return (
     <div className="post-section">
-      <h2>이달의 게시물 인기순</h2>
+      <h2>Like TOP 10</h2>
       <div className="post-list">
         {posts.map((post, index) => (
           <div key={post.postId} className="post-item">
