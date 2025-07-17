@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.twogether.local7.vote.dao.VotePostDAO">
+<mapper namespace="com.twogether.local7.vote.dao.VoteDAO">
 
     <resultMap id="votePostMap" type="com.twogether.local7.vote.vo.VoteVO">
         <id property="postId" column="POST_ID"/>

@@ -52,19 +52,23 @@ function VotePage() {
   return (
     // 탭 선택 영역
     <div className="vote-container">
-      <div className="tap-contents">
-        <div
-          className={selectedTap === 'place' ? 'tap selected-tap' : 'tap'}
-          onClick={() => handleTapClick('place')}
-        >
-          이달의 여행지
+      <div className="vote-header">
+        <div className="tap-contents">
+          <div
+            className={selectedTap === 'place' ? 'tap selected-tap' : 'tap'}
+            onClick={() => handleTapClick('place')}
+          >
+            이달의 여행지
+          </div>
+          <div
+            className={selectedTap === 'post' ? 'tap selected-tap' : 'tap'}
+            onClick={() => handleTapClick('post')}
+          >
+            이달의 게시물
+          </div>
         </div>
-        <div
-          className={selectedTap === 'post' ? 'tap selected-tap' : 'tap'}
-          onClick={() => handleTapClick('post')}
-        >
-          이달의 게시물
-        </div>
+
+        <p className="best-reigon">N 월의 선정지는 M 입니다</p>
       </div>
 
       {/* 탭 전환에 따른 내용 표시 */}
@@ -99,7 +103,7 @@ function VotePage() {
           </button>
 
           {/* 댓글 컴포넌트 */}
-          <VotePageComSection />
+          {/* <VotePageComSection /> */}
         </>
       ) : (
         <>
