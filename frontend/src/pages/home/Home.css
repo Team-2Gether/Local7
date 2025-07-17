@@ -241,7 +241,7 @@
 .slides-container-vertical {
     display: flex;
     flex-direction: column;
-    transition: transform 1.9s ease-in-out; /* 슬라이드 애니메이션 */
+    transition: transform 1.0s ease-in-out; /* 슬라이드 애니메이션 */
 }
 
 /* 슬라이드 순간 이동 시 트랜지션 제거 */
