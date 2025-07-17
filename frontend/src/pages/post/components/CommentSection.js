@@ -241,12 +241,12 @@ function CommentSection({ postId, currentUser, onCommentCountChange }) {
                                         <button onClick={() => handleUpdateCommentClick(comment)}>수정</button>                  
                                         <button onClick={() => handleDeleteComment(comment.commentId)}>삭제</button>
                                         <button 
-                                        className={`like-button1 ${comment.likedByCurrentUser ? 'liked' : ''}`}
-                                        onClick={() => handleToggleLike(comment.commentId)}
-                                        disabled={!currentUser}
-                                    >
-                                        ❤️ {comment.likeCount || 0}
-                                    </button>
+                                            className={`like-button1 ${comment.likedByCurrentUser ? 'liked' : ''}`}
+                                            onClick={() => handleToggleLike(comment.commentId)}
+                                            disabled={!currentUser}
+                                        >
+                                            ❤️ {comment.likeCount || 0}
+                                        </button>
                                     </div>
                                 )}
                             </div>

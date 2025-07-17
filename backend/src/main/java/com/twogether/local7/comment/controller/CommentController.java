@@ -51,12 +51,14 @@ public class CommentController {
     @PutMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<String> updateComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentVO comment, HttpSession session) {
         Long currentUserId = (Long) session.getAttribute("userId");
+        Long ruleId = (Long) session.getAttribute("ruleId");
 
         if (currentUserId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 댓글을 수정할 수 있습니다.");
         }
 
-        boolean isSuccess = commentService.updateComment(commentId, comment, currentUserId);
+        // 서비스 메서드에 ruleId를 함께 전달
+        boolean isSuccess = commentService.updateComment(commentId, comment, currentUserId, ruleId);
 
         if (isSuccess) {
             return ResponseEntity.ok("댓글이 성공적으로 수정되었습니다.");
@@ -69,12 +71,14 @@ public class CommentController {
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable Long postId, @PathVariable Long commentId, HttpSession session) {
         Long currentUserId = (Long) session.getAttribute("userId");
+        Long ruleId = (Long) session.getAttribute("ruleId");
 
         if (currentUserId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 댓글을 삭제할 수 있습니다.");
         }
 
-        boolean isSuccess = commentService.deleteComment(commentId, currentUserId);
+        // 서비스 메서드에 ruleId를 함께 전달
+        boolean isSuccess = commentService.deleteComment(commentId, currentUserId, ruleId);
 
         if (isSuccess) {
             return ResponseEntity.ok("댓글이 성공적으로 삭제되었습니다.");
