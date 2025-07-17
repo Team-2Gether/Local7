@@ -71,11 +71,6 @@ function OtherUser({ currentUser }) {
                     <p><strong>가입일:</strong> {new Date(otherUserProfile.createDate).toLocaleDateString()}</p>
                 </div>
             </div>
-
-            <div className="other-user-posts-section">
-                <h3>{otherUserProfile.userNickname}님이 작성한 게시글</h3>
-                <MyPosts currentUser={currentUser} targetUserId={otherUserProfile.userId} />
-            </div>
         </div>
     );
 }

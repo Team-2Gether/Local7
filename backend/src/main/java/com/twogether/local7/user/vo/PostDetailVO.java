@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-public class PostVO {
+public class PostDetailVO {
     private Long postId;
     private Long userId;
     private String userLoginId; // 게시글 작성자의 로그인 ID를 위한 필드 추가
