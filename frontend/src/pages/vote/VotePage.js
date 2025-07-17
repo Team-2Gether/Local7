@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import VotePageComSection from './components/VotePage_comSection';
+// import VotePageComSection from './components/VotePage_comSection';
 import VotePagePost from './components/VotePage_post';
 import axios from 'axios';
 import './VotePage.css';
@@ -11,9 +11,39 @@ function VotePage() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedTap, setSelectedTap] = useState('place');
   const [hasVoted, setHasVoted] = useState(false);
+  const storedUserId = sessionStorage.getItem('userId');
+  const userId = storedUserId ? parseInt(storedUserId, 10) : null; //유저 id 값
+
+  // 투표 여부 확인 요청 (userId가 있을 경우에만)
+  useEffect(() => {
+    console.log('storedUserId:', storedUserId);
+    console.log('userId:', userId);
+    if (userId !== null) {
+      console.log('axios 요청 시작');
+      axios
+        .get(`http://localhost:8080/api/vote/userId`, { params: { userId } })
+        .then((res) => {
+          const user = res.data;
+          if (user.hasVoted === 'Y') {
+            setHasVoted(true);
+            localStorage.setItem(`hasVoted_user_${userId}`, true); // 로컬에도 동기화
+            localStorage.setItem(`votedRegion_user_${userId}`, user.regionId); // regionId도 저장
+            setSelectedOption(user.regionId); // 이전에 선택한 지역으로 반영
+          }
+        })
+        .catch((err) => console.error('유저 정보 불러오기 실패:', err));
+    }
+  }, [userId]);
 
   // 최초 1회 DB에서 지역 데이터 받아오기
   useEffect(() => {
+    // -----------------------------------------------------------
+    // const voted = localStorage.getItem(`hasVoted_user_${userId}`);
+
+    // if (voted) {
+    //   setHasVoted(true);
+    // }
+    // -------------------------------------------------------------------
     axios
       .get('http://localhost:8080/api/vote/regions')
       .then((res) => {
@@ -42,6 +72,23 @@ function VotePage() {
         [selectedOption]: prevVotes[selectedOption] + 1,
       }));
       setHasVoted(true);
+
+      // ✅ 로컬스토리지에 저장
+      localStorage.setItem(`hasVoted_user_${userId}`, true);
+      localStorage.setItem(`votedRegion_user_${userId}`, selectedOption);
+
+      // 이용자 정보 post요청
+      axios
+        .post('http://localhost:8080/api/vote/votes', {
+          userId: userId,
+          regionId: selectedOption,
+        })
+        .then((res) => {
+          console.log('투표 성공:', res.data);
+        })
+        .catch((err) => {
+          console.error('투표 실패:', err);
+        });
     }
   };
 

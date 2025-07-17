@@ -9,6 +9,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VoteVO {
 
+    //vote
+    private Long userId;
+    private Long viewCount;
+    private String hasVoted; // "Y" or "N"
+
     //region
     private Long regionId;
     private String krName; //region_description쿼리 별칭

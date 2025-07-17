@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.twogether.local7.vote.dao.VoteDAO">
+
+    <resultMap id="voteMap" type="com.twogether.local7.vote.vo.VoteVO">
+        <id property="regionId" column="REGION_ID"/>
+        <result property="postTitle" column="POST_TITLE"/>
+        <result property="krName" column="krName"/>
+        <result property="viewCount" column="VIEW_COUNT"/>
+    </resultMap>
+
+    <resultMap id="userMap" type="com.twogether.local7.vote.vo.VoteVO">
+        <id property="userId" column="USER_ID"/>
+        <result property="hasVoted" column="HAS_VOTED"/>
+    </resultMap>
+
+    <!-- view_count 증가 -->
+    <update id="increaseViewCount">
+        UPDATE tb_region
+        SET view_count = view_count + 1
+        WHERE region_id = #{regionId}
+    </update>
+    <!-- 유저 투표 상태 Y로 변경-->
+    <update id="updateHasVoted" parameterType="java.lang.Long">
+        UPDATE tb_user
+        SET has_voted = 'Y'
+        WHERE user_id = #{userId, jdbcType=BIGINT}
+    </update>
+
+    <select id="getAllVotes" resultMap="voteMap">
+        SELECT region_id, SUBSTR(REGION_DESCRIPTION, 1, 2) AS krName, view_count
+        FROM tb_region
+    </select>
+
+    <select id="getUserById" resultMap="userMap">
+        SELECT
+        user_id,
+        has_voted
+        FROM tb_user
+        WHERE user_id = #{userId}
+    </select>
+
+</mapper>
