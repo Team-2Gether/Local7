@@ -82,8 +82,7 @@ function PostDetail({ currentUser }) {
                     <p className="post-detail-meta">
                         작성자:
                         <Link to={`/user/profile/${post.userLoginId}`} className="author-link">
-                            {/* 이 부분을 수정했습니다. currentUser가 null일 경우 안전하게 접근합니다. */}
-                            {currentUser?.userNickname || '알 수 없음'}
+                            {post.createdId || '알 수 없음'}
                         </Link>
                         | 작성일: {new Date(post.createdDate).toLocaleString()}
                         <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
@@ -129,7 +128,7 @@ function PostDetail({ currentUser }) {
                         <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
                     </div>
 
-                    {currentUser && post.userId === currentUser.userId && (
+                    {currentUser && (currentUser.userId === post.userId || currentUser.userLoginId === 'admin') && (
                         <div className="post-detail-actions">
                             <button
                                 onClick={() => navigate(`/posts/edit/${post.postId}`)}
