@@ -5,16 +5,32 @@ import useLike from '../hooks/useLike';
 
 import './Post.css'; 
 
-function PostList({ currentUser }) {
+function PostList({ currentUser, selectedCity }) {
 
     const { posts, loading, error, message, loadAllPosts, removePost, setMessage, setPosts } = usePost();
     const { toggleLike, likeLoading, likeError } = useLike();
     const navigate = useNavigate();
     const [sortBy, setSortBy] = useState('latest');
-
+    const [filteredPosts, setFilteredPosts] = useState([]);
+    
     useEffect(() => {
         loadAllPosts(sortBy);
     }, [loadAllPosts, sortBy]);
+
+    useEffect(() => {
+        if (posts.length > 0) {
+            if (selectedCity === '전체') {
+            // '전체'가 선택되면 필터링 없이 모든 게시글 표시
+            setFilteredPosts(posts);
+        } else {
+            // 선택된 도시에 따라 게시글 필터링
+            const filtered = posts.filter(post => post.locationTag === selectedCity);
+            setFilteredPosts(filtered);
+        }
+        } else {
+            setFilteredPosts([]);
+        }
+    }, [posts, selectedCity]);
 
     const handleDelete = async (postId) => {
         console.log('Current User:', currentUser);
@@ -101,11 +117,11 @@ function PostList({ currentUser }) {
                 </button>
             </div>
             <div className="post-grid-wrapper">
-                {posts.length === 0 ? (
+                {filteredPosts.length === 0 ? (
                     <p className="no-posts-message">게시글이 없습니다.</p>
                 ) : (
                     <ul className="post-grid">
-                        {posts.map((post) => {
+                        {filteredPosts.map((post) => {
                         return (
                             <li key={post.postId} className="post-card">
                                 {/* 게시글 상세 페이지로 이동 링크 */}

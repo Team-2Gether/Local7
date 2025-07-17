@@ -24,7 +24,7 @@ import "./Home.css";
 import HomeCardFeed from "./HomeCardFeed";
 import PostList from "../post/components/PostList";
 
-function Home() {
+function Home({ currentUser }) {
   const [selectedCity, setSelectedCity] = useState("속초");
   const [mapObj, setMapObj] = useState(null);
   const [activeSection, setActiveSection] = useState("restaurants");
@@ -245,7 +245,7 @@ function Home() {
             {activeSection === "restaurants" && (
               <HomeCardFeed selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
             )}
-            {activeSection === "posts" && <PostList />}
+            {activeSection === "posts" && <PostList currentUser={currentUser} selectedCity={selectedCity} />}
           </div>
 
           <hr className="separator" />
