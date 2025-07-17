@@ -6,4 +6,7 @@ import java.util.List;
 
 public interface VoteService {
     List<VoteVO> getAllRegions();
+
+    List<VoteVO> getAllPosts();
+
 }

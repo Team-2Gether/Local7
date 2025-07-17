@@ -9,4 +9,7 @@ import java.util.List;
 public interface VoteDAO {
 
     List<VoteVO> getAllRegions();
+
+    List<VoteVO> getAllPosts();
+
 }

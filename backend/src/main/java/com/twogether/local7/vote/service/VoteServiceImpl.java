@@ -16,4 +16,9 @@ public class VoteServiceImpl implements VoteService{
     public List<VoteVO> getAllRegions() {
         return voteDAO.getAllRegions();
     }
+
+    @Override
+    public List<VoteVO> getAllPosts() {
+        return voteDAO.getAllPosts();
+    }
 }
