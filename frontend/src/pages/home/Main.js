@@ -1,16 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Routes, Route } from 'react-router-dom';
 import RestaurantDetailModal from './RestaurantDetailModal';
-import RestaurantVote from '../vote/VotePage';
-import Home from './Home';
-import PostList from '../post/components/PostList';
-import PostForm from '../post/PostForm';
-import MyPage from '../user/MyPage';
-
 import './Home.css';
 
-function Main({ currentUser }) {
+function Main({ currentUser }) { // activeContent prop 제거
   const [restaurants, setRestaurants] = useState([]);
   const [error, setError] = useState(null);
 
@@ -141,70 +134,55 @@ function Main({ currentUser }) {
   };
 
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<Home currentUser={currentUser} />} />
-        <Route
-          path="/restaurants"
-          element={
-            <div className="home-container">
-              <h1>
-                환영합니다, {currentUser ? currentUser.userNickname : '게스트'}{' '}
-                님!
-              </h1>
-              {error && <p className="error-message">{error}</p>}
+    // Main 컴포넌트는 이제 Home 컴포넌트의 역할만 수행하거나,
+    // /restaurants 경로에 대한 내용을 직접 렌더링하도록 변경됩니다.
+    // 여기서는 기존 /restaurants 경로의 내용을 렌더링하도록 유지합니다.
+    <div className="home-container">
+        <h1>
+            환영합니다, {currentUser ? currentUser.userNickname : '게스트'}{' '}
+            님!
+        </h1>
+        {error && <p className="error-message">{error}</p>}
 
-              <div
-                id="map"
-                className="map-container"
-                ref={mapContainerRef}
-              ></div>
+        <div
+            id="map"
+            className="map-container"
+            ref={mapContainerRef}
+        ></div>
 
-              <h2>음식점 목록</h2>
-              {restaurants.length > 0 ? (
-                <ul className="restaurant-list">
-                  {restaurants.map((r) => {
-                    const address = `${r.addrSido || ''} ${
-                      r.addrSigungu || ''
-                    } ${r.addrDong || ''} ${r.addrDetail || ''}`;
-                    return (
-                      <li
-                        key={r.restaurantId}
-                        className="restaurant-item"
-                        onClick={() => handleRestaurantClick(r)}
-                      >
-                        <h3>{r.restaurantName}</h3>
-                        <p>주소: {address}</p>
-                        <p>카테고리: {r.restaurantCategory}</p>
-                      </li>
-                    );
-                  })}
-                </ul>
-              ) : (
-                !error && <p>데이터 로딩 중...</p>
-              )}
-            </div>
-          }
-        />
-        <Route path="/posts" element={<PostList />} />
-        <Route path="/posts/new" element={<PostForm />} />
-        <Route path="/posts/edit/:id" element={<PostForm />} />
-        <Route path="/mypage" element={<MyPage currentUser={currentUser} />} />
-        <Route
-          path="/pick"
-          element={<RestaurantVote currentUser={currentUser} />}
-        />
-      </Routes>
+        <h2>음식점 목록</h2>
+        {restaurants.length > 0 ? (
+            <ul className="restaurant-list">
+            {restaurants.map((r) => {
+                const address = `${r.addrSido || ''} ${
+                r.addrSigungu || ''
+                } ${r.addrDong || ''} ${r.addrDetail || ''}`;
+                return (
+                <li
+                    key={r.restaurantId}
+                    className="restaurant-item"
+                    onClick={() => handleRestaurantClick(r)}
+                >
+                    <h3>{r.restaurantName}</h3>
+                    <p>주소: {address}</p>
+                    <p>카테고리: {r.restaurantCategory}</p>
+                </li>
+                );
+            })}
+            </ul>
+        ) : (
+            !error && <p>데이터 로딩 중...</p>
+        )}
 
-      {selectedRestaurant && (
-        <RestaurantDetailModal
-          isOpen={isDetailModalOpen}
-          onRequestClose={() => setIsDetailModalOpen(false)}
-          restaurant={selectedRestaurant}
-          currentUser={currentUser}
-        />
-      )}
-    </>
+        {selectedRestaurant && (
+            <RestaurantDetailModal
+            isOpen={isDetailModalOpen}
+            onRequestClose={() => setIsDetailModalOpen(false)}
+            restaurant={selectedRestaurant}
+            currentUser={currentUser}
+            />
+        )}
+    </div>
   );
 }
 

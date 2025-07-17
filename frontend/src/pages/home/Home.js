@@ -25,7 +25,7 @@ import HomeCardFeed from "./HomeCardFeed";
 import PostList from "../post/components/PostList";
 
 function Home({ currentUser }) {
-  const [selectedCity, setSelectedCity] = useState("속초");
+  const [selectedCity, setSelectedCity] = useState("전체");
   const [mapObj, setMapObj] = useState(null);
   const [activeSection, setActiveSection] = useState("restaurants");
 

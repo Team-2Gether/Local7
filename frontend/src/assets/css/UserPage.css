@@ -1,3 +1,4 @@
+/* 사용자 페이지 제목 스타일 */
 .user-page-container h2 {
     color: #333;
     margin-bottom: 20px;
@@ -6,6 +7,7 @@
     gap: 10px;
 }
 
+/* 공통 메시지 박스 */
 .message {
     padding: 10px;
     margin-bottom: 15px;
@@ -14,165 +16,164 @@
     text-align: center;
     font-weight: bold;
 }
-
 .message.success {
     background-color: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
 }
-
 .message.error {
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
 
+/* 전체 레이아웃 */
 .user-page-content {
-    display: flex; /* Flexbox를 사용하여 내부 요소들을 가로로 배치 */
-    width: 100%; /* 부모 컨테이너 너비에 맞춤 */
-    gap: 20px; /* 네비게이션과 컨텐츠 사이의 간격 */
+    display: flex;
+    width: 100%;
+    background-color: #222;
 }
 
+/* 왼쪽 네비게이션 */
 .user-page-navigation {
-    flex: 0 0 200px; /* 너비 고정 */
+    flex: 0 0 200px;
     background-color: #fff;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 20px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
-
 .user-page-navigation ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
-
 .user-page-navigation li {
     margin-bottom: 10px;
 }
-
 .user-page-navigation .nav-link {
     text-decoration: none;
     color: #007bff;
     font-weight: bold;
     padding: 8px 12px;
     border-radius: 4px;
-    display: block; /* 링크 전체를 클릭 가능하게 */
+    display: block;
     transition: background-color 0.3s ease;
 }
-
 .user-page-navigation .nav-link:hover {
     background-color: #e9f5ff;
 }
-
 .user-page-navigation .nav-link.active {
     background-color: #007bff;
     color: white;
 }
 
+/* 오른쪽 섹션 */
 .user-update-sections-wrapper {
-    flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
+    background-color: #222;
+    flex-grow: 2;
     display: flex;
     flex-direction: column;
-    gap: 20px; /* 각 섹션 사이의 간격 */
+    border-radius: 20px;
 }
 
+/* 정보 수정 폼 */
 .user-update-form {
-    background-color: #fff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    width: 90%; /* 부모 너비에 맞춤 */
+    background-color: #363636;
+    padding: 20px;
 }
-
 .user-update-form h3 {
-    color: #333;
+    color: #FFCC00;
     margin-top: 0;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
 }
 
+/* 폼 그룹 */
 .form-group {
+    padding: 8px;
     margin-bottom: 15px;
 }
-
 .form-group label {
     display: block;
-    margin-bottom: 8px;
     font-weight: bold;
-    color: #555;
+    color: #eee;
+    margin-left: 5px;
 }
-
 .form-group input[type="text"],
 .form-group input[type="password"] {
-    width: calc(100% - 20px); /* 패딩 고려 */
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    width:84%;
+    padding: 12px;
+    border: none;
+    border-radius: 20px;
     font-size: 1rem;
 }
 
+/* 입력 + 버튼 묶음 */
 .input-with-button {
     display: flex;
+    align-items: center;
     gap: 10px;
+    width: 100%;
 }
-
 .input-with-button input {
     flex-grow: 1;
+    padding: 12px;
+    border-radius: 20px;
+    font-size: 1rem;
+    border: none;
 }
 
-.check-button,
-.submit-button,
-.delete-button {
-    padding: 10px 15px;
+/* 버튼 공통 스타일 */
+button {
+    padding: 12px 25px;
     border: none;
-    border-radius: 4px;
+    border-radius: 20px;
     font-size: 1rem;
     cursor: pointer;
+    white-space: nowrap;
     transition: background-color 0.3s ease;
-    white-space: nowrap; /* 버튼 텍스트 줄바꿈 방지 */
 }
 
+/* 중복 확인 버튼 */
 .check-button {
-    background-color: #6c757d;
+    background-color: #79AAFF;
     color: white;
 }
-
 .check-button:hover:not(:disabled) {
-    background-color: #5a6268;
+    background-color: rgb(81, 113, 141);
 }
 
+/* 제출 버튼 */
 .submit-button {
     background-color: #007bff;
     color: white;
-    width: 100%;
+    width: 20%;
     margin-top: 10px;
+    margin-left: 10px; /* 오른쪽 정렬 */
 }
-
 .submit-button:hover:not(:disabled) {
     background-color: #0056b3;
 }
 
+/* 삭제 버튼 */
 .delete-button {
     background-color: #dc3545;
     color: white;
-    width: 100%;
-    margin-top: 10px;
+    width: 25%;
+    margin-left: 10px;
 }
-
 .delete-button:hover:not(:disabled) {
     background-color: #c82333;
 }
 
+/* 비활성 버튼 */
 button:disabled {
-    background-color: #cccccc;
+    background-color: #FFCC00;
     cursor: not-allowed;
 }
 
+/* 경고 텍스트 */
 .warning-text {
     color: #dc3545;
     font-weight: bold;
     margin-bottom: 15px;
-    text-align: center;
 }
