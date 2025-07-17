@@ -82,8 +82,7 @@ function PostDetail({ currentUser }) {
                     <p className="post-detail-meta">
                         작성자:
                         <Link to={`/user/profile/${post.userLoginId}`} className="author-link">
-                            {/* 이 부분을 수정했습니다. currentUser가 null일 경우 안전하게 접근합니다. */}
-                            {currentUser?.userNickname || '알 수 없음'}
+                            {post.updatedId || '알 수 없음'}
                         </Link>
                         | 작성일: {new Date(post.createdDate).toLocaleString()}
                         <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
