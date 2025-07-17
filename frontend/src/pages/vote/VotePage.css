@@ -3,9 +3,16 @@ h2 {
   color: #ffff;
 }
 
+.vote-header {
+  background-image: url(./image/vote-header.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: auto;
+}
+
 .vote-container {
   text-align: center;
-  margin-top: 60px;
 }
 
 .vote-buttons {
@@ -47,9 +54,13 @@ h2 {
 }
 
 .tap-contents {
+  background-color: #999;
   display: flex;
   width: 400px;
   margin: auto;
+}
+.best-reigon {
+  background-color: #999;
 }
 
 .tap-contents > div {
