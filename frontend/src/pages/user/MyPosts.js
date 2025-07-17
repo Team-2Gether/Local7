@@ -72,7 +72,7 @@ function MyPosts({ currentUser }) { // currentUser prop 추가
                 <p className="no-posts-message">작성된 게시글이 없습니다.</p>
             ) : (
                 <>
-                    <ul className="post-list">
+                    <ul className="post-list1">
                         {posts.map((post) => (
                             <li key={post.postId} className="post-item">
                                 <Link to={`/posts/${post.postId}`} className="post-link">
