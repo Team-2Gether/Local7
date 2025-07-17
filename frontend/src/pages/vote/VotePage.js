@@ -42,7 +42,9 @@ function VotePage() {
           setSelectedOption(res.data[0].regionId); // 예시
         }
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error('투표 여부 상태 불러오기 실패', err);
+      });
   }, [userId]);
 
   // 지역 데이터 불러오기
@@ -57,7 +59,9 @@ function VotePage() {
           }))
         );
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error('지역 데이터 불러오기 실패', err);
+      });
   }, []);
 
   // 투표하기 버튼 클릭
@@ -73,7 +77,9 @@ function VotePage() {
       .then(() => {
         setHasVoted(true);
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error('투표 유저 정보 불러오기 실패', err);
+      });
   };
 
   //탭 전환
