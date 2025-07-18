@@ -144,52 +144,74 @@
   grid-template-columns: repeat(2, 1fr);
   
 }
+.post-grid-wrapper {
+  grid-template-columns: repeat(2, 1fr);
+  
+}
+
 
 
 /* 개별 게시글 카드 (PostList) */
+/* 게시글 전체 래퍼 */
+.post-grid-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px; /* 카드 간격 */
+  margin: 0;
+  padding: 0;
+  width: 100%;       /* 전체 너비 사용 */
+  box-sizing: border-box;
+}
+
+/* 게시글 그리드 카드 */
+.post-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: contents; /* wrapper에서 grid 적용하므로 중첩 안 되게 */
+}
+
+/* 개별 게시글 카드 */
 .post-card {
   border-radius: 20px;
   overflow: hidden;
   background-color: #212121; /* 카드 배경 */
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   outline: 2px solid #5e5e5e; /* 바깥쪽 테두리 */
+  transition: outline 0.2s ease;
 }
 
 .post-card:hover {
-    outline: 2px solid #ffffff; /* 바깥쪽 테두리 */
+  outline: 2px solid #ffffff;
 }
 
-/* 썸네일 이미지 컨테이너 (PostList) */
+/* 썸네일 */
 .post-thumbnail {
-    width: 100%;
-    height: 350px;
-    overflow: hidden;
-    border-bottom: 1px solid #3a3a3a;
-    background-color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  height: 350px; /* 고정 높이 유지 */
+  overflow: hidden;
+  background-color: #2e2e2e; /* 이미지 없을 때 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
-/* 썸네일 이미지 (PostList) */
-.thumbnail-image {
-    width: 100%;
-    height: 100%;
-    object-fit: fill; /* 비율 무시하고 틀에 맞춤 */
+/* 이미지 있을 때 */
+.post-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-/* 썸네일 플레이스홀더 (이미지 없을 때) (PostList) */
-.post-thumbnail-placeholder {
-    width: 100%;
-    height: 200px;
-    background-color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #888;
-    font-size: 1.1em;
-    border-bottom: 1px solid #3a3a3a;
+/* 이미지 없을 때 텍스트 */
+.no-image {
+  color: #888;
+  font-size: 16px;
+  font-weight: 500;
 }
+
 
 /* 게시글 카드 제목 (PostList) */
 .post-card-title {
