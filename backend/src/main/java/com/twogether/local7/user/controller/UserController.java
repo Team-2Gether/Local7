@@ -2,7 +2,7 @@ package com.twogether.local7.user.controller;
 
 import com.twogether.local7.pagintion.Pagination;
 import com.twogether.local7.pagintion.SimplePageable;
-import com.twogether.local7.user.dto.UserProfileImageUpdateRequest; // 새로 추가된 DTO 임포트
+import com.twogether.local7.user.dto.UserProfileImageUpdateRequest;
 import com.twogether.local7.user.service.UserService;
 import com.twogether.local7.user.vo.PostDetailVO;
 import com.twogether.local7.user.vo.UserVO;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/user") //
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -37,13 +37,34 @@ public class UserController {
         }
     }
 
-    // @PatchMapping 대신 @PostMapping 사용 (저장된 정보에 따름)
-    @PostMapping("/update-loginid")
-    public ResponseEntity<Map<String, Object>> updateLoginId(@RequestParam Long userId, @RequestParam String newUserLoginId) {
+    // 기존 update-loginid 엔드포인트를 인증코드 발송 요청으로 변경합니다.
+    @PostMapping("/request-loginid-change-verification")
+    public ResponseEntity<Map<String, Object>> requestLoginIdChangeVerification(@RequestParam Long userId, @RequestParam String newUserLoginId) {
         try {
             // 여기에 현재 로그인된 사용자가 userId와 일치하는지 확인하는 로직 추가 필요 (보안 강화)
-            userService.updateUserLoginId(userId, newUserLoginId);
+            userService.requestLoginIdChangeVerification(userId, newUserLoginId);
+            return ResponseEntity.ok(createSuccessResponse("아이디 변경을 위한 인증 코드가 이메일로 발송되었습니다."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(createErrorResponse("validation_error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(createErrorResponse("verification_request_failed", "아이디 변경 인증 코드 발송 중 오류가 발생했습니다."));
+        }
+    }
+
+    // 새로운 엔드포인트: 인증 코드를 통한 아이디 변경 최종 확정
+    @PostMapping("/confirm-loginid-change")
+    public ResponseEntity<Map<String, Object>> confirmLoginIdChange(
+            @RequestParam Long userId,
+            @RequestParam String newUserLoginId,
+            @RequestParam String verificationCode) {
+        try {
+            userService.confirmUserLoginIdChange(userId, newUserLoginId, verificationCode);
             return ResponseEntity.ok(createSuccessResponse("로그인 아이디가 성공적으로 변경되었습니다."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(createErrorResponse("validation_error", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(createErrorResponse("update_failed", "로그인 아이디 변경 중 오류가 발생했습니다."));
@@ -261,6 +282,20 @@ public class UserController {
         }
     }
 
+    // 새롭게 추가된 부분: 자기소개 업데이트 엔드포인트
+    @PostMapping("/update-bio")
+    public ResponseEntity<Map<String, Object>> updateUserBio(
+            @RequestParam Long userId,
+            @RequestParam String userBio) {
+        try {
+            // 여기에 현재 로그인된 사용자가 userId와 일치하는지 확인하는 로직 추가 필요 (보안 강화)
+            userService.updateUserBio(userId, userBio);
+            return ResponseEntity.ok(createSuccessResponse("자기소개가 성공적으로 업데이트되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(createErrorResponse("bio_update_failed", "자기소개 업데이트 중 오류가 발생했습니다."));
+        }
+    }
 
     private Map<String, Object> createErrorResponse(String code, String message) {
         Map<String, Object> response = new HashMap<>();

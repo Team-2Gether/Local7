@@ -123,8 +123,6 @@ function OtherUser({ currentUser }) {
                     </button>
                 )}
             </div>
-            {/* MyPosts 컴포넌트 추가 - 다른 사용자의 게시글을 표시할 때 사용 */}
-            {/* <MyPosts userId={otherUserProfile.userId} /> */}
         </div>
     );
 }
