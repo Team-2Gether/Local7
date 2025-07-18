@@ -14,24 +14,50 @@ function PostList({ currentUser, selectedCity }) {
     const [sortBy, setSortBy] = useState('latest');
     const [filteredPosts, setFilteredPosts] = useState([]);
     
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchOption, setSearchOption] = useState('all'); 
+
     useEffect(() => {
         loadAllPosts(sortBy);
     }, [loadAllPosts, sortBy]);
 
-    useEffect(() => {
+        useEffect(() => {
         if (posts.length > 0) {
+            // 1. 도시 필터링
+            let currentFilteredPosts = [];
             if (selectedCity === '전체') {
-            // '전체'가 선택되면 필터링 없이 모든 게시글 표시
-            setFilteredPosts(posts);
-        } else {
-            // 선택된 도시에 따라 게시글 필터링
-            const filtered = posts.filter(post => post.locationTag === selectedCity);
-            setFilteredPosts(filtered);
-        }
+                currentFilteredPosts = posts;
+            } else {
+                currentFilteredPosts = posts.filter(post => post.locationTag === selectedCity);
+            }
+
+            // 2. 검색어 필터링
+            if (searchQuery) {
+                const searchLower = searchQuery.toLowerCase();
+                currentFilteredPosts = currentFilteredPosts.filter(post => {
+                    switch (searchOption) {
+                        case 'title':
+                            return post.postTitle.toLowerCase().includes(searchLower);
+                        case 'author':
+                            return post.userNickname.toLowerCase().includes(searchLower);
+                        case 'content':
+                            return post.postContent.toLowerCase().includes(searchLower);
+                        case 'all':
+                        default:
+                            return (
+                                post.postTitle.toLowerCase().includes(searchLower) ||
+                                post.postContent.toLowerCase().includes(searchLower) ||
+                                post.userNickname.toLowerCase().includes(searchLower)
+                            );
+                    }
+                });
+            }
+
+            setFilteredPosts(currentFilteredPosts);
         } else {
             setFilteredPosts([]);
         }
-    }, [posts, selectedCity]);
+    }, [posts, selectedCity, searchQuery, searchOption]);
 
     const handleDelete = async (postId) => {
         console.log('Current User:', currentUser);
@@ -108,6 +134,27 @@ function PostList({ currentUser, selectedCity }) {
                         <option value="comments">댓글순</option>
                     </select>
                 </div>
+
+                <div className="search-container">
+                    <select
+                        className="search-option-select"
+                        value={searchOption}
+                        onChange={(e) => setSearchOption(e.target.value)}
+                    >
+                        <option value="all">전체</option>
+                        <option value="title">제목</option>
+                        <option value="author">작성자</option>
+                        <option value="content">내용</option>
+                    </select>
+                    <input
+                        type="text"
+                        className="search-input"
+                        placeholder="검색어를 입력하세요..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+
                 <button
                     onClick={() => navigate('/posts/new')}
                     className="post-button create-button"
