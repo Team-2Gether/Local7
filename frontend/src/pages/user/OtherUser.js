@@ -2,13 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-// import '../../assets/css/User.css'; // User.css 경로 수정
-import MyPosts from './MyPosts';
+import OtherUserPosts from './OtherUserPosts'; // OtherUserPosts 컴포넌트 import 추가
 
 function OtherUser({ currentUser }) {
     const { userLoginId } = useParams();
     const [otherUserProfile, setOtherUserProfile] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true); // 수정된 부분: (true) -> useState(true)
     const [error, setError] = useState(null);
     const [isFollowing, setIsFollowing] = useState(false); // 팔로우 상태 추가
 
@@ -123,10 +122,10 @@ function OtherUser({ currentUser }) {
                     </button>
                 )}
             </div>
-            {/* MyPosts 컴포넌트 추가 - 다른 사용자의 게시글을 표시할 때 사용 */}
-            {/* <MyPosts userId={otherUserProfile.userId} /> */}
+            {/* OtherUserPosts 컴포넌트 추가 */}
+            <OtherUserPosts userId={otherUserProfile.userId} />
         </div>
     );
 }
 
-export default OtherUser;
+export default OtherUser; 
