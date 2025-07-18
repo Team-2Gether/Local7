@@ -157,7 +157,7 @@
     margin: 0;
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2열 고정 */
-    gap: 50px;
+    gap: 20px;
 }
 
 /* 개별 게시글 카드 (PostList) */

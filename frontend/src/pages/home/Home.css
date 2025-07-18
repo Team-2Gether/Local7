@@ -5,8 +5,7 @@ html, body {
     margin: 0;
     padding: 0;
     padding-top: 26px; /* navbar 높이만큼 */
-    padding-left: 40px;  /* 왼쪽 여백을 padding으로 변경 */
-    padding-right: 40px; /* 오른쪽 여백 추가 */
+    margin-left: 40px;
     box-sizing: border-box;
     font-family: 'Noto Sans KR', sans-serif;
 }
@@ -126,19 +125,17 @@ html, body {
 
 /* 로그인 후 메인 콘텐츠 영역 */
 .main-content-area {
-    display: flex;
-    flex: 1;
-    margin: 0;
-    padding: 0;
+    margin: 0 auto;               /* 중앙 정렬 */
+    padding: 0;            
+    overflow: hidden;
 }
-
 /* Sidebar가 있을 때 콘텐츠 영역 */
 .content-with-sidebar {
-    flex: 1;
-    padding: 0px;
-    overflow-y: auto;
-}
 
+    padding: 0px;
+    overflow-y: auto;       /* 사이드바 너비만큼 오른쪽으로 */
+    box-sizing: border-box;
+}
 /* Navbar 컨테이너 */
 .navbar-container {
     width: 100%;
@@ -238,7 +235,7 @@ html, body {
 
 .app-layout {
     /* 기존 flex 및 컬러 유지하며, max-width와 중앙 정렬 추가 */
-    max-width: 1200px;
+    max-width: 1175px;
     margin: 0 auto;
     overflow-x: auto;
 }
@@ -458,4 +455,55 @@ html, body {
 
 .kakao-map-top-button:hover {
     background-color: #f0b900;
+}
+/* 모바일 (작은 화면) - 0 ~ 599px */
+/* 모바일 - 최대 599px */
+@media (max-width: 599px) {
+  .app-layout {
+    max-width: 100%;
+    width: 100%;
+    padding: 0 10px;
+    margin: 0;
+  }
+}
+
+/* 태블릿 - 600px 이상 899px 이하 */
+@media (min-width: 600px) and (max-width: 899px) {
+  .app-layout {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+  }
+}
+
+/* 중형 노트북 - 900px 이상 1199px 이하 */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .app-layout {
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+  }
+}
+
+/* 일반 데스크탑 - 1200px 이상 2239px 이하 */
+@media (min-width: 1200px) and (max-width: 2239px) {
+  .app-layout {
+    max-width: 1175px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+  }
+}
+
+/* 초대형 모니터 - 2240px 이상 */
+@media (min-width: 2240px) {
+  .app-layout {
+    max-width: 100vw;
+    width: 100vw;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+  }
 }
