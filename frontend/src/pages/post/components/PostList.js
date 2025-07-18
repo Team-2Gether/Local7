@@ -42,12 +42,15 @@ function PostList({ currentUser, selectedCity }) {
                             return post.userNickname.toLowerCase().includes(searchLower);
                         case 'content':
                             return post.postContent.toLowerCase().includes(searchLower);
+                        case 'location': // 지역 검색 옵션 추가
+                            return post.locationTag.toLowerCase().includes(searchLower);
                         case 'all':
                         default:
                             return (
                                 post.postTitle.toLowerCase().includes(searchLower) ||
                                 post.postContent.toLowerCase().includes(searchLower) ||
-                                post.userNickname.toLowerCase().includes(searchLower)
+                                post.userNickname.toLowerCase().includes(searchLower) ||
+                                post.locationTag.toLowerCase().includes(searchLower)
                             );
                     }
                 });
@@ -145,6 +148,7 @@ function PostList({ currentUser, selectedCity }) {
                         <option value="title">제목</option>
                         <option value="author">작성자</option>
                         <option value="content">내용</option>
+                        <option value="location">지역</option>
                     </select>
                     <input
                         type="text"
