@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
 import CommentSection from './CommentSection';
@@ -128,28 +129,40 @@ function PostDetail({ currentUser }) {
                         <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
                     </div>
 
-                    {currentUser && (currentUser.userId === post.userId || currentUser.userLoginId === 'admin') && (
-                        <div className="post-detail-actions">
-                            <button
-                                onClick={() => navigate(`/posts/edit/${post.postId}`)}
-                                className="post-detail-button edit"
-                            >
-                                수정
-                            </button>
-                            <button
-                                onClick={handleDelete}
-                                className="post-detail-button delete"
-                            >
-                                삭제
-                            </button>
-                        </div>
-                    )}
                     <button
                         onClick={() => navigate('/posts')}
                         className="post-detail-button back"
                     >
                         목록으로 돌아가기
                     </button>
+
+                    {currentUser && (currentUser.userId === post.userId || currentUser.userLoginId === 'admin') && (
+                        <div className="post-detail-actions">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (window.confirm('수정하시겠습니까?')) {
+                                        navigate(`/posts/edit/${post.postId}`);
+                                    }
+                                }}
+                                className="post-detail-button edit"
+                            >
+                                <FaEdit />
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (window.confirm('삭제하시겠습니까?')) {
+                                        handleDelete(post.postId);
+                                    }
+                                }}
+                                className="post-detail-button delete"
+                            >
+                                <FaTrashAlt />
+                            </button>
+                        </div>
+                    )}
+                    
                     {/* CommentSection 컴포넌트 추가 */}
                     <CommentSection 
                         postId={post.postId} 

@@ -210,7 +210,7 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
                     comments.map((comment) => (
                         <div key={comment.commentId} className="comment-item">
                             <div className="comment-header">
-                                <Link to={`/user/profile/${post.userLoginId}`}>
+                                <Link to={`/user/profile/${post.userLoginId}`} className="user-profile-link">
                                     <img
                                         src={comment.userProfImgUrl || '/images/default_profile.png'} // 기본 프로필 이미지 경로 수정 (이전에 안내드린대로)
                                         alt="프로필"

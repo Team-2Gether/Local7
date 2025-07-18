@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
 
@@ -167,21 +168,25 @@ function PostList({ currentUser, selectedCity }) {
                                     <>
                                     <button
                                         onClick={(e) => {
-                                        e.stopPropagation();
-                                        navigate(`/posts/edit/${post.postId}`);
+                                            e.stopPropagation();
+                                            if (window.confirm('수정하시겠습니까?')) {
+                                                navigate(`/posts/edit/${post.postId}`);
+                                            }
                                         }}
                                         className="post-action-button edit"
                                     >
-                                        수정
+                                        <FaEdit />
                                     </button>
                                     <button
                                         onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDelete(post.postId);
+                                            e.stopPropagation();
+                                            if (window.confirm('삭제하시겠습니까?')) {
+                                                handleDelete(post.postId);
+                                            }
                                         }}
                                         className="post-action-button delete"
                                     >
-                                        삭제
+                                        <FaTrashAlt />
                                     </button>
                                     </>
                                 )}
