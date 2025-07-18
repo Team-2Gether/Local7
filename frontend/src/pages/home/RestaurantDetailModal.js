@@ -99,7 +99,7 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
 
                 <div className="average-rating-container">
                     <p className="average-rating-text">
-                        평균 평점:
+                        평점:
                         <span className="average-rating-stars">
                             {'★'.repeat(Math.floor(averageRating))}
                             {'☆'.repeat(5 - Math.floor(averageRating))}
