@@ -20,6 +20,9 @@ html, body {
     color: #fff;              /* 기존 글씨색 유지 */
     overflow-x: auto;         /* 가로 넘침 시 스크롤 */
     box-sizing: border-box;   /* 패딩/보더 포함해 크기 계산 */
+    max-width: 1175px;
+    margin: 0 auto;
+    overflow-x: auto;
 }
 
 /* 로그인 모달 오버레이 스타일 */
@@ -232,13 +235,6 @@ html, body {
 /* ------------------------------------------- */
 /* 여기서부터 home.css 내용 (디자인 그대로 유지) */
 /* ------------------------------------------- */
-
-.app-layout {
-    /* 기존 flex 및 컬러 유지하며, max-width와 중앙 정렬 추가 */
-    max-width: 1175px;
-    margin: 0 auto;
-    overflow-x: auto;
-}
 
 .map-description-container {
     display: flex;
