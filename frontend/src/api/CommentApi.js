@@ -1,16 +1,16 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080'; 
-
-const commentsApi = axios.create({
-  baseURL: API_BASE_URL,
+// API 클라이언트 인스턴스 생성
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8080/api',
   withCredentials: true, // 세션 쿠키를 포함하여 요청을 보냄
 });
 
 // (수정) sortOrder 매개변수 추가 및 쿼리 파라미터로 전달
 export const fetchComments = async (postId, sortOrder = 'latest') => { // (수정) 기본값 'latest' 추가
   try {
-    const response = await commentsApi.get(`/api/posts/${postId}/comments`, {
+    // baseURL이 '/api'로 변경되었으므로, 경로에서 '/api'를 제거합니다.
+    const response = await apiClient.get(`/posts/${postId}/comments`, {
       params: { sort: sortOrder } // (추가) 정렬 기준을 쿼리 파라미터로 전달
     });
     return response.data;
@@ -22,7 +22,8 @@ export const fetchComments = async (postId, sortOrder = 'latest') => { // (수�
 
 export const createComment = async (postId, content) => {
   try {
-    const response = await commentsApi.post(`/api/posts/${postId}/comments`, { content });
+    // baseURL이 '/api'로 변경되었으므로, 경로에서 '/api'를 제거합니다.
+    const response = await apiClient.post(`/posts/${postId}/comments`, { content });
     return response.data;
   } catch (error) {
     console.error('댓글 작성에 실패했습니다:', error);
@@ -35,7 +36,8 @@ export const createComment = async (postId, content) => {
 
 export const updateComment = async (postId, commentId, content) => {
   try {
-    const response = await commentsApi.put(`/api/posts/${postId}/comments/${commentId}`, { content });
+    // baseURL이 '/api'로 변경되었으므로, 경로에서 '/api'를 제거합니다.
+    const response = await apiClient.put(`/posts/${postId}/comments/${commentId}`, { content });
     return response.data;
   } catch (error) {
     console.error('댓글 수정에 실패했습니다:', error);
@@ -48,7 +50,8 @@ export const updateComment = async (postId, commentId, content) => {
 
 export const deleteComment = async (postId, commentId) => {
   try {
-    const response = await commentsApi.delete(`/api/posts/${postId}/comments/${commentId}`);
+    // baseURL이 '/api'로 변경되었으므로, 경로에서 '/api'를 제거합니다.
+    const response = await apiClient.delete(`/posts/${postId}/comments/${commentId}`);
     return response.data;
   } catch (error) {
     console.error('댓글 삭제에 실패했습니다:', error);
@@ -62,7 +65,8 @@ export const deleteComment = async (postId, commentId) => {
 // 댓글 좋아요 토글 API 호출 함수
 export const toggleLikeComment = async (commentId, userId) => {
   try {
-    const response = await commentsApi.post(`/api/comments/${commentId}/like`, { userId });
+    // baseURL이 '/api'로 변경되었으므로, 경로에서 '/api'를 제거합니다.
+    const response = await apiClient.post(`/comments/${commentId}/like`, { userId });
     return response.data;
   } catch (error) {
     console.error('댓글 좋아요 토글에 실패했습니다:', error);

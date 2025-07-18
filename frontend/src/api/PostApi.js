@@ -1,10 +1,9 @@
 // src/api/PostApi.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api/posts'; // 게시글 관련 API의 기본 URL
-
-const api = axios.create({
-    baseURL: API_BASE_URL,
+// API 클라이언트 인스턴스 생성
+const apiClient = axios.create({
+    baseURL: 'http://localhost:8080/api', // 기본 URL을 /api로 설정
     withCredentials: true, // 쿠키 등 인증 정보 포함
 });
 
@@ -19,7 +18,8 @@ export const fetchPosts = async (sortBy) => { // sortBy 파라미터 추가
         if (sortBy) { // sortBy 값이 있을 경우에만 파라미터에 추가
             params.sortBy = sortBy;
         }
-        const response = await api.get('/', { params }); // params 객체를 사용하여 쿼리 파라미터 전달
+        // baseURL이 '/api'이므로, '/posts/'로 경로를 조정합니다.
+        const response = await apiClient.get('/posts/', { params }); // params 객체를 사용하여 쿼리 파라미터 전달
         return response.data.data; // 백엔드에서 'data' 키로 게시글 목록을 반환한다고 가정
     } catch (error) {
         console.error('게시글 목록 조회 실패:', error);
@@ -34,12 +34,8 @@ export const fetchPosts = async (sortBy) => { // sortBy 파라미터 추가
  */
 export const fetchPostById = async (postId) => {
     try {
-        // 백엔드 UserController에 추가된 새로운 엔드포인트 호출
-        // 기존 api 인스턴스의 baseURL이 '/api/posts'로 설정되어 있어
-        // '/api/user/posts' 엔드포인트를 호출하기 위해 axios를 직접 사용합니다.
-        const response = await axios.get(`http://localhost:8080/api/user/posts/${postId}`, {
-            withCredentials: true // api 인스턴스의 withCredentials 설정 유지
-        });
+        // baseURL이 '/api'이므로, '/user/posts/${postId}'로 경로를 조정합니다.
+        const response = await apiClient.get(`/user/posts/${postId}`);
 
         // 백엔드 응답이 { status: "success", message: "...", post: PostVO_object } 형태이므로,
         // 실제 post 객체는 response.data.post에 담겨 있습니다.
@@ -72,7 +68,8 @@ export const createPost = async (postData, imageFiles) => {
             });
         }
 
-        const response = await api.post('/', formData, { // api 인스턴스 사용
+        // baseURL이 '/api'이므로, '/posts/'로 경로를 조정합니다.
+        const response = await apiClient.post('/posts/', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data', // 중요: multipart/form-data로 설정
             },
@@ -100,7 +97,8 @@ export const updatePost = async (postId, postData, newImageFiles = []) => {
             formData.append('images', file); // 새로운 이미지 파일 추가
         });
 
-        const response = await api.put(`/${postId}`, formData, { // api 인스턴스 사용
+        // baseURL이 '/api'이므로, '/posts/${postId}'로 경로를 조정합니다.
+        const response = await apiClient.put(`/posts/${postId}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data', // 중요: multipart/form-data로 설정
             },
@@ -119,7 +117,8 @@ export const updatePost = async (postId, postData, newImageFiles = []) => {
  */
 export const deletePost = async (postId) => {
     try {
-        const response = await api.delete(`/${postId}`); // api 인스턴스 사용
+        // baseURL이 '/api'이므로, '/posts/${postId}'로 경로를 조정합니다.
+        const response = await apiClient.delete(`/posts/${postId}`);
         return response.data;
     } catch (error) {
         console.error(`게시글 (ID: ${postId}) 삭제 실패:`, error);

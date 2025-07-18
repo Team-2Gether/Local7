@@ -8,7 +8,7 @@ function OtherUserPosts({ userId }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [page, setPage] = useState(0); // 페이지 상태를 0부터 시작하도록 변경 (스프링 부트 페이징 0-index)
-    const [totalPages, setTotalPages] = useState(0);
+    const [totalPages, setTotalPages] = useState(10);
     const [totalElements, setTotalElements] = useState(0);
     const pageSize = 10; // 한 페이지에 보여줄 게시글 수
 
