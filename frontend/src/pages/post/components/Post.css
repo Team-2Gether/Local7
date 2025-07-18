@@ -152,11 +152,11 @@
   overflow: hidden;
   background-color: #212121; /* 카드 배경 */
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  outline: 2px solid #5e5e5e; /* 바깥쪽 테두리 */
 }
 
 .post-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    outline: 2px solid #ffffff; /* 바깥쪽 테두리 */
 }
 
 /* 썸네일 이미지 컨테이너 (PostList) */
