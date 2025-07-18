@@ -151,7 +151,12 @@ function PostDetail({ currentUser }) {
                         목록으로 돌아가기
                     </button>
                     {/* CommentSection 컴포넌트 추가 */}
-                    <CommentSection postId={post.postId} currentUser={currentUser} onCommentCountChange={handleCommentCountChange}/>
+                    <CommentSection 
+                        postId={post.postId} 
+                        currentUser={currentUser} 
+                        onCommentCountChange={handleCommentCountChange}
+                        post={post}
+                    />
                 </div>
             </div>
         </div>

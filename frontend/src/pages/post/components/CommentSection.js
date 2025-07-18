@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import useComment from '../hooks/useComment';
 import './CommentSection.css';
 
-function CommentSection({ postId, currentUser, onCommentCountChange }) {
+function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
     const {
         comments,
         commentsLoading,
@@ -208,16 +209,19 @@ function CommentSection({ postId, currentUser, onCommentCountChange }) {
                     comments.map((comment) => (
                         <div key={comment.commentId} className="comment-item">
                             <div className="comment-header">
-                                <img
-                                    src={comment.userProfImgUrl || '/images/default_profile.png'} // 기본 프로필 이미지 경로 수정 (이전에 안내드린대로)
-                                    alt="프로필"
-                                    className="profile-img"
-                                />
-                                <span className="user-nickname">{comment.userNickname}</span>
+                                <Link to={`/user/profile/${post.userLoginId}`}>
+                                    <img
+                                        src={comment.userProfImgUrl || '/images/default_profile.png'} // 기본 프로필 이미지 경로 수정 (이전에 안내드린대로)
+                                        alt="프로필"
+                                        className="profile-img"
+                                    />
+                                    <span className="user-nickname">{comment.userNickname}</span>
+                                </Link>
                                 <span className="comment-date">
                                     {new Date(comment.createdDate).toLocaleString()}
                                 </span>
                             </div>
+
                             {editingCommentId === comment.commentId ? (
                                 <div className="editing-area">
                                     <textarea
