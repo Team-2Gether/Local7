@@ -12,6 +12,8 @@ function Main({ currentUser }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
 
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false); 
+
   const updateMapAndList = useCallback((fetchedRestaurants) => {
     if (mapInstanceRef.current) {
       const map = mapInstanceRef.current;

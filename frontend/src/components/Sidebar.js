@@ -27,6 +27,8 @@ const Sidebar = ({onMenuItemClick}) => {
                 navigate("/pick");
             else if (item === "notice")
                 navigate("/notice");
+            else if (item === 'ai')
+                navigate("/ai");
         }
     };
 
