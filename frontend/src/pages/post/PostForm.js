@@ -128,7 +128,7 @@ function PostForm({ currentUser }) {
                 setSelectedFiles([]);
                 setImagePreviews([]);
             }
-            navigate('/posts'); // 목록으로 이동
+            navigate('/', { state: { from: 'posts' } }); 
         } catch (err) {
             console.error('게시글 저장 오류:', err);
             setError(err.response?.data?.message || '게시글 저장에 실패했습니다.'); // 백엔드 에러 메시지 표시
@@ -248,7 +248,7 @@ function PostForm({ currentUser }) {
                         </button>
                         <button
                             type="button"
-                            onClick={() => navigate('/posts')}
+                            onClick={() => navigate('/', { state: { from: 'posts' } })}
                             className="post-button post-back-button"
                         >
                             목록으로 돌아가기

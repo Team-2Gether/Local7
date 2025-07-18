@@ -252,7 +252,7 @@
 }
 
 /* 좋아요 버튼 (통합된 스타일) */
-.like-button { 
+.like-button1 { 
     font-size: 2em; 
     cursor: pointer;
     transition: transform 0.1s ease-in-out;
@@ -266,15 +266,15 @@
     color: inherit;
 }
 
-.like-button:hover {
+.like-button1:hover {
     transform: scale(1.1);
 }
 
-.like-button.liked {
+.like-button1.liked {
     color: red; /* PostDetail 기준 */
 }
 
-.like-button[disabled] {
+.like-button1[disabled] {
     cursor: not-allowed;
     opacity: 0.5; /* PostDetail 기준 */
 }

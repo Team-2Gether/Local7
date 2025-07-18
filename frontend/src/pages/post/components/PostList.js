@@ -146,7 +146,7 @@ function PostList({ currentUser, selectedCity }) {
                                     <p className="post-card-meta">작성일: {new Date(post.createdDate).toLocaleDateString()}</p>
                                     <p className="post-card-likes">
                                         <span
-                                            className={`like-button ${post.liked ? 'liked' : ''}`}
+                                            className={`like-button1 ${post.liked ? 'liked' : ''}`}
                                             onClick={(e) => handleToggleLike(post.postId, e)} // 좋아요 버튼 클릭 이벤트
                                             disabled={likeLoading}
                                         >
