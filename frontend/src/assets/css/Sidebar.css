@@ -1,21 +1,29 @@
 /* src/components/Sidebar.css */
 
+/* Sidebar 스타일 (Sidebar.css에서 가져옴) */
 .sidebar-container {
-    width: 80px;
-    /* 사이드바 너비 */
-    background-color: #333;
-    /* 배경색 */
+    width: 80px; /* 사이드바 너비 */
+    background-color: #111111; /* 배경색 */
     color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 0;
+    padding: 70px 0; /* 사이드바 내부 상하 패딩 */
     box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+    height: 100%; /* Sidebar가 main-content-area의 높이를 꽉 채우도록 설정 */
+    flex-shrink: 0; /* Sidebar가 줄어들지 않도록 설정 */
+    margin: 0;
+    position: fixed; /* 추가: 왼쪽에 고정 */
+    top: 0;
+    left: 0;
+    z-index: 1500;
+    height: 100%;
+    border-right: 1px solid #e0e0e0;
 }
+
 
 .sidebar-button {
     background: transparent;
-    /* 기본 배경색은 투명으로 설정 */
     border: none;
     color: white;
     padding: 15px 0;
@@ -25,13 +33,11 @@
     align-items: center;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    /* 부드러운 전환 효과 */
     border-radius: 5px;
 }
 
 .sidebar-button:hover {
     background-color: #575757;
-    /* 호버 시 배경색 */
 }
 
 .sidebar-icon {
