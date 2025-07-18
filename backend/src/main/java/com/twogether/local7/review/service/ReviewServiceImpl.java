@@ -1,5 +1,8 @@
 package com.twogether.local7.review.service;
 
+import com.twogether.local7.ai.service.AiService;
+import com.twogether.local7.ai.vo.AiReviewRequest;
+import com.twogether.local7.ai.vo.AiReviewResponse;
 import com.twogether.local7.review.dao.ReviewDAO;
 import com.twogether.local7.review.vo.ReviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +25,31 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private ReviewDAO reviewDAO;
 
+    @Autowired
+    private AiService aiService;
+
     @Override
     public Mono<ReviewVO> addReview(ReviewVO review) {
         return Mono.fromCallable(() -> {
-            logger.info("ReviewService: addReview 호출 - {}", review);
+
+            // 1. AI 리뷰 요약 및 키워드 추출 요청
+            AiReviewRequest aiRequest = new AiReviewRequest();
+            aiRequest.setReview_text(review.getReviewContent());
+
+            // 2. AI 서비스 호출 (비동기)
+            AiReviewResponse aiResponse = aiService.summarizeReview(aiRequest).block();
+
+            // 3. AI 응답을 ReviewVO에 설정
+            if (aiResponse != null) {
+                review.setAiSummary(aiResponse.getSummary());
+                // 키워드 리스트를 하나의 문자열로 변환하여 저장
+                review.setAiKeywords(String.join(", ", aiResponse.getKeywords()));
+            }
+
+            // 4. AI 분석 결과를 포함한 리뷰를 DB에 저장
             reviewDAO.insertReview(review);
             logger.info("ReviewService: 리뷰 추가 성공, ID: {}", review.getReviewId());
+
             return review;
         }).subscribeOn(Schedulers.boundedElastic());
     }

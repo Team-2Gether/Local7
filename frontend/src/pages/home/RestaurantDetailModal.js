@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
-import ReviewForm from '../review/ReviewForm'; // ReviewForm 임포트 경로 확인!
+import ReviewForm from '../review/ReviewForm'; 
 
 import './RestaurantDetailModal.css';
 
@@ -12,16 +12,19 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
     const [loadingReviews, setLoadingReviews] = useState(true);
     const [reviewError, setReviewError] = useState(null);
     const [showReviewForm, setShowReviewForm] = useState(false);
-    const [editingReview, setEditingReview] = useState(null); 
+    const [editingReview, setEditingReview] = useState(null);
 
-    // restaurantId가 변경될 때마다 리뷰를 다시 로드
+    // `showReviewForm` 상태에 따라 텍스트를 변경합니다.
+    const reviewFormButtonText = showReviewForm ? '리뷰 목록 보기' : '리뷰 작성하기';
+
     useEffect(() => {
         if (isOpen && restaurant?.restaurantId) {
             fetchReviews(restaurant.restaurantId);
-            setShowReviewForm(false); // 모달 열릴 때 리뷰 폼 숨김
-            setEditingReview(null); // 수정 모드 초기화
+            // 모달이 열릴 때 리뷰 폼을 숨깁니다.
+            setShowReviewForm(false);
+            setEditingReview(null);
         } else {
-            setReviews([]); // 모달 닫힐 때 리뷰 초기화
+            setReviews([]);
             setReviewError(null);
         }
     }, [isOpen, restaurant?.restaurantId]);
@@ -34,136 +37,145 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
             if (response.data?.status === 'success') {
                 setReviews(response.data.data);
             } else {
-                setReviewError(response.data?.message || '리뷰를 불러오는 데 실패했습니다.');
+                setReviewError(response.data?.message || '리뷰 로딩 중 오류가 발생했습니다.');
             }
-        } catch (err) {
-            console.error('리뷰 불러오기 오류:', err);
-            setReviewError('리뷰를 불러오는 중 네트워크 오류가 발생했습니다.');
+        } catch (error) {
+            console.error('Error fetching reviews:', error);
+            setReviewError('리뷰 데이터를 가져오는 데 실패했습니다.');
         } finally {
             setLoadingReviews(false);
         }
     };
 
-    const handleReviewSubmitted = () => {
-        setShowReviewForm(false); // 폼 제출 후 폼 숨기기
-        setEditingReview(null); // 수정 모드 해제
-        fetchReviews(restaurant.restaurantId); // 리뷰 목록 새로고침
-    };
-
     const handleEditReview = (review) => {
-        setEditingReview(review); // 수정할 리뷰 설정
-        setShowReviewForm(true); // 리뷰 폼 표시
+        setEditingReview(review);
+        setShowReviewForm(true);
     };
 
     const handleDeleteReview = async (reviewId) => {
-        if (window.confirm('정말로 이 리뷰를 삭제하시겠습니까?')) {
+        if (window.confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
             try {
                 const response = await axios.delete(`http://localhost:8080/api/reviews/${reviewId}`);
                 if (response.data?.status === 'success') {
-                    alert(response.data.message);
+                    alert('리뷰가 삭제되었습니다.');
                     fetchReviews(restaurant.restaurantId); // 리뷰 목록 새로고침
                 } else {
-                    alert(response.data?.message || '리뷰 삭제에 실패했습니다.');
+                    alert('리뷰 삭제에 실패했습니다.');
                 }
-            } catch (err) {
-                console.error('리뷰 삭제 오류:', err);
-                alert('리뷰 삭제 중 네트워크 오류가 발생했습니다.');
+            } catch (error) {
+                console.error('Error deleting review:', error);
+                alert('리뷰 삭제 중 오류가 발생했습니다.');
             }
         }
     };
 
-    const handleCancelEdit = () => {
-        setEditingReview(null);
+    // 리뷰 제출 성공 시 호출될 함수
+    const handleReviewSubmitted = () => {
+        // 폼을 숨기고, 리뷰 목록을 새로고침
         setShowReviewForm(false);
+        setEditingReview(null);
+        fetchReviews(restaurant.restaurantId);
     };
 
-    // 모달 닫기 요청 시 폼 상태 초기화
-    const handleRequestClose = () => {
-        setShowReviewForm(false);
-        setEditingReview(null);
-        onRequestClose();
-    };
+    const averageRating = reviews.length > 0
+        ? (reviews.reduce((sum, review) => sum + (review.reviewRating || 0), 0) / reviews.length).toFixed(1)
+        : '0.0';
 
     return (
         <Modal
             isOpen={isOpen}
-            onRequestClose={handleRequestClose}
+            onRequestClose={onRequestClose}
+            contentLabel="Restaurant Detail Modal"
             className="restaurant-detail-modal"
             overlayClassName="restaurant-detail-overlay"
-            contentLabel="Restaurant Details"
         >
-            <div className="modal-header-kakao">
-                <div className="title-section">
-                    <h3>{restaurant.restaurantName}</h3>
-                    <p className="category">{restaurant.restaurantCategory}</p>
+            <div className="modal-content">
+                <h2>{restaurant?.restaurantName}</h2>
+                <p>주소: {`${restaurant?.addrSido || ''} ${restaurant?.addrSigungu || ''} ${restaurant?.addrDong || ''} ${restaurant?.addrDetail || ''}`}</p>
+                <p>전화번호: {restaurant?.phoneNumber}</p>
+                <p>카테고리: {restaurant?.restaurantCategory}</p>
+
+                <div className="modal-divider"></div>
+
+                <div className="average-rating-container">
+                    <p className="average-rating-text">
+                        평균 평점:
+                        <span className="average-rating-stars">
+                            {'★'.repeat(Math.floor(averageRating))}
+                            {'☆'.repeat(5 - Math.floor(averageRating))}
+                        </span>
+                        <span className="average-rating-value">{averageRating}</span>
+                        <span className="review-count">({reviews.length}개 리뷰)</span>
+                    </p>
                 </div>
-                <button onClick={handleRequestClose} className="close-button">&times;</button>
-            </div>
 
-            <div className="modal-body">
-                <p><strong>주소:</strong> {`${restaurant.addrSido || ''} ${restaurant.addrSigungu || ''} ${restaurant.addrDong || ''} ${restaurant.addrDetail || ''}`}</p>
-                <p><strong>전화번호:</strong> {restaurant.phoneNumber || '정보 없음'}</p>
-                <p><strong>영업 시간:</strong> {restaurant.openHour !== null ? `${restaurant.openHour}:${String(restaurant.openMinute).padStart(2, '0')} ~ ${restaurant.closeHour}:${String(restaurant.closeMinute).padStart(2, '0')}` : '정보 없음'}</p>
-                {restaurant.breakStartHour !== null && (
-                    <p><strong>브레이크 타임:</strong> {`${restaurant.breakStartHour}:${String(restaurant.breakStartMinute).padStart(2, '0')} ~ ${restaurant.breakEndHour}:${String(restaurant.breakEndMinute).padStart(2, '0')}`}</p>
-                )}
-                <p><strong>휴무일:</strong> {restaurant.restaurantHoliday || '정보 없음'}</p>
-                <p><strong>주차 정보:</strong> {restaurant.parkingInfo || '정보 없음'}</p>
+                <div className="modal-divider"></div>
 
-                <hr />
-
-                <div className="review-section">
-                    <h4>리뷰</h4>
-                    {currentUser && ( // 로그인된 사용자만 리뷰 작성 버튼 표시
-                        <button onClick={() => setShowReviewForm(!showReviewForm)} className="toggle-review-form-button">
-                            {showReviewForm ? '리뷰 폼 숨기기' : (editingReview ? '리뷰 수정 폼' : '리뷰 작성')}
+                {/* 리뷰 작성/목록 전환 버튼 */}
+                <div className="review-action-buttons">
+                    {currentUser && (
+                        <button className="add-review-button" onClick={() => setShowReviewForm(!showReviewForm)}>
+                            {reviewFormButtonText}
                         </button>
                     )}
-
-                    {showReviewForm && (
-                        <ReviewForm
-                            restaurantId={restaurant.restaurantId}
-                            onReviewSubmitted={handleReviewSubmitted}
-                            editingReview={editingReview}
-                            onCancelEdit={handleCancelEdit}
-                            currentUser={currentUser} // 현재 사용자 정보를 ReviewForm에 전달
-                        />
-                    )}
-
-                    {loadingReviews ? (
-                        <p>리뷰 로딩 중...</p>
-                    ) : reviewError ? (
-                        <p className="error-message">{reviewError}</p>
-                    ) : reviews.length === 0 ? (
-                        <p>아직 작성된 리뷰가 없습니다.</p>
-                    ) : (
-                        <ul className="review-list">
-                            {reviews.map((review) => (
-                                <li key={review.reviewId} className="review-item">
-                                    <div className="review-header">
-                                        {/* TODO: review.userId를 사용하여 사용자 닉네임/ID 표시 */}
-                                        <span className="review-user">{review.userNickname || `사용자 ${review.userId}`}</span>
-                                        <span className="review-rating">
-                                            {'★'.repeat(Math.floor(review.reviewRating))}
-                                            {'☆'.repeat(5 - Math.floor(review.reviewRating))}
-                                        </span>
-                                        <span className="review-date">{new Date(review.createdDate).toLocaleDateString()}</span>
-                                    </div>
-                                    <p className="review-content">{review.reviewContent}</p>
-                                    {review.aiSummary && <p className="review-ai-summary">**AI 요약:** {review.aiSummary}</p>}
-                                    {review.aiKeywords && <p className="review-ai-keywords">**키워드:** {review.aiKeywords}</p>}
-                                    {currentUser && currentUser.userId === review.userId && (
-                                        <div className="review-actions">
-                                            <button onClick={() => handleEditReview(review)}>수정</button>
-                                            <button onClick={() => handleDeleteReview(review.reviewId)}>삭제</button>
-                                        </div>
-                                    )}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
                 </div>
+
+                {/* showReviewForm 상태에 따라 ReviewForm 또는 리뷰 목록을 렌더링 */}
+                {showReviewForm ? (
+                    <ReviewForm
+                        restaurantId={restaurant.restaurantId}
+                        userId={currentUser.userId}
+                        userNickname={currentUser.userNickname}
+                        existingReview={editingReview}
+                        onReviewSubmitted={handleReviewSubmitted}
+                        onCancel={() => { setShowReviewForm(false); setEditingReview(null); }}
+                    />
+                ) : (
+                    <div className="review-list-container">
+                        <h3>리뷰</h3>
+                        {loadingReviews ? (
+                            <p>리뷰를 로딩 중입니다...</p>
+                        ) : reviewError ? (
+                            <p className="error-message">{reviewError}</p>
+                        ) : reviews.length === 0 ? (
+                            <p>등록된 리뷰가 없습니다. 첫 리뷰를 작성해 보세요!</p>
+                        ) : (
+                            <ul className="review-list">
+                                {reviews.map((review) => (
+                                    <li key={review.reviewId} className="review-item">
+                                        <div className="review-header">
+                                            <span className="review-author">{review.userNickname || '익명'}</span>
+                                            <span className="review-rating">
+                                                {'★'.repeat(Math.floor(review.reviewRating))}
+                                                {'☆'.repeat(5 - Math.floor(review.reviewRating))}
+                                            </span>
+                                            <span className="review-date">{new Date(review.createdDate).toLocaleDateString()}</span>
+                                        </div>
+                                        <p className="review-content">{review.reviewContent}</p>
+                                        {review.aiSummary && (
+                                            <p className="review-ai-summary">
+                                                <strong>AI 요약:</strong> {review.aiSummary}
+                                            </p>
+                                        )}
+                                        {review.aiKeywords && (
+                                            <p className="review-ai-keywords">
+                                                <strong>키워드: </strong><span>{review.aiKeywords}</span> 
+                                            </p>
+                                        )}
+                                        {currentUser && currentUser.userId === review.userId && (
+                                            <div className="review-actions">
+                                                <button onClick={() => handleEditReview(review)}>수정</button>
+                                                <button onClick={() => handleDeleteReview(review.reviewId)}>삭제</button>
+                                            </div>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                )}
             </div>
+            <button className="modal-close-button" onClick={onRequestClose}>닫기</button>
         </Modal>
     );
 }

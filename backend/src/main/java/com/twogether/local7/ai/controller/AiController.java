@@ -11,8 +11,6 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/ai")
 public class AiController {
 
-    // CORS 설정 추가: React 개발 서버 도메인에서 요청을 허용합니다.
-
     private final AiService aiService; // AiService 주입
 
     @Autowired // AiService 빈을 자동으로 주입받음

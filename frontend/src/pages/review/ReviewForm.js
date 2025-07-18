@@ -1,81 +1,73 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { summarizeReview } from '../../api/AiApi'; // AI API 호출 함수 임포트
+import './ReviewForm.css';
 
-
-
-function ReviewForm({ restaurantId, onReviewSubmitted, editingReview, onCancelEdit, currentUser }) {
-
-    // editingReview가 있으면 수정 모드, 없으면 새 리뷰 작성 모드
-    const [rating, setRating] = useState(editingReview ? editingReview.reviewRating : 0);
-    const [content, setContent] = useState(editingReview ? editingReview.reviewContent : '');
-    const [error, setError] = useState(null);
+function ReviewForm({ restaurantId, userId, existingReview, onReviewSubmitted, onCancel }) {
+    const [reviewContent, setReviewContent] = useState('');
+    const [reviewRating, setReviewRating] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // editingReview가 변경될 때마다 폼 필드 업데이트
     useEffect(() => {
-        if (editingReview) {
-            setRating(editingReview.reviewRating);
-            setContent(editingReview.reviewContent);
+        if (existingReview) {
+            setReviewContent(existingReview.reviewContent);
+            setReviewRating(existingReview.reviewRating);
         } else {
-            setRating(0);
-            setContent('');
+            setReviewContent('');
+            setReviewRating(0);
         }
-        setError(null); // 폼 초기화 시 에러 메시지 초기화
-    }, [editingReview]);
+    }, [existingReview]);
+
+    const handleRatingClick = (rating) => {
+        setReviewRating(rating);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null);
+        if (!reviewContent.trim() || reviewRating === 0) {
+            alert("별점과 내용을 모두 입력해 주세요.");
+            return;
+        }
+
         setIsSubmitting(true);
 
-        if (!currentUser || !currentUser.userId) {
-            setError("리뷰를 작성하려면 로그인해야 합니다.");
-            setIsSubmitting(false);
-            return;
-        }
-
-        if (rating === 0) {
-            setError("별점을 선택해주세요.");
-            setIsSubmitting(false);
-            return;
-        }
-        if (content.trim() === '') {
-            setError("리뷰 내용을 입력해주세요.");
-            setIsSubmitting(false);
-            return;
-        }
-
-        const reviewData = {
-            userId: currentUser.userId, // 현재 로그인된 사용자 ID
-            restaurantId: restaurantId,
-            reviewRating: rating,
-            reviewContent: content,
-            aiSummary: null,
-            aiKeywords: null,
-        };
-
         try {
+            // 1. 리뷰 내용을 AI 요약 API에 보냅니다.
+            const aiResponse = await summarizeReview(reviewContent);
+
+            // 2. AI 응답을 포함하여 리뷰 데이터를 구성합니다.
+            const reviewData = {
+                restaurantId,
+                userId,
+                reviewRating,
+                reviewContent,
+                aiSummary: aiResponse.summary,
+                aiKeywords: aiResponse.keywords.join(', ')
+            };
+
+            // 3. 리뷰를 백엔드에 전송합니다 (수정 또는 등록)
             let response;
-            if (editingReview) {
-                // 리뷰 수정
-                response = await axios.put(`http://localhost:8080/api/reviews/${editingReview.reviewId}`, reviewData);
+            if (existingReview) {
+                // 기존 리뷰 수정
+                response = await axios.put(`http://localhost:8080/api/reviews/${existingReview.reviewId}`, {
+                    ...reviewData,
+                    reviewId: existingReview.reviewId,
+                });
             } else {
-                // 새 리뷰 작성
+                // 새 리뷰 등록
                 response = await axios.post('http://localhost:8080/api/reviews', reviewData);
             }
 
             if (response.data?.status === 'success') {
-                alert(response.data.message); // 사용자에게 성공 메시지 표시
-                onReviewSubmitted(); // 리뷰 목록 새로고침 또는 업데이트 콜백 호출
-                setRating(0); // 폼 초기화
-                setContent('');
-                if (onCancelEdit) onCancelEdit(); // 수정 모드 취소
+                alert(`리뷰가 ${existingReview ? '수정' : '등록'}되었습니다!`);
+                onReviewSubmitted(); // 성공 시 부모 컴포넌트에 알림
             } else {
-                setError(response.data?.message || '리뷰 처리 중 오류가 발생했습니다.');
+                alert(`리뷰 ${existingReview ? '수정' : '등록'}에 실패했습니다: ${response.data?.message || '알 수 없는 오류'}`);
             }
-        } catch (err) {
-            console.error('리뷰 제출 오류:', err);
-            setError('리뷰 처리 중 네트워크 오류가 발생했습니다. 서버를 확인해주세요.');
+
+        } catch (error) {
+            console.error('리뷰 전송 중 오류 발생:', error);
+            alert(`리뷰 ${existingReview ? '수정' : '등록'} 중 오류가 발생했습니다.`);
         } finally {
             setIsSubmitting(false);
         }
@@ -83,47 +75,37 @@ function ReviewForm({ restaurantId, onReviewSubmitted, editingReview, onCancelEd
 
     return (
         <div className="review-form-container">
-            <h4>{editingReview ? '리뷰 수정' : '새 리뷰 작성'}</h4>
+            <h3>{existingReview ? '리뷰 수정하기' : '새 리뷰 작성하기'}</h3>
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="rating">별점:</label>
-                    <select
-                        id="rating"
-                        value={rating}
-                        onChange={(e) => setRating(parseFloat(e.target.value))}
-                        disabled={isSubmitting}
-                    >
-                        <option value="0">별점 선택</option>
-                        {[1, 2, 3, 4, 5].map((num) => (
-                            <option key={num} value={num}>{num}점</option>
-                        ))}
-                    </select>
+                <div className="review-rating-input">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                            key={star}
+                            className={`star-icon ${star <= reviewRating ? 'filled' : ''}`}
+                            onClick={() => handleRatingClick(star)}
+                        >
+                            ★
+                        </span>
+                    ))}
                 </div>
-                <div className="form-group">
-                    <label htmlFor="content">리뷰 내용:</label>
-                    <textarea
-                        id="content"
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        rows="4"
-                        placeholder="리뷰 내용을 입력해주세요."
-                        disabled={isSubmitting}
-                    ></textarea>
-                </div>
-                {error && <p className="error-message">{error}</p>}
+                <textarea
+                    className="review-content-input"
+                    value={reviewContent}
+                    onChange={(e) => setReviewContent(e.target.value)}
+                    placeholder="솔직한 리뷰를 남겨주세요."
+                    rows="5"
+                ></textarea>
                 <div className="form-actions">
-                    <button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? '처리 중...' : (editingReview ? '리뷰 수정' : '리뷰 작성')}
+                    <button type="submit" className="submit-button" disabled={isSubmitting}>
+                        {isSubmitting ? '전송 중...' : (existingReview ? '수정 완료' : '리뷰 등록')}
                     </button>
-                    {editingReview && (
-                        <button type="button" onClick={onCancelEdit} disabled={isSubmitting}>
-                            취소
-                        </button>
-                    )}
+                    <button type="button" className="cancel-button" onClick={onCancel} disabled={isSubmitting}>
+                        취소
+                    </button>
                 </div>
             </form>
         </div>
     );
 }
 
-export default ReviewForm; 
+export default ReviewForm;

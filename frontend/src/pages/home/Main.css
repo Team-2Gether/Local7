@@ -1,0 +1,141 @@
+/* 기본 레이아웃 */
+body, .home-container {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Noto Sans KR', sans-serif;
+    padding: 2rem;
+    min-height: 100vh;
+}
+
+/* 지도 영역 */
+.map-container {
+    width: 100%;
+    height: 400px;
+    border: 2px solid #333;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+}
+
+/* 음식점 리스트: 바둑판 형태로 그리드 구성 */
+.restaurant-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
+
+/* 음식점 항목 */
+.restaurant-item {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 180px;
+}
+
+.restaurant-item:hover {
+    background-color: #2a2a2a;
+    transform: translateY(-4px);
+}
+
+/* 리뷰 작성 폼 */
+.review-form-container {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.review-form-container h4 {
+    margin-bottom: 1.2rem;
+    color: #fff;
+}
+
+/* 폼 그룹 */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #ccc;
+}
+
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 4px;
+    border: 1px solid #555;
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    resize: vertical;
+}
+
+.form-group select:disabled,
+.form-group textarea:disabled {
+    background-color: #444;
+    color: #888;
+}
+
+/* 오류 메시지 */
+.error-message {
+    color: #ff6b6b;
+    margin-bottom: 1rem;
+}
+
+/* 버튼 영역 */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-actions button {
+    padding: 0.6rem 1.4rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.form-actions button[type="submit"] {
+    background-color: #3f51b5;
+    color: white;
+}
+
+.form-actions button[type="submit"]:hover {
+    background-color: #5c6bc0;
+}
+
+.form-actions button[type="button"] {
+    background-color: #555;
+    color: white;
+}
+
+.form-actions button[type="button"]:hover {
+    background-color: #777;
+}
+
+.form-actions button:disabled {
+    background-color: #333;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* 모달 내부 다크 스타일 (선택 적용) */
+.ReactModal__Content {
+    background-color: #1f1f1f !important;
+    color: #e0e0e0 !important;
+    border-radius: 8px;
+    border: 1px solid #444;
+}

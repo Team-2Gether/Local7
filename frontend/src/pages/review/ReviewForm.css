@@ -1,98 +1,71 @@
-/* src/components/review/ReviewForm.css */
+/* src/review/ReviewForm.css */
 .review-form-container {
-    background-color: #f9f9f9;
+    background-color: #333;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
 }
 
-.review-form-container h4 {
+.review-form-container h3 {
     margin-top: 0;
-    color: #333;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    color: #f0f0f0;
 }
 
-.review-form-container .form-group {
+.review-rating-input {
     margin-bottom: 15px;
-}
-
-.review-form-container label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #555;
-}
-
-.review-form-container textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
-    font-size: 1rem;
-    resize: vertical; /* 세로 크기 조절 허용 */
-}
-
-.review-form-container .star-rating {
-    display: flex;
-    font-size: 1.8rem;
-    color: #ccc; /* 기본 별 색상 */
+    font-size: 2rem;
     cursor: pointer;
 }
 
-.review-form-container .star-rating .star {
-    margin-right: 5px;
+.star-icon {
+    color: #555;
     transition: color 0.2s;
 }
 
-.review-form-container .star-rating .star.selected {
-    color: gold; /* 선택된 별 색상 */
+.star-icon.filled {
+    color: #f39c12; /* 황금색 */
 }
 
-.review-form-container .form-actions {
+.review-content-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #555;
+    background-color: #444;
+    color: #f0f0f0;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.form-actions {
     display: flex;
-    gap: 10px;
     justify-content: flex-end;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
-.review-form-container button {
-    padding: 10px 15px;
+.submit-button,
+.cancel-button {
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
+    font-weight: bold;
     cursor: pointer;
-    font-size: 1rem;
     transition: background-color 0.2s;
 }
 
-.review-form-container button[type="submit"] {
-    background-color: #007bff;
+.submit-button {
+    background-color: #28a745;
     color: white;
+    margin-left: 10px;
 }
 
-.review-form-container button[type="submit"]:hover:not(:disabled) {
-    background-color: #0056b3;
-}
-
-.review-form-container button[type="submit"]:disabled {
-    background-color: #cccccc;
+.submit-button:disabled {
+    background-color: #555;
     cursor: not-allowed;
 }
 
-.review-form-container button[type="button"] { /* 취소 버튼 */
-    background-color: #6c757d;
+.cancel-button {
+    background-color: #dc3545;
     color: white;
-}
-
-.review-form-container button[type="button"]:hover:not(:disabled) {
-    background-color: #5a6268;
-}
-
-.review-form-container .error-message {
-    color: #dc3545;
-    margin-bottom: 15px;
-    font-weight: bold;
 }
