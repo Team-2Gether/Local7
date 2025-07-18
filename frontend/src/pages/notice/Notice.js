@@ -19,10 +19,8 @@ function Notice({ currentUser }) {
 
   const [notices, setNotices] = useState([]);
 
-  useEffect(() => {
-    if (location.pathname === "/notice") {
-      loadNotices();
-    }
+  useEffect(() => {    
+    loadNotices();
   }, [location.pathname]);
 
   const loadNotices = async () => {

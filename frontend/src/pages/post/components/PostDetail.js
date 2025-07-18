@@ -130,7 +130,7 @@ function PostDetail({ currentUser }) {
                     </div>
 
                     <button
-                        onClick={() => navigate('/posts')}
+                        onClick={() => navigate('/', { state: { from: 'posts' } })}
                         className="post-detail-button back"
                     >
                         목록으로 돌아가기

@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
+
 // 배너 이미지 임포트
 import banner1 from "../../assets/images/banner.png";
 import banner2 from "../../assets/images/banner2.png";
@@ -27,7 +29,10 @@ import PostList from "../post/components/PostList";
 function Home({ currentUser }) {
   const [selectedCity, setSelectedCity] = useState("전체");
   const [mapObj, setMapObj] = useState(null);
-  const [activeSection, setActiveSection] = useState("restaurants");
+
+  const location = useLocation();
+  const initialSection = location.state?.from || "restaurants";
+  const [activeSection, setActiveSection] = useState(initialSection);
 
   // 배너 상태
   const [currentSlide, setCurrentSlide] = useState(0);
