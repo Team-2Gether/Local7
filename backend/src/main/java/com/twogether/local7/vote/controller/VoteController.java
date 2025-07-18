@@ -38,7 +38,11 @@ public class VoteController {
         System.out.println(">>> getUserById 호출됨. userId = " + userId);
         return voteService.getUserById(userId);
     }
-
+    //투표 수 리스트 조회
+    @GetMapping("/results")
+    public List<VoteVO> getViewCount(){
+        return voteService.getAllViewCount();
+    }
     //지역 리스트 조회
     @GetMapping("/regions")
     public List<VoteVO> getRegions() {

@@ -40,6 +40,12 @@ public class VoteServiceImpl implements VoteService{
         return voteDAO.getUserById(userId);
     }
 
+    //투표 수
+    @Override
+    public List<VoteVO> getAllViewCount(){
+        return voteDAO.getAllViewCount();
+    }
+
     //지역
     @Override
     public List<VoteVO> getAllRegions() {

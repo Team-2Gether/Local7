@@ -16,6 +16,9 @@ public interface VoteDAO {
 
     //투표 완료시 has_voted 값을 'Y'로 번경
     void updateHasVoted(Long userId);
+
+    //투표 수 리스트 조회
+    List<VoteVO> getAllViewCount();
     
     //전체 지역 리스트 조회
     List<VoteVO> getAllRegions();
