@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { MdPushPin } from 'react-icons/md';
 import Modal from 'react-modal';
 import axios from 'axios';
 import ReviewForm from '../review/ReviewForm'; 
-
+import { summarizeReview } from '../../api/AiApi';
 import './RestaurantDetailModal.css';
 
 Modal.setAppElement('#root');
@@ -13,6 +14,9 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
     const [reviewError, setReviewError] = useState(null);
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [editingReview, setEditingReview] = useState(null);
+
+    const [restaurantAiSummary, setRestaurantAiSummary] = useState('');
+    const [restaurantAiKeywords, setRestaurantAiKeywords] = useState([]);
 
     // `showReviewForm` 상태에 따라 텍스트를 변경합니다.
     const reviewFormButtonText = showReviewForm ? '리뷰 목록 보기' : '리뷰 작성하기';
@@ -35,15 +39,45 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
         try {
             const response = await axios.get(`http://localhost:8080/api/reviews/restaurant/${restaurantId}`);
             if (response.data?.status === 'success') {
-                setReviews(response.data.data);
+                const fetchedReviews = response.data.data;
+                setReviews(fetchedReviews);
+                // 리뷰가 성공적으로 로드되면 AI 요약 통합 함수 호출
+                if (fetchedReviews.length > 0) {
+                    summarizeRestaurantReviews(fetchedReviews);
+                }
             } else {
-                setReviewError(response.data?.message || '리뷰 로딩 중 오류가 발생했습니다.');
+                setReviewError(response.data?.message || '리뷰 목록 조회에 실패했습니다.');
             }
         } catch (error) {
-            console.error('Error fetching reviews:', error);
-            setReviewError('리뷰 데이터를 가져오는 데 실패했습니다.');
+            console.error('리뷰 조회 중 오류 발생:', error);
+            setReviewError('서버에서 리뷰를 가져오는 데 실패했습니다.');
         } finally {
             setLoadingReviews(false);
+        }
+    };
+
+    const summarizeRestaurantReviews = async (allReviews) => {
+        try {
+            // 모든 AI 요약과 키워드를 결합
+            const combinedSummary = allReviews
+                .map(r => r.aiSummary)
+                .filter(Boolean) // null 또는 빈 문자열 제외
+                .join(' ');
+            const combinedKeywords = allReviews
+                .flatMap(r => r.aiKeywords ? r.aiKeywords.split(',').map(k => k.trim()) : [])
+                .filter(Boolean);
+
+            if (combinedSummary) {
+                // AiApi.js에 새로운 함수를 만들어 호출
+                // 현재는 기존 summarizeReview를 활용
+                const finalAiResult = await summarizeReview(combinedSummary + ' ' + combinedKeywords.join(' '));
+                
+                setRestaurantAiSummary(finalAiResult.summary);
+                setRestaurantAiKeywords(finalAiResult.keywords);
+            }
+        } catch (error) {
+            console.error("레스토랑 전체 요약 생성 중 오류 발생:", error);
+            // 오류 처리
         }
     };
 
@@ -90,12 +124,28 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
             overlayClassName="restaurant-detail-overlay"
         >
             <div className="modal-content">
+                <button className="modal-close-top-button1" onClick={onRequestClose} aria-label="Close modal">×</button>
                 <h2>{restaurant?.restaurantName}</h2>
                 <p>주소: {`${restaurant?.addrSido || ''} ${restaurant?.addrSigungu || ''} ${restaurant?.addrDong || ''} ${restaurant?.addrDetail || ''}`}</p>
                 <p>전화번호: {restaurant?.phoneNumber}</p>
                 <p>카테고리: {restaurant?.restaurantCategory}</p>
 
-                <div className="modal-divider"></div>
+                <div className="modal-divider">
+                    {restaurantAiSummary && (
+                    <div className="restaurant-ai-summary">
+                        <h3>
+                            <MdPushPin style={{ verticalAlign: 'middle', marginRight: '6px', color: '#f39c12' }} />
+                            AI 종합 요약
+                        </h3>
+                        <p>{restaurantAiSummary}</p>
+                        {restaurantAiKeywords.length > 0 && (
+                            <p>
+                                <strong>키워드:</strong> {restaurantAiKeywords.map(k => `#${k.trim()}`).join(' ')}
+                            </p>
+                        )}
+                    </div>
+                )}
+                </div>
 
                 <div className="average-rating-container">
                     <p className="average-rating-text">
@@ -144,24 +194,20 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                                 {reviews.map((review) => (
                                     <li key={review.reviewId} className="review-item">
                                         <div className="review-header">
-                                            <span className="review-author">{review.userNickname || '익명'}</span>
-                                            <span className="review-rating">
-                                                {'★'.repeat(Math.floor(review.reviewRating))}
-                                                {'☆'.repeat(5 - Math.floor(review.reviewRating))}
+                                            <span className="review-date">
+                                                {new Date(review.createdDate).toLocaleDateString()}
                                             </span>
-                                            <span className="review-date">{new Date(review.createdDate).toLocaleDateString()}</span>
+                                            <div className="review-meta">
+                                                <span className="review-author">
+                                                    {review.userNickname || '익명'}
+                                                </span>
+                                                <span className="review-rating">
+                                                    {'★'.repeat(Math.floor(review.reviewRating))}
+                                                    {'☆'.repeat(5 - Math.floor(review.reviewRating))}
+                                                </span>
+                                            </div>
                                         </div>
                                         <p className="review-content">{review.reviewContent}</p>
-                                        {review.aiSummary && (
-                                            <p className="review-ai-summary">
-                                                <strong>AI 요약:</strong> {review.aiSummary}
-                                            </p>
-                                        )}
-                                        {review.aiKeywords && (
-                                            <p className="review-ai-keywords">
-                                                <strong>키워드: </strong><span>{review.aiKeywords}</span> 
-                                            </p>
-                                        )}
                                         {currentUser && currentUser.userId === review.userId && (
                                             <div className="review-actions">
                                                 <button onClick={() => handleEditReview(review)}>수정</button>
