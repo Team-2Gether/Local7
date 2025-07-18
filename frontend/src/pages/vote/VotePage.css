@@ -61,13 +61,14 @@ h2 {
 }
 
 .tap-contents {
-  background-color: #999;
+  /* background-color: #999; */
   display: flex;
   width: 400px;
   margin: auto;
+  padding-top: 20px;
 }
 .best-reigon {
-  background-color: #999;
+  /* background-color: #999; */
 }
 
 .tap-contents > div {

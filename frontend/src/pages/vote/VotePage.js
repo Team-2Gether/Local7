@@ -113,7 +113,7 @@ function VotePage() {
       {/* 탭 전환에 따른 내용 표시 */}
       {selectedTap === 'place' && (
         <>
-          <h2>이달의 여행지를 투표해주세요</h2>
+          <h2>나만의 여행지를 투표해주세요</h2>
 
           {/* 해당 각 지역 선택 버튼 */}
           <div className="vote-buttons">
