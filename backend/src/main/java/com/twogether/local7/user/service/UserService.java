@@ -29,4 +29,13 @@ public interface UserService {
 
     // 게시글 ID로 단일 게시글 조회 추가
     PostDetailVO getPostById(Long postId);
+
+    // 새로운 메서드 추가: 비밀번호 변경
+    void updateUserPassword(Long userId, String newPassword); //
+
+    // 새로운 메서드 추가: 현재 비밀번호 확인
+    boolean checkUserPassword(Long userId, String currentPassword); //
+
+    // 새로운 메서드 추가: 사용자 프로필 이미지 업데이트
+    void updateUserProfileImage(Long userId, String userProfileImageUrl);
 }

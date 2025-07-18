@@ -3,7 +3,7 @@ import React from 'react';
 import useUserWithdrawal from '../hook/useUserWithdrawal'; // 경로 변경
 import useFormData from '../../../common/useFormData'; // useFormData 훅 추가
 
-function UserWithdrawalSection({ onLogout }) {
+function UserWithdrawalSection({ currentUser, onLogout }) {
     const { formData, handleChange, setFormData } = useFormData({
         withdrawalPassword: '',
         withdrawalVerificationCode: ''
@@ -17,7 +17,7 @@ function UserWithdrawalSection({ onLogout }) {
         isWithdrawing,
         withdrawalMessage,
         withdrawalMessageType
-    } = useUserWithdrawal(onLogout, formData.withdrawalPassword, formData.withdrawalVerificationCode, setFormData); // useUserWithdrawal 훅에 formData 전달
+    } = useUserWithdrawal(currentUser, onLogout, formData.withdrawalPassword, formData.withdrawalVerificationCode, setFormData); // useUserWithdrawal 훅에 currentUser 추가 전달
 
     return (
         <div className="user-withdrawal-form user-update-form">
@@ -33,7 +33,7 @@ function UserWithdrawalSection({ onLogout }) {
                             name="withdrawalPassword" // name 속성 추가
                             value={formData.withdrawalPassword}
                             onChange={handleChange}
-                            placeholder="현재 비밀번호를 입력해주세요"
+                            placeholder="비밀번호를 다시 입력하세요"
                             required
                             disabled={isRequestingWithdrawalCode}
                         />
@@ -43,16 +43,16 @@ function UserWithdrawalSection({ onLogout }) {
                         className="delete-button"
                         disabled={isRequestingWithdrawalCode}
                     >
-                        {isRequestingWithdrawalCode ? '요청 중...' : '탈퇴 인증 코드 요청'}
+                        {isRequestingWithdrawalCode ? '인증 코드 요청 중...' : '인증 코드 요청'}
                     </button>
                 </form>
             ) : (
                 <form onSubmit={(e) => handleWithdrawal(e)}>
                     <div className="form-group">
-                        <label htmlFor="withdrawalPasswordConfirm">비밀번호 재확인:</label>
+                        <label htmlFor="withdrawalPassword">비밀번호 확인:</label>
                         <input
                             type="password"
-                            id="withdrawalPasswordConfirm"
+                            id="withdrawalPassword"
                             name="withdrawalPassword" // name 속성 추가
                             value={formData.withdrawalPassword}
                             onChange={handleChange}

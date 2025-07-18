@@ -37,4 +37,13 @@ public interface UserDAO {
 
     // 게시글 ID로 단일 게시글 조회 추가
     PostDetailVO findPostById(Long postId); // 메서드 이름 변경: findById -> findPostById (충돌 방지)
+
+    // 새로운 메서드 추가: 사용자 비밀번호 업데이트
+    void updateUserPassword(Long userId, String newPassword); // 메서드 시그니처 추가 (Mapper와 일치해야 함)
+
+    // 새로운 메서드 추가: 사용자 비밀번호 조회
+    String findUserPassword(Long userId); // userId로 비밀번호만 조회하는 메서드 추가
+
+    // 새로운 메서드 추가: 사용자 프로필 이미지 업데이트
+    void updateUserProfileImage(Long userId, String userProfileImageUrl);
 }

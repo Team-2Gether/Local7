@@ -34,9 +34,9 @@ const useUserLoginId = (currentUser, onLogout) => {
             return;
         }
         if (currentUser && newUserLoginId === currentUser.userLoginId) {
-            displayLoginIdMessage('현재 아이디와 동일합니다. 변경하려면 다른 아이디를 입력해주세요.', 'error');
+            displayLoginIdMessage('현재 아이디와 동일합니다. 다른 아이디를 입력해주세요.', 'warning'); // 메시지 타입 변경
             setIsLoginIdChecked(true);
-            setIsLoginIdAvailable(false);
+            setIsLoginIdAvailable(false); // 동일하면 사용 불가능으로 처리
             return;
         }
 
@@ -49,20 +49,24 @@ const useUserLoginId = (currentUser, onLogout) => {
                 displayLoginIdMessage(response.data.message, response.data.isDuplicate ? 'error' : 'success');
             } else {
                 displayLoginIdMessage(response.data.message || '아이디 중복 확인에 실패했습니다.', 'error');
-                setIsLoginIdChecked(false);
-                setIsLoginIdAvailable(false);
             }
         } catch (error) {
             console.error("아이디 중복 확인 중 오류 발생:", error);
-            displayLoginIdMessage('아이디 중복 확인 중 오류가 발생했습니다.', 'error');
-            setIsLoginIdChecked(false);
-            setIsLoginIdAvailable(false);
+            displayLoginIdMessage(error.response?.data?.message || '아이디 중복 확인 중 오류가 발생했습니다.', 'error');
         } finally {
             setIsCheckingLoginId(false);
         }
     };
 
     const handleUpdateLoginId = async () => {
+        if (!currentUser || !currentUser.userId) {
+            displayLoginIdMessage('로그인 정보가 없습니다.', 'error');
+            return;
+        }
+        if (!newUserLoginId.trim()) {
+            displayLoginIdMessage('새 아이디를 입력해주세요.', 'error');
+            return;
+        }
         if (!isLoginIdChecked || !isLoginIdAvailable) {
             displayLoginIdMessage('먼저 아이디 중복 확인을 완료하고 사용 가능한 아이디를 입력해주세요.', 'error');
             return;
@@ -74,7 +78,14 @@ const useUserLoginId = (currentUser, onLogout) => {
 
         setIsUpdatingLoginId(true);
         try {
-            const response = await axios.post('http://localhost:8080/api/user/update-loginid', { newUserLoginId: newUserLoginId });
+            // @PatchMapping에서 @PostMapping으로 변경되었으므로 axios.post 사용
+            // 백엔드에서 @RequestParam으로 받으므로 params를 사용
+            const response = await axios.post('http://localhost:8080/api/user/update-loginid', null, {
+                params: {
+                    userId: currentUser.userId,
+                    newUserLoginId: newUserLoginId
+                }
+            });
             if (response.status === 200 && response.data.status === 'success') {
                 displayLoginIdMessage('아이디가 성공적으로 변경되었습니다. 다시 로그인해야 적용됩니다.', 'success');
                 if (onLogout) {

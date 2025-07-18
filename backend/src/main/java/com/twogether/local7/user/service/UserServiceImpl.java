@@ -143,4 +143,29 @@ public class UserServiceImpl implements UserService {
         }
         return post;
     }
+
+    // 새로운 메서드 구현: 비밀번호 변경
+    //
+    @Override
+    public void updateUserPassword(Long userId, String newPassword) {
+        // 실제 애플리케이션에서는 newPassword를 해싱하여 저장해야 합니다.
+        // 예: String hashedNewPassword = passwordEncoder.encode(newPassword);
+        userDAO.updateUserPassword(userId, newPassword);
+    }
+
+    // 새로운 메서드 구현: 현재 비밀번호 확인
+    //
+    @Override
+    public boolean checkUserPassword(Long userId, String currentPassword) {
+        // 실제 애플리케이션에서는 currentPassword를 해싱하여 저장된 비밀번호와 비교해야 합니다.
+        // 예: return passwordEncoder.matches(currentPassword, user.getUserPassword());
+        String storedPassword = userDAO.findUserPassword(userId); // DB에서 암호화된 비밀번호 가져옴
+        // 여기서는 예시로 일반 텍스트 비교 (실제로는 PasswordEncoder 사용)
+        return currentPassword != null && storedPassword != null && currentPassword.equals(storedPassword);
+    }
+
+    @Override
+    public void updateUserProfileImage(Long userId, String userProfileImageUrl) {
+        userDAO.updateUserProfileImage(userId, userProfileImageUrl);
+    }
 }

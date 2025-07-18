@@ -1,10 +1,13 @@
 // src/pages/user/UserPage.js
 import React from 'react';
-import '../../assets/css/UserPage.css';import { FaLock } from 'react-icons/fa';
-import UserLoginIdSection from '../user/components/UserLoginIdSection'; // 경로 변경됨
-import UserNicknameSection from '../user/components/UserNicknameSection'; // 경로 변경됨
-import UserWithdrawalSection from '../user/components/UserWithdrawalSection'; // 경로 변경됨
-import useMessageDisplay from '../user/hook/useMessageDisplay'; // 경로 변경됨
+import '../../assets/css/UserPage.css'; //
+import { FaLock } from 'react-icons/fa';
+import UserLoginIdSection from '../user/components/UserLoginIdSection';
+import UserNicknameSection from '../user/components/UserNicknameSection';
+import UserWithdrawalSection from '../user/components/UserWithdrawalSection';
+import UserPasswordSection from '../user/components/UserPasswordSection';
+import UserIMGSection from '../user/components/UserIMGSection'; // 새로 추가된 import
+import useMessageDisplay from '../user/hook/useMessageDisplay';
 
 function UserPage({ currentUser, onLogout }) {
     const { message, messageType } = useMessageDisplay();
@@ -20,14 +23,20 @@ function UserPage({ currentUser, onLogout }) {
 
             <div className="user-page-content">
                 <div className="user-update-sections-wrapper">
+                    {/* 프로필 이미지 변경 섹션 */}
+                    <UserIMGSection currentUser={currentUser} onLogout={onLogout} /> {/* 새로 추가된 컴포넌트 */}
+
                     {/* 닉네임 변경 섹션 */}
                     <UserNicknameSection currentUser={currentUser} onLogout={onLogout} />
 
                     {/* 아이디 변경 섹션 */}
                     <UserLoginIdSection currentUser={currentUser} onLogout={onLogout} />
 
+                    {/* 비밀번호 변경 섹션 */}
+                    <UserPasswordSection currentUser={currentUser} onLogout={onLogout} />
+
                     {/* 회원 탈퇴 섹션 */}
-                    <UserWithdrawalSection onLogout={onLogout} />
+                    <UserWithdrawalSection currentUser={currentUser} onLogout={onLogout} />
                 </div>
             </div>
         </div>
@@ -35,5 +44,3 @@ function UserPage({ currentUser, onLogout }) {
 }
 
 export default UserPage;
-
-// import '../../assets/css/UserPage.css';

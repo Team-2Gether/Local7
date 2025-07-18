@@ -3,7 +3,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import useMessageDisplay from './useMessageDisplay'; // 경로 변경
 
-const useUserWithdrawal = (onLogout, withdrawalPassword, withdrawalVerificationCode, setFormData) => { // 변경된 부분
+const useUserWithdrawal = (currentUser, onLogout, withdrawalPassword, withdrawalVerificationCode, setFormData) => { // currentUser 추가
     const [withdrawalRequested, setWithdrawalRequested] = useState(false);
     const [isRequestingWithdrawalCode, setIsRequestingWithdrawalCode] = useState(false);
     const [isWithdrawing, setIsWithdrawing] = useState(false);
@@ -12,6 +12,10 @@ const useUserWithdrawal = (onLogout, withdrawalPassword, withdrawalVerificationC
 
     const handleRequestWithdrawalVerification = async (e) => {
         e.preventDefault();
+        if (!currentUser || !currentUser.userId) {
+            displayWithdrawalMessage('로그인 정보가 없습니다.', 'error');
+            return;
+        }
         if (!withdrawalPassword) {
             displayWithdrawalMessage('탈퇴를 위해 현재 비밀번호를 입력해주세요.', 'error');
             return;
@@ -19,8 +23,11 @@ const useUserWithdrawal = (onLogout, withdrawalPassword, withdrawalVerificationC
 
         setIsRequestingWithdrawalCode(true);
         try {
-            const response = await axios.post('http://localhost:8080/api/user/request-withdrawal-verification', {
-                password: withdrawalPassword
+            // 백엔드에서 @RequestParam userId를 받도록 되어 있으므로, body가 아닌 params로 보내는 것이 더 명확
+            const response = await axios.post('http://localhost:8080/api/user/request-withdrawal', null, {
+                params: {
+                    userId: currentUser.userId
+                }
             });
             if (response.data.status === 'success') {
                 setWithdrawalRequested(true);
@@ -38,23 +45,36 @@ const useUserWithdrawal = (onLogout, withdrawalPassword, withdrawalVerificationC
 
     const handleWithdrawal = async (e) => {
         e.preventDefault();
-        if (!withdrawalPassword || !withdrawalVerificationCode) {
-            displayWithdrawalMessage('비밀번호와 인증 코드를 모두 입력해주세요.', 'error');
+        if (!currentUser || !currentUser.userId) {
+            displayWithdrawalMessage('로그인 정보가 없습니다.', 'error');
+            return;
+        }
+        if (!withdrawalPassword) {
+            displayWithdrawalMessage('비밀번호를 입력해주세요.', 'error');
+            return;
+        }
+        if (!withdrawalVerificationCode) {
+            displayWithdrawalMessage('인증 코드를 입력해주세요.', 'error');
             return;
         }
 
         setIsWithdrawing(true);
         try {
-            const response = await axios.post('http://localhost:8080/api/user/withdraw', {
-                password: withdrawalPassword,
-                verificationCode: withdrawalVerificationCode
+            // @DeleteMapping에서 @PostMapping으로 변경되었으므로 axios.post 사용
+            // 백엔드에서 @RequestParam으로 받으므로 params를 사용
+            const response = await axios.post('http://localhost:8080/api/user/withdraw', null, {
+                params: {
+                    userId: currentUser.userId,
+                    password: withdrawalPassword,
+                    verificationCode: withdrawalVerificationCode
+                }
             });
             if (response.data.status === 'success') {
                 displayWithdrawalMessage('회원 탈퇴가 성공적으로 처리되었습니다.', 'success');
                 if (onLogout) {
                     onLogout();
                 } else {
-                    window.location.href = '/login';
+                    window.location.href = '/login'; // 또는 다른 로그인 페이지 경로
                 }
             } else {
                 displayWithdrawalMessage(response.data.message || '회원 탈퇴에 실패했습니다.', 'error');
@@ -64,7 +84,6 @@ const useUserWithdrawal = (onLogout, withdrawalPassword, withdrawalVerificationC
             displayWithdrawalMessage(error.response?.data?.message || '회원 탈퇴 중 오류가 발생했습니다.', 'error');
         } finally {
             setIsWithdrawing(false);
-            // 탈퇴 성공 또는 실패 후 폼 데이터 초기화 (선택 사항)
             if (setFormData) {
                 setFormData({ withdrawalPassword: '', withdrawalVerificationCode: '' });
             }
@@ -72,10 +91,6 @@ const useUserWithdrawal = (onLogout, withdrawalPassword, withdrawalVerificationC
     };
 
     return {
-        // withdrawalPassword, // 이제 props로 받으므로 불필요
-        // setWithdrawalPassword, // 이제 props로 받으므로 불필요
-        // withdrawalVerificationCode, // 이제 props로 받으므로 불필요
-        // setWithdrawalVerificationCode, // 이제 props로 받으므로 불필요
         withdrawalRequested,
         handleRequestWithdrawalVerification,
         handleWithdrawal,

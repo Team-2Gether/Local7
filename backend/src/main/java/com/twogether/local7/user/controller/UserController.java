@@ -2,6 +2,7 @@ package com.twogether.local7.user.controller;
 
 import com.twogether.local7.pagintion.Pagination;
 import com.twogether.local7.pagintion.SimplePageable;
+import com.twogether.local7.user.dto.UserProfileImageUpdateRequest; // 새로 추가된 DTO 임포트
 import com.twogether.local7.user.service.UserService;
 import com.twogether.local7.user.vo.PostDetailVO;
 import com.twogether.local7.user.vo.UserVO;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/user") //
 public class UserController {
 
     @Autowired
@@ -36,7 +37,8 @@ public class UserController {
         }
     }
 
-    @PatchMapping("/update-loginid")
+    // @PatchMapping 대신 @PostMapping 사용 (저장된 정보에 따름)
+    @PostMapping("/update-loginid")
     public ResponseEntity<Map<String, Object>> updateLoginId(@RequestParam Long userId, @RequestParam String newUserLoginId) {
         try {
             // 여기에 현재 로그인된 사용자가 userId와 일치하는지 확인하는 로직 추가 필요 (보안 강화)
@@ -57,13 +59,14 @@ public class UserController {
             response.put("isDuplicate", isDuplicate);
             response.put("message", isDuplicate ? "이미 사용중인 닉네임입니다." : "사용 가능한 닉네임입니다.");
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        }  catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(createErrorResponse("check_failed", "닉네임 중복 확인 중 오류가 발생했습니다."));
         }
     }
 
-    @PatchMapping("/update-nickname")
+    // @PatchMapping 대신 @PostMapping 사용 (저장된 정보에 따름)
+    @PostMapping("/update-nickname")
     public ResponseEntity<Map<String, Object>> updateNickname(@RequestParam Long userId, @RequestParam String newUserNickname) {
         try {
             // 여기에 현재 로그인된 사용자가 userId와 일치하는지 확인하는 로직 추가 필요 (보안 강화)
@@ -87,7 +90,8 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/withdraw")
+    // @DeleteMapping 대신 @PostMapping 사용 (저장된 정보에 따름)
+    @PostMapping("/withdraw")
     public ResponseEntity<Map<String, Object>> withdrawUser(
             @RequestParam Long userId,
             @RequestParam String password,
@@ -195,6 +199,65 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(createErrorResponse("post_retrieval_failed", "게시글 조회 중 오류가 발생했습니다."));
+        }
+    }
+
+    // 새로운 엔드포인트: 비밀번호 변경
+    //
+    @PostMapping("/change-password")
+    public ResponseEntity<Map<String, Object>> changePassword(
+            @RequestParam Long userId,
+            @RequestParam String currentPassword, // 현재 비밀번호도 받도록 추가 (백엔드 로직에서 사용)
+            @RequestParam String newPassword) {
+        try {
+            // 현재 비밀번호 확인 로직 (UserService에서 처리)
+            boolean isPasswordCorrect = userService.checkUserPassword(userId, currentPassword);
+            if (!isPasswordCorrect) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED) // 401 Unauthorized
+                        .body(createErrorResponse("invalid_current_password", "현재 비밀번호가 올바르지 않습니다."));
+            }
+
+            // 비밀번호 변경 로직
+            userService.updateUserPassword(userId, newPassword);
+            return ResponseEntity.ok(createSuccessResponse("비밀번호가 성공적으로 변경되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(createErrorResponse("password_change_failed", "비밀번호 변경 중 오류가 발생했습니다."));
+        }
+    }
+
+    // 새로운 엔드포인트: 현재 비밀번호 확인
+    //
+    @PostMapping("/check-password")
+    public ResponseEntity<Map<String, Object>> checkPassword(
+            @RequestParam Long userId,
+            @RequestParam String password) {
+        try {
+            // 현재 로그인된 사용자가 userId와 일치하는지 확인하는 로직 추가 (보안 강화)
+
+            boolean isPasswordCorrect = userService.checkUserPassword(userId, password);
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("isPasswordCorrect", isPasswordCorrect);
+            response.put("message", isPasswordCorrect ? "비밀번호가 일치합니다." : "비밀번호가 일치하지 않습니다.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(createErrorResponse("password_check_failed", "비밀번호 확인 중 오류가 발생했습니다."));
+        }
+    }
+
+    // 새로운 엔드포인트: 프로필 이미지 업데이트
+    @PostMapping("/update-profile-image")
+    public ResponseEntity<Map<String, Object>> updateUserProfileImage(
+            @RequestBody UserProfileImageUpdateRequest request) { // @RequestBody로 변경
+        try {
+            // 여기에 현재 로그인된 사용자가 userId와 일치하는지 확인하는 로직 추가 필요 (보안 강화)
+            userService.updateUserProfileImage(request.getUserId(), request.getUserProfileImageUrl());
+            return ResponseEntity.ok(createSuccessResponse("프로필 이미지가 성공적으로 변경되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(createErrorResponse("profile_image_update_failed", "프로필 이미지 변경 중 오류가 발생했습니다."));
         }
     }
 

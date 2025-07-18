@@ -52,23 +52,4 @@ function MyPage({ currentUser, isLoggedIn }) {
     );
 }
 
-// MyPage의 기본 자식 컴포넌트로 사용자 정보를 표시하는 컴포넌트
-function UserInfo({ userData }) {
-    return (
-        <div className="user-info-section"> {/* 기존 사용자 정보 섹션 */}
-            <div className="profile-image-container">
-                <img src={userData.userProfileImageUrl || 'https://via.placeholder.com/150'} alt="프로필 이미지" className="profile-image" />
-            </div>
-            <div className="user-details">
-                <p><strong>아이디:</strong> {userData.userLoginId}</p>
-                <p><strong>닉네임:</strong> {userData.userNickname}</p>
-                <p><strong>이메일:</strong> {userData.userEmail}</p>
-                <p><strong>이름:</strong> {userData.userName}</p>
-                <p><strong>소개:</strong> {userData.userBio || '작성된 소개가 없습니다.'}</p>
-                <p><strong>가입일:</strong> {new Date(userData.createDate).toLocaleDateString()}</p>
-            </div>
-        </div>
-    );
-}
-
 export default MyPage;
