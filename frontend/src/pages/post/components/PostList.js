@@ -126,22 +126,20 @@ function PostList({ currentUser, selectedCity }) {
                                 {/* 게시글 상세 페이지로 이동 링크 */}
                                 <div onClick={() => handlePostClick(post.postId)} style={{ cursor: 'pointer' }}>
                                     {/* 이미지 미리보기 추가 */}
-                                    {post.firstImageUrl && (
-                                        <div className="post-thumbnail">
-                                            <img
-                                                src={`http://localhost:8080${post.firstImageUrl}`}
-                                                alt="게시글 미리보기"
-                                                className="thumbnail-image"
-                                            />
+                                    <div className="post-thumbnail">
+                                        {post.firstImageUrl ? (
+                                        <img
+                                            src={`data:image/jpeg;base64,${post.firstImageUrl}`}
+                                            alt="게시글 미리보기"
+                                            className="thumbnail-image"
+                                        />
+                                        ) : (
+                                        <div className="no-image">
+                                            이미지가 없습니다
                                         </div>
-                                    )}
-                                    {/* 이미지가 없는 경우를 위한 플레이스홀더 (선택 사항) */}
-                                    {!post.firstImageUrl && (
-                                        <div className="post-thumbnail-placeholder">
-                                            <p>이미지 없음</p>
-                                        </div>
-                                    )}
-
+                                        )}
+                                    </div>
+                                    
                                     <h2 className="post-card-title">{post.postTitle}</h2>
                                     <p className="post-card-content">{post.postContent}</p>
                                     <p className="post-card-meta">작성자: {post.userNickname}</p>

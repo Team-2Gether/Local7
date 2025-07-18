@@ -1,4 +1,3 @@
-// src/api/PostApi.js
 import axios from 'axios';
 
 // API 클라이언트 인스턴스 생성
@@ -52,6 +51,24 @@ export const fetchPostById = async (postId) => {
 };
 
 /**
+ * 파일 객체를 Base64 문자열로 변환하는 헬퍼 함수
+ * @param {File} file - 변환할 파일 객체
+ * @returns {Promise<string>} Base64 문자열 (prefix 제외)
+ */
+const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file); // 파일을 Data URL (Base64)로 읽기
+        reader.onload = () => {
+            // "data:image/jpeg;base64,"와 같은 prefix를 제거하고 순수 Base64 문자열만 반환
+            const base64String = reader.result.split(',')[1];
+            resolve(base64String);
+        };
+        reader.onerror = error => reject(error);
+    });
+};
+
+/**
  * 게시글 생성 (이미지 파일 포함)
  * @param {object} postData - 생성할 게시글 데이터 (JSON 객체)
  * @param {File[]} imageFiles - 이미지 파일 배열
@@ -60,18 +77,24 @@ export const fetchPostById = async (postId) => {
 export const createPost = async (postData, imageFiles) => {
     try {
         const formData = new FormData();
-        formData.append('post', new Blob([JSON.stringify(postData)], { type: 'application/json' })); // PostVO 데이터를 JSON Blob으로 변환
+        // PostVO 데이터를 JSON Blob으로 변환하여 'post' 파트에 추가
+        formData.append('post', new Blob([JSON.stringify(postData)], { type: 'application/json' }));
 
         if (imageFiles && imageFiles.length > 0) {
-            imageFiles.forEach((file) => {
-                formData.append('images', file); // 이미지 파일 추가
+            const base64Images = await Promise.all(
+                imageFiles.map(file => fileToBase64(file))
+            );
+            base64Images.forEach(base64String => {
+                formData.append('images', base64String);
+                console.log("Adding Base64 to FormData (first 50 chars):", base64String.substring(0, Math.min(base64String.length, 50)) + "...");
             });
+        } else {
+            console.log("No image files selected for upload.");
         }
 
-        // baseURL이 '/api'이므로, '/posts/'로 경로를 조정합니다.
         const response = await apiClient.post('/posts/', formData, {
             headers: {
-                'Content-Type': 'multipart/form-data', // 중요: multipart/form-data로 설정
+                'Content-Type': 'multipart/form-data', // 여전히 FormData를 사용하므로 유지
             },
         });
         return response.data;
@@ -91,16 +114,22 @@ export const createPost = async (postData, imageFiles) => {
 export const updatePost = async (postId, postData, newImageFiles = []) => {
     try {
         const formData = new FormData();
-        formData.append('post', new Blob([JSON.stringify(postData)], { type: 'application/json' })); // PostVO 데이터를 JSON Blob으로 변환
+        // PostVO 데이터를 JSON Blob으로 변환하여 'post' 파트에 추가
+        formData.append('post', new Blob([JSON.stringify(postData)], { type: 'application/json' }));
 
-        newImageFiles.forEach((file) => {
-            formData.append('images', file); // 새로운 이미지 파일 추가
-        });
+        if (newImageFiles && newImageFiles.length > 0) {
+            // 각 이미지 파일을 Base64 문자열로 변환하여 'images' 파트에 추가
+            const base64Images = await Promise.all(
+                newImageFiles.map(file => fileToBase64(file))
+            );
+            base64Images.forEach(base64String => {
+                formData.append('images', base64String); // Base64 문자열을 추가
+            });
+        }
 
-        // baseURL이 '/api'이므로, '/posts/${postId}'로 경로를 조정합니다.
         const response = await apiClient.put(`/posts/${postId}`, formData, {
             headers: {
-                'Content-Type': 'multipart/form-data', // 중요: multipart/form-data로 설정
+                'Content-Type': 'multipart/form-data', // 여전히 FormData를 사용하므로 유지
             },
         });
         return response.data;

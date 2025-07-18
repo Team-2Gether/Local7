@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -21,13 +22,36 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostVO> getAllPosts() {
-        return postDAO.getAllPosts();
+        List<PostVO> posts = postDAO.getAllPosts();
+        // 각 게시글에 대해 이미지 정보와 firstImageUrl 설정
+        return posts.stream().map(post -> {
+            List<ImageVO> images = imageService.getImagesByPostId(post.getPostId());
+            post.setImages(images);
+            // 첫 번째 이미지의 Base64 문자열을 firstImageUrl에 설정
+            if (images != null && !images.isEmpty()) {
+                post.setFirstImageUrl(images.get(0).getImageUrl()); // ImageVO의 imageUrl은 이제 Base64 문자열
+            } else {
+                post.setFirstImageUrl(null); // 이미지가 없는 경우
+            }
+            return post;
+        }).collect(Collectors.toList());
     }
 
     @Override
     public List<PostVO> getAllPosts(String sortBy) {
-        // 정렬 기준에 따라 DAO 메서드 호출
-        return postDAO.getAllPostsSorted(sortBy);
+        List<PostVO> posts = postDAO.getAllPostsSorted(sortBy);
+        // 각 게시글에 대해 이미지 정보와 firstImageUrl 설정
+        return posts.stream().map(post -> {
+            List<ImageVO> images = imageService.getImagesByPostId(post.getPostId());
+            post.setImages(images);
+            // 첫 번째 이미지의 Base64 문자열을 firstImageUrl에 설정
+            if (images != null && !images.isEmpty()) {
+                post.setFirstImageUrl(images.get(0).getImageUrl()); // ImageVO의 imageUrl은 이제 Base64 문자열
+            } else {
+                post.setFirstImageUrl(null);
+            }
+            return post;
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -39,19 +63,30 @@ public class PostServiceImpl implements PostService {
         if (post != null) {
             List<ImageVO> images = imageService.getImagesByPostId(postId);
             post.setImages(images);
+            // 첫 번째 이미지의 Base64 문자열을 firstImageUrl에 설정
+            if (images != null && !images.isEmpty()) {
+                post.setFirstImageUrl(images.get(0).getImageUrl());
+            } else {
+                post.setFirstImageUrl(null); // 이미지가 없는 경우
+            }
         }
-
         return post;
     }
 
     @Override
-    @Transactional // 트랜잭션 유지 (게시글, 이미지 저장이 함께 처리되도록)
+    @Transactional
     public void createPost(PostVO post, List<String> imageUrls) {
-
+        System.out.println("PostServiceImpl: createPost called with post: " + post.getPostTitle());
         postDAO.insertPost(post);
+        System.out.println("PostServiceImpl: Post inserted, assigned postId: " + post.getPostId());
 
-        if (imageUrls != null && !imageUrls.isEmpty()) {
-
+        // imageUrls 리스트의 상태를 확인
+        if (imageUrls == null) {
+            System.out.println("PostServiceImpl: imageUrls list is null.");
+        } else if (imageUrls.isEmpty()) {
+            System.out.println("PostServiceImpl: imageUrls list is empty. No images to save.");
+        } else {
+            System.out.println("PostServiceImpl: imageUrls list contains " + imageUrls.size() + " images.");
             for (String imageUrl : imageUrls) {
                 ImageVO image = new ImageVO();
                 image.setPostId(post.getPostId());
@@ -59,9 +94,10 @@ public class PostServiceImpl implements PostService {
                 image.setCreatedId(post.getCreatedId());
                 image.setUpdatedId(post.getUpdatedId());
 
+                System.out.println("PostServiceImpl: Attempting to save image for postId: " + image.getPostId() + ", image URL (first 50 chars): " + imageUrl.substring(0, Math.min(imageUrl.length(), 50)) + "...");
                 imageService.saveImage(image);
+                System.out.println("PostServiceImpl: Image saved successfully for postId: " + image.getPostId());
             }
-
         }
     }
 
@@ -102,7 +138,6 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    // userId 파라미터 추가 및 DAO 호출 시 전달
     public void deletePost(Long postId, Long userId) {
         postDAO.deletePost(postId, userId);
     }

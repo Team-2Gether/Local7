@@ -17,7 +17,15 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public void saveImage(ImageVO image) {
-        imageDAO.insertImage(image);
+        System.out.println("ImageServiceImpl: saveImage called. ImageVO postId: " + image.getPostId() + ", imageUrl length: " + (image.getImageUrl() != null ? image.getImageUrl().length() : "null"));
+        try {
+            imageDAO.insertImage(image);
+            System.out.println("ImageServiceImpl: imageDAO.insertImage successful.");
+        } catch (Exception e) {
+            System.err.println("ImageServiceImpl: Error inserting image: " + e.getMessage());
+            e.printStackTrace(); // 스택 트레이스 출력
+            throw new RuntimeException("Failed to save image", e); // 예외를 다시 던져 트랜잭션 롤백 유도
+        }
     }
 
     @Override

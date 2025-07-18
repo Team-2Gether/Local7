@@ -94,7 +94,7 @@ function PostDetail({ currentUser }) {
                             {post.images.map((image, index) => (
                                 <img
                                     key={index}
-                                    src={`http://localhost:8080${image.imageUrl}`}
+                                    src={`data:image/jpeg;base64,${image.imageUrl}`}
                                     alt={`게시글 이미지 ${index + 1}`}
                                     className="post-detail-image"
                                 />
@@ -104,7 +104,7 @@ function PostDetail({ currentUser }) {
                     {(!post.images || post.images.length === 0) && post.firstImageUrl && (
                         <div className="post-detail-images">
                             <img
-                                src={`http://localhost:8080${post.firstImageUrl}`}
+                                src={`data:image/jpeg;base64,${post.firstImageUrl}`}
                                 alt="게시글 대표 이미지"
                                 className="post-detail-image"
                             />

@@ -19,9 +19,9 @@
             SELECT SEQ_TB_POST_IMAGE.NEXTVAL FROM DUAL
         </selectKey>
         INSERT INTO TB_POST_IMAGE (
-        IMAGE_ID, POST_ID, IMAGE_URL, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
+            IMAGE_ID, POST_ID, IMAGE_URL, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
         ) VALUES (
-        #{imageId}, #{postId}, #{imageUrl}, SYSTIMESTAMP, #{createdId}, SYSTIMESTAMP, #{updatedId}
+            #{imageId}, #{postId}, #{imageUrl}, SYSTIMESTAMP, #{createdId}, SYSTIMESTAMP, #{updatedId}
         )
     </insert>
 
