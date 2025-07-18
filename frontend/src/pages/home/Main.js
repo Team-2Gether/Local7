@@ -12,8 +12,6 @@ function Main({ currentUser }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
 
-  const [isAiModalOpen, setIsAiModalOpen] = useState(false); 
-
   const updateMapAndList = useCallback((fetchedRestaurants) => {
     if (mapInstanceRef.current) {
       const map = mapInstanceRef.current;
@@ -126,7 +124,7 @@ function Main({ currentUser }) {
   };
 
   return (
-    <div className="home-container">
+    <div className="home-container1">
       <h1>
         환영합니다, {currentUser ? currentUser.userNickname : '게스트'} 님!
       </h1>

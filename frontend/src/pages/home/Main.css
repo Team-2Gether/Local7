@@ -1,5 +1,5 @@
 /* 기본 레이아웃 */
-body, .home-container {
+body, .home-container1 {
     background-color: #121212;
     color: #e0e0e0;
     font-family: 'Noto Sans KR', sans-serif;
@@ -19,7 +19,7 @@ body, .home-container {
 /* 음식점 리스트: 바둑판 형태로 그리드 구성 */
 .restaurant-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); 
     gap: 1.5rem;
     padding: 0;
     list-style: none;
@@ -31,13 +31,13 @@ body, .home-container {
     background-color: #1e1e1e;
     border: 1px solid #333;
     border-radius: 8px;
-    padding: 1.2rem;
+    padding: 1.2rem 1.2rem;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 180px;
+    height: 230px;
 }
 
 .restaurant-item:hover {
