@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import useComment from '../hooks/useComment';
 import './CommentSection.css';
 
@@ -237,22 +238,32 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
                             )}
 
                             <div className="comment-footer">
-                                
-
-                                {/* 수정/삭제 버튼은 현재 로그인한 사용자의 댓글에만 표시 (관리자 포함) */}
+                                {/* 수정/삭제 버튼은 댓글 작성자 또는 관리자에게만 표시 */}
                                 {currentUser && (currentUser.userId === comment.userId || currentUser.userLoginId === 'admin') && editingCommentId !== comment.commentId && (
                                     <div className="comment-actions">
-                                        <button onClick={() => handleUpdateCommentClick(comment)}>수정</button>                  
-                                        <button onClick={() => handleDeleteComment(comment.commentId)}>삭제</button>
                                         <button 
-                                            className={`like-button1 ${comment.likedByCurrentUser ? 'liked' : ''}`}
-                                            onClick={() => handleToggleLike(comment.commentId)}
-                                            disabled={!currentUser}
+                                            onClick={() => handleUpdateCommentClick(comment)}
+                                            className="icon-button"
                                         >
-                                            ❤️ {comment.likeCount || 0}
+                                            <FaEdit />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteComment(comment.commentId)}
+                                            className="icon-button"
+                                        >
+                                            <FaTrashAlt />
                                         </button>
                                     </div>
                                 )}
+
+                                {/* 좋아요 버튼은 로그인한 모든 사용자에게 표시 */}
+                                <button
+                                    className={`like-button1 ${comment.likedByCurrentUser ? 'liked' : ''}`}
+                                    onClick={() => handleToggleLike(comment.commentId)}
+                                    disabled={!currentUser} // 로그인하지 않은 경우 비활성화
+                                >
+                                    ❤️ {comment.likeCount || 0}
+                                </button>
                             </div>
                         </div>
                     ))
