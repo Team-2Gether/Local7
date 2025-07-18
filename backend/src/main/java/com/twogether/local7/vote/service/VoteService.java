@@ -14,6 +14,8 @@ public interface VoteService {
     //사용자 has_voted 상태 업데이트
     void updateHasVoted(Long userId);
 
+    List<VoteVO> getAllViewCount();
+
     List<VoteVO> getUserById(Long userId);
 
     List<VoteVO> getAllRegions();

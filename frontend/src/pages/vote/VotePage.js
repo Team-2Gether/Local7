@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import VotePageComSection from './components/VotePage_comSection';
 import VotePagePost from './components/VotePage_post';
+import VotePageResult from './components/VotePage_result';
 import axios from 'axios';
 import './VotePage.css';
 
@@ -110,9 +111,9 @@ function VotePage() {
       </div>
 
       {/* 탭 전환에 따른 내용 표시 */}
-      {selectedTap === 'place' ? (
+      {selectedTap === 'place' && (
         <>
-          <h2>이달의 여행지를 투표해주세요</h2>
+          <h2>나만의 여행지를 투표해주세요</h2>
 
           {/* 해당 각 지역 선택 버튼 */}
           <div className="vote-buttons">
@@ -129,6 +130,7 @@ function VotePage() {
               </button>
             ))}
           </div>
+
           <br />
 
           {/* 투표 버튼 */}
@@ -140,12 +142,26 @@ function VotePage() {
             투표하기
           </button>
 
-          {/* 댓글 컴포넌트 */}
-          {/* <VotePageComSection /> */}
+          <br />
+
+          {/* 투표 현황보러가기 버튼 */}
+          <button
+            className="vote-result-Button"
+            onClick={() => handleTapClick('result')}
+          >
+            투표 현황보러 가기
+          </button>
         </>
-      ) : (
+      )}
+
+      {selectedTap === 'result' && (
         <>
-          {/* 이달의 게시물 컴포넌트 */}
+          <VotePageResult />
+        </>
+      )}
+
+      {selectedTap === 'post' && (
+        <>
           <VotePagePost />
         </>
       )}
