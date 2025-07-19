@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import RestaurantDetailModal from './RestaurantDetailModal';
 import './Main.css';
 
 function Main({ currentUser }) {
-  const [restaurants, setRestaurants] = useState([]);
+  // 모든 음식점 데이터를 저장하는 상태 (지도, 검색, 필터링용)
+  const [allRestaurants, setAllRestaurants] = useState([]);
+  // 필터링/정렬/검색 결과로 렌더링에 사용될 최종 목록
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [error, setError] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -15,7 +17,7 @@ function Main({ currentUser }) {
 
   // Pagination 관련 상태 추가
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
+  const pageSize = 12; // 페이지당 항목 수
 
   const mapContainerRef = useRef(null);
   const myLocationMarkerRef = useRef(null);
@@ -66,7 +68,7 @@ function Main({ currentUser }) {
 
     if (fetchedRestaurants.length > 0) mapInstance.setBounds(bounds);
     mapInstance.markerList = markers;
-  }, [handleRestaurantClick]);
+  }, []);
 
   const getDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371;
@@ -80,7 +82,8 @@ function Main({ currentUser }) {
     return R * c;
   };
 
-  const handleFilterClick = useCallback((radius, data = restaurants) => {
+  // 필터링 함수를 전체 데이터(allRestaurants) 기준으로 실행
+  const handleFilterClick = useCallback((radius) => {
     const centerLat = DONGHAE_CITY_HALL_LAT;
     const centerLon = DONGHAE_CITY_HALL_LON;
 
@@ -92,7 +95,7 @@ function Main({ currentUser }) {
     } else if (radius <= 10) {
       mapLevel = 6;
     } else if (radius <= 15 || radius <= 20) {
-      mapLevel = 7;
+      mapLevel = 9;
     }
 
     if (map) {
@@ -100,7 +103,7 @@ function Main({ currentUser }) {
       map.panTo(new window.kakao.maps.LatLng(centerLat, centerLon));
     }
 
-    const newFilteredList = data.filter(restaurant => {
+    const newFilteredList = allRestaurants.filter(restaurant => {
       if (restaurant.restaurantLat && restaurant.restaurantLon) {
         const distance = getDistance(centerLat, centerLon, restaurant.restaurantLat, restaurant.restaurantLon);
         return distance <= radius;
@@ -109,9 +112,11 @@ function Main({ currentUser }) {
     });
 
     setFilteredRestaurants(newFilteredList);
+    setCurrentPage(0); // 필터링 시 첫 페이지로 이동
     console.log(`${radius}km 반경 필터링 완료:`, newFilteredList.length, '개');
-  }, [restaurants, map, DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON]);
+  }, [allRestaurants, map, DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON]);
 
+  // 정렬 함수를 현재 표시된 필터링된 목록 기준으로 실행
   const handleSortClick = (sortBy) => {
     const sortedRestaurants = [...filteredRestaurants].sort((a, b) => {
       if (sortBy === 'rating') {
@@ -126,75 +131,38 @@ function Main({ currentUser }) {
     console.log(`${sortBy} 순으로 정렬 완료`);
   };
 
-  const fetchAllRestaurants = useCallback(async (page, size) => {
+  // 전체 음식점 데이터를 가져오는 함수 (지도/필터링용)
+  const fetchAllRestaurantsForMap = useCallback(async () => {
     try {
-      // 페이지와 크기 파라미터를 추가하여 API 호출
-      const response = await axios.get(`http://localhost:8080/api/restaurants?page=${page}&size=${size}`);
-      
+      const response = await axios.get('http://localhost:8080/api/restaurants/all');
       if (response.data?.status === 'success' && response.data.data) {
-        const { content, totalPages, pageNumber } = response.data.data;
-        
-        // Pagination 객체에서 필요한 데이터만 추출하여 상태 업데이트
-        setRestaurants(content);
-        setFilteredRestaurants(content);
-        setTotalPages(totalPages);
-        setCurrentPage(pageNumber);
-
+        setAllRestaurants(response.data.data);
+        setFilteredRestaurants(response.data.data); // 초기 목록을 전체 데이터로 설정
       } else {
-        console.error('API 응답 형식이 예상과 다릅니다.', response.data);
-        setError('음식점 데이터를 가져오지 못했습니다.');
+        console.error('지도 데이터 API 응답 형식이 예상과 다릅니다.', response.data);
+        setError('지도 데이터를 가져오지 못했습니다.');
       }
     } catch (err) {
-      setError('데이터 가져오기 오류: ' + err.message);
+      setError('지도 데이터 가져오기 오류: ' + err.message);
     }
   }, []);
-  
-  // 페이지 변경 핸들러
-  const handlePageChange = (newPage) => {
-    if (newPage >= 0 && newPage < totalPages) {
-      fetchAllRestaurants(newPage, 12); // 12는 페이지 크기
+
+  const handleSearch = () => {
+    if (searchTerm.trim() === '') {
+      setFilteredRestaurants(allRestaurants);
+    } else {
+      const results = allRestaurants.filter(restaurant =>
+        restaurant.restaurantName.includes(searchTerm.trim())
+      );
+      setFilteredRestaurants(results);
     }
+    setCurrentPage(0); // 검색 시 첫 페이지로 이동
   };
 
-  useEffect(() => {
-    const mapScriptId = "kakao-map-script";
-    if (document.getElementById(mapScriptId) || window.kakao) {
-        return;
-    }
-    const script = document.createElement("script");
-    script.id = mapScriptId;
-    script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=690813b8710fce175e3acf9121422624&libraries=services";
-    script.async = true;
-    document.head.appendChild(script);
-
-    return () => {
-        const script = document.getElementById(mapScriptId);
-        if (script) {
-            script.remove();
-        }
-    };
-  }, []);
-
-  useEffect(() => {
-    const container = mapContainerRef.current;
-    if (window.kakao && window.kakao.maps && container && !map) {
-      const options = {
-          center: new window.kakao.maps.LatLng(DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON),
-          level: 3,
-      };
-      const createdMap = new window.kakao.maps.Map(container, options);
-      setMap(createdMap);
-      
-      // 초기 데이터 로딩 시 페이징 호출
-      fetchAllRestaurants(0, 12); // 첫 페이지(0)와 기본 크기(12)로 호출
-    }
-  }, [map, mapContainerRef, fetchAllRestaurants, DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON]);
-
-  useEffect(() => {
-    if (map) {
-      updateMapMarkers(map, filteredRestaurants);
-    }
-  }, [map, filteredRestaurants, updateMapMarkers]);
+  const handleShowAllRestaurants = () => {
+    setFilteredRestaurants(allRestaurants);
+    setCurrentPage(0); // 전체보기 시 첫 페이지로 이동
+  };
 
   const handleMyPositionClick = () => {
     if (map) {
@@ -221,24 +189,88 @@ function Main({ currentUser }) {
       });
       
       myLocationMarkerRef.current = newMarker;
+
+      // 지도 현재 화면에 보이는 음식점만 필터링하여 목록에 표시
+      const bounds = map.getBounds();
+      const visibleRestaurants = allRestaurants.filter(r => {
+        if (r.restaurantLat && r.restaurantLon) {
+          const pos = new window.kakao.maps.LatLng(parseFloat(r.restaurantLat), parseFloat(r.restaurantLon));
+          return bounds.contain(pos);
+        }
+        return false;
+      });
+      setFilteredRestaurants(visibleRestaurants);
+      setCurrentPage(0); // 필터링 시 첫 페이지로 이동
     }
   };
 
-  // 검색 및 전체보기 기능은 현재 페이지에 한정됩니다.
-  // 전체 데이터에 대한 검색/필터링을 하려면 백엔드 API를 수정해야 합니다.
-  const handleSearch = () => {
-    if (searchTerm.trim() === '') {
-      setFilteredRestaurants(restaurants);
-    } else {
-      const results = restaurants.filter(restaurant =>
-        restaurant.restaurantName.includes(searchTerm.trim())
-      );
-      setFilteredRestaurants(results);
+  // 지도 초기화 및 전체 데이터 로딩
+  useEffect(() => {
+    const mapScriptId = "kakao-map-script";
+    if (document.getElementById(mapScriptId) || window.kakao) {
+        return;
     }
-  };
+    const script = document.createElement("script");
+    script.id = mapScriptId;
+    script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=690813b8710fce175e3acf9121422624&libraries=services";
+    script.async = true;
+    document.head.appendChild(script);
 
-  const handleShowAllRestaurants = () => {
-    setFilteredRestaurants(restaurants);
+    return () => {
+        const script = document.getElementById(mapScriptId);
+        if (script) {
+            script.remove();
+        }
+    };
+  }, []);
+  
+  useEffect(() => {
+    const container = mapContainerRef.current;
+    if (window.kakao && window.kakao.maps && container && !map) {
+      const options = {
+          center: new window.kakao.maps.LatLng(DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON),
+          level: 3,
+      };
+      const createdMap = new window.kakao.maps.Map(container, options);
+      setMap(createdMap);
+      
+      // '내 위치' 마커 이벤트 리스너 추가
+      window.kakao.maps.event.addListener(createdMap, 'idle', function() {
+        const bounds = createdMap.getBounds();
+        const visibleRestaurants = allRestaurants.filter(r => {
+          if (r.restaurantLat && r.restaurantLon) {
+            const pos = new window.kakao.maps.LatLng(parseFloat(r.restaurantLat), parseFloat(r.restaurantLon));
+            return bounds.contain(pos);
+          }
+          return false;
+        });
+        setFilteredRestaurants(visibleRestaurants);
+      });
+      
+      fetchAllRestaurantsForMap(); // 지도용 전체 데이터 호출
+    }
+  }, [map, allRestaurants, fetchAllRestaurantsForMap, DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON]);
+
+  // 지도 마커 업데이트는 전체 데이터에 맞춰서
+  useEffect(() => {
+    if (map && allRestaurants.length > 0) {
+      updateMapMarkers(map, allRestaurants);
+    }
+  }, [map, allRestaurants]);
+  
+  // 페이징 처리된 목록을 계산하는 useMemo
+  const paginatedRestaurants = useMemo(() => {
+    const start = currentPage * pageSize;
+    const end = start + pageSize;
+    return filteredRestaurants.slice(start, end);
+  }, [filteredRestaurants, currentPage, pageSize]);
+
+  const totalPages = Math.ceil(filteredRestaurants.length / pageSize);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
+    }
   };
 
   return (
@@ -257,7 +289,7 @@ function Main({ currentUser }) {
               <button onClick={() => handleFilterClick(1)}>1km</button>
               <button onClick={() => handleFilterClick(3)}>3km</button>
               <button onClick={() => handleFilterClick(10)}>10km</button>
-              <button onClick={() => handleFilterClick(15)}>15km</button>
+              <button onClick={() => handleFilterClick(20)}>20km</button>
             </div>
           </div>
         </div>
@@ -296,9 +328,9 @@ function Main({ currentUser }) {
           <button onClick={handleShowAllRestaurants}>전체보기</button>
         </div>
         
-        {filteredRestaurants.length > 0 ? (
+        {paginatedRestaurants.length > 0 ? (
           <ul className="restaurant-list">
-            {filteredRestaurants.map((r) => {
+            {paginatedRestaurants.map((r) => {
               const address = `${r.addrSido || ''} ${r.addrSigungu || ''} ${r.addrDong || ''} ${r.addrDetail || ''}`;
               return (
                 <li
@@ -324,7 +356,7 @@ function Main({ currentUser }) {
           <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
             이전
           </button>
-          <span>{currentPage + 1} / {totalPages}</span>
+          <span>{currentPage + 1} / {totalPages} ({filteredRestaurants.length}개)</span>
           <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage + 1 >= totalPages}>
             다음
           </button>
