@@ -42,31 +42,9 @@
         FROM TB_RESTAURANT T1
         LEFT JOIN TB_REVIEW T2 ON T1.RESTAURANT_ID = T2.RESTAURANT_ID
         GROUP BY
-            T1.RESTAURANT_ID,
-            T1.RESTAURANT_NAME,
-            T1.ADDR_SIDO,
-            T1.ADDR_SIGUNGU,
-            T1.ADDR_DONG,
-            T1.ADDR_DETAIL,
-            T1.PHONE_NUMBER,
-            T1.RESTAURANT_CATEGORY,
-            T1.RESTAURANT_LAT,
-            T1.RESTAURANT_LON,
-            T1.OPEN_HOUR,
-            T1.OPEN_MINUTE,
-            T1.CLOSE_HOUR,
-            T1.CLOSE_MINUTE,
-            T1.BREAK_START_HOUR,
-            T1.BREAK_START_MINUTE,
-            T1.BREAK_END_HOUR,
-            T1.BREAK_END_MINUTE,
-            T1.RESTAURANT_HOLIDAY,
-            T1.PARKING_INFO,
-            T1.KAKAO_PLACE_ID,
-            T1.CREATED_DATE,
-            T1.CREATED_ID,
-            T1.UPDATED_DATE,
-            T1.UPDATED_ID
+            T1.RESTAURANT_ID, T1.RESTAURANT_NAME, T1.ADDR_SIDO, T1.ADDR_SIGUNGU, T1.ADDR_DONG, T1.ADDR_DETAIL, T1.PHONE_NUMBER, T1.RESTAURANT_CATEGORY, T1.RESTAURANT_LAT, T1.RESTAURANT_LON, T1.OPEN_HOUR, T1.OPEN_MINUTE, T1.CLOSE_HOUR, T1.CLOSE_MINUTE, T1.BREAK_START_HOUR, T1.BREAK_START_MINUTE, T1.BREAK_END_HOUR, T1.BREAK_END_MINUTE, T1.RESTAURANT_HOLIDAY, T1.PARKING_INFO, T1.KAKAO_PLACE_ID, T1.CREATED_DATE, T1.CREATED_ID, T1.UPDATED_DATE, T1.UPDATED_ID
+        ORDER BY T1.RESTAURANT_ID
+        OFFSET #{pageable.offset} ROWS FETCH NEXT #{pageable.pageSize} ROWS ONLY
     </select>
 
     <select id="findRestaurantsByCategory" parameterType="string" resultMap="restaurantResultMap">
@@ -97,6 +75,10 @@
             UPDATED_ID
         FROM TB_RESTAURANT
         WHERE RESTAURANT_CATEGORY = #{category}
+    </select>
+
+    <select id="countAllRestaurants" resultType="long">
+        SELECT COUNT(*) FROM TB_RESTAURANT
     </select>
 
 </mapper>
