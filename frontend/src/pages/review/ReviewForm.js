@@ -96,10 +96,10 @@ function ReviewForm({ restaurantId, userId, existingReview, onReviewSubmitted, o
                     rows="5"
                 ></textarea>
                 <div className="form-actions">
-                    <button type="submit" className="submit-button" disabled={isSubmitting}>
+                    <button type="submit" className="submit-button11" disabled={isSubmitting}>
                         {isSubmitting ? '전송 중...' : (existingReview ? '수정 완료' : '리뷰 등록')}
                     </button>
-                    <button type="button" className="cancel-button" onClick={onCancel} disabled={isSubmitting}>
+                    <button type="button" className="cancel-button11" onClick={onCancel} disabled={isSubmitting}>
                         취소
                     </button>
                 </div>

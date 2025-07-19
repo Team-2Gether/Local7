@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { MdPushPin, MdLink } from 'react-icons/md';
 import Modal from 'react-modal';
 import axios from 'axios';
-import ReviewForm from '../review/ReviewForm'; 
-import { summarizeReview } from '../../api/AiApi';
+import ReviewForm from '../../review/ReviewForm'; 
+import { summarizeReview } from '../../../api/AiApi';
 import './RestaurantDetailModal.css';
 
 Modal.setAppElement('#root');

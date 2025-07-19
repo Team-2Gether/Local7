@@ -1,6 +1,6 @@
 /* src/review/ReviewForm.css */
 .review-form-container {
-    background-color: #333;
+    background-color: #222;
     padding: 20px;
     border-radius: 8px;
     margin-top: 20px;
@@ -40,32 +40,45 @@
 
 .form-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin-top: 15px;
+    gap: 10px;
 }
 
-.submit-button,
-.cancel-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
+.submit-button11 {
+    background-color: #FFCC00;
+    color: #000000;
+    border: 1px solid transparent; /* 기본은 투명 테두리 */
+    padding: 6px;
+    border-radius: 20px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, border-color 0.2s; /* 부드러운 테두리 전환 */
+}
+.cancel-button11 {
+    background-color: #333;
+    color: #000000;
+    border: 1px solid transparent; /* 기본은 투명 테두리 */
+    padding: 6px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s; /* 부드러운 테두리 전환 */
 }
 
-.submit-button {
-    background-color: #28a745;
-    color: white;
-    margin-left: 10px;
+.submit-button11:hover {
+    color: #fff;
+    border-color: #FFCC00;
 }
 
-.submit-button:disabled {
+.cancel-button11:hover {
+    color: #fff;
+    border-color: #FFCC00;
+}
+
+.submit-button11:disabled {
     background-color: #555;
     cursor: not-allowed;
 }
 
-.cancel-button {
-    background-color: #dc3545;
-    color: white;
+.modal-close-button {
+    margin-top:10px;
 }
