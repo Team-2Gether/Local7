@@ -16,23 +16,19 @@ function Main({ currentUser }) {
   const mapContainerRef = useRef(null);
   const myLocationMarkerRef = useRef(null);
 
-  // 동해시청의 위도, 경도
   const DONGHAE_CITY_HALL_LAT = 37.5255;
   const DONGHAE_CITY_HALL_LON = 129.1147;
 
-  // 음식점 항목 클릭 핸들러
   const handleRestaurantClick = (restaurant) => {
     setSelectedRestaurant(restaurant);
     setIsDetailModalOpen(true);
   };
 
-  // 모달 닫기 핸들러
   const handleModalClose = () => {
     setIsDetailModalOpen(false);
     setSelectedRestaurant(null);
   };
   
-  // 마커를 관리하고 지도에 표시하는 함수
   const updateMapMarkers = useCallback((mapInstance, fetchedRestaurants) => {
     if (!mapInstance) return;
 
@@ -68,7 +64,6 @@ function Main({ currentUser }) {
     mapInstance.markerList = markers;
   }, [handleRestaurantClick]);
 
-  // 거리를 계산하는 함수 (Haversine 공식)
   const getDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -81,7 +76,6 @@ function Main({ currentUser }) {
     return R * c;
   };
 
-  // 반경 필터링 함수
   const handleFilterClick = useCallback((radius, data = restaurants) => {
     const centerLat = DONGHAE_CITY_HALL_LAT;
     const centerLon = DONGHAE_CITY_HALL_LON;
@@ -114,7 +108,6 @@ function Main({ currentUser }) {
     console.log(`${radius}km 반경 필터링 완료:`, newFilteredList.length, '개');
   }, [restaurants, map, DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON]);
 
-  // 평점순 또는 댓글순으로 정렬하는 함수
   const handleSortClick = (sortBy) => {
     const sortedRestaurants = [...filteredRestaurants].sort((a, b) => {
       if (sortBy === 'rating') {
@@ -129,7 +122,6 @@ function Main({ currentUser }) {
     console.log(`${sortBy} 순으로 정렬 완료`);
   };
 
-  // 모든 음식점 데이터를 가져오는 함수
   const fetchAllRestaurants = useCallback(async (callback) => {
     try {
       const response = await axios.get('http://localhost:8080/api/restaurants');
@@ -147,7 +139,6 @@ function Main({ currentUser }) {
     }
   }, []);
 
-  // 지도 스크립트 로드 useEffect
   useEffect(() => {
     const mapScriptId = "kakao-map-script";
     if (document.getElementById(mapScriptId) || window.kakao) {
@@ -167,7 +158,6 @@ function Main({ currentUser }) {
     };
   }, []);
 
-  // 지도 초기화 및 데이터 로드 useEffect
   useEffect(() => {
     const container = mapContainerRef.current;
     if (window.kakao && window.kakao.maps && container && !map) {
@@ -184,14 +174,12 @@ function Main({ currentUser }) {
     }
   }, [map, mapContainerRef, fetchAllRestaurants, handleFilterClick, DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON]);
 
-  // 필터링된 음식점 목록이 변경되면 마커를 업데이트
   useEffect(() => {
     if (map) {
       updateMapMarkers(map, filteredRestaurants);
     }
   }, [map, filteredRestaurants, updateMapMarkers]);
 
-  // '내 위치' 버튼 클릭 핸들러
   const handleMyPositionClick = () => {
     if (map) {
       const donghaePosition = new window.kakao.maps.LatLng(DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON);
@@ -220,10 +208,8 @@ function Main({ currentUser }) {
     }
   };
 
-  // 검색 기능 핸들러
   const handleSearch = () => {
     if (searchTerm.trim() === '') {
-      // 검색어가 비어있으면 전체 목록 표시
       setFilteredRestaurants(restaurants);
     } else {
       const results = restaurants.filter(restaurant =>
@@ -233,97 +219,97 @@ function Main({ currentUser }) {
     }
   };
 
-  // **새로 추가된 함수**
-  // 전체 목록 보기 핸들러
   const handleShowAllRestaurants = () => {
     setFilteredRestaurants(restaurants);
   };
 
   return (
-    <div className="home-container1">
-      <h1>
-        환영합니다, {currentUser ? currentUser.userNickname : '게스트'} 님!
-      </h1>
-      {error && <p className="error-message">{error}</p>}
+    <div className="home-wrapper">
+      <div className="home-container">
+        <h1>
+          환영합니다, {currentUser ? currentUser.userNickname : '게스트'} 님!
+        </h1>
+        {error && <p className="error-message">{error}</p>}
 
-      <div id="map_wrap">
-        <div id="map" ref={mapContainerRef}></div>
-        <div className="custom-controls">
-          <button onClick={handleMyPositionClick} className="my-position-btn">내 위치</button>
-          <div className="filter-buttons">
-            <button onClick={() => handleFilterClick(1)}>1km</button>
-            <button onClick={() => handleFilterClick(3)}>3km</button>
-            <button onClick={() => handleFilterClick(10)}>10km</button>
-            <button onClick={() => handleFilterClick(15)}>15km</button>
+        <div id="map_wrap">
+          <div id="map" ref={mapContainerRef}></div>
+          <div className="custom-controls">
+            <button onClick={handleMyPositionClick} className="my-position-btn">내 위치</button>
+            <div className="filter-buttons">
+              <button onClick={() => handleFilterClick(1)}>1km</button>
+              <button onClick={() => handleFilterClick(3)}>3km</button>
+              <button onClick={() => handleFilterClick(10)}>10km</button>
+              <button onClick={() => handleFilterClick(15)}>15km</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="restaurant-list-header">
-        <h2>음식점 목록</h2>
-        <div className="sort-buttons1">
-            <button
-              onClick={() => handleSortClick('rating')}
-              className={activeSortBy === 'rating' ? 'active' : ''}
-            >
-              평점순
-            </button>
-            <button
-              onClick={() => handleSortClick('comments')}
-              className={activeSortBy === 'comments' ? 'active' : ''}
-            >
-              댓글순
-            </button>
-        </div>
-      </div>
-
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="음식점 이름을 검색하세요"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              handleSearch();
-            }
-          }}
-        />
-        <button onClick={handleSearch}>검색</button>
-        <button onClick={handleShowAllRestaurants}>전체보기</button>
-      </div>
-      
-      {filteredRestaurants.length > 0 ? (
-        <ul className="restaurant-list">
-          {filteredRestaurants.map((r) => {
-            const address = `${r.addrSido || ''} ${r.addrSigungu || ''} ${r.addrDong || ''} ${r.addrDetail || ''}`;
-            return (
-              <li
-                key={r.restaurantId}
-                className="restaurant-item"
-                onClick={() => handleRestaurantClick(r)}
+        <div className="restaurant-list-header">
+          <h2>음식점 목록</h2>
+          <div className="sort-buttons1">
+              <button
+                onClick={() => handleSortClick('rating')}
+                className={activeSortBy === 'rating' ? 'active' : ''}
               >
-                <h3>{r.restaurantName}</h3>
-                <p>주소: {address}</p>
-                <p>카테고리: {r.restaurantCategory}</p>
-                <p>평점: {r.averageRating ? r.averageRating.toFixed(1) : '평점 없음'}</p>
-                <p>댓글: {r.totalComments !== undefined ? r.totalComments : 0}개</p>
-              </li>
-            );
-          })}
-        </ul>
-      ) : (
-        !error && <p>데이터 로딩 중...</p>
-      )}
+                평점순
+              </button>
+              <button
+                onClick={() => handleSortClick('comments')}
+                className={activeSortBy === 'comments' ? 'active' : ''}
+              >
+                댓글순
+              </button>
+          </div>
+        </div>
 
-      {selectedRestaurant && (
-        <RestaurantDetailModal
-          isOpen={isDetailModalOpen}
-          onRequestClose={handleModalClose}
-          restaurant={selectedRestaurant}
-          currentUser={currentUser}
-        />
-      )}
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="음식점 이름을 검색하세요"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch();
+              }
+            }}
+          />
+          <button onClick={handleSearch}>검색</button>
+          <button onClick={handleShowAllRestaurants}>전체보기</button>
+        </div>
+        
+        {filteredRestaurants.length > 0 ? (
+          <ul className="restaurant-list">
+            {filteredRestaurants.map((r) => {
+              const address = `${r.addrSido || ''} ${r.addrSigungu || ''} ${r.addrDong || ''} ${r.addrDetail || ''}`;
+              return (
+                <li
+                  key={r.restaurantId}
+                  className="restaurant-item"
+                  onClick={() => handleRestaurantClick(r)}
+                >
+                  <h3>{r.restaurantName}</h3>
+                  <p>주소: {address}</p>
+                  <p>카테고리: {r.restaurantCategory}</p>
+                  <p>평점: {r.averageRating ? r.averageRating.toFixed(1) : '평점 없음'}</p>
+                  <p>댓글: {r.totalComments !== undefined ? r.totalComments : 0}개</p>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          !error && <p>데이터 로딩 중...</p>
+        )}
+
+        {selectedRestaurant && (
+          <RestaurantDetailModal
+            isOpen={isDetailModalOpen}
+            onRequestClose={handleModalClose}
+            restaurant={selectedRestaurant}
+            currentUser={currentUser}
+          />
+        )}
+      </div>
     </div>
   );
 }

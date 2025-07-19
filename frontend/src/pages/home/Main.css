@@ -1,243 +1,282 @@
-/* 기본 레이아웃 */
-.home-container1,
-body {
-    background-color: #121212;
-    color: #e0e0e0;
-    font-family: 'Noto Sans KR', sans-serif;
-    padding: 2rem;
-    min-height: 100vh;
+/* Main.css - 완성형 다크 모던 UI 스타일 */
+
+/* 전체 기본 세팅 */
+
+.home-wrapper {
+  width: 100vw;
+  box-sizing: border-box;
+  padding-left: 1rem;   /* 좌 */
+  padding-right: 7rem;  /* 우 */
+  padding-top: 1rem;    /* 위 */
+  padding-bottom: 2rem; /* 아래 */
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+.home-container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
 }
 
+/* 타이틀 */
+.home-container > h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #f0f0f0;
+  user-select: none;
+}
+
+/* 에러 메시지 */
+.error-message {
+  color: #ff6b6b;
+  background-color: #3b1a1a;
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  user-select: none;
+}
+
+/* 지도 래퍼 */
+/* 지도 영역 크기 고정 */
 #map_wrap {
-    position: relative;
-    width: 100%;
-    height: 400px;
-    margin-bottom: 2rem;
+  position: relative;
+  width: 100%;        /* 고정 px 대신 %로 */
+  max-width: 800px;   /* 최대 크기 제한 가능 */
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: visible;  /* hidden에서 visible로 */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+  border: 2px solid #2a2a2a;
+  margin: 0 auto 2rem auto;
 }
 
 #map {
-    width: 100%;
-    height: 100%;
-    border: 2px solid #333;
-    border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
 }
 
-/* 음식점 리스트: 바둑판 형태로 그리드 구성 */
-.restaurant-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 1.5rem;
-    padding: 0;
-    list-style: none;
-    margin: 0;
-}
-
-/* 음식점 항목 */
-.restaurant-item {
-    background-color: #1e1e1e;
-    border: 1px solid #333;
-    border-radius: 8px;
-    padding: 1.2rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 230px;
-}
-
-.restaurant-item:hover {
-    background-color: #2a2a2a;
-    transform: translateY(-4px);
-}
-
-/* 리뷰 작성 폼 */
-.review-form-container {
-    background-color: #1e1e1e;
-    border: 1px solid #333;
-    padding: 2rem;
-    border-radius: 8px;
-    margin-top: 2rem;
-}
-
-.review-form-container h4 {
-    margin-bottom: 1.2rem;
-    color: #fff;
-}
-
-/* 폼 그룹 */
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #ccc;
-}
-
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 0.8rem;
-    border-radius: 4px;
-    border: 1px solid #555;
-    background-color: #2a2a2a;
-    color: #e0e0e0;
-    resize: vertical;
-}
-
-.form-group select:disabled,
-.form-group textarea:disabled {
-    background-color: #444;
-    color: #888;
-}
-
-/* 오류 메시지 */
-.error-message {
-    color: #ff6b6b;
-    margin-bottom: 1rem;
-}
-
-/* 버튼 영역 */
-.form-actions {
-    display: flex;
-    gap: 1rem;
-}
-
-.form-actions button {
-    padding: 0.6rem 1.4rem;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
-}
-
-.form-actions button[type="submit"] {
-    background-color: #3f51b5;
-    color: white;
-}
-
-.form-actions button[type="submit"]:hover {
-    background-color: #5c6bc0;
-}
-
-.form-actions button[type="button"] {
-    background-color: #555;
-    color: white;
-}
-
-.form-actions button[type="button"]:hover {
-    background-color: #777;
-}
-
-.form-actions button:disabled {
-    background-color: #333;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-/* 모달 내부 다크 스타일 (선택 적용) */
-.ReactModal__Content {
-    background-color: #1f1f1f !important;
-    color: #e0e0e0 !important;
-    border-radius: 8px;
-    border: 1px solid #444;
-}
-
-/* 사용자 정의 컨트롤 영역 (내 위치 버튼과 필터 버튼 그룹) */
+/* 사용자 위치, 필터 버튼 래퍼 */
 .custom-controls {
-    position: absolute; /* 지도가 절대 위치이므로, 이 컨트롤도 절대 위치로 */
-    top: 10px; /* 지도의 위쪽에서 10px 떨어진 곳 */
-    left: 10px; /* 지도의 왼쪽에서 10px 떨어진 곳 */
-    z-index: 2; /* 지도가 z-index: 1 이므로, 버튼이 지도 위에 보이도록 2로 설정 */
-    display: flex;
-    align-items: center;
-    gap: 10px; /* '내 위치' 버튼과 필터 버튼 그룹 사이의 간격 */
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 10;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-/* 필터 버튼들 */
-.filter-buttons {
-    display: flex;
-    gap: 5px; /* 필터 버튼들 사이의 간격 */
-}
-
-/* 모든 버튼에 대한 기본 스타일 */
+/* 공통 버튼 스타일 */
 .custom-controls button,
 .my-position-btn {
-    padding: 8px 12px;
-    border: 1px solid #555;
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s;
+  background-color: #292929;
+  border: 1.8px solid #555;
+  color: #ddd;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  user-select: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .custom-controls button:hover,
 .my-position-btn:hover {
-    background-color: #2a2a2a;
+  background-color: #3c3c3c;
+  border-color: #f8d800;
+  color: #fff;
+  box-shadow: 0 0 8px #f8d800;
 }
 
-/* sort-buttons 스타일 */
-.sort-buttons1 {
-    display: flex;
-    margin-bottom: 10px;
-    gap: 5px;
-    /* position: absolute; 스타일은 제거합니다 */
+/* 필터 버튼 그룹 */
+.filter-buttons {
+  display: flex;
+  gap: 8px;
 }
 
-/* 클릭된 정렬 버튼 스타일 */
-.sort-buttons1 button.active {
-    background-color: #4a4a4a; /* 활성화된 버튼의 배경색 (약간 밝은 회색) */
-    color: #fff; /* 활성화된 버튼의 글자색 (흰색) */
-    font-weight: bold;
-    border: 1px solid #4a4a4a;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2); /* 은은한 흰색 그림자 효과 */
-}
-
-/* 새로운 부모 컨테이너에 대한 스타일 추가 */
+/* 음식점 목록 헤더 */
 .restaurant-list-header {
-    display: flex;
-    justify-content: space-between; /* 제목과 버튼들을 양 끝으로 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
-    margin-top: 20px;
-    padding: 0 10px; /* 좌우 패딩 추가 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.9rem;
+  padding: 0 6px;
 }
 
-/* h2 태그의 마진을 조정하여 정렬 */
 .restaurant-list-header h2 {
-    margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  user-select: none;
+}
+
+/* 정렬 버튼 */
+.sort-buttons1 {
+  display: flex;
+  gap: 8px;
+}
+
+.sort-buttons1 button {
+  background-color: #292929;
+  border: 1.5px solid transparent;
+  padding: 6px 14px;
+  border-radius: 8px;
+  color: #ddd;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+.sort-buttons1 button:hover {
+  background-color: #3c3c3c;
+  border-color: #f8d800;
+  color: #fff;
+  box-shadow: 0 0 10px #f8d800;
+}
+
+.sort-buttons1 button.active {
+  background-color: #f8d800;
+  color: #222;
+  border-color: #f8d800;
+  font-weight: 700;
+  box-shadow: 0 0 12px #f8d800;
 }
 
 /* 검색 컨테이너 */
 .search-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 0 10px; /* 좌우 패딩 추가 */
+  display: flex;
+  gap: 12px;
+  margin: 1.5rem 0 2rem 0;
+  padding: 0 6px;
 }
 
-/* 검색 입력창 */
 .search-container input[type="text"] {
-    flex-grow: 1; /* 남는 공간을 모두 차지하도록 설정 */
-    padding: 8px 12px;
-    border-radius: 4px;
-    border: 1px solid #555;
-    background-color: #2a2a2a;
-    color: #e0e0e0;
-    font-size: 14px;
+  flex-grow: 1;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1.8px solid #444;
+  background-color: #222;
+  color: #eee;
+  outline-offset: 2px;
+  transition: border-color 0.3s ease;
+  user-select: text;
 }
 
-/* 검색 버튼 */
-.search-container1 button {
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 1px solid #fdfdfd;
-    background-color: white;
-    cursor: pointer;
+.search-container input[type="text"]::placeholder {
+  color: #999;
+}
+
+.search-container input[type="text"]:focus {
+  border-color: #f8d800;
+  background-color: #2b2b2b;
+  color: #fff;
+}
+
+/* 검색, 전체보기 버튼 */
+.search-container button {
+  background-color: #f8d800;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 700;
+  color: #222;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 0 12px #f8d800;
+  transition: background-color 0.3s ease;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.search-container button:hover {
+  background-color: #e6c800;
+}
+
+/* 음식점 리스트 */
+.restaurant-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0 6px 40px 6px;
+}
+
+/* 음식점 아이템 */
+.restaurant-item {
+  background-color: #222;
+  border-radius: 14px;
+  padding: 1.3rem 1.4rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.7);
+  cursor: pointer;
+  color: #ddd;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 260px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  user-select: none;
+  border: 2px solid transparent;
+}
+
+.restaurant-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(248, 216, 0, 0.6);
+  border-color: #f8d800;
+}
+
+.restaurant-item h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  overflow-wrap: break-word;
+}
+
+.restaurant-item p {
+  margin: 0.18rem 0;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  color: #bbb;
+  flex-shrink: 0;
+}
+
+/* 반응형 모바일 대응 */
+@media (max-width: 480px) {
+  .home-wrapper {
+    padding: 1rem;
+  }
+
+  .restaurant-list {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+
+  .restaurant-item {
+    height: auto;
+    padding: 1rem;
+  }
+
+  .custom-controls {
+    top: 8px;
+    left: 8px;
+    gap: 8px;
+  }
+
+  .search-container button {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+
+  .search-container input[type="text"] {
+    font-size: 0.9rem;
+  }
 }
