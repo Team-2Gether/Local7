@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom'; // Link import 추가
 
 function FollowerList({ currentUser }) {
     const { userId: urlUserId } = useParams(); // URL 파라미터에서 userId를 가져옵니다.
@@ -59,7 +59,7 @@ function FollowerList({ currentUser }) {
         return <div className="follow-list-container error-message">{error}</div>;
     }
 
-    return (
+        return (
         <div className="follow-list-container">
             <h2 className="follow-list-title">
                 {targetUserId === currentUser?.userId ? "내 팔로워 목록" : "팔로워 목록"}
@@ -70,15 +70,18 @@ function FollowerList({ currentUser }) {
                 <ul className="follow-items">
                     {followers.map((follow) => (
                         <li key={follow.followerId} className="follow-item">
-                            <img
-                                src={follow.followerUserProfileImageUrl || "https://via.placeholder.com/50"}
-                                alt="프로필"
-                                className="follow-profile-image"
-                            />
-                            <div className="follow-details">
-                                <p className="follow-nickname">{follow.followerUserNickname}</p>
-                                <p className="follow-id">@{follow.followerUserLoginId}</p>
-                            </div>
+                            {/* Link 컴포넌트 수정 */}
+                            <Link to={`/user/profile/${follow.followerUserLoginId}`} className="follow-link">
+                                <img
+                                    src={follow.followerUserProfileImageUrl || "https://via.placeholder.com/50"}
+                                    alt="프로필"
+                                    className="profile-image"
+                                />
+                                <div className="follow-details">
+                                    <p className="follow-nickname">{follow.followerUserNickname}</p>
+                                    <p className="follow-id">@{follow.followerUserLoginId}</p>
+                                </div>
+                            </Link>
                         </li>
                     ))}
                 </ul>

@@ -2,16 +2,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom'; // Link 추가
 import axios from 'axios';
-import OtherUserPosts from './OtherUserPosts'; // OtherUserPosts 컴포넌트 import 추가
+import OtherUserPosts from './OtherUserPosts';
 
 function OtherUser({ currentUser }) {
     const { userLoginId } = useParams();
     const [otherUserProfile, setOtherUserProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isFollowing, setIsFollowing] = useState(false); // 팔로우 상태 추가
-    const [followerCount, setFollowerCount] = useState(0); // 팔로워 수 상태 추가
-    const [followingCount, setFollowingCount] = useState(0); // 팔로잉 수 상태 추가
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [followerCount, setFollowerCount] = useState(0);
+    const [followingCount, setFollowingCount] = useState(0);
 
 
     useEffect(() => {
@@ -83,7 +83,7 @@ function OtherUser({ currentUser }) {
         };
 
         fetchUserProfileAndFollowStatus();
-    }, [userLoginId, currentUser]); // userLoginId 또는 currentUser 변경 시 재실행
+    }, [userLoginId, currentUser]);
 
     const handleFollowToggle = async () => {
         if (!currentUser || !currentUser.userId) {
@@ -106,7 +106,6 @@ function OtherUser({ currentUser }) {
             if (response.status === 200 && response.data.success) {
                 setIsFollowing(response.data.isFollowing);
                 alert(response.data.message);
-                // 팔로우/언팔로우 성공 시 팔로워/팔로잉 수 즉시 업데이트
                 if (response.data.isFollowing) {
                     setFollowerCount(prev => prev + 1);
                 } else {
@@ -133,7 +132,6 @@ function OtherUser({ currentUser }) {
         return <div className="user-profile-container no-user">사용자를 찾을 수 없습니다.</div>;
     }
 
-    // 현재 접속한 유저와 프로필의 유저가 다를 경우에만 팔로우 버튼 표시
     const showFollowButton = currentUser && currentUser.userId !== otherUserProfile.userId;
 
     return (
@@ -155,10 +153,10 @@ function OtherUser({ currentUser }) {
                     <p><strong>소개:</strong> {otherUserProfile.userBio || "작성된 소개가 없습니다."}</p>
                     <p><strong>가입일:</strong> {new Date(otherUserProfile.createDate).toLocaleDateString()}</p>
                     <p>
-                        <strong>팔로워:</strong> <Link to={`/user/profile/${otherUserProfile.userLoginId}/followers`}>{followerCount}</Link>
+                        <strong>팔로워:</strong> <Link to={`/user/profile/${otherUserProfile.userId}/followers`}>{followerCount}</Link>
                     </p>
                     <p>
-                        <strong>팔로잉:</strong> <Link to={`/user/profile/${otherUserProfile.userLoginId}/followings`}>{followingCount}</Link>
+                        <strong>팔로잉:</strong> <Link to={`/user/profile/${otherUserProfile.userId}/followings`}>{followingCount}</Link>
                     </p>
                 </div>
                 {showFollowButton && (
@@ -167,7 +165,6 @@ function OtherUser({ currentUser }) {
                     </button>
                 )}
             </div>
-            {/* OtherUserPosts 컴포넌트 추가 */}
             <OtherUserPosts userId={otherUserProfile.userId} />
         </div>
     );

@@ -38,7 +38,7 @@ export function AppContent() {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
     const [isAiModalOpen, setIsAiModalOpen] = useState(false);
-    const [selectedCity, setSelectedCity] = useState("속초"); // selectedCity 상태를 AppContent로 이동
+    const [selectedCity, setSelectedCity] = useState("속초");
 
     const navigate = useNavigate();
 
@@ -136,19 +136,18 @@ export function AppContent() {
                 {
                     isLoggedIn && (
                         <div className="sidebar-container">
-                            <Sidebar onMenuItemClick={handleSidebarMenuItemClick} /> {/* onMenuItemClick 전달 */}
+                            <Sidebar onMenuItemClick={handleSidebarMenuItemClick} />
                         </div>
                     )
                 }
 
                 <div className="content-with-sidebar">
                     <Routes>
-                        {/* 로그인 상태에 따른 초기 페이지 라우트 */}
                         <Route
                             path="/"
                             element={isLoggedIn
                                 ? (
-                                    <Home currentUser={currentUser} selectedCity={selectedCity} setSelectedCity={setSelectedCity} /> // Home 컴포넌트에 selectedCity와 setSelectedCity 전달
+                                    <Home currentUser={currentUser} selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
                                 )
                                 : (
                                     <div className="initial-login-screen">
@@ -164,7 +163,6 @@ export function AppContent() {
                                         </div>
                                     </div>
                                 )} />
-                        {/* /restaurants 라우트 (Main 컴포넌트가 담당) */}
                         <Route path="/restaurants" element={<Main currentUser={currentUser} />} />
                         <Route
                             path="/pick"
@@ -209,7 +207,7 @@ export function AppContent() {
                                 )}>
                             <Route
                                 index="index"
-                                element={<UserInfo currentUser={currentUser} /> // currentUser를 props로 전달
+                                element={<UserInfo currentUser={currentUser} />
                                 }
                             />
                             <Route
@@ -240,11 +238,11 @@ export function AppContent() {
                             />
                         </Route>
 
-                        {/* OtherUser 페이지 라우트: 다른 사용자의 프로필 (팔로워/팔로잉 목록 포함) */}
+                        {/* OtherUser 페이지 라우트: 다른 사용자의 프로필 */}
                         <Route path="/user/profile/:userLoginId" element={<OtherUser currentUser={currentUser} />} />
-                        {/* OtherUser의 팔로워/팔로잉 목록을 위한 중첩 라우트 추가 (OtherUser 내부에서 Outlet 사용하지 않음) */}
-                        <Route path="/user/profile/:userLoginId/followers" element={<FollowerList currentUser={currentUser} />} />
-                        <Route path="/user/profile/:userLoginId/followings" element={<FollowingList currentUser={currentUser} />} />
+                        {/* 다른 사용자의 팔로워/팔로잉 목록 라우트 추가 - userId를 사용 */}
+                        <Route path="/user/profile/:userId/followers" element={<FollowerList currentUser={currentUser} />} />
+                        <Route path="/user/profile/:userId/followings" element={<FollowingList currentUser={currentUser} />} />
 
 
                         <Route
@@ -289,25 +287,22 @@ export function AppContent() {
     );
 }
 
-function UserInfo({ currentUser }) { // currentUser를 props로 받음
+function UserInfo({ currentUser }) {
     const [userData, setUserData] = useState(null);
-    const [followerCount, setFollowerCount] = useState(0); // 팔로워 수 상태 추가
-    const [followingCount, setFollowingCount] = useState(0); // 팔로잉 수 상태 추가
-    const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
-    const [error, setError] = useState(null); // <--- 이 줄을 추가합니다.
-    const { userLoginId } = useParams(); // URL에서 userLoginId를 가져올 수 있도록 추가 (다른 사용자 프로필 조회 시)
+    const [followerCount, setFollowerCount] = useState(0);
+    const [followingCount, setFollowingCount] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { userLoginId } = useParams();
 
     useEffect(() => {
         const fetchUserDataAndFollowCounts = async () => {
-            setIsLoading(true); // 데이터 로딩 시작 시 true로 설정
-            setError(null); // <--- 에러 상태 초기화 추가
+            setIsLoading(true);
+            setError(null);
 
-            let targetUserLoginId = currentUser?.userLoginId; // 기본값은 현재 로그인된 사용자
-            let targetUserId = currentUser?.userId; // 기본값은 현재 로그인된 사용자 ID
+            let targetUserLoginId = currentUser?.userLoginId;
+            let targetUserId = currentUser?.userId;
 
-            // MyPage의 UserInfo 컴포넌트는 항상 로그인된 사용자의 정보를 보여주므로,
-            // userLoginId URL 파라미터를 사용하지 않습니다.
-            // OtherUser 컴포넌트의 UserInfo 역할을 OtherUser 자체에서 하므로 여기서는 currentUser만 사용합니다.
             if (currentUser && currentUser.userId) {
                 targetUserLoginId = currentUser.userLoginId;
                 targetUserId = currentUser.userId;
@@ -318,27 +313,25 @@ function UserInfo({ currentUser }) { // currentUser를 props로 받음
             }
 
             try {
-                // 1. 사용자 프로필 정보 가져오기 (이미 currentUser에 있으므로 API 호출은 생략 가능, 하지만 일관성을 위해 유지)
                 const userProfileResponse = await axios.get(`http://localhost:8080/api/user/profile/loginid/${targetUserLoginId}`);
                 if (userProfileResponse.data.status === "success") {
                     setUserData(userProfileResponse.data.userProfile);
-                    targetUserId = userProfileResponse.data.userProfile.userId; // 가져온 프로필에서 userId 업데이트
+                    targetUserId = userProfileResponse.data.userProfile.userId;
                 } else {
                     console.error("사용자 프로필을 가져오는 데 실패했습니다:", userProfileResponse.data.message);
                     setUserData(null);
-                    setError(userProfileResponse.data.message || "사용자 프로필을 불러오는 데 실패했습니다."); // <--- 에러 설정
-                    setIsLoading(false); // 로딩 종료
-                    return; // 사용자 프로필 없으면 팔로우 정보도 가져올 필요 없음
+                    setError(userProfileResponse.data.message || "사용자 프로필을 불러오는 데 실패했습니다.");
+                    setIsLoading(false);
+                    return;
                 }
             } catch (error) {
                 console.error("사용자 프로필 조회 중 오류 발생:", error);
                 setUserData(null);
-                setError("사용자 프로필을 불러오는 중 오류가 발생했습니다."); // <--- 에러 설정
-                setIsLoading(false); // 로딩 종료
+                setError("사용자 프로필을 불러오는 중 오류가 발생했습니다.");
+                setIsLoading(false);
                 return;
             }
 
-            // 2. 팔로워 및 팔로잉 수 가져오기 (사용자 프로필을 성공적으로 가져온 후)
             if (targetUserId) {
                 try {
                     const followerCountResponse = await axios.get(`http://localhost:8080/api/follows/followers/count/${targetUserId}`);
@@ -362,17 +355,17 @@ function UserInfo({ currentUser }) { // currentUser를 props로 받음
                     console.error("팔로잉 수 조회 중 오류 발생:", error);
                 }
             }
-            setIsLoading(false); // 모든 데이터 로딩 완료 후 false로 설정
+            setIsLoading(false);
         };
 
         fetchUserDataAndFollowCounts();
-    }, [currentUser]); // currentUser가 변경될 때마다 재호출 (UserInfo는 현재 로그인된 사용자만 다룸)
+    }, [currentUser]);
 
     if (isLoading) {
-        return <p>사용자 정보를 불러오는 중입니다...</p>; // 로딩 중 메시지
+        return <p>사용자 정보를 불러오는 중입니다...</p>;
     }
 
-    if (error) { // <--- 에러가 발생했을 때 메시지 표시
+    if (error) {
         return <p className="error-message">{error}</p>;
     }
 
