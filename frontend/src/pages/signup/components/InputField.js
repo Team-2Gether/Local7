@@ -2,7 +2,7 @@ import React from 'react';
 
 function InputField({ label, id, name, type = 'text', value, onChange, onBlur, required, disabled }) {
   return (
-    <div className="form-group">
+    <div className="form-group1">
       <label htmlFor={id}>{label}</label>
       <input
         type={type}

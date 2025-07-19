@@ -6,7 +6,7 @@ function AuthButton({ onClick, disabled, children, className }) {
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={className}
+      className={`${className}1`} // 숫자 접미사 붙임
     >
       {children}
     </button>

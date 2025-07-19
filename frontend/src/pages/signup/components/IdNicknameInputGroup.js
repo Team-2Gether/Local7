@@ -11,14 +11,14 @@ function IdNicknameInputGroup({
   onChange,
   onBlur,
   onClickCheck,
-  isDuplicate, // null: not checked, true: duplicate, false: available
+  isDuplicate,
   fieldMessage,
   required = true
 }) {
   return (
-    <div className="form-group">
+    <div className="form-group1">
       <label htmlFor={id}>{label}</label>
-      <div className="input-with-button">
+      <div className="input-with-button1">
         <InputField
           id={id}
           name={name}
@@ -31,13 +31,13 @@ function IdNicknameInputGroup({
         <AuthButton
           onClick={onClickCheck}
           disabled={!value}
-          className="btn-check-duplicate"
+          className="btn-check-duplicate1"
         >
           중복확인
         </AuthButton>
       </div>
-      {fieldMessage && <StatusMessage type="error" message={fieldMessage} />} {/* StatusMessage 사용 */}
-      {isDuplicate === false && <StatusMessage type="success" message={`사용 가능한 ${label.slice(0, -1)}입니다.`} />} {/* StatusMessage 사용 */}
+      {fieldMessage && <StatusMessage type="error" message={fieldMessage} />}
+      {isDuplicate === false && <StatusMessage type="success" message={`사용 가능한 ${label.slice(0, -1)}입니다.`} />}
     </div>
   );
 }

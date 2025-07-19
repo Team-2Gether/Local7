@@ -1,12 +1,12 @@
 import React from 'react';
 import InputField from './InputField';
-import StatusMessage from './StatusMessage'; // Corrected import path
+import StatusMessage from './StatusMessage';
 
 function PasswordConfirmField({ label, id, name, value, onChange, userPassword, required }) {
   const showMismatchError = value && userPassword !== value;
 
   return (
-    <div className="form-group">
+    <div className="form-group1">
       <InputField
         label={label}
         id={id}

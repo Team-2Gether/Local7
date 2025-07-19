@@ -4,11 +4,11 @@ import useSignupForm from './hooks/useSignupForm';
 
 import '../../assets/css/SignupForm.css';
 import StatusMessage from './components/StatusMessage';
-import IdNicknameInputGroup from './components/IdNicknameInputGroup';
-import InputField from './components/InputField';
-import PasswordConfirmField from './components/PasswordConfirmField';
-import EmailVerificationGroup from './components/EmailVerificationGroup'; 
-import TextAreaField from './components/TextAreaField';
+import IdNicknameInputGroup1 from './components/IdNicknameInputGroup';
+import InputField1 from './components/InputField';
+import PasswordConfirmField1 from './components/PasswordConfirmField';
+import EmailVerificationGroup1 from './components/EmailVerificationGroup'; 
+import TextAreaField1 from './components/TextAreaField';
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -28,12 +28,12 @@ function SignupPage() {
   } = useSignupForm(navigate);
 
   return (
-    <div className="signup-container">
+    <div className="signup-container1">
       <h2>회원가입</h2>
       {messages.general && <StatusMessage type={messages.general.includes('성공') ? 'success' : 'error'} message={messages.general} />}
 
-      <form onSubmit={handleSubmit}> {/* 훅에서 반환된 handleSubmit을 직접 사용 */}
-        <IdNicknameInputGroup
+      <form onSubmit={handleSubmit}>
+        <IdNicknameInputGroup1
           label="아이디:"
           id="userLoginId"
           name="userLoginId"
@@ -45,7 +45,7 @@ function SignupPage() {
           fieldMessage={messages.userLoginId}
         />
 
-        <InputField
+        <InputField1
           label="비밀번호:"
           id="userPassword"
           name="userPassword"
@@ -55,7 +55,7 @@ function SignupPage() {
           required
         />
 
-        <PasswordConfirmField
+        <PasswordConfirmField1
           label="비밀번호 확인:"
           id="userPasswordConfirm"
           name="userPasswordConfirm"
@@ -65,12 +65,12 @@ function SignupPage() {
           required
         />
         
-        <EmailVerificationGroup
+        <EmailVerificationGroup1
           userEmail={formData.userEmail}
           verificationCode={verificationCode}
           emailVerified={emailVerified}
           emailSent={emailSent}
-          handleEmailChange={handleChange} // formData의 handleChange를 사용
+          handleEmailChange={handleChange}
           handleVerificationCodeChange={handleVerificationCodeChange}
           handleSendVerificationCode={handleSendVerificationCode}
           handleVerifyEmailCode={handleVerifyEmailCode}
@@ -80,7 +80,7 @@ function SignupPage() {
           emailStatusMessage={messages.emailStatus}
         />
 
-        <IdNicknameInputGroup
+        <IdNicknameInputGroup1
           label="닉네임:"
           id="userNickname"
           name="userNickname"
@@ -92,7 +92,7 @@ function SignupPage() {
           fieldMessage={messages.nickname}
         />
 
-        <InputField
+        <InputField1
           label="이름:"
           id="userUsername"
           name="userUsername"
@@ -102,7 +102,7 @@ function SignupPage() {
           required
         />
 
-        <InputField
+        <InputField1
           label="프로필 이미지 URL (선택 사항):"
           id="userProfileImageUrl"
           name="userProfileImageUrl"
@@ -111,7 +111,7 @@ function SignupPage() {
           onChange={handleChange}
         />
 
-        <TextAreaField
+        <TextAreaField1
           label="자기소개 (선택 사항):"
           id="userBio"
           name="userBio"
@@ -119,7 +119,7 @@ function SignupPage() {
           onChange={handleChange}
         />
 
-        <button type="submit" className="btn-submit">회원가입</button>
+        <button type="submit" className="btn-submit1">회원가입</button>
       </form>
     </div>
   );

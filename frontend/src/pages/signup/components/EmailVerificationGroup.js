@@ -1,7 +1,7 @@
 import React from 'react';
 import InputField from './InputField';
 import AuthButton from './AuthButton';
-import StatusMessage from './StatusMessage'; // Corrected import path
+import StatusMessage from './StatusMessage';
 
 function EmailVerificationGroup({
   userEmail,
@@ -15,12 +15,12 @@ function EmailVerificationGroup({
   checkDuplicateEmail,
   emailFieldMessage,
   verificationCodeFieldMessage,
-  emailStatusMessage // use this prop for all email-related status messages
+  emailStatusMessage
 }) {
   return (
-    <div className="form-group">
+    <div className="form-group1">
       <label htmlFor="userEmail">이메일:</label>
-      <div className="email-input-group">
+      <div className="email-input-group1">
         <InputField
           id="userEmail"
           name="userEmail"
@@ -36,7 +36,7 @@ function EmailVerificationGroup({
           <AuthButton
             onClick={handleSendVerificationCode}
             disabled={emailSent || !userEmail}
-            className="btn-send-code"
+            className="btn-send-code1"
           >
             {emailSent ? '재전송' : '인증코드 전송'}
           </AuthButton>
@@ -48,9 +48,9 @@ function EmailVerificationGroup({
       {emailStatusMessage === 'failed' && <StatusMessage type="error" message="이메일 인증에 실패했습니다." />}
 
       {emailSent && !emailVerified && (
-        <div className="form-group">
+        <div className="form-group1">
           <label htmlFor="verificationCode">인증 코드 (4자리):</label>
-          <div className="email-input-group">
+          <div className="email-input-group1">
             <input
               type="text"
               id="verificationCode"
@@ -60,7 +60,7 @@ function EmailVerificationGroup({
               maxLength="4"
               required
             />
-            <button type="button" onClick={handleVerifyEmailCode} className="btn-verify-code">
+            <button type="button" onClick={handleVerifyEmailCode} className="btn-verify-code1">
               인증 확인
             </button>
           </div>

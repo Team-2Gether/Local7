@@ -1,150 +1,162 @@
-/* src/pages/signup/SignupForm.css */
-/* 기존 SignupForm.css 내용 */
+body {
+  background-color: #1a1a1a !important;
+}
 
-.signup-container {
- 
+.signup-container1 {
   max-width: 500px;
-  margin: 50px auto;
-  padding: 30px;
+  padding: 40px 50px;
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   background-color: #fff;
+  margin: 40px auto;
 }
 
 h2 {
   text-align: center;
   color: #333;
   margin-bottom: 30px;
+  font-weight: 700;
 }
 
-.form-group label {
+.form-group1 {
+  margin-bottom: 18px;
+}
+
+.form-group1 label {
   display: block;
-  font-weight: bold;
+  font-weight: 600;
   color: #555;
+  margin-bottom: 6px;
 }
 
-.form-group input[type="text"],
-.form-group input[type="password"],
-.form-group input[type="email"],
-.form-group textarea {
+.form-group1 input[type="text"],
+.form-group1 input[type="password"],
+.form-group1 input[type="email"],
+.form-group1 textarea {
   width: 100%;
-  padding: 8px;
+  padding: 10px 12px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  box-sizing: border-box; /* Padding includes border in element's total width and height */
+  box-sizing: border-box;
   font-size: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.form-group input[type="text"]:focus,
-.form-group input[type="password"]:focus,
-.form-group input[type="email"]:focus,
-.form-group textarea:focus {
+.form-group1 input[type="text"]:focus,
+.form-group1 input[type="password"]:focus,
+.form-group1 input[type="email"]:focus,
+.form-group1 textarea:focus {
   border-color: #007bff;
   outline: none;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
 }
 
-.form-group textarea {
+.form-group1 textarea {
   resize: vertical;
   min-height: 80px;
 }
 
-.input-with-button {
+.input-with-button1 {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 
-.input-with-button input {
+.input-with-button1 input {
   flex-grow: 1;
 }
 
-.email-input-group {
+.email-input-group1 {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 
-.email-input-group input {
+.email-input-group1 input {
   flex-grow: 1;
 }
 
-.btn-send-code,
-.btn-verify-code,
-.btn-check-duplicate {
-  padding: 4px 6px; /* 패딩을 줄여 크기 축소 */
+.btn-send-code1,
+.btn-verify-code1,
+.btn-check-duplicate1 {
+  padding: 5px 10px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
   white-space: nowrap;
-  height: 35px;
+  height: 36px;
+  transition: background-color 0.3s ease;
 }
 
-.btn-send-code:hover,
-.btn-verify-code:hover,
-.btn-check-duplicate:hover {
+.btn-send-code1:hover,
+.btn-verify-code1:hover,
+.btn-check-duplicate1:hover {
   background-color: #0056b3;
 }
 
-.btn-send-code:disabled,
-.btn-verify-code:disabled,
-.btn-check-duplicate:disabled {
+.btn-send-code1:disabled,
+.btn-verify-code1:disabled,
+.btn-check-duplicate1:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
 }
 
-.btn-submit {
+.btn-submit1 {
   width: 100%;
-  height: 35px;
+  height: 40px;
   padding: 8px 15px;
   background-color: #28a745;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 20px;
+  font-size: 17px;
+  font-weight: 700;
+  margin-top: 25px;
+  transition: background-color 0.3s ease;
 }
 
-.btn-submit:hover {
+.btn-submit1:hover {
   background-color: #218838;
 }
 
-.message {
+.message1 {
   text-align: center;
-  padding: 10px;
+  padding: 10px 0;
   margin-bottom: 20px;
   border-radius: 5px;
+  font-weight: 600;
 }
 
-.message.success {
+.message1.success1 {
   background-color: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
 }
 
-.message.error {
+.message1.error1 {
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
 }
 
-.info-message {
+.info-message1 {
   color: #007bff;
   font-size: 0.9em;
   margin-top: 5px;
 }
 
-.error-message {
+.error-message1 {
   color: #dc3545;
   font-size: 0.9em;
   margin-top: 5px;
 }
 
-.success-message {
+.success-message1 {
   color: #28a745;
   font-size: 0.9em;
   margin-top: 5px;

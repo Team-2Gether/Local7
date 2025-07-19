@@ -2,7 +2,7 @@ import React from 'react';
 
 function TextAreaField({ label, id, name, value, onChange, required }) {
   return (
-    <div className="form-group">
+    <div className="form-group1">
       <label htmlFor={id}>{label}</label>
       <textarea
         id={id}
