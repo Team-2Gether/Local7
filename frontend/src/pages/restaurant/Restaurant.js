@@ -4,7 +4,6 @@ import { useRestaurants, useMap, usePagination } from './hooks/useRestaurantHook
 import './Restaurant.css';
 
 function Restaurant({ currentUser }) {
-  // 상태 및 로직을 커스텀 훅으로 분리하여 사용
   const { 
     allRestaurants, 
     filteredRestaurants, 
@@ -19,20 +18,6 @@ function Restaurant({ currentUser }) {
     setFilteredRestaurants,
   } = useRestaurants();
 
-  const {
-    map,
-    mapContainerRef,
-    handleMyPositionClick,
-    handleFilterClick
-  } = useMap(allRestaurants, setFilteredRestaurants);
-  
-  const {
-    paginatedItems: paginatedRestaurants,
-    currentPage,
-    totalPages,
-    handlePageChange,
-  } = usePagination(filteredRestaurants, 12);
-
   // 모달 관련 상태
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
@@ -46,6 +31,21 @@ function Restaurant({ currentUser }) {
     setIsDetailModalOpen(false);
     setSelectedRestaurant(null);
   }, []);
+
+  // useMap 훅 호출 시 handleRestaurantClick 함수를 인자로 전달
+  const {
+    map,
+    mapContainerRef,
+    handleMyPositionClick,
+    handleFilterClick
+  } = useMap(allRestaurants, setFilteredRestaurants, handleRestaurantClick);
+  
+  const {
+    paginatedItems: paginatedRestaurants,
+    currentPage,
+    totalPages,
+    handlePageChange,
+  } = usePagination(filteredRestaurants, 12);
 
   return (
     <div className="home-wrapper">
