@@ -89,9 +89,9 @@ function Main({ currentUser }) {
 
     let mapLevel = 3;
     if (radius <= 1) {
-      mapLevel = 4;
-    } else if (radius <= 3) {
       mapLevel = 3;
+    } else if (radius <= 3) {
+      mapLevel = 4;
     } else if (radius <= 10) {
       mapLevel = 6;
     } else if (radius <= 15 || radius <= 20) {
