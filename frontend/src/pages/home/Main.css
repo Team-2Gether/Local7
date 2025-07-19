@@ -6,6 +6,7 @@
 
 /* 전체 페이지 래퍼, 화면 전체 너비, 좌우 여백 조절 */
 .home-wrapper {
+background-color:#212121;
   width: 100vw;                  /* 화면 가로 전체 */
   box-sizing: border-box;        /* 패딩, 테두리까지 포함한 너비 계산 */
   padding-left: 1rem;            /* 왼쪽 여백 */
@@ -20,7 +21,7 @@
 /* 내부 컨텐츠 래퍼, 최대 너비 지정, 세로 방향 배치 */
 .home-container {
   width: 100%;                  /* 부모 너비 100% 차지 */
-  max-width: 1200px;            /* 최대 1200px 너비 제한 */
+  max-width: 1300px;            /* 최대 1200px 너비 제한 */
   display: flex;
   flex-direction: column;       /* 내부 아이템 세로 배치 */
 }
@@ -207,27 +208,21 @@
   padding: 0 6px;
 }
 
-.search-container input[type="text"] {
+.search-container input {
   flex-grow: 1;
   padding: 10px 14px;
   font-size: 1rem;
   border-radius: 12px;
-  border: 1.8px solid #444;
+  border: 1px solid #444;
   background-color: #222;
   color: #eee;
   outline-offset: 2px;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.1s ease;
   user-select: text;
 }
 
-.search-container input[type="text"]::placeholder {
-  color: #999;
-}
-
-.search-container input[type="text"]:focus {
-  border-color: #f8d800;
-  background-color: #2b2b2b;
-  color: #fff;
+.search-container input:focus {
+  border-color: #79AAFF;
 }
 
 /* 검색 및 전체보기 버튼 - .tab-button 스타일 적용 */
@@ -238,20 +233,12 @@
   border-radius: 20px;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
   font-weight: 600;
   user-select: none;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
   flex-shrink: 0;
 }
 
 .search-container button:hover {
-  border-color: #FFCC00;
-}
-
-.search-container button.active {
-  background: #FFCC00;
-  color: #000;
   border-color: #FFCC00;
 }
 
