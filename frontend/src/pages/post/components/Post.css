@@ -251,11 +251,6 @@
     background-color: #444;
 }
 
-.search-input::placeholder {
-    outline: none;
-    border-color: #79AAFF;
-    background-color: #444;
-}
 
 .search-input:focus {
     outline: none;
