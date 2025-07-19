@@ -33,4 +33,6 @@ public class RestaurantVO {
 
     private Double averageRating;       // 평균 평점
     private Integer totalComments;      // 총 댓글 수
+
+    private String kakaoPlaceId;        // 카카오
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MdPushPin } from 'react-icons/md';
+import { MdPushPin, MdLink } from 'react-icons/md';
 import Modal from 'react-modal';
 import axios from 'axios';
 import ReviewForm from '../review/ReviewForm'; 
@@ -129,6 +129,18 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                 <p>주소: {`${restaurant?.addrSido || ''} ${restaurant?.addrSigungu || ''} ${restaurant?.addrDong || ''} ${restaurant?.addrDetail || ''}`}</p>
                 <p>전화번호: {restaurant?.phoneNumber}</p>
                 <p>카테고리: {restaurant?.restaurantCategory}</p>
+
+                <div className="modal-divider">
+                    <a 
+                        href={`https://place.map.kakao.com/${restaurant.kakaoPlaceId}#menuInfo`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="kakao-map-link-button"
+                    >
+                        <MdLink style={{ marginRight: '6px' }} />
+                        카카오맵에서 메뉴 확인하기
+                    </a>
+                </div>
 
                 <div className="modal-divider">
                     {restaurantAiSummary && (

@@ -254,6 +254,7 @@ class KakaoMapCrawler:
             BREAK_END_MINUTE,
             RESTAURANT_HOLIDAY,
             PARKING_INFO,
+            KAKAO_PLACE_ID,
             CREATED_DATE,
             CREATED_ID,
             UPDATED_DATE,
@@ -279,6 +280,7 @@ class KakaoMapCrawler:
             :breakEndMinute,
             :restaurantHoliday,
             :parkingInfo,
+            :kakaoPlaceId,
             :createdDate,
             :createdId,
             :updatedDate,
@@ -306,6 +308,7 @@ class KakaoMapCrawler:
                 'breakEndMinute': parsed_hours['break_end_minute'],
                 'restaurantHoliday': parsed_hours['holiday'],
                 'parkingInfo': parking_info_value,
+                'kakaoPlaceId': restaurant_info.get('kakaoPlaceId'),
                 'createdDate': datetime.now(),
                 'createdId': "system_crawler_7road",
                 'updatedDate': datetime.now(),
@@ -373,6 +376,8 @@ class KakaoMapCrawler:
                                 # 전화번호는 랜덤값 생성 제외. API에서 제공되는 값이 없으면 None으로 유지.
                                 phone_number = doc.get('phone')
 
+                                kakao_place_id = doc.get('id')
+
                                 operating_hours = self.get_operating_hours(doc.get('place_name'), doc.get('road_address_name') or doc.get('address_name'))
 
                                 restaurant_info = {
@@ -382,7 +387,8 @@ class KakaoMapCrawler:
                                     "restaurantCategory": doc.get('category_name'),
                                     "restaurantLatitude": float(doc.get('y')),
                                     "restaurantLongitude": float(doc.get('x')),
-                                    "restaurantOpenHours": operating_hours # 영업 시간은 _parse_operating_hours에서 랜덤 처리
+                                    "restaurantOpenHours": operating_hours, # 영업 시간은 _parse_operating_hours에서 랜덤 처리
+                                    "kakaoPlaceId": kakao_place_id
                                 }
 
                                 # DB에 이미 존재하는지 확인 후 삽입

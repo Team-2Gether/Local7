@@ -31,6 +31,7 @@
         <result property="updatedId" column="UPDATED_ID"/>
         <result property="totalComments" column="TOTAL_COMMENTS"/>
         <result property="averageRating" column="AVERAGE_RATING"/>
+        <result property="kakaoPlaceId" column="KAKAO_PLACE_ID"/>
     </resultMap>
 
     <select id="findAllRestaurants" resultMap="restaurantResultMap">
@@ -61,6 +62,7 @@
             T1.BREAK_END_MINUTE,
             T1.RESTAURANT_HOLIDAY,
             T1.PARKING_INFO,
+            T1.KAKAO_PLACE_ID,
             T1.CREATED_DATE,
             T1.CREATED_ID,
             T1.UPDATED_DATE,

@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/restaurants") // 음식점 관련 API 엔드포인트
-@CrossOrigin(origins = "http://localhost:3000")
 public class RestaurantController {
 
     @Autowired
