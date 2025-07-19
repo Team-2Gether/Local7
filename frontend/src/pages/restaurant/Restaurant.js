@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import RestaurantDetailModal from './RestaurantDetailModal';
-import './Main.css';
+import './Restaurant.css';
 
 function Main({ currentUser }) {
   // 모든 음식점 데이터를 저장하는 상태 (지도, 검색, 필터링용)

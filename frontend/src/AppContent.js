@@ -7,7 +7,7 @@ import "./App.css";
 
 import SignupForm from "./pages/signup/SignupPage";
 import Navbar from "./components/Navbar";
-import Main from "./pages/home/Main";
+import Restaurant from "./pages/restaurant/Restaurant";
 import LoginForm from "./pages/login/LoginForm";
 import NotFoundPage from "./components/404page/NotFoundPage";
 import TermsOfServiceModal from "./components/TermsOfServiceModal";
@@ -163,7 +163,7 @@ export function AppContent() {
                                         </div>
                                     </div>
                                 )} />
-                        <Route path="/restaurants" element={<Main currentUser={currentUser} />} />
+                        <Route path="/restaurants" element={<Restaurant currentUser={currentUser} />} />
                         <Route
                             path="/pick"
                             element={<RestaurantVote currentUser={currentUser} />}
