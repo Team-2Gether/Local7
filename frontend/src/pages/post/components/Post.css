@@ -247,19 +247,20 @@
     padding: 8px 12px;
     border-radius: 20px;
     font-size: 14px;
-    background-color: #f0f0f0;
+    color: #f0f0f0;
+    background-color: #444;
 }
 
 .search-input::placeholder {
     outline: none;
     border-color: #007bff;
-    background-color: #3a3a3a;
+    background-color: #444;
 }
 
 .search-input:focus {
     outline: none;
     border-color: #007bff;
-    background-color: #3a3a3a;
+    background-color: #444;
 }
 
 
@@ -605,8 +606,7 @@
 }
 
 .post-button.create-button:hover {
-    background-color: #ad8b00;
-    transform: translateY(-1px);
+    background-color: #3a3a3a;
 }
 
 .post-button.create-button:active {
