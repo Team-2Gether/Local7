@@ -237,7 +237,7 @@
 
 .search-option-select:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: #79AAFF;
     background-color: #3a3a3a;
 }
 
@@ -253,13 +253,13 @@
 
 .search-input::placeholder {
     outline: none;
-    border-color: #007bff;
+    border-color: #79AAFF;
     background-color: #444;
 }
 
 .search-input:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: #79AAFF;
     background-color: #444;
 }
 
@@ -577,7 +577,7 @@
 
 .sort-options select:focus {
      outline: none;
-    border-color: #007bff;
+    border-color: #79AAFF;
     background-color: #3a3a3a;
 }
 
