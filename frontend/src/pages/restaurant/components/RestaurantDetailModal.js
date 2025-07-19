@@ -103,6 +103,20 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
         }
     };
 
+    const formatTime = (hour, minute) => {
+        if (hour === null || hour === undefined) {
+            return '없음';
+        }
+
+        const ampm = hour < 12 ? '오전' : '오후';
+        const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+        
+        // 분 데이터가 없는 경우를 처리
+        const displayMinute = minute !== null && minute !== undefined ? `${minute}분` : '';
+
+        return `${ampm} ${displayHour}시 ${displayMinute}`.trim();
+    };
+
     // 리뷰 제출 성공 시 호출될 함수
     const handleReviewSubmitted = () => {
         // 폼을 숨기고, 리뷰 목록을 새로고침
@@ -128,6 +142,14 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                 <h2>{restaurant?.restaurantName}</h2>
                 <p>주소: {`${restaurant?.addrSido || ''} ${restaurant?.addrSigungu || ''} ${restaurant?.addrDong || ''} ${restaurant?.addrDetail || ''}`}</p>
                 <p>전화번호: {restaurant?.phoneNumber}</p>
+                <p>영업시간: {formatTime(restaurant?.openHour, restaurant?.openMinute)} ~ {formatTime(restaurant?.closeHour, restaurant?.closeMinute)}</p>
+                {restaurant?.breakStartHour !== null || restaurant?.breakEndHour !== null ? (
+                    <p>브레이크타임: {formatTime(restaurant?.breakStartHour, restaurant?.breakStartMinute)} ~ {formatTime(restaurant?.breakEndHour, restaurant?.breakEndMinute)}</p>
+                ) : (
+                    <p>브레이크타임: 없음</p>
+                )}
+                
+                <p>주차정보: {restaurant?.parkingInfo || '주차 불가능'}</p>
                 <p>카테고리: {restaurant?.restaurantCategory}</p>
 
                 <div className="modal-divider">
