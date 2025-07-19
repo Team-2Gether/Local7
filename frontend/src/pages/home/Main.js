@@ -11,8 +11,12 @@ function Main({ currentUser }) {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [map, setMap] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeSortBy, setActiveSortBy] = useState(null)
-  
+  const [activeSortBy, setActiveSortBy] = useState(null);
+
+  // Pagination 관련 상태 추가
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+
   const mapContainerRef = useRef(null);
   const myLocationMarkerRef = useRef(null);
 
@@ -28,7 +32,7 @@ function Main({ currentUser }) {
     setIsDetailModalOpen(false);
     setSelectedRestaurant(null);
   };
-  
+
   const updateMapMarkers = useCallback((mapInstance, fetchedRestaurants) => {
     if (!mapInstance) return;
 
@@ -50,7 +54,7 @@ function Main({ currentUser }) {
           position: pos,
           title: r.restaurantName,
         });
-        
+
         window.kakao.maps.event.addListener(marker, 'click', function() {
             handleRestaurantClick(r);
         });
@@ -122,14 +126,20 @@ function Main({ currentUser }) {
     console.log(`${sortBy} 순으로 정렬 완료`);
   };
 
-  const fetchAllRestaurants = useCallback(async (callback) => {
+  const fetchAllRestaurants = useCallback(async (page, size) => {
     try {
-      const response = await axios.get('http://localhost:8080/api/restaurants');
-      if (response.data?.status === 'success' && Array.isArray(response.data.data)) {
-        setRestaurants(response.data.data);
-        if (callback) {
-          callback(response.data.data);
-        }
+      // 페이지와 크기 파라미터를 추가하여 API 호출
+      const response = await axios.get(`http://localhost:8080/api/restaurants?page=${page}&size=${size}`);
+      
+      if (response.data?.status === 'success' && response.data.data) {
+        const { content, totalPages, pageNumber } = response.data.data;
+        
+        // Pagination 객체에서 필요한 데이터만 추출하여 상태 업데이트
+        setRestaurants(content);
+        setFilteredRestaurants(content);
+        setTotalPages(totalPages);
+        setCurrentPage(pageNumber);
+
       } else {
         console.error('API 응답 형식이 예상과 다릅니다.', response.data);
         setError('음식점 데이터를 가져오지 못했습니다.');
@@ -138,6 +148,13 @@ function Main({ currentUser }) {
       setError('데이터 가져오기 오류: ' + err.message);
     }
   }, []);
+  
+  // 페이지 변경 핸들러
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      fetchAllRestaurants(newPage, 12); // 12는 페이지 크기
+    }
+  };
 
   useEffect(() => {
     const mapScriptId = "kakao-map-script";
@@ -168,11 +185,10 @@ function Main({ currentUser }) {
       const createdMap = new window.kakao.maps.Map(container, options);
       setMap(createdMap);
       
-      fetchAllRestaurants((data) => {
-          handleFilterClick(3, data);
-      });
+      // 초기 데이터 로딩 시 페이징 호출
+      fetchAllRestaurants(0, 12); // 첫 페이지(0)와 기본 크기(12)로 호출
     }
-  }, [map, mapContainerRef, fetchAllRestaurants, handleFilterClick, DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON]);
+  }, [map, mapContainerRef, fetchAllRestaurants, DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON]);
 
   useEffect(() => {
     if (map) {
@@ -208,6 +224,8 @@ function Main({ currentUser }) {
     }
   };
 
+  // 검색 및 전체보기 기능은 현재 페이지에 한정됩니다.
+  // 전체 데이터에 대한 검색/필터링을 하려면 백엔드 API를 수정해야 합니다.
   const handleSearch = () => {
     if (searchTerm.trim() === '') {
       setFilteredRestaurants(restaurants);
@@ -300,6 +318,17 @@ function Main({ currentUser }) {
         ) : (
           !error && <p>데이터 로딩 중...</p>
         )}
+
+        {/* 페이지네이션 컨트롤 */}
+        <div className="pagination">
+          <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
+            이전
+          </button>
+          <span>{currentPage + 1} / {totalPages}</span>
+          <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage + 1 >= totalPages}>
+            다음
+          </button>
+        </div>
 
         {selectedRestaurant && (
           <RestaurantDetailModal

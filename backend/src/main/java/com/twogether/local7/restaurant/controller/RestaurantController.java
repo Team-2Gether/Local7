@@ -3,9 +3,9 @@ package com.twogether.local7.restaurant.controller;
 import com.twogether.local7.restaurant.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
@@ -20,13 +20,16 @@ public class RestaurantController {
     private RestaurantService restaurantService;
 
     @GetMapping
-    public Mono<ResponseEntity<Map<String, Object>>> getAllRestaurants() {
-        return restaurantService.getAllRestaurants()
-                .map(restaurants -> {
+    public Mono<ResponseEntity<Map<String, Object>>> getAllRestaurants(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+
+        return restaurantService.getAllRestaurants(page, size)
+                .map(pagination -> {
                     Map<String, Object> response = new HashMap<>();
                     response.put("status", "success");
                     response.put("message", "음식점 목록 조회 성공");
-                    response.put("data", restaurants);
+                    response.put("data", pagination);
                     return ResponseEntity.ok(response);
                 })
                 .onErrorResume(e -> {
