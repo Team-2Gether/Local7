@@ -258,7 +258,7 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
 
                                 {/* 좋아요 버튼은 로그인한 모든 사용자에게 표시 */}
                                 <button
-                                    className={`like-button1 ${comment.likedByCurrentUser ? 'liked' : ''}`}
+                                    className={`like-button2 ${comment.likedByCurrentUser ? 'liked' : ''}`}
                                     onClick={() => handleToggleLike(comment.commentId)}
                                     disabled={!currentUser} // 로그인하지 않은 경우 비활성화
                                 >

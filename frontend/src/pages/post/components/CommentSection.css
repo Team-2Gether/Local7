@@ -269,7 +269,7 @@
     margin-top: 10px;
 }
 
-.like-button1 {
+.like-button2 {
     background: none;
     border: none;
     cursor: pointer;
@@ -281,11 +281,11 @@
 }
 
 
-.like-button1.liked {
+.like-button2.liked {
     color: #ff4d4d; /* 좋아요 눌렀을 때 색상 */
 }
 
-.like-button1:disabled {
+.like-button2:disabled {
     cursor: not-allowed;
     opacity: 0.6;
 }
