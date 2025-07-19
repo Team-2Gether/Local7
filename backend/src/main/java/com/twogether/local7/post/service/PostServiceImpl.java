@@ -108,8 +108,13 @@ public class PostServiceImpl implements PostService {
         // 1. 게시글 존재 여부 및 작성자 일치 여부 확인
         PostVO existingPost = postDAO.getPostById(post.getPostId());
 
+        if (existingPost == null) {
+            // 게시글이 존재하지 않으면 false 반환
+            return false;
+        }
+
         // 게시글이 없거나 현재 사용자가 작성자가 아니면 false 반환
-        if (existingPost == null || !existingPost.getUserId().equals(currentUserId)) {
+        if (!existingPost.getUserId().equals(currentUserId) && currentUserId != 1L) {
             return false;
         }
 

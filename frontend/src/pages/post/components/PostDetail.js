@@ -24,7 +24,7 @@ function PostDetail({ currentUser }) {
             try {
                 await removePost(parseInt(id));
                 alert('게시글이 성공적으로 삭제되었습니다.');
-                navigate('/posts');
+                navigate('/', { state: { from: 'posts' } });
             } catch (err) {
                 console.error('게시글 삭제 오류:', err);
                 setMessage('게시글 삭제에 실패했습니다.');

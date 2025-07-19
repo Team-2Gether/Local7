@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException; // 더 이상 직접적인 파일 I/O는 없지만, 예외 처리 시 필요할 수 있음
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -30,9 +30,7 @@ public class PostController {
 
     // 모든 게시글 조회 (GET /api/posts)
     @GetMapping({"", "/"})
-    public ResponseEntity<Map<String, Object>> getAllPosts(
-            @RequestParam(required = false) String sortBy,
-            HttpSession session) {
+    public ResponseEntity<Map<String, Object>> getAllPosts(@RequestParam(required = false) String sortBy, HttpSession session) {
 
         List<PostVO> posts;
 
@@ -43,7 +41,6 @@ public class PostController {
         }
 
         Map<String, Object> response = new HashMap<>();
-
         Long currentUserId = (Long) session.getAttribute("userId");
 
         List<PostVO> postsWithLikeStatus = posts.stream().map(post -> {
@@ -68,7 +65,6 @@ public class PostController {
     public ResponseEntity<Map<String, Object>> getPostById(@PathVariable("id") Long postId, HttpSession session) {
 
         PostVO post = postService.getPostById(postId);
-
         Map<String, Object> response = new HashMap<>();
 
         if (post == null) {
@@ -97,13 +93,9 @@ public class PostController {
 
     // 게시글 생성 (POST /api/posts) - 이미지 파일 추가
     @PostMapping({"", "/"})
-    public ResponseEntity<Map<String, Object>> createPost(
-            @RequestPart("post") PostVO post,
-            @RequestParam(value = "images", required = false) List<String> images,
-            HttpSession session) {
+    public ResponseEntity<Map<String, Object>> createPost(@RequestPart("post") PostVO post, @RequestParam(value = "images", required = false) List<String> images, HttpSession session) {
 
         Map<String, Object> response = new HashMap<>();
-
         Long currentUserId = (Long) session.getAttribute("userId");
         String currentUserLoginId = (String) session.getAttribute("userLoginId");
 
@@ -134,11 +126,7 @@ public class PostController {
 
     // 게시글 업데이트 (PUT /api/posts/{id}) - 이미지 파일 추가
     @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<Map<String, Object>> updatePost(
-            @PathVariable("id") Long postId,
-            @RequestPart("post") PostVO post,
-            @RequestParam(value = "images", required = false) List<String> images,
-            HttpSession session) {
+    public ResponseEntity<Map<String, Object>> updatePost(@PathVariable("id") Long postId, @RequestPart("post") PostVO post, @RequestParam(value = "images", required = false) List<String> images, HttpSession session) {
 
         Map<String, Object> response = new HashMap<>();
         Long currentUserId = (Long) session.getAttribute("userId");
@@ -176,9 +164,10 @@ public class PostController {
     // 게시글 삭제 (DELETE /api/posts/{id})
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deletePost(@PathVariable("id") Long postId, HttpSession session) {
-        Map<String, Object> response = new HashMap<>();
 
+        Map<String, Object> response = new HashMap<>();
         Long currentUserId = (Long) session.getAttribute("userId");
+
         if (currentUserId == null) {
             response.put("status", "error");
             response.put("message", "로그인이 필요합니다.");
@@ -192,9 +181,9 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
 
-        if (!existingPost.getUserId().equals(currentUserId)) {
+        if (!existingPost.getUserId().equals(currentUserId) && currentUserId != 1L) {
             response.put("status", "error");
-            response.put("message", "게시글을 삭제할 권한이 없습니다. 본인이 작성한 게시글만 삭제할 수 있습니다.");
+            response.put("message", "게시글을 삭제할 권한이 없습니다. 본인이 작성한 게시글 또는 관리자만 삭제할 수 있습니다.");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
