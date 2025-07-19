@@ -119,7 +119,7 @@ function PostDetail({ currentUser }) {
 
                     <div className="post-detail-likes">
                         <button
-                            className={`like-button ${post.liked ? 'liked' : ''}`}
+                            className={`like-button5 ${post.liked ? 'liked' : ''}`}
                             onClick={handleToggleLike}
                             disabled={likeLoading}
                         >
