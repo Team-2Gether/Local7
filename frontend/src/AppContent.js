@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Modal from "react-modal";
 
@@ -206,9 +206,7 @@ export function AppContent() {
                                 )}>
                             <Route
                                 index="index"
-                                element={<UserInfo userData={
-                                    currentUser
-                                } />
+                                element={<UserInfo currentUser={currentUser} /> // currentUser를 props로 전달
                                 }
                             />
                             <Route
@@ -274,7 +272,75 @@ export function AppContent() {
     );
 }
 
-function UserInfo({ userData }) {
+function UserInfo({ currentUser }) { // currentUser를 props로 받음
+    const [userData, setUserData] = useState(null);
+    const [followerCount, setFollowerCount] = useState(0); // 팔로워 수 상태 추가
+    const [followingCount, setFollowingCount] = useState(0); // 팔로잉 수 상태 추가
+    const { userLoginId } = useParams(); // URL에서 userLoginId를 가져올 수 있도록 추가 (다른 사용자 프로필 조회 시)
+
+    useEffect(() => {
+        const fetchUserDataAndFollowCounts = async () => {
+            let targetUserLoginId = currentUser?.userLoginId; // 기본값은 현재 로그인된 사용자
+            let targetUserId = currentUser?.userId; // 기본값은 현재 로그인된 사용자 ID
+
+            if (userLoginId) { // URL 파라미터로 userLoginId가 있다면 해당 사용자 정보를 가져옴
+                targetUserLoginId = userLoginId;
+                // userLoginId로 userId를 찾아야 할 경우 여기에 로직 추가 (필요하다면)
+                // 현재는 currentUser에서 userId를 직접 가져오므로, 다른 사용자 조회 시 userId를 API에서 받아와야 함.
+                // 이 예시에서는 userLoginId로 사용자 정보를 가져올 때 userId도 함께 받아온다고 가정합니다.
+            }
+
+            if (!targetUserLoginId) {
+                console.log("조회할 사용자 ID가 없습니다.");
+                return;
+            }
+
+            try {
+                // 1. 사용자 프로필 정보 가져오기
+                const userProfileResponse = await axios.get(`http://localhost:8080/api/user/profile/loginid/${targetUserLoginId}`);
+                if (userProfileResponse.data.status === "success") {
+                    setUserData(userProfileResponse.data.userProfile);
+                    targetUserId = userProfileResponse.data.userProfile.userId; // 가져온 프로필에서 userId 업데이트
+                } else {
+                    console.error("사용자 프로필을 가져오는 데 실패했습니다:", userProfileResponse.data.message);
+                    setUserData(null);
+                    return; // 사용자 프로필 없으면 팔로우 정보도 가져올 필요 없음
+                }
+            } catch (error) {
+                console.error("사용자 프로필 조회 중 오류 발생:", error);
+                setUserData(null);
+                return;
+            }
+
+            // 2. 팔로워 및 팔로잉 수 가져오기 (사용자 프로필을 성공적으로 가져온 후)
+            if (targetUserId) {
+                try {
+                    const followerCountResponse = await axios.get(`http://localhost:8080/api/follows/followers/count/${targetUserId}`);
+                    if (followerCountResponse.status === 200) {
+                        setFollowerCount(followerCountResponse.data.followerCount);
+                    } else {
+                        console.error("팔로워 수를 가져오는 데 실패했습니다.");
+                    }
+                } catch (error) {
+                    console.error("팔로워 수 조회 중 오류 발생:", error);
+                }
+
+                try {
+                    const followingCountResponse = await axios.get(`http://localhost:8080/api/follows/followings/count/${targetUserId}`);
+                    if (followingCountResponse.status === 200) {
+                        setFollowingCount(followingCountResponse.data.followingCount);
+                    } else {
+                        console.error("팔로잉 수를 가져오는 데 실패했습니다.");
+                    }
+                } catch (error) {
+                    console.error("팔로잉 수 조회 중 오류 발생:", error);
+                }
+            }
+        };
+
+        fetchUserDataAndFollowCounts();
+    }, [currentUser, userLoginId]); // currentUser나 userLoginId가 변경될 때마다 재호출
+
     if (!userData)
         return <p>사용자 정보를 불러올 수 없습니다.</p>;
     return (
@@ -308,8 +374,14 @@ function UserInfo({ userData }) {
                     {userData.userBio || "작성된 소개가 없습니다."}
                 </p>
                 <p>
-                    <strong>가입일:</strong>{" "}
+                    <strong>가입일:</strong>
                     {new Date(userData.createDate).toLocaleDateString()}
+                </p>
+                <p>
+                    <strong>팔로워:</strong> {followerCount}
+                </p>
+                <p>
+                    <strong>팔로잉:</strong> {followingCount}
                 </p>
             </div>
         </div>
