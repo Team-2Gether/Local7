@@ -80,6 +80,7 @@ function PostList({ currentUser, selectedCity }) {
     // 좋아요 버튼 클릭 핸들러
     const handleToggleLike = async (postId, e) => {
         e.stopPropagation(); // 이벤트 버블링 방지 (게시글 상세 페이지로 이동하는 것을 막음)
+        console.log("좋아요 클릭");
 
         if (!currentUser) {
             // alert 대신 커스텀 모달 UI 사용 권장
@@ -197,7 +198,7 @@ function PostList({ currentUser, selectedCity }) {
                                     <p className="post-card-meta">작성일: {new Date(post.createdDate).toLocaleDateString()}</p>
                                     <p className="post-card-likes">
                                         <span
-                                            className={`like-button1 ${post.liked ? 'liked' : ''}`}
+                                            className={`like-button3 ${post.liked ? 'liked' : ''}`}
                                             onClick={(e) => handleToggleLike(post.postId, e)} // 좋아요 버튼 클릭 이벤트
                                             disabled={likeLoading}
                                         >

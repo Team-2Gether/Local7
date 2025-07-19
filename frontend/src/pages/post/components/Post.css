@@ -299,8 +299,7 @@
     margin-top: 20px; 
 }
 
-/* 좋아요 버튼 (통합된 스타일) */
-.like-button1.liked { 
+.like-button3 {
     font-size: 3em; 
     cursor: pointer;
     transition: transform 0.1s ease-in-out;
@@ -314,15 +313,30 @@
     color: inherit;
 }
 
-.like-button1:hover {
+/* 좋아요 버튼 (통합된 스타일) */
+.like-button3.liked { 
+    font-size: 3em; 
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+}
+
+.like-button3:hover {
     transform: scale(1.1);
 }
 
-.like-button1.liked {
+.like-button3.liked {
     color: red; /* PostDetail 기준 */
 }
 
-.like-button1[disabled] {
+.like-button3[disabled] {
     cursor: not-allowed;
     opacity: 0.5; /* PostDetail 기준 */
 }
