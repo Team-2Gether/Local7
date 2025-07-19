@@ -211,7 +211,7 @@ export const useMap = (
             };
 
             let mapLevel;
-            if (radius <= 1) {
+            if (radius <= 2) {
                 mapLevel = 3;
             } else if (radius <= 3) {
                 mapLevel = 4;
