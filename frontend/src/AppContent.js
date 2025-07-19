@@ -26,6 +26,9 @@ import PostList from "./pages/post/components/PostList";
 import PostDetail from "./pages/post/components/PostDetail";
 import Notice from "./pages/notice/Notice";
 import OtherUser from "./pages/user/OtherUser";
+import FollowerList from "./pages/user/FollowerList"; // FollowerList import
+import FollowingList from "./pages/user/FollowingList"; // FollowingList import
+
 
 Modal.setAppElement("#root");
 
@@ -226,9 +229,23 @@ export function AppContent() {
                                 } />
                                 }
                             />
+                            {/* MyPage 내부 라우트: 팔로워/팔로잉 목록 */}
+                            <Route
+                                path="followers"
+                                element={<FollowerList currentUser={currentUser} />}
+                            />
+                            <Route
+                                path="followings"
+                                element={<FollowingList currentUser={currentUser} />}
+                            />
                         </Route>
 
+                        {/* OtherUser 페이지 라우트: 다른 사용자의 프로필 (팔로워/팔로잉 목록 포함) */}
                         <Route path="/user/profile/:userLoginId" element={<OtherUser currentUser={currentUser} />} />
+                        {/* OtherUser의 팔로워/팔로잉 목록을 위한 중첩 라우트 추가 (OtherUser 내부에서 Outlet 사용하지 않음) */}
+                        <Route path="/user/profile/:userLoginId/followers" element={<FollowerList currentUser={currentUser} />} />
+                        <Route path="/user/profile/:userLoginId/followings" element={<FollowingList currentUser={currentUser} />} />
+
 
                         <Route
                             path="/notice/*"
@@ -276,27 +293,32 @@ function UserInfo({ currentUser }) { // currentUser를 props로 받음
     const [userData, setUserData] = useState(null);
     const [followerCount, setFollowerCount] = useState(0); // 팔로워 수 상태 추가
     const [followingCount, setFollowingCount] = useState(0); // 팔로잉 수 상태 추가
+    const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+    const [error, setError] = useState(null); // <--- 이 줄을 추가합니다.
     const { userLoginId } = useParams(); // URL에서 userLoginId를 가져올 수 있도록 추가 (다른 사용자 프로필 조회 시)
 
     useEffect(() => {
         const fetchUserDataAndFollowCounts = async () => {
+            setIsLoading(true); // 데이터 로딩 시작 시 true로 설정
+            setError(null); // <--- 에러 상태 초기화 추가
+
             let targetUserLoginId = currentUser?.userLoginId; // 기본값은 현재 로그인된 사용자
             let targetUserId = currentUser?.userId; // 기본값은 현재 로그인된 사용자 ID
 
-            if (userLoginId) { // URL 파라미터로 userLoginId가 있다면 해당 사용자 정보를 가져옴
-                targetUserLoginId = userLoginId;
-                // userLoginId로 userId를 찾아야 할 경우 여기에 로직 추가 (필요하다면)
-                // 현재는 currentUser에서 userId를 직접 가져오므로, 다른 사용자 조회 시 userId를 API에서 받아와야 함.
-                // 이 예시에서는 userLoginId로 사용자 정보를 가져올 때 userId도 함께 받아온다고 가정합니다.
-            }
-
-            if (!targetUserLoginId) {
-                console.log("조회할 사용자 ID가 없습니다.");
+            // MyPage의 UserInfo 컴포넌트는 항상 로그인된 사용자의 정보를 보여주므로,
+            // userLoginId URL 파라미터를 사용하지 않습니다.
+            // OtherUser 컴포넌트의 UserInfo 역할을 OtherUser 자체에서 하므로 여기서는 currentUser만 사용합니다.
+            if (currentUser && currentUser.userId) {
+                targetUserLoginId = currentUser.userLoginId;
+                targetUserId = currentUser.userId;
+            } else {
+                setError("사용자 정보를 불러올 수 없습니다.");
+                setIsLoading(false);
                 return;
             }
 
             try {
-                // 1. 사용자 프로필 정보 가져오기
+                // 1. 사용자 프로필 정보 가져오기 (이미 currentUser에 있으므로 API 호출은 생략 가능, 하지만 일관성을 위해 유지)
                 const userProfileResponse = await axios.get(`http://localhost:8080/api/user/profile/loginid/${targetUserLoginId}`);
                 if (userProfileResponse.data.status === "success") {
                     setUserData(userProfileResponse.data.userProfile);
@@ -304,11 +326,15 @@ function UserInfo({ currentUser }) { // currentUser를 props로 받음
                 } else {
                     console.error("사용자 프로필을 가져오는 데 실패했습니다:", userProfileResponse.data.message);
                     setUserData(null);
+                    setError(userProfileResponse.data.message || "사용자 프로필을 불러오는 데 실패했습니다."); // <--- 에러 설정
+                    setIsLoading(false); // 로딩 종료
                     return; // 사용자 프로필 없으면 팔로우 정보도 가져올 필요 없음
                 }
             } catch (error) {
                 console.error("사용자 프로필 조회 중 오류 발생:", error);
                 setUserData(null);
+                setError("사용자 프로필을 불러오는 중 오류가 발생했습니다."); // <--- 에러 설정
+                setIsLoading(false); // 로딩 종료
                 return;
             }
 
@@ -336,13 +362,23 @@ function UserInfo({ currentUser }) { // currentUser를 props로 받음
                     console.error("팔로잉 수 조회 중 오류 발생:", error);
                 }
             }
+            setIsLoading(false); // 모든 데이터 로딩 완료 후 false로 설정
         };
 
         fetchUserDataAndFollowCounts();
-    }, [currentUser, userLoginId]); // currentUser나 userLoginId가 변경될 때마다 재호출
+    }, [currentUser]); // currentUser가 변경될 때마다 재호출 (UserInfo는 현재 로그인된 사용자만 다룸)
+
+    if (isLoading) {
+        return <p>사용자 정보를 불러오는 중입니다...</p>; // 로딩 중 메시지
+    }
+
+    if (error) { // <--- 에러가 발생했을 때 메시지 표시
+        return <p className="error-message">{error}</p>;
+    }
 
     if (!userData)
         return <p>사용자 정보를 불러올 수 없습니다.</p>;
+
     return (
         <div className="user-info-section">
             <div className="profile-image-container">
@@ -374,7 +410,7 @@ function UserInfo({ currentUser }) { // currentUser를 props로 받음
                     {userData.userBio || "작성된 소개가 없습니다."}
                 </p>
                 <p>
-                    <strong>가입일:</strong>
+                    <strong>가입일:</strong>{" "}
                     {new Date(userData.createDate).toLocaleDateString()}
                 </p>
                 <p>

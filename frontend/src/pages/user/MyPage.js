@@ -1,6 +1,6 @@
 // MyPage.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link, Outlet } from 'react-router-dom'; // Outlet 추가
+import { useNavigate, Link, Outlet } from 'react-router-dom';
 import '../../assets/css/MyPage.css'; // MyPage.css 파일을 import 합니다.
 
 // MyPage 컴포넌트는 currentUser와 isLoggedIn을 props로 받습니다.
@@ -37,9 +37,12 @@ function MyPage({ currentUser, isLoggedIn }) {
             <div className="my-page-content"> {/* 새로운 div로 컨텐츠를 묶습니다. */}
                 <div className="my-page-navigation"> {/* 왼쪽에 배치될 네비게이션 섹션 */}
                     <ul>
-                        <li><Link to="/mypage" className="nav-link">내 정보</Link></li> {/* 기본 자식 라우트가 렌더링되도록 to="/mypage"로 변경 */}
-                        <li><Link to="/mypage/edit" className="nav-link">회원 정보 수정</Link></li> {/* UserPage 링크 (예시 경로) */}
-                        <li><Link to="/mypage/posts" className="nav-link">내가 쓴 글</Link></li> {/* 내가 쓴 글 링크 추가 */}
+                        <li><Link to="/mypage" className="nav-link">내 정보</Link></li>
+                        <li><Link to="/mypage/edit" className="nav-link">회원 정보 수정</Link></li>
+                        <li><Link to="/mypage/posts" className="nav-link">내가 쓴 글</Link></li>
+                        {/* 팔로워/팔로잉 링크 수정: 현재 로그인된 사용자의 ID를 포함하도록 */}
+                        <li><Link to={`/mypage/followers`} className="nav-link">팔로워</Link></li>
+                        <li><Link to={`/mypage/followings`} className="nav-link">팔로잉</Link></li>
                         {/* 다른 마이 페이지 메뉴 항목들을 여기에 추가할 수 있습니다. */}
                     </ul>
                 </div>

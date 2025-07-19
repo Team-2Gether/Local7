@@ -1,18 +1,24 @@
 // src/pages/user/OtherUser.js
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom'; // Link 추가
 import axios from 'axios';
 import OtherUserPosts from './OtherUserPosts'; // OtherUserPosts 컴포넌트 import 추가
 
 function OtherUser({ currentUser }) {
     const { userLoginId } = useParams();
     const [otherUserProfile, setOtherUserProfile] = useState(null);
-    const [loading, setLoading] = useState(true); // 수정된 부분: (true) -> useState(true)
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isFollowing, setIsFollowing] = useState(false); // 팔로우 상태 추가
+    const [followerCount, setFollowerCount] = useState(0); // 팔로워 수 상태 추가
+    const [followingCount, setFollowingCount] = useState(0); // 팔로잉 수 상태 추가
+
 
     useEffect(() => {
         const fetchUserProfileAndFollowStatus = async () => {
+            setLoading(true);
+            setError(null);
+
             if (!userLoginId || userLoginId === 'undefined') {
                 setError('유효하지 않은 사용자 ID입니다.');
                 setLoading(false);
@@ -20,13 +26,13 @@ function OtherUser({ currentUser }) {
             }
 
             try {
-                // 사용자 프로필 조회
+                // 1. 사용자 프로필 조회
                 const userProfileResponse = await axios.get(`http://localhost:8080/api/user/profile/loginid/${userLoginId}`);
-                if (userProfileResponse.status === 200) {
+                if (userProfileResponse.status === 200 && userProfileResponse.data.status === "success") {
                     const profileData = userProfileResponse.data.userProfile;
                     setOtherUserProfile(profileData);
 
-                    // 팔로우 상태 확인 (현재 로그인한 사용자가 있을 때만)
+                    // 2. 팔로우 상태 확인 (현재 로그인한 사용자가 있을 때만)
                     if (currentUser && currentUser.userId && profileData.userId) {
                         const followStatusResponse = await axios.get(`http://localhost:8080/api/follows/status`, {
                             params: {
@@ -38,6 +44,33 @@ function OtherUser({ currentUser }) {
                             setIsFollowing(followStatusResponse.data.isFollowing);
                         }
                     }
+
+                    // 3. 팔로워 및 팔로잉 수 가져오기
+                    const targetUserId = profileData.userId;
+                    if (targetUserId) {
+                        try {
+                            const followerCountResponse = await axios.get(`http://localhost:8080/api/follows/followers/count/${targetUserId}`);
+                            if (followerCountResponse.status === 200) {
+                                setFollowerCount(followerCountResponse.data.followerCount);
+                            } else {
+                                console.error("팔로워 수를 가져오는 데 실패했습니다.");
+                            }
+                        } catch (err) {
+                            console.error("팔로워 수 조회 중 오류 발생:", err);
+                        }
+
+                        try {
+                            const followingCountResponse = await axios.get(`http://localhost:8080/api/follows/followings/count/${targetUserId}`);
+                            if (followingCountResponse.status === 200) {
+                                setFollowingCount(followingCountResponse.data.followingCount);
+                            } else {
+                                console.error("팔로잉 수를 가져오는 데 실패했습니다.");
+                            }
+                        } catch (err) {
+                            console.error("팔로잉 수 조회 중 오류 발생:", err);
+                        }
+                    }
+
                 } else {
                     setError(userProfileResponse.data.message || '사용자 프로필을 불러오지 못했습니다.');
                 }
@@ -66,13 +99,19 @@ function OtherUser({ currentUser }) {
             const response = await axios.post('http://localhost:8080/api/follows/toggle', {
                 followerId: currentUser.userId,
                 followingId: otherUserProfile.userId,
-                createdId: currentUser.userLoginId, // 현재 로그인한 사용자의 userLoginId
-                updatedId: currentUser.userLoginId  // 현재 로그인한 사용자의 userLoginId
+                createdId: currentUser.userLoginId,
+                updatedId: currentUser.userLoginId
             });
 
             if (response.status === 200 && response.data.success) {
                 setIsFollowing(response.data.isFollowing);
                 alert(response.data.message);
+                // 팔로우/언팔로우 성공 시 팔로워/팔로잉 수 즉시 업데이트
+                if (response.data.isFollowing) {
+                    setFollowerCount(prev => prev + 1);
+                } else {
+                    setFollowerCount(prev => prev - 1);
+                }
             } else {
                 alert(response.data.message || "팔로우/언팔로우 실패");
             }
@@ -115,6 +154,12 @@ function OtherUser({ currentUser }) {
                     <p><strong>이름:</strong> {otherUserProfile.userName}</p>
                     <p><strong>소개:</strong> {otherUserProfile.userBio || "작성된 소개가 없습니다."}</p>
                     <p><strong>가입일:</strong> {new Date(otherUserProfile.createDate).toLocaleDateString()}</p>
+                    <p>
+                        <strong>팔로워:</strong> <Link to={`/user/profile/${otherUserProfile.userLoginId}/followers`}>{followerCount}</Link>
+                    </p>
+                    <p>
+                        <strong>팔로잉:</strong> <Link to={`/user/profile/${otherUserProfile.userLoginId}/followings`}>{followingCount}</Link>
+                    </p>
                 </div>
                 {showFollowButton && (
                     <button onClick={handleFollowToggle} className="follow-button">
@@ -128,4 +173,4 @@ function OtherUser({ currentUser }) {
     );
 }
 
-export default OtherUser; 
+export default OtherUser;

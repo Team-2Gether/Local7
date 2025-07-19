@@ -15,6 +15,11 @@ public class FollowVO {
     // 조인된 사용자 정보를 위한 필드 추가
     private String followerUserName;
     private String followerUserNickname;
+    private String followerUserLoginId; // 추가
+    private String followerUserProfileImageUrl; // 추가
+
     private String followingUserName;
     private String followingUserNickname;
+    private String followingUserLoginId; // 추가
+    private String followingUserProfileImageUrl; // 추가
 }

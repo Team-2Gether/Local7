@@ -1,84 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.twogether.local7.follow.dao.FollowDAO">
 
-    <resultMap id="followResultMap" type="com.twogether.local7.follow.vo.FollowVO">
+    <resultMap id="followVOMap" type="com.twogether.local7.follow.vo.FollowVO">
         <id property="followerId" column="FOLLOWER_ID"/>
-        <id property="followingId" column="FOLLOWING_ID"/>
+        <result property="followingId" column="FOLLOWING_ID"/>
         <result property="createdDate" column="CREATED_DATE"/>
         <result property="createdId" column="CREATED_ID"/>
         <result property="updatedDate" column="UPDATED_DATE"/>
         <result property="updatedId" column="UPDATED_ID"/>
+
         <result property="followerUserName" column="FOLLOWER_USER_NAME"/>
         <result property="followerUserNickname" column="FOLLOWER_USER_NICKNAME"/>
+        <result property="followerUserLoginId" column="FOLLOWER_USER_LOGIN_ID"/>
+        <result property="followerUserProfileImageUrl" column="FOLLOWER_USER_PROFILE_IMAGE_URL"/>
+
         <result property="followingUserName" column="FOLLOWING_USER_NAME"/>
         <result property="followingUserNickname" column="FOLLOWING_USER_NICKNAME"/>
+        <result property="followingUserLoginId" column="FOLLOWING_USER_LOGIN_ID"/>
+        <result property="followingUserProfileImageUrl" column="FOLLOWING_USER_PROFILE_IMAGE_URL"/>
     </resultMap>
 
-    <insert id="insertFollow" parameterType="com.twogether.local7.follow.vo.FollowVO">
-        INSERT INTO TB_FOLLOW (
-        FOLLOWER_ID,
-        FOLLOWING_ID,
-        CREATED_DATE,
-        CREATED_ID,
-        UPDATED_DATE,
-        UPDATED_ID
-        ) VALUES (
-        #{followerId},
-        #{followingId},
-        SYSTIMESTAMP,
-        #{createdId},
-        SYSTIMESTAMP,
-        #{updatedId}
-        )
-    </insert>
-
-    <delete id="deleteFollow" parameterType="com.twogether.local7.follow.vo.FollowVO">
-        DELETE FROM TB_FOLLOW
-        WHERE FOLLOWER_ID = #{followerId} AND FOLLOWING_ID = #{followingId}
-    </delete>
-
-    <select id="countFollow" parameterType="com.twogether.local7.follow.vo.FollowVO" resultType="int">
-        SELECT COUNT(*)
-        FROM TB_FOLLOW
-        WHERE FOLLOWER_ID = #{followerId} AND FOLLOWING_ID = #{followingId}
+    <select id="selectFollowers" parameterType="int" resultMap="followVOMap">
+        SELECT
+        F.FOLLOWER_ID,
+        F.FOLLOWING_ID,
+        F.CREATED_DATE,
+        F.CREATED_ID,
+        F.UPDATED_DATE,
+        F.UPDATED_ID,
+        U_FOLLOWER.USER_NAME AS FOLLOWER_USER_NAME,
+        U_FOLLOWER.USER_NICKNAME AS FOLLOWER_USER_NICKNAME,
+        U_FOLLOWER.LOGIN_ID AS FOLLOWER_USER_LOGIN_ID,
+        U_FOLLOWER.USER_PROF_IMG_URL AS FOLLOWER_USER_PROFILE_IMAGE_URL  FROM TB_FOLLOW F
+        JOIN TB_USER U_FOLLOWER ON F.FOLLOWER_ID = U_FOLLOWER.USER_ID
+        WHERE F.FOLLOWING_ID = #{followingId}
     </select>
 
-    <select id="selectFollowers" parameterType="int" resultMap="followResultMap">
+    <select id="selectFollowings" parameterType="int" resultMap="followVOMap">
         SELECT
-        TF.FOLLOWER_ID,
-        TF.FOLLOWING_ID,
-        TF.CREATED_DATE,
-        TF.CREATED_ID,
-        TF.UPDATED_DATE,
-        TF.UPDATED_ID,
-        TU_FOLLOWER.USER_NAME AS FOLLOWER_USER_NAME,
-        TU_FOLLOWER.USER_NICKNAME AS FOLLOWER_USER_NICKNAME,
-        TU_FOLLOWING.USER_NAME AS FOLLOWING_USER_NAME,
-        TU_FOLLOWING.USER_NICKNAME AS FOLLOWING_USER_NICKNAME
-        FROM TB_FOLLOW TF
-        LEFT JOIN TB_USER TU_FOLLOWER ON TF.FOLLOWER_ID = TU_FOLLOWER.USER_ID
-        LEFT JOIN TB_USER TU_FOLLOWING ON TF.FOLLOWING_ID = TU_FOLLOWING.USER_ID
-        WHERE TF.FOLLOWING_ID = #{followingId}
-    </select>
-
-    <select id="selectFollowings" parameterType="int" resultMap="followResultMap">
-        SELECT
-        TF.FOLLOWER_ID,
-        TF.FOLLOWING_ID,
-        TF.CREATED_DATE,
-        TF.CREATED_ID,
-        TF.UPDATED_DATE,
-        TF.UPDATED_ID,
-        TU_FOLLOWER.USER_NAME AS FOLLOWER_USER_NAME,
-        TU_FOLLOWER.USER_NICKNAME AS FOLLOWER_USER_NICKNAME,
-        TU_FOLLOWING.USER_NAME AS FOLLOWING_USER_NAME,
-        TU_FOLLOWING.USER_NICKNAME AS FOLLOWING_USER_NICKNAME
-        FROM TB_FOLLOW TF
-        LEFT JOIN TB_USER TU_FOLLOWER ON TF.FOLLOWER_ID = TU_FOLLOWER.USER_ID
-        LEFT JOIN TB_USER TU_FOLLOWING ON TF.FOLLOWING_ID = TU_FOLLOWING.USER_ID
-        WHERE TF.FOLLOWER_ID = #{followerId}
+        F.FOLLOWER_ID,
+        F.FOLLOWING_ID,
+        F.CREATED_DATE,
+        F.CREATED_ID,
+        F.UPDATED_DATE,
+        F.UPDATED_ID,
+        U_FOLLOWING.USER_NAME AS FOLLOWING_USER_NAME,
+        U_FOLLOWING.USER_NICKNAME AS FOLLOWING_USER_NICKNAME,
+        U_FOLLOWING.LOGIN_ID AS FOLLOWING_USER_LOGIN_ID,
+        U_FOLLOWING.USER_PROF_IMG_URL AS FOLLOWING_USER_PROFILE_IMAGE_URL  FROM TB_FOLLOW F
+        JOIN TB_USER U_FOLLOWING ON F.FOLLOWING_ID = U_FOLLOWING.USER_ID
+        WHERE F.FOLLOWER_ID = #{followerId}
     </select>
 
     <select id="countFollowers" parameterType="int" resultType="int">
@@ -91,6 +65,22 @@
         SELECT COUNT(*)
         FROM TB_FOLLOW
         WHERE FOLLOWER_ID = #{userId}
+    </select>
+
+    <insert id="insertFollow" parameterType="com.twogether.local7.follow.vo.FollowVO">
+        INSERT INTO TB_FOLLOW (FOLLOWER_ID, FOLLOWING_ID, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID)
+        VALUES (#{followerId}, #{followingId}, SYSTIMESTAMP, #{createdId}, SYSTIMESTAMP, #{updatedId})
+    </insert>
+
+    <delete id="deleteFollow" parameterType="com.twogether.local7.follow.vo.FollowVO">
+        DELETE FROM TB_FOLLOW
+        WHERE FOLLOWER_ID = #{followerId} AND FOLLOWING_ID = #{followingId}
+    </delete>
+
+    <select id="countFollow" parameterType="com.twogether.local7.follow.vo.FollowVO" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_FOLLOW
+        WHERE FOLLOWER_ID = #{followerId} AND FOLLOWING_ID = #{followingId}
     </select>
 
 </mapper>
