@@ -30,4 +30,7 @@ public class RestaurantVO {
     private String createdId;           // CREATED_ID VARCHAR2(100)
     private LocalDateTime updatedDate;  // UPDATED_DATE TIMESTAMP
     private String updatedId;           // UPDATED_ID VARCHAR2(100)
+
+    private Double averageRating;       // 평균 평점
+    private Integer totalComments;      // 총 댓글 수
 }

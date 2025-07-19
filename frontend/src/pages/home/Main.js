@@ -306,6 +306,8 @@ function Main({ currentUser }) {
                 <h3>{r.restaurantName}</h3>
                 <p>주소: {address}</p>
                 <p>카테고리: {r.restaurantCategory}</p>
+                <p>평점: {r.averageRating ? r.averageRating.toFixed(1) : '평점 없음'}</p>
+                <p>댓글: {r.totalComments !== undefined ? r.totalComments : 0}개</p>
               </li>
             );
           })}

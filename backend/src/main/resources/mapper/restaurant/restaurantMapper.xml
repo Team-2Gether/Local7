@@ -29,63 +29,70 @@
         <result property="createdId" column="CREATED_ID"/>
         <result property="updatedDate" column="UPDATED_DATE"/>
         <result property="updatedId" column="UPDATED_ID"/>
+        <result property="totalComments" column="TOTAL_COMMENTS"/>
+        <result property="averageRating" column="AVERAGE_RATING"/>
     </resultMap>
 
     <select id="findAllRestaurants" resultMap="restaurantResultMap">
         SELECT
-        RESTAURANT_ID,
-        RESTAURANT_NAME,
-        ADDR_SIDO,
-        ADDR_SIGUNGU,
-        ADDR_DONG,
-        ADDR_DETAIL,
-        PHONE_NUMBER,
-        RESTAURANT_CATEGORY,
-        RESTAURANT_LAT,
-        RESTAURANT_LON,
-        OPEN_HOUR,
-        OPEN_MINUTE,
-        CLOSE_HOUR,
-        CLOSE_MINUTE,
-        BREAK_START_HOUR,
-        BREAK_START_MINUTE,
-        BREAK_END_HOUR,
-        BREAK_END_MINUTE,
-        RESTAURANT_HOLIDAY,
-        PARKING_INFO,
-        CREATED_DATE,
-        CREATED_ID,
-        UPDATED_DATE,
-        UPDATED_ID
-        FROM TB_RESTAURANT
+            T1.*,
+            COUNT(T2.REVIEW_ID) AS TOTAL_COMMENTS,
+            ROUND(AVG(T2.REVIEW_RATING), 1) AS AVERAGE_RATING
+        FROM TB_RESTAURANT T1
+        LEFT JOIN TB_REVIEW T2 ON T1.RESTAURANT_ID = T2.RESTAURANT_ID
+        GROUP BY
+            T1.RESTAURANT_ID,
+            T1.RESTAURANT_NAME,
+            T1.ADDR_SIDO,
+            T1.ADDR_SIGUNGU,
+            T1.ADDR_DONG,
+            T1.ADDR_DETAIL,
+            T1.PHONE_NUMBER,
+            T1.RESTAURANT_CATEGORY,
+            T1.RESTAURANT_LAT,
+            T1.RESTAURANT_LON,
+            T1.OPEN_HOUR,
+            T1.OPEN_MINUTE,
+            T1.CLOSE_HOUR,
+            T1.CLOSE_MINUTE,
+            T1.BREAK_START_HOUR,
+            T1.BREAK_START_MINUTE,
+            T1.BREAK_END_HOUR,
+            T1.BREAK_END_MINUTE,
+            T1.RESTAURANT_HOLIDAY,
+            T1.PARKING_INFO,
+            T1.CREATED_DATE,
+            T1.CREATED_ID,
+            T1.UPDATED_DATE,
+            T1.UPDATED_ID
     </select>
 
     <select id="findRestaurantsByCategory" parameterType="string" resultMap="restaurantResultMap">
         SELECT
-        RESTAURANT_ID,
-        RESTAURANT_NAME,
-        ADDR_SIDO,
-        ADDR_SIGUNGU,
-        ADDR_DONG,
-        ADDR_DETAIL,
-        PHONE_NUMBER,
-        RESTAURANT_CATEGORY,
-        RESTAURANT_LAT,
-        RESTAURANT_LON,
-        OPEN_HOUR,
-        OPEN_MINUTE,
-        CLOSE_HOUR,
-        CLOSE_MINUTE,
-        BREAK_START_HOUR,
-        BREAK_START_MINUTE,
-        BREAK_END_HOUR,
-        BREAK_END_MINUTE,
-        RESTAURANT_HOLIDAY,
-        PARKING_INFO,
-        CREATED_DATE,
-        CREATED_ID,
-        UPDATED_DATE,
-        UPDATED_ID
+            RESTAURANT_ID,
+            RESTAURANT_NAME,
+            ADDR_SIDO,
+            ADDR_SIGUNGU,
+            ADDR_DONG,
+            ADDR_DETAIL,
+            PHONE_NUMBER,
+            RESTAURANT_CATEGORY,
+            RESTAURANT_LAT,
+            RESTAURANT_LON,
+            OPEN_HOUR,
+            OPEN_MINUTE,
+            CLOSE_HOUR,
+            CLOSE_MINUTE,
+            BREAK_START_HOUR,
+            BREAK_START_MINUTE,
+            BREAK_END_HOUR,
+            BREAK_END_MINUTE,
+            RESTAURANT_HOLIDAY,
+            PARKING_INFO,
+            CREATED_DATE,
+            CREATED_ID,
+            UPDATED_DATE,
+            UPDATED_ID
         FROM TB_RESTAURANT
         WHERE RESTAURANT_CATEGORY = #{category}
     </select>
