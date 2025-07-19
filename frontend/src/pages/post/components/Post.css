@@ -107,6 +107,7 @@
     font-weight: bold;
     display: inline-flex; 
     align-items: center;
+    margin-left:10px;
 }
 .comment-count span { 
     margin-right: 3px;
@@ -220,45 +221,45 @@
 
 /* 검색 옵션 드롭다운 스타일 */
 .search-option-select {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    color: #555;
-    background-color: #fff;
+    padding: 6px 10px;
+    background-color: #444;
+    color: #f0f0f0;
+    border: 1px solid #666;
+    border-radius: 20px;
+    font-size: 0.95em;
     cursor: pointer;
-    outline: none;
-    transition: all 0.2s ease-in-out;
+    transition: border-color 0.2s, background-color 0.2s;;
 }
 
 .search-option-select:hover {
-    border-color: #888;
+    border-color: #666;
 }
 
 .search-option-select:focus {
-    border-color: #3f51b5; /* 포커스 시 색상 변경 */
-    box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+    outline: none;
+    border-color: #007bff;
+    background-color: #3a3a3a;
 }
 
 /* 검색 입력창 스타일 */
 .search-input {
     flex-grow: 1; /* 남은 공간을 채우도록 설정 */
     padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 20px;
     font-size: 14px;
-    color: #333;
-    outline: none;
-    transition: all 0.2s ease-in-out;
+    background-color: #f0f0f0;
 }
 
 .search-input::placeholder {
-    color: #aaa;
+    outline: none;
+    border-color: #007bff;
+    background-color: #3a3a3a;
 }
 
 .search-input:focus {
-    border-color: #3f51b5; /* 포커스 시 색상 변경 */
-    box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+    outline: none;
+    border-color: #007bff;
+    background-color: #3a3a3a;
 }
 
 
@@ -266,14 +267,21 @@
 .post-card-title {
     font-size: 1.3em;
     color: #ffffff;
-    padding-bottom: 5px;
+    word-break: break-word;
+}
+.post-card-title {
+    font-size: 1.3em;
+    color: #ffffff;
     word-break: break-word;
 }
 
+
 /* 게시글 카드 내용 (PostList) */
 .post-card-content {
-    font-size: 0.95em;
-    color: bbbbbb(255, 255, 255);
+    font-size: 1.2em;
+    padding-bottom: 40px; /* 버튼과 라인 간 간격 */
+    gap: 10px;
+    color: #ffffff;
     margin: 0 15px 10px 15px;
     flex-grow: 1;
     display: -webkit-box;
@@ -286,7 +294,7 @@
 /* 게시글 메타 정보 (PostList) */
 .post-card-meta {
     font-size: 0.9em;
-    color: #999;
+    color: #c4c4c4;
     margin: 5px 15px;
 }
 
@@ -294,14 +302,18 @@
 .post-card-likes,
 .post-detail-likes {
     display: flex;
+    flex-wrap: wrap; /* 글씨 길어지면 줄바꿈 가능 */
+    gap: 50px; /* 항목 간 간격 */
     align-items: center;
-    gap: 40px; 
-    margin-top: 20px; 
+    margin-top: 20px;
+    margin-left: 0;
+    padding-right: 5%;
+    word-break: break-word;
+    flex-shrink: 0;
 }
-
 /* 좋아요 버튼 (PostList) */
 .like-button3 {
-    font-size: 3em; 
+    font-size: 2.0em; 
     cursor: pointer;
     transition: transform 0.1s ease-in-out;
     background: none;
@@ -316,7 +328,7 @@
 
 /* 좋아요 버튼 (통합된 스타일) */
 .like-button3.liked { 
-    font-size: 3em; 
+    font-size: 2.0em; 
     cursor: pointer;
     transition: transform 0.1s ease-in-out;
     background: none;
@@ -386,9 +398,11 @@
 
 /* 좋아요 개수 (PostList & PostDetail 공통) */
 .like-count,.comment-count {
-    font-size: 1.4em; 
+    font-size: 1.2em; /* PostList 기준, 필요시 개별 컴포넌트에서 재정의 */
+    color: #e0e0e0;
     font-weight: bold;
-    color: #f0f0f0; 
+    display: inline-flex; 
+    align-items: center;
 }
 
 
@@ -438,25 +452,26 @@
 /* 게시글 액션 버튼 컨테이너 (PostList) */
 .post-card-actions {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 15px;
-    margin-top: auto;
+    gap: 30px;
+    padding: 13px;
     border-top: 1px solid #000000; /* 흰색 선 */
 }
 
 /* 게시글 액션 버튼 (PostList) */
 .post-action-button {
-    padding: 8px 40px;
+    padding: 4px 30px;
+    margin-left: 0;
     border: none;
     border-radius: 20px;
     cursor: pointer;
-    font-size: 1.3em;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 1.6em;
+    transition: background-color 0.1s ease, color 0.1s ease;
     font-weight: bold;
+    background-color: #eee;
 }
 
 .post-action-button.edit {
+    margin-left:15%;
     background-color: #ffc107;
     color: #333;
 }
@@ -549,7 +564,7 @@
     background-color: #444;
     color: #f0f0f0;
     border: 1px solid #666;
-    border-radius: 5px;
+    border-radius: 20px;
     font-size: 0.95em;
     cursor: pointer;
     transition: border-color 0.2s, background-color 0.2s;;

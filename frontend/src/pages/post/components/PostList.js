@@ -193,10 +193,12 @@ function PostList({ currentUser, selectedCity }) {
                                     </div>
                                     
                                     <h2 className="post-card-title">{post.postTitle}</h2>
+                                    <p className="post-card-meta">작성자 | {post.userNickname}</p>
                                     <p className="post-card-content">{post.postContent}</p>
-                                    <p className="post-card-meta">작성자: {post.userNickname}</p>
-                                    <p className="post-card-meta">작성일: {new Date(post.createdDate).toLocaleDateString()}</p>
-                                    <p className="post-card-likes">
+                                    <p className="post-card-meta">작성일 | {new Date(post.createdDate).toLocaleDateString()}</p>
+                                    <p className="post-card-meta">위치 | {post.locationTag}</p>
+                                </div>
+                                <div className="post-card-actions">
                                         <span
                                             className={`like-button3 ${post.liked ? 'liked' : ''}`}
                                             onClick={(e) => handleToggleLike(post.postId, e)} // 좋아요 버튼 클릭 이벤트
@@ -206,12 +208,6 @@ function PostList({ currentUser, selectedCity }) {
                                         </span>
                                         <span className="like-count">❤️{post.likeCount || 0}</span>
                                         <span className="comment-count">💬 {post.commentCount}</span>
-                                    </p>
-
-                                    <p className="post-card-meta">위치: {post.locationTag}</p>
-                                </div>
-
-                                <div className="post-card-actions">
 
                                 {currentUser && (currentUser.userId === post.userId || currentUser.userLoginId === 'admin') && (
 
