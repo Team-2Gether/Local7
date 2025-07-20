@@ -10,23 +10,25 @@ export const useRestaurants = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeSortBy, setActiveSortBy] = useState(null);
 
-    // 초기 데이터 로드 (컴포넌트 마운트 시 한 번만 실행)
-    useEffect(() => {
-        const loadData = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const data = await fetchAllRestaurants();
-                setAllRestaurants(data);
-                setFilteredRestaurants(data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadData();
+    // 데이터를 가져오는 로직을 별도의 함수로 분리
+    const loadData = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const data = await fetchAllRestaurants();
+            setAllRestaurants(data);
+            setFilteredRestaurants(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     }, []);
+
+    // 컴포넌트가 처음 마운트될 때 한 번만 데이터 로드
+    useEffect(() => {
+        loadData();
+    }, [loadData]);
 
     const handleSearch = () => {
         if (searchTerm.trim() === '') {
@@ -68,7 +70,8 @@ export const useRestaurants = () => {
         handleSearch,
         handleShowAllRestaurants,
         activeSortBy,
-        handleSortClick
+        handleSortClick,
+        refetchRestaurants: loadData
     };
 };
 
@@ -151,49 +154,6 @@ export const useMap = (
         setFilteredRestaurants(visibleRestaurants);
     }, [map, allRestaurants, setFilteredRestaurants]);
 
-    // '내 위치' 버튼 클릭 시
-    const handleMyPositionClick = useCallback(() => {
-        if (map) {
-            const donghaePosition = new window
-                .kakao
-                .maps
-                .LatLng(DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON);
-            map.setLevel(4);
-            map.panTo(donghaePosition);
-
-            if (myLocationMarkerRef.current) {
-                myLocationMarkerRef
-                    .current
-                    .setMap(null);
-            }
-            const imageSrc = "/compass.png";
-            const imageSize = new window
-                .kakao
-                .maps
-                .Size(40, 40);
-            const markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, {
-              offset: new window.kakao.maps.Point(20, 20) // 아이콘의 가로/세로 절반 값
-            });
-            const newMarker = new window
-                .kakao
-                .maps
-                .Marker({map: map, position: donghaePosition, image: markerImage});
-            myLocationMarkerRef.current = newMarker;
-        }
-    }, [map, DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON]);
-
-    const getDistance = (lat1, lon1, lat2, lon2) => {
-        const R = 6371;
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(
-            lat1 * Math.PI / 180
-        ) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    };
-
-    // 특정 반경 필터링
     const handleFilterClick = useCallback(
         (radius) => {
             const centerLat = DONGHAE_CITY_HALL_LAT;
@@ -243,6 +203,55 @@ export const useMap = (
         },
         [map, allRestaurants, DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON, setFilteredRestaurants]
     );
+
+    const handleMyPositionClick = useCallback(() => {
+        if (map) {
+            const donghaePosition = new window
+                .kakao
+                .maps
+                .LatLng(DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON);
+            map.setLevel(5);
+            map.panTo(donghaePosition);
+
+            if (myLocationMarkerRef.current) {
+                myLocationMarkerRef
+                    .current
+                    .setMap(null);
+            }
+            const imageSrc = "/compass.png";
+            const imageSize = new window
+                .kakao
+                .maps
+                .Size(40, 40);
+            const markerImage = new window
+                .kakao
+                .maps
+                .MarkerImage(imageSrc, imageSize, {
+                    offset: new window
+                        .kakao
+                        .maps
+                        .Point(20, 20)
+                });
+            const newMarker = new window
+                .kakao
+                .maps
+                .Marker({map: map, position: donghaePosition, image: markerImage});
+            myLocationMarkerRef.current = newMarker;
+
+            handleFilterClick(3);
+        }
+    }, [map, DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON, handleFilterClick]);
+
+    const getDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(
+            lat1 * Math.PI / 180
+        ) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    };
 
     // 지도 스크립트 로드
     useEffect(() => {

@@ -8,7 +8,7 @@ import './RestaurantDetailModal.css';
 
 Modal.setAppElement('#root');
 
-function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser }) {
+function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser, onReviewSubmitted }) {
     const [reviews, setReviews] = useState([]);
     const [loadingReviews, setLoadingReviews] = useState(true);
     const [reviewError, setReviewError] = useState(null);
@@ -123,6 +123,9 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
         setShowReviewForm(false);
         setEditingReview(null);
         fetchReviews(restaurant.restaurantId);
+        if (onReviewSubmitted) { 
+            onReviewSubmitted();
+        }
     };
 
     const averageRating = reviews.length > 0

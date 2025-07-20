@@ -16,6 +16,7 @@ function Restaurant({ currentUser }) {
     activeSortBy,
     handleSortClick,
     setFilteredRestaurants,
+    refetchRestaurants,
   } = useRestaurants();
 
   // 모달 관련 상태
@@ -25,7 +26,8 @@ function Restaurant({ currentUser }) {
   const handleRestaurantClick = useCallback((restaurant) => {
     setSelectedRestaurant(restaurant);
     setIsDetailModalOpen(true);
-  }, []);
+    refetchRestaurants();
+  }, [refetchRestaurants]);
 
   const handleModalClose = useCallback(() => {
     setIsDetailModalOpen(false);
@@ -143,6 +145,7 @@ function Restaurant({ currentUser }) {
             onRequestClose={handleModalClose}
             restaurant={selectedRestaurant}
             currentUser={currentUser}
+            onReviewSubmitted={refetchRestaurants}
           />
         )}
       </div>
