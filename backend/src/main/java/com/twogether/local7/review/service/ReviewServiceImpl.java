@@ -8,18 +8,16 @@ import com.twogether.local7.review.vo.ReviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers; // Schedulers 임포트
+import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
 
-// 로깅을 위한 임포트 추가
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
-    // 로거 인스턴스 생성
     private static final Logger logger = LoggerFactory.getLogger(ReviewServiceImpl.class);
 
     @Autowired
@@ -32,21 +30,16 @@ public class ReviewServiceImpl implements ReviewService {
     public Mono<ReviewVO> addReview(ReviewVO review) {
         return Mono.fromCallable(() -> {
 
-            // 1. AI 리뷰 요약 및 키워드 추출 요청
             AiReviewRequest aiRequest = new AiReviewRequest();
             aiRequest.setReview_text(review.getReviewContent());
 
-            // 2. AI 서비스 호출 (비동기)
             AiReviewResponse aiResponse = aiService.summarizeReview(aiRequest).block();
 
-            // 3. AI 응답을 ReviewVO에 설정
             if (aiResponse != null) {
                 review.setAiSummary(aiResponse.getSummary());
-                // 키워드 리스트를 하나의 문자열로 변환하여 저장
                 review.setAiKeywords(String.join(", ", aiResponse.getKeywords()));
             }
 
-            // 4. AI 분석 결과를 포함한 리뷰를 DB에 저장
             reviewDAO.insertReview(review);
             logger.info("ReviewService: 리뷰 추가 성공, ID: {}", review.getReviewId());
 
@@ -60,6 +53,16 @@ public class ReviewServiceImpl implements ReviewService {
             logger.info("ReviewService: getReviewsByRestaurantId 호출 - restaurantId: {}", restaurantId);
             List<ReviewVO> reviews = reviewDAO.findReviewsByRestaurantId(restaurantId);
             logger.info("ReviewService: restaurantId {}에 대한 리뷰 {}개 조회 성공", restaurantId, reviews.size());
+            return reviews;
+        }).subscribeOn(Schedulers.boundedElastic());
+    }
+
+    @Override
+    public Mono<List<ReviewVO>> getAllReviews() { // 리뷰 전체 목록 조회 로직 추가
+        return Mono.fromCallable(() -> {
+            logger.info("ReviewService: getAllReviews 호출");
+            List<ReviewVO> reviews = reviewDAO.findAllReviews();
+            logger.info("ReviewService: 전체 리뷰 {}개 조회 성공", reviews.size());
             return reviews;
         }).subscribeOn(Schedulers.boundedElastic());
     }

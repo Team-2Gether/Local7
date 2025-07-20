@@ -13,6 +13,9 @@ public interface ReviewDAO {
     // 특정 맛집의 모든 리뷰 조회
     List<ReviewVO> findReviewsByRestaurantId(Long restaurantId);
 
+    // 전체 리뷰 조회 메서드 추가
+    List<ReviewVO> findAllReviews();
+
     // 특정 사용자의 모든 리뷰 조회 (마이페이지 등에서 활용 가능)
     List<ReviewVO> findReviewsByUserId(Long userId);
 
@@ -21,5 +24,4 @@ public interface ReviewDAO {
 
     // 리뷰 삭제
     void deleteReview(Long reviewId);
-
 }
