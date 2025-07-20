@@ -223,6 +223,94 @@
 }
 
 /* -------------------------------------------
+   투표 결과 영역: 그래프 전체 컨테이너
+------------------------------------------- */
+.vote-result-container {
+  background-color: #1c1c1c;
+  padding: 2.5rem;
+  border-radius: 20px;
+  color: #fff;
+  font-family: 'Noto Sans KR', sans-serif;
+  max-width: 1000px;
+  margin: 2rem auto;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
+}
+
+/* 결과 헤더 타이틀 */
+.vote-result-header {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  color: #ffcc00;
+  text-shadow: 0 0 8px rgba(255, 204, 0, 0.6);
+}
+
+/* 각 투표 결과 줄 */
+.vote-result-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.6rem;
+}
+
+/* 순위 번호 */
+.vote-result-rank {
+  width: 40px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-align: center;
+  color: #ffcc00;
+}
+
+/* 지역 이름 */
+.vote-result-region {
+  width: 140px;
+  font-size: 1.1rem;
+  color: #ddd;
+}
+
+/* 막대 배경 컨테이너 */
+.bar-container {
+  flex: 1;
+  height: 22px;
+  background-color: #333;
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 애니메이션 효과 */
+@keyframes fillBar {
+  0% {
+    width: 0%;
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* 실제 막대 */
+.bar {
+  height: 100%;
+  background: linear-gradient(90deg, #00f0ff, #0072ff, #5f27cd);
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(0, 198, 255, 0.7);
+  animation: fillBar 1.5s ease-out forwards;
+  transition: width 1.2s ease;
+}
+
+/* 퍼센트 숫자 */
+.percent {
+  width: 60px;
+  text-align: right;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #00f0ff;
+}
+
+/* -------------------------------------------
    반응형 스타일 (모바일 대응)
 ------------------------------------------- */
 @media (max-width: 768px) {
