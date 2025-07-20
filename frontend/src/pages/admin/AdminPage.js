@@ -456,7 +456,7 @@ const AdminPage = ({ currentUser }) => {
                                     sortedReports.map(report => (
                                         <tr key={report.reportId}>
                                             <td>{report.reportId}</td>
-                                            <td>{report.postTitle || report.commentContent}</td>
+                                            <td>{report.targetNickname}</td>
                                             <td>{report.reportReason}</td>
                                             <td>{report.reportStatus}</td>
                                             <td>{new Date(report.createdDate).toLocaleDateString()}</td>

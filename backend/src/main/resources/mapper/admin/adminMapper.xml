@@ -59,6 +59,10 @@
         <result property="createdId" column="CREATED_ID" />
         <result property="updatedDate" column="UPDATED_DATE" />
         <result property="updatedId" column="UPDATED_ID" />
+        <result property="reporterNickname" column="REPORTER_NICKNAME" />
+        <result property="postTitle" column="POST_TITLE" />
+        <result property="commentContent" column="COMMENT_CONTENT" />
+        <result property="targetNickname" column="TARGET_NICKNAME" />
     </resultMap>
 
     <select id="selectAllUsers" resultMap="userMap">
@@ -83,8 +87,18 @@
     </select>
 
     <select id="selectAllReports" resultMap="reportMap">
-        SELECT *
-        FROM TB_REPORT
+        SELECT
+            r.*,
+            ru.USER_NICKNAME AS REPORTER_NICKNAME,
+            p.POST_TITLE,
+            c.CONTENT AS COMMENT_CONTENT,
+            tu.USER_NICKNAME AS TARGET_NICKNAME
+        FROM TB_REPORT r
+        LEFT JOIN TB_USER ru ON r.REPORTER_ID = ru.USER_ID
+        LEFT JOIN TB_POST p ON r.REPORT_TYPE = 'post' AND r.TARGET_ID = p.POST_ID
+        LEFT JOIN TB_COMMENT c ON r.REPORT_TYPE = 'comment' AND r.TARGET_ID = c.COMMENT_ID
+        LEFT JOIN TB_USER tu ON (r.REPORT_TYPE = 'post' AND p.USER_ID = tu.USER_ID) OR (r.REPORT_TYPE = 'comment' AND c.USER_ID = tu.USER_ID)
+        ORDER BY r.CREATED_DATE DESC
     </select>
 
     <delete id="deletePost">
