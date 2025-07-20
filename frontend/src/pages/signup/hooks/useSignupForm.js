@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useEmailVerification from './useEmailVerification';
 import useDuplicateCheck from './useDuplicateCheck';
-import { registerUser } from '../../../api/SignupApi'; //
+import { registerUser } from '../../../api/SignupApi';
 import useFormData from '../../../common/useFormData';
 
 function useSignupForm(navigate) {
@@ -11,15 +11,15 @@ function useSignupForm(navigate) {
     userPasswordConfirm: '',
     userEmail: '',
     userNickname: '',
-    userName: '', // userUsername -> userName으로 변경
-    userProfImgUrl: '', // userProfileImageUrl -> userProfImgUrl으로 변경
+    userName: '',
+    userProfImgUrl: '', // base64 문자열을 저장할 필드
     userBio: '',
   };
 
   const [messages, setMessages] = useState({});
 
   const { formData, handleChange: handleFormDataChange, resetFormData } = useFormData(initialFormData);
-  
+
   const {
     verificationCode,
     emailVerified,
@@ -30,7 +30,7 @@ function useSignupForm(navigate) {
     resetEmailVerification,
   } = useEmailVerification(formData.userEmail, setMessages);
 
-  const { duplicateStatus, checkDuplicate, resetDuplicateStatus, setDuplicateStatus } = useDuplicateCheck(setMessages); 
+  const { duplicateStatus, checkDuplicate, resetDuplicateStatus, setDuplicateStatus } = useDuplicateCheck(setMessages);
 
   const handleAllChanges = (e) => {
     const { name } = e.target;
@@ -38,30 +38,41 @@ function useSignupForm(navigate) {
 
     setMessages((prev) => {
       const newMessages = { ...prev };
-      delete newMessages[name];
+      delete newMessages.general;
+      delete newMessages.emailStatus;
+      delete newMessages.verificationCode;
+      delete newMessages[`${name}`];
+      if (name === 'userLoginId') setDuplicateStatus((prev) => ({ ...prev, userLoginId: null }));
+      if (name === 'userNickname') setDuplicateStatus((prev) => ({ ...prev, userNickname: null }));
       if (name === 'userEmail') {
-        delete newMessages.emailStatus;
-        delete newMessages.verificationCode;
-      }
-      if (name === 'userLoginId' || name === 'userNickname' || name === 'userEmail') {
-        delete newMessages.general; // 일반 메시지 초기화
-        if (name === 'userLoginId') setDuplicateStatus((prev) => ({ ...prev, userLoginId: null }));
-        if (name === 'userNickname') setDuplicateStatus((prev) => ({ ...prev, userNickname: null }));
-        if (name === 'userEmail') {
-          setDuplicateStatus((prev) => ({ ...prev, userEmail: null }));
-          resetEmailVerification(); // 이메일 변경 시 인증 상태 초기화
-        }
+        setDuplicateStatus((prev) => ({ ...prev, userEmail: null }));
+        resetEmailVerification();
       }
       return newMessages;
     });
   };
+
+  // 이미지 파일을 base64로 변환하여 formData에 저장하는 핸들러
+  const handleImageChange = (event) => {
+    const file = event.target.files ? event.target.files?.[0] : null;
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // reader.result는 "data:image/jpeg;base64,..." 형태의 문자열입니다.
+        handleFormDataChange({ target: { name: 'userProfImgUrl', value: reader.result } });
+      };
+      reader.readAsDataURL(file); // 파일을 base64 URL로 읽기
+    } else {
+      handleFormDataChange({ target: { name: 'userProfImgUrl', value: '' } }); // 파일 선택 취소 시 초기화
+    }
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessages({}); // Submit 시 모든 메시지 초기화 (선택 사항)
 
     // 유효성 검사 로직 (기존 로직 유지)
-    // userUsername 대신 userName을 사용하도록 수정
     if (!formData.userLoginId || !formData.userPassword || !formData.userPasswordConfirm || !formData.userEmail || !formData.userNickname || !formData.userName) {
       setMessages({ general: '모든 필수 필드를 입력해주세요.' });
       return false;
@@ -90,7 +101,6 @@ function useSignupForm(navigate) {
 
     try {
       const { userPasswordConfirm, ...dataToSend } = formData;
-      // API 함수 호출로 변경
       const response = await registerUser(dataToSend);
       setMessages({ general: response.message || '회원가입 성공!' });
       navigate('/');
@@ -119,6 +129,7 @@ function useSignupForm(navigate) {
     messages,
     duplicateStatus,
     handleChange: handleAllChanges,
+    handleImageChange, // 추가
     handleEmailChange: handleAllChanges,
     handleVerificationCodeChange,
     handleSendVerificationCode: sendVerificationCode,

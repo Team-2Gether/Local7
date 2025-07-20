@@ -2,12 +2,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSignupForm from './hooks/useSignupForm';
 
-import '../../assets/css/SignupForm.css'; //
+import '../../assets/css/SignupForm.css'; // 리액트 css 경로
 import StatusMessage from './components/StatusMessage';
 import IdNicknameInputGroup1 from './components/IdNicknameInputGroup';
 import InputField1 from './components/InputField';
 import PasswordConfirmField1 from './components/PasswordConfirmField';
-import EmailVerificationGroup1 from './components/EmailVerificationGroup'; 
+import EmailVerificationGroup1 from './components/EmailVerificationGroup';
 import TextAreaField1 from './components/TextAreaField';
 
 function SignupPage() {
@@ -19,12 +19,13 @@ function SignupPage() {
     emailSent,
     messages,
     duplicateStatus,
-    handleChange, 
+    handleChange,
+    handleImageChange, // 추가
     handleVerificationCodeChange,
-    handleSendVerificationCode, 
-    handleVerifyEmailCode,      
+    handleSendVerificationCode,
+    handleVerifyEmailCode,
     checkDuplicate,
-    handleSubmit, 
+    handleSubmit,
   } = useSignupForm(navigate);
 
   return (
@@ -64,7 +65,7 @@ function SignupPage() {
           userPassword={formData.userPassword}
           required
         />
-        
+
         <EmailVerificationGroup1
           userEmail={formData.userEmail}
           verificationCode={verificationCode}
@@ -102,14 +103,19 @@ function SignupPage() {
           required
         />
 
-        <InputField1
-          label="프로필 이미지 URL (선택 사항):"
-          id="userProfImgUrl"
-          name="userProfImgUrl"
-          type="text"
-          value={formData.userProfImgUrl}
-          onChange={handleChange}
-        />
+        <div> {/* 이미지 업로드 관련 div */}
+          <label htmlFor="userProfImg">프로필 이미지 (선택 사항):</label>
+          <input
+            type="file"
+            id="userProfImg"
+            name="userProfImg"
+            accept="image/*"
+            onChange={handleImageChange} // handleImageChange 연결
+          />
+          {formData.userProfImgUrl && (
+            <img src={formData.userProfImgUrl} alt="프로필 미리보기" style={{ maxWidth: '100px', maxHeight: '100px', marginTop: '10px' }} />
+          )}
+        </div>
 
         <TextAreaField1
           label="자기소개 (선택 사항):"
