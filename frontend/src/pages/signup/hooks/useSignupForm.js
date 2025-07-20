@@ -1,8 +1,7 @@
 import { useState } from 'react';
-// import axios from 'axios'; // 직접 Axios 사용 대신 API 함수 임포트
 import useEmailVerification from './useEmailVerification';
 import useDuplicateCheck from './useDuplicateCheck';
-import { registerUser } from '../../../api/SignupApi'; // SignupApi에서 registerUser 함수 임포트
+import { registerUser } from '../../../api/SignupApi'; //
 import useFormData from '../../../common/useFormData';
 
 function useSignupForm(navigate) {
@@ -12,8 +11,8 @@ function useSignupForm(navigate) {
     userPasswordConfirm: '',
     userEmail: '',
     userNickname: '',
-    userUsername: '',
-    userProfileImageUrl: '',
+    userName: '', // userUsername -> userName으로 변경
+    userProfImgUrl: '', // userProfileImageUrl -> userProfImgUrl으로 변경
     userBio: '',
   };
 
@@ -27,11 +26,10 @@ function useSignupForm(navigate) {
     emailSent,
     handleVerificationCodeChange,
     sendVerificationCode,
-    verifyEmailCode, // useEmailVerification에서 반환되는 이름과 일치하도록 수정
+    verifyEmailCode,
     resetEmailVerification,
   } = useEmailVerification(formData.userEmail, setMessages);
 
-  // setDuplicateStatus를 useDuplicateCheck 훅의 반환 값에 추가했으므로 구조 분해 할당
   const { duplicateStatus, checkDuplicate, resetDuplicateStatus, setDuplicateStatus } = useDuplicateCheck(setMessages); 
 
   const handleAllChanges = (e) => {
@@ -63,7 +61,8 @@ function useSignupForm(navigate) {
     setMessages({}); // Submit 시 모든 메시지 초기화 (선택 사항)
 
     // 유효성 검사 로직 (기존 로직 유지)
-    if (!formData.userLoginId || !formData.userPassword || !formData.userPasswordConfirm || !formData.userEmail || !formData.userNickname || !formData.userUsername) {
+    // userUsername 대신 userName을 사용하도록 수정
+    if (!formData.userLoginId || !formData.userPassword || !formData.userPasswordConfirm || !formData.userEmail || !formData.userNickname || !formData.userName) {
       setMessages({ general: '모든 필수 필드를 입력해주세요.' });
       return false;
     }
@@ -94,7 +93,7 @@ function useSignupForm(navigate) {
       // API 함수 호출로 변경
       const response = await registerUser(dataToSend);
       setMessages({ general: response.message || '회원가입 성공!' });
-      navigate('/login');
+      navigate('/');
       resetFormAndStates(); // 회원가입 성공 후 폼 초기화
       return true;
     } catch (error) {
@@ -120,12 +119,12 @@ function useSignupForm(navigate) {
     messages,
     duplicateStatus,
     handleChange: handleAllChanges,
-    handleEmailChange: handleAllChanges, // handleChange가 userEmail도 처리하므로 별도 함수 필요 없을 수 있음
+    handleEmailChange: handleAllChanges,
     handleVerificationCodeChange,
-    handleSendVerificationCode: sendVerificationCode, // 이름 일관성을 위해 수정
-    handleVerifyEmailCode: verifyEmailCode, // 이름 일관성을 위해 수정
+    handleSendVerificationCode: sendVerificationCode,
+    handleVerifyEmailCode: verifyEmailCode,
     checkDuplicate,
-    handleSubmit, // handleSubmit으로 반환
+    handleSubmit,
     resetFormAndStates
   };
 }

@@ -6,6 +6,8 @@
 
     <insert id="insertUser" parameterType="com.twogether.local7.signup.vo.SignupVO">
         INSERT INTO TB_USER (
+        USER_ID,
+        RULE_ID,
         LOGIN_ID,
         USER_NAME,
         USER_PASSWORD,
@@ -16,6 +18,8 @@
         CREATE_DATE,
         CREATED_ID
         ) VALUES (
+        SEQ_TB_USER.NEXTVAL,
+        #{ruleId},
         #{userLoginId},
         #{userName},
         #{userPassword},

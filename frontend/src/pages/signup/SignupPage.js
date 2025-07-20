@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSignupForm from './hooks/useSignupForm';
 
-import '../../assets/css/SignupForm.css';
+import '../../assets/css/SignupForm.css'; //
 import StatusMessage from './components/StatusMessage';
 import IdNicknameInputGroup1 from './components/IdNicknameInputGroup';
 import InputField1 from './components/InputField';
@@ -94,20 +94,20 @@ function SignupPage() {
 
         <InputField1
           label="이름:"
-          id="userUsername"
-          name="userUsername"
+          id="userName"
+          name="userName"
           type="text"
-          value={formData.userUsername}
+          value={formData.userName}
           onChange={handleChange}
           required
         />
 
         <InputField1
           label="프로필 이미지 URL (선택 사항):"
-          id="userProfileImageUrl"
-          name="userProfileImageUrl"
+          id="userProfImgUrl"
+          name="userProfImgUrl"
           type="text"
-          value={formData.userProfileImageUrl}
+          value={formData.userProfImgUrl}
           onChange={handleChange}
         />
 
