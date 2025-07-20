@@ -1,145 +1,148 @@
 /* -------------------------------------------
-투표 전체 컨테이너 스타일
+   투표 전체 컨테이너 스타일
 ------------------------------------------- */
 .vote-container {
-max-width: 1200px;
-margin: 0 auto;
-padding: 0;
-font-family: 'Noto Sans KR', sans-serif;
-color: #eee;
-box-sizing: border-box;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: #eee;
+  box-sizing: border-box;
 }
 
 /* -------------------------------------------
-헤더 영역 스타일
+   헤더 영역 스타일
 ------------------------------------------- */
 .vote-header {
-background: url('./image/vote-header.png') center center / 120% auto no-repeat;
-padding: 5.2rem 22.5vw;
-margin-bottom: 2rem;
-text-align: center;
-user-select: none;
-border-bottom: 4px solid transparent;
-border-image: linear-gradient(to right, #FFCC00, #FFCC00);
-border-image-slice: 1;
+  background: url('./image/vote-header.png') center center / 120% auto no-repeat;
+  padding: 5.2rem 22.5vw;
+  margin-bottom: 2rem;
+  text-align: center;
+  user-select: none;
+  border-bottom: 4px solid transparent;
+  border-image: linear-gradient(to right, #FFCC00, #FFCC00);
+  border-image-slice: 1;
 }
 
 /* -------------------------------------------
-탭 영역 컨테이너
+   탭 영역 컨테이너
 ------------------------------------------- */
 .tap-contents {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 2rem 12rem;
-border-radius: 20px;
-margin-bottom: 2rem;
-gap: 1rem;
-flex-wrap: wrap;
-box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 12rem;
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
 /* -------------------------------------------
-각 탭 버튼 스타일
+   각 탭 버튼 스타일
 ------------------------------------------- */
 .tap {
-flex: 1 1 100px;
-min-width: 100px;
-text-align: center;
-padding: 0.6rem 0;
-border-radius: 20px;
-cursor: pointer;
-user-select: none;
-transition: background-color 0.3s ease;
-background-color: #444;
-color: white;
-font-weight: 900;
-font-size: 1.1rem;
+  flex: 1 1 100px;
+  min-width: 100px;
+  text-align: center;
+  padding: 0.9rem 0;
+  border-radius: 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s ease;
+  background-color: #444;
+  color: white;
+  font-weight: 900;
+  font-size: 1.0rem;
 }
 
 .tap:hover {
-background-color: #ffcc00;
-color: black;
+  background-color: #ffcc00;
+  color: black;
 }
 
 /* 현재 선택된 탭 강조 스타일 */
 .selected-tap {
-font-weight: bold;
-background-color: #ffcc00 !important;
-color: black !important;
+  font-weight: bold;
+  background-color: #ffcc00 !important;
+  color: black !important;
 }
 
 /* 투표 안내 텍스트 */
 .best-reigon {
-font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 /* -------------------------------------------
-투표 버튼 그룹 스타일
+   투표 버튼 그룹 스타일
 ------------------------------------------- */
 .vote-buttons {
-display: flex;
-flex-wrap: wrap;
-gap: 8px;
-justify-content: center;
-margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 1.5rem;
 }
 
 /* 개별 투표 버튼 스타일 */
 .vote-buttons button {
-flex: 0 1 auto;
-min-width: 90px;
-max-width: 120px;
-padding: 0.4rem 2.5rem;
-border-radius: 20px;
-border: none;
-cursor: pointer;
-transition: background-color 0.2s ease;
-white-space: nowrap;
-background-color: #79AAFF;
-color: #eee;
-font-size: 1.2rem;
-font-weight: 500;
+  flex: 0 1 auto;
+  min-width: 90px;
+  max-width: 120px;
+  padding: 0.4rem 2.5rem;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+  background-color: #79AAFF;
+  color: #eee;
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 
 .vote-buttons button:hover:not(:disabled) {
-background-color: #eee;
-color: #222;
+  background-color: #eee;
+  color: #222;
 }
 
 /* 선택된 투표 버튼 강조 스타일 */
 .selected-region {
-font-weight: bold;
-box-shadow: inset 0 0 8px #4caf50;
-background-color: #2e7d32;
-color: #fff;
+  font-weight: bold;
+  box-shadow: inset 0 0 8px #4caf50;
+  background-color: #2e7d32;
+  color: #fff;
 }
 
 /* -------------------------------------------
-투표하기 및 결과보기 버튼 스타일
+   투표하기 및 결과보기 버튼 스타일
 ------------------------------------------- */
 .vote-todo-Button,
 .vote-result-Button {
-display: block;
-width: 100%;
-max-width: 240px;
-margin: 0.5rem auto;
-padding: 0.5rem 1rem;
-border-radius: 12px;
-font-size: 0.95rem;
-cursor: pointer;
-transition: background-color 0.2s ease;
-background-color: #84b7eb;
-color: white;
-border: none;
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  margin: 0.5rem auto;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  background-color: #84b7eb;
+  color: white;
+  border: none;
 }
 
 .vote-todo-Button:disabled {
-background-color: #ccc;
-color: #666;
-cursor: not-allowed;
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
 }
-/* 슬라이드 전체 컨테이너: 버튼과 이미지가 가로 정렬됨 */
+
+/* -------------------------------------------
+   슬라이드 전체 컨테이너: 버튼과 이미지가 가로 정렬됨
+------------------------------------------- */
 .slide-container {
   position: relative;
   width: 100%;
@@ -153,7 +156,7 @@ cursor: not-allowed;
 
 /* 이미지와 이름 표시 영역 */
 .slide-content {
-  width: 100%;
+  width: 80%;
   max-width: 500px;
   border-radius: 20px;
   overflow: hidden;
@@ -198,36 +201,67 @@ cursor: not-allowed;
   color: #fff;
 }
 
+/* -------------------------------------------
+   슬라이드와 투표 버튼 영역을 좌우로 나란히 배치하는 부모 컨테이너
+------------------------------------------- */
+.vote-main-content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* 위쪽 정렬 */
+  margin-bottom: 2rem;
+  margin-right: 7rem;
+  flex-wrap: wrap; /* 화면 작아질 때 세로 배치로 변경 가능 */
+}
+
+/* 투표 버튼 및 버튼 그룹 영역 */
+.vote-controls {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px; /* 적절한 최소 넓이 설정 */
+  max-width: 350px;
+  flex-shrink: 0; /* 너무 작아지지 않도록 방지 */
+}
 
 /* -------------------------------------------
-반응형 스타일 (모바일 대응)
+   반응형 스타일 (모바일 대응)
 ------------------------------------------- */
 @media (max-width: 768px) {
-.vote-header {
-padding: 2rem 4vw;
-}
+  .vote-header {
+    padding: 2rem 4vw;
+  }
 
-.tap-contents {
-flex-direction: column;
-align-items: stretch;
-padding: 1rem;
-}
+  .tap-contents {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
 
-.tap {
-width: 100%;
-}
+  .tap {
+    width: 100%;
+  }
 
-.vote-buttons {
-flex-direction: column;
-gap: 0.8rem;
-}
+  .vote-buttons {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
 
-.vote-buttons button {
-max-width: 100%;
-}
+  .vote-buttons button {
+    max-width: 100%;
+  }
 
-.vote-todo-Button,
-.vote-result-Button {
-max-width: 100%;
-}
+  .vote-todo-Button,
+  .vote-result-Button {
+    max-width: 100%;
+  }
+
+  .vote-main-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .vote-controls {
+    max-width: 100%;
+    min-width: auto;
+    width: 100%;
+  }
 }

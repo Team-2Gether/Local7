@@ -120,60 +120,58 @@ function VotePage() {
         <>
           <h2>다음달의 여행지를 투표해주세요</h2>
 
-          {/* --------------------------
-              이미지 슬라이드 영역
-              -------------------------- */}
-          {regions.length > 0 && (
-            <div className="slide-container">
-              {/* 좌측 이전 슬라이드 버튼 */}
-              <button className="slide-btn prev" onClick={prevSlide} aria-label="이전 이미지">
-                &#10094;
-              </button>
+          {/* 좌우 배치를 위한 부모 컨테이너 */}
+          <div className="vote-main-content">
+            {/* 좌측: 이미지 슬라이드 */}
+            {regions.length > 0 && (
+              <div className="slide-container">
+                <button className="slide-btn prev" onClick={prevSlide} aria-label="이전 이미지">
+                  &#10094;
+                </button>
 
-              {/* 현재 슬라이드 이미지 및 라벨 */}
-              <div className="slide-content">
-                <img
-                  src={regions[slideIndex].imgUrl}
-                  alt={regions[slideIndex].name}
-                  className="slide-image"
-                />
-                <div className="slide-label">{regions[slideIndex].name}</div>
+                <div className="slide-content">
+                  <img
+                    src={regions[slideIndex].imgUrl}
+                    alt={regions[slideIndex].name}
+                    className="slide-image"
+                  />
+                  <div className="slide-label">{regions[slideIndex].name}</div>
+                </div>
+
+                <button className="slide-btn next" onClick={nextSlide} aria-label="다음 이미지">
+                  &#10095;
+                </button>
+              </div>
+            )}
+
+            {/* 우측: 투표 버튼 및 투표하기 버튼 */}
+            <div className="vote-controls">
+              <div className="vote-buttons">
+                {regions.map((region) => (
+                  <button
+                    key={region.key}
+                    onClick={() => setSelectedOption(region.key)}
+                    className={selectedOption === region.key ? 'selected-region' : ''}
+                    disabled={hasVoted}
+                  >
+                    {region.name}
+                  </button>
+                ))}
               </div>
 
-              {/* 우측 다음 슬라이드 버튼 */}
-              <button className="slide-btn next" onClick={nextSlide} aria-label="다음 이미지">
-                &#10095;
+              <button
+                className="vote-todo-Button"
+                onClick={handleVoteClick}
+                disabled={hasVoted || !selectedOption}
+              >
+                투표하기
+              </button>
+
+              <button className="vote-result-Button" onClick={() => handleTapClick('result')}>
+                투표 현황보러 가기
               </button>
             </div>
-          )}
-
-          {/* 투표 버튼 그룹 */}
-          <div className="vote-buttons">
-            {regions.map((region) => (
-              <button
-                key={region.key}
-                onClick={() => setSelectedOption(region.key)}
-                className={selectedOption === region.key ? 'selected-region' : ''}
-                disabled={hasVoted}
-              >
-                {region.name}
-              </button>
-            ))}
           </div>
-
-          {/* 투표하기 버튼 */}
-          <button
-            className="vote-todo-Button"
-            onClick={handleVoteClick}
-            disabled={hasVoted || !selectedOption}
-          >
-            투표하기
-          </button>
-
-          {/* 투표 현황 보기 버튼 */}
-          <button className="vote-result-Button" onClick={() => handleTapClick('result')}>
-            투표 현황보러 가기
-          </button>
         </>
       )}
 
