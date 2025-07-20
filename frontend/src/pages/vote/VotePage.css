@@ -14,7 +14,7 @@
    헤더 영역 스타일
 ------------------------------------------- */
 .vote-header {
-  background: url('./image/vote-header.png') center center / 120% auto no-repeat;
+  background: url('../../assets/images/vote-header.png') center center / 120% auto no-repeat;
   padding: 5.2rem 22.5vw;
   margin-bottom: 2rem;
   text-align: center;
