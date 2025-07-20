@@ -44,11 +44,13 @@ const Sidebar = ({onMenuItemClick}) => {
                 <FaAward className="sidebar-icon"/>
                 <span>TOP10</span>
             </button>
-
+            
+            {/*
             <button className="sidebar-button" onClick={() => handleSidebarClick('restaurants')}>
                 <FaUtensils className="sidebar-icon" />
                 <span>주변 맛집</span>
             </button>
+            */}
 
             {/* <button className="sidebar-button" onClick={() => handleSidebarClick('posts')}>
                 <FaListAlt className="sidebar-icon"/>
