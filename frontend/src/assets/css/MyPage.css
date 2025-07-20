@@ -27,7 +27,7 @@
     margin-bottom: 10px;
 }
 
-.my-page-navigation .nav-link {
+.my-page-navigation .nav-link1 {
     text-decoration: none;
     color: #007bff;
     font-weight: bold;
@@ -37,11 +37,11 @@
     transition: background-color 0.3s ease;
 }
 
-.my-page-navigation .nav-link:hover {
+.my-page-navigation .nav-link1:hover {
     background-color: #e9f5ff;
 }
 
-.my-page-navigation .nav-link.active {
+.my-page-navigation .nav-link1.active {
     background-color: #007bff;
     color: white;
 }
