@@ -204,10 +204,13 @@ public class UserController {
 
     // 게시글 ID로 단일 게시글 조회 엔드포인트 추가
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<Map<String, Object>> getPostDetailById(@PathVariable Long postId) {
+    public ResponseEntity<Map<String, Object>> getPostDetailById(@PathVariable Long postId, HttpSession session) {
         Map<String, Object> response = new HashMap<>();
+
+        Long currentUserId = (Long) session.getAttribute("userId");
+
         try {
-            PostDetailVO post = userService.getPostById(postId);
+            PostDetailVO post = userService.getPostById(postId, currentUserId);
             if (post != null) {
                 response.put("status", "success");
                 response.put("message", "게시글을 성공적으로 조회했습니다.");
