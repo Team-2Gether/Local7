@@ -1,16 +1,17 @@
 import React from 'react';
-import {FaHome, FaUser, FaRobot, FaAward, FaShieldAlt, FaBullhorn} from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
+import {FaHome, FaUser, FaRobot, FaAward, FaBullhorn} from 'react-icons/fa';
+import {RiAdminLine} from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom'; 
 
 const Sidebar = ({ onMenuItemClick, currentUser }) => {
-    const navigate = useNavigate(); // useNavigate 훅 초기화
+    const navigate = useNavigate(); 
 
     const handleSidebarClick = (item) => {
         if (item === "ai") {
-            onMenuItemClick(item); // AiModal을 열기 위해 부모 컴포넌트의 onMenuItemClick 호출
+            onMenuItemClick(item); 
         } else {
-            // setActiveContent(item); // Main.js에서 관리하던 activeContent는 더 이상 Sidebar에서 직접 제어하지 않음
-            onMenuItemClick(item); // Main.js의 activeContent 상태 업데이트를 위해 호출
+            
+            onMenuItemClick(item); 
             
             // 라우팅 처리
             if (item === "home")
@@ -76,7 +77,7 @@ const Sidebar = ({ onMenuItemClick, currentUser }) => {
 
             {currentUser && currentUser.ruleId === 1 && (
                 <button className="sidebar-button" onClick={() => handleSidebarClick('admin')}>
-                    <FaShieldAlt className="sidebar-icon"/>
+                    <RiAdminLine className="sidebar-icon"/>
                     <span>관리자</span>
                 </button>
             )}
