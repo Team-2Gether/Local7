@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaEdit, FaTrashAlt, FaExclamationTriangle } from 'react-icons/fa';
 import useComment from '../hooks/useComment';
 import './CommentSection.css';
+import ReportModal from './ReportModal';
 
 function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
     const {
@@ -19,6 +20,9 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
         toggleCommentLike,
         handleReportComment,
     } = useComment();
+
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+    const [targetCommentId, setTargetCommentId] = useState(null);
 
     const [newCommentContent, setNewCommentContent] = useState('');
     const [editingCommentId, setEditingCommentId] = useState(null);
@@ -164,19 +168,23 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
         }
     };
 
-    const handleReport = async (commentId) => {
+    // 댓글 신고 모달 열기
+    const handleOpenReportModal = (commentId) => {
         if (!currentUser) {
             alert('로그인 후 신고할 수 있습니다.');
             return;
         }
-        const reportReason = prompt('신고 사유를 입력해주세요:');
-        if (reportReason) {
-            try {
-                await handleReportComment(commentId, reportReason);
-                alert('댓글이 성공적으로 신고되었습니다.');
-            } catch (err) {
-                alert(err.message);
-            }
+        setTargetCommentId(commentId);
+        setIsReportModalOpen(true);
+    };
+
+    // 댓글 신고 제출
+    const handleCommentReport = async (reportReason) => {
+        try {
+            await handleReportComment(targetCommentId, reportReason);
+            alert('댓글이 성공적으로 신고되었습니다.');
+        } catch (err) {
+            alert(err.message);
         }
     };
     
@@ -283,7 +291,7 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
                                 </button>
                                 {currentUser && comment.userId !== currentUser.userId && (
                                     <button
-                                        onClick={() => handleReport(comment.commentId)}
+                                        onClick={() => handleOpenReportModal(comment.commentId)}
                                         className="icon-button"
                                         title="댓글 신고"
                                     >
@@ -295,7 +303,14 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
                     ))
                 )}
             </div>
+            <ReportModal
+                isOpen={isReportModalOpen}
+                onClose={() => setIsReportModalOpen(false)}
+                onReport={handleCommentReport}
+                target="댓글"
+            />
         </div>
+        
     );
 }
 

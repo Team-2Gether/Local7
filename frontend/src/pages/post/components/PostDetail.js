@@ -1,9 +1,10 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { FaEdit, FaTrashAlt, FaExclamationTriangle  } from 'react-icons/fa';
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
 import CommentSection from './CommentSection';
+import ReportModal from './ReportModal';
 
 import './Post.css';
 
@@ -12,6 +13,8 @@ function PostDetail({ currentUser }) {
     const navigate = useNavigate();
     const { post, loading, error, loadPostById, removePost, setMessage, setPost, reportPost  } = usePost();
     const { toggleLike, likeLoading, likeError, setLikeError } = useLike();
+
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
     useEffect(() => {
         if (id) {
@@ -59,22 +62,22 @@ function PostDetail({ currentUser }) {
         }));
     }, [setPost]);
 
-    const handleReportPost = async () => {
+    // 게시글 신고 모달 열기
+    const handleOpenReportModal = () => {
         if (!currentUser) {
             alert('로그인 후 신고할 수 있습니다.');
             return;
         }
+        setIsReportModalOpen(true);
+    };
 
-        const reportReason = window.prompt('신고 사유를 입력해주세요:');
-        if (reportReason) {
-            try {
-                // **usePost 훅의 reportPost 함수 호출**
-                const response = await reportPost(post.postId, reportReason);
-                alert(response.message);
-            } catch (err) {
-                // usePost 훅에서 에러 메시지를 이미 처리하므로, 여기서는 alert만 표시
-                alert('신고 접수에 실패했습니다.');
-            }
+    // 신고 제출
+    const handlePostReport = async (reportReason) => {
+        try {
+            await reportPost(post.postId, reportReason);
+            alert('게시글이 성공적으로 신고되었습니다.');
+        } catch (err) {
+            alert(err.message);
         }
     };
 
@@ -151,7 +154,7 @@ function PostDetail({ currentUser }) {
                         <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
                         {showReportButton && (
                             <button
-                                onClick={handleReportPost}
+                                onClick={handleOpenReportModal}
                                 className="post-detail-button report"
                                 title="게시글 신고"
                             >
@@ -200,6 +203,13 @@ function PostDetail({ currentUser }) {
                         currentUser={currentUser} 
                         onCommentCountChange={handleCommentCountChange}
                         post={post}
+                    />
+
+                    <ReportModal
+                        isOpen={isReportModalOpen}
+                        onClose={() => setIsReportModalOpen(false)}
+                        onReport={handlePostReport}
+                        target="게시글"
                     />
                 </div>
             </div>
