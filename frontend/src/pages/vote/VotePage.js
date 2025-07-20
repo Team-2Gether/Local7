@@ -10,93 +10,138 @@ function VotePage() {
   const [selectedTap, setSelectedTap] = useState('place');
   const [hasVoted, setHasVoted] = useState(false);
   const [userId, setUserId] = useState(null);
-
-  // 현재 슬라이드 인덱스 상태
   const [slideIndex, setSlideIndex] = useState(0);
+  const [topRegionName, setTopRegionName] = useState('없음');
+
+  // 지역 이름 기준 이미지 경로 매핑 함수 (한글명 → public/assets/images/top/폴더 이미지)
+  const getImageByRegionName = (name) => {
+    const map = {
+      부산: '/assets/images/top/busan.png',
+      동해: '/assets/images/top/donghae.png',
+      강릉: '/assets/images/top/gangneung.png',
+      고성: '/assets/images/top/goseong.png',
+      경주: '/assets/images/top/gyeongju.png',
+      포항: '/assets/images/top/pohang.png',
+      삼척: '/assets/images/top/samcheok.png',
+      속초: '/assets/images/top/sokcho.png',
+      울진: '/assets/images/top/uljin.png',
+      울산: '/assets/images/top/ulsan.png',
+      양양: '/assets/images/top/yangyang.png',
+      영덕: '/assets/images/top/yeongdeok.png',
+    };
+    return map[name] || '/assets/images/top/default-image.jpg';
+  };
 
   useEffect(() => {
-    axios
-      .get('http://localhost:8080/api/auth/status', { withCredentials: true })
-      .then((res) => {
-        if (res.data.isLoggedIn) {
-          setUserId(res.data.userId);
-        } else {
-          setUserId(null);
-        }
-      })
-      .catch((err) => {
-        console.error('로그인 상태 확인 실패', err);
-      });
+    fetchUserStatus();
+    fetchRegions();
   }, []);
 
   useEffect(() => {
-    if (!userId) return;
-
-    axios
-      .get('http://localhost:8080/api/vote/userId', { withCredentials: true })
-      .then((res) => {
-        if (res.data.some((vote) => vote.hasVoted === 'Y')) {
-          setHasVoted(true);
-          setSelectedOption(res.data[0].regionId);
-        }
-      })
-      .catch((err) => {
-        console.error('투표 여부 상태 불러오기 실패', err);
-      });
+    if (userId) fetchUserVoteStatus();
   }, [userId]);
 
-  useEffect(() => {
-    axios
-      .get('http://localhost:8080/api/vote/regions', { withCredentials: true })
-      .then((res) => {
-        // 서버에서 받은 지역 데이터에 이미지 URL(imgUrl)도 포함되어 있다고 가정
-        setRegions(
-          res.data.map((region) => ({
-            key: region.regionId,
-            name: region.krName,
-            imgUrl: region.imgUrl || './default-image.jpg', // 이미지가 없으면 기본 이미지 지정
-          }))
+  const fetchUserStatus = async () => {
+    try {
+      const res = await axios.get('http://localhost:8080/api/auth/status', { withCredentials: true });
+      setUserId(res.data.isLoggedIn ? res.data.userId : null);
+    } catch (err) {
+      console.error('로그인 상태 확인 실패', err);
+    }
+  };
+
+  const fetchUserVoteStatus = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8080/api/vote/user/${userId}`, { withCredentials: true });
+      if (res.data && res.data.hasVoted === 'Y') {
+        setHasVoted(true);
+        setSelectedOption(res.data.regionId);
+        const idx = regions.findIndex(r => r.key === res.data.regionId);
+        if (idx >= 0) setSlideIndex(idx);
+      }
+    } catch (err) {
+      console.error('투표 여부 상태 불러오기 실패', err);
+    }
+  };
+
+  const fetchRegions = async () => {
+    try {
+      const res = await axios.get('http://localhost:8080/api/vote/regions', { withCredentials: true });
+
+      // API에서 imgUrl이 없으면 지역명 매핑 함수로 기본 경로 할당
+      const regionsWithImg = res.data.map(region => ({
+        key: region.regionId,
+        name: region.krName,
+        imgUrl: region.imgUrl && region.imgUrl.trim() !== '' ? region.imgUrl : getImageByRegionName(region.krName),
+        voteCount: region.voteCount || 0,
+      }));
+
+      setRegions(regionsWithImg);
+
+      if (regionsWithImg.length > 0) {
+        setSelectedOption(regionsWithImg[0].key);
+        setSlideIndex(0);
+
+        const topRegion = regionsWithImg.reduce(
+          (max, region) => (region.voteCount > max.voteCount ? region : max),
+          regionsWithImg[0]
         );
-      })
-      .catch((err) => {
-        console.error('지역 데이터 불러오기 실패', err);
-      });
-  }, []);
+        setTopRegionName(topRegion.name);
+      } else {
+        setTopRegionName('없음');
+      }
+    } catch (err) {
+      console.error('지역 데이터 불러오기 실패', err);
+      setTopRegionName('없음');
+    }
+  };
 
-  const handleVoteClick = () => {
+  const handleVoteClick = async () => {
     if (!selectedOption || hasVoted) return;
-
-    axios
-      .post(
+    try {
+      await axios.post(
         'http://localhost:8080/api/vote/votes',
         { regionId: selectedOption },
         { withCredentials: true }
-      )
-      .then(() => {
-        setHasVoted(true);
-      })
-      .catch((err) => {
-        console.error('투표 유저 정보 불러오기 실패', err);
-      });
+      );
+      setHasVoted(true);
+      alert('투표가 완료되었습니다!');
+      fetchRegions();
+    } catch (err) {
+      console.error('투표 처리 실패', err);
+      alert('투표 중 오류가 발생했습니다.');
+    }
   };
 
   const handleTapClick = (tap) => {
     setSelectedTap(tap);
   };
 
-  // 이전 슬라이드 버튼 클릭 핸들러
   const prevSlide = () => {
-    setSlideIndex((prev) => (prev === 0 ? regions.length - 1 : prev - 1));
+    if (regions.length === 0) return;
+    setSlideIndex((prev) => {
+      const newIndex = prev === 0 ? regions.length - 1 : prev - 1;
+      setSelectedOption(regions[newIndex].key);
+      return newIndex;
+    });
   };
 
-  // 다음 슬라이드 버튼 클릭 핸들러
   const nextSlide = () => {
-    setSlideIndex((prev) => (prev === regions.length - 1 ? 0 : prev + 1));
+    if (regions.length === 0) return;
+    setSlideIndex((prev) => {
+      const newIndex = prev === regions.length - 1 ? 0 : prev + 1;
+      setSelectedOption(regions[newIndex].key);
+      return newIndex;
+    });
+  };
+
+  const handleRegionClick = (regionKey, index) => {
+    setSelectedOption(regionKey);
+    setSlideIndex(index);
   };
 
   return (
     <div className="vote-container">
-      {/* 상단 헤더 및 탭 영역 */}
       <div className="vote-header">
         <div className="tap-contents">
           <div
@@ -105,6 +150,12 @@ function VotePage() {
           >
             이달의 여행지
           </div>
+            <div
+            className={selectedTap === 'result' ? 'tap selected-tap' : 'tap'}
+            onClick={() => handleTapClick('result')}
+          >
+            투표 결과
+          </div>
           <div
             className={selectedTap === 'post' ? 'tap selected-tap' : 'tap'}
             onClick={() => handleTapClick('post')}
@@ -112,47 +163,42 @@ function VotePage() {
             이달의 게시물
           </div>
         </div>
-        <p className="best-reigon">이번달의 선정지는 M 입니다</p>
+        <p className="best-reigon">이번달의 선정지는 {topRegionName} 입니다</p>
       </div>
 
-      {/* 이달의 여행지 탭 선택 시 */}
       {selectedTap === 'place' && (
         <>
           <h2>다음달의 여행지를 투표해주세요</h2>
-
-          {/* 좌우 배치를 위한 부모 컨테이너 */}
           <div className="vote-main-content">
-            {/* 좌측: 이미지 슬라이드 */}
             {regions.length > 0 && (
               <div className="slide-container">
                 <button className="slide-btn prev" onClick={prevSlide} aria-label="이전 이미지">
                   &#10094;
                 </button>
-
                 <div className="slide-content">
                   <img
                     src={regions[slideIndex].imgUrl}
                     alt={regions[slideIndex].name}
                     className="slide-image"
+                    style={{ pointerEvents: 'none', userSelect: 'none' }}
                   />
                   <div className="slide-label">{regions[slideIndex].name}</div>
                 </div>
-
                 <button className="slide-btn next" onClick={nextSlide} aria-label="다음 이미지">
                   &#10095;
                 </button>
               </div>
             )}
 
-            {/* 우측: 투표 버튼 및 투표하기 버튼 */}
-            <div className="vote-controls">
+            <div className="vote-controls" style={{ zIndex: 2, position: 'relative' }}>
               <div className="vote-buttons">
-                {regions.map((region) => (
+                {regions.map((region, index) => (
                   <button
                     key={region.key}
-                    onClick={() => setSelectedOption(region.key)}
+                    onClick={() => handleRegionClick(region.key, index)}
                     className={selectedOption === region.key ? 'selected-region' : ''}
                     disabled={hasVoted}
+                    type="button"
                   >
                     {region.name}
                   </button>
@@ -163,19 +209,15 @@ function VotePage() {
                 className="vote-todo-Button"
                 onClick={handleVoteClick}
                 disabled={hasVoted || !selectedOption}
+                type="button"
               >
-                투표하기
-              </button>
-
-              <button className="vote-result-Button" onClick={() => handleTapClick('result')}>
-                투표 현황보러 가기
+                {hasVoted ? '투표 완료' : '투표하기'}
               </button>
             </div>
           </div>
         </>
       )}
 
-      {/* 결과 탭, 게시물 탭 컴포넌트 */}
       {selectedTap === 'result' && <VotePageResult />}
       {selectedTap === 'post' && <VotePagePost />}
     </div>

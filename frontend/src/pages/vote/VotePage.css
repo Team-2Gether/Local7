@@ -1,5 +1,8 @@
 /* -------------------------------------------
    투표 전체 컨테이너 스타일
+   - 최대 가로폭 1200px로 제한하여 중앙 정렬
+   - 기본 폰트와 색상 설정
+   - box-sizing: border-box로 패딩, 보더 포함 크기 계산
 ------------------------------------------- */
 .vote-container {
   max-width: 1200px;
@@ -12,10 +15,14 @@
 
 /* -------------------------------------------
    헤더 영역 스타일
+   - 배경 이미지를 중앙 정렬 및 크기 조정하여 배경으로 사용
+   - 위아래 패딩과 좌우는 뷰포트 너비 비율로 설정해 반응형 고려
+   - 하단에 그라데이션 테두리 효과 적용
+   - 텍스트 중앙 정렬, 선택 방지 처리
 ------------------------------------------- */
 .vote-header {
   background: url('../../assets/images/vote-header.png') center center / 120% auto no-repeat;
-  padding: 5.2rem 22.5vw;
+  padding: 5.2rem 27.2vw;
   margin-bottom: 2rem;
   text-align: center;
   user-select: none;
@@ -26,57 +33,81 @@
 
 /* -------------------------------------------
    탭 영역 컨테이너
+   - flexbox로 가로 정렬 및 중앙 배치
+   - 간격(gap) 1rem, 둥근 모서리 적용
+   - flex-wrap: nowrap으로 한 줄 고정
 ------------------------------------------- */
 .tap-contents {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 2rem 12rem;
+  padding: 0;
   border-radius: 20px;
   margin-bottom: 2rem;
   gap: 1rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   box-sizing: border-box;
 }
 
 /* -------------------------------------------
    각 탭 버튼 스타일
+   - 고정 너비(150px)와 높이(48px)로 균일하게 디자인
+   - 텍스트 수직 및 수평 중앙 정렬
+   - 둥근 모서리, 포인터 커서, 선택 방지
+   - 배경, 글자색 및 굵기 지정
+   - 부드러운 배경 및 글자색 전환 효과
 ------------------------------------------- */
 .tap {
-  flex: 1 1 100px;
-  min-width: 100px;
+  flex: 0 0 150px;
+  height: 48px;
+  line-height: 48px;
   text-align: center;
-  padding: 0.9rem 0;
+  padding: 0;
   border-radius: 20px;
   cursor: pointer;
   user-select: none;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
   background-color: #444;
   color: white;
   font-weight: 900;
-  font-size: 1.0rem;
+  font-size: 1rem;
+  white-space: nowrap;
+  box-sizing: border-box;
+  border: none;
 }
 
+/* 탭 버튼 호버 효과
+   - 배경색 노란색(#ffcc00)으로 변경
+   - 글자색 검정으로 변경 */
 .tap:hover {
   background-color: #ffcc00;
   color: black;
 }
 
-/* 현재 선택된 탭 강조 스타일 */
+/* 선택된 탭 스타일
+   - 노란색 배경 및 검정 글자색 강제 적용
+   - 노란색 빛나는 그림자 효과 추가
+   - 테두리 제거 */
 .selected-tap {
   font-weight: bold;
   background-color: #ffcc00 !important;
   color: black !important;
-}
-
-/* 투표 안내 텍스트 */
-.best-reigon {
-  font-size: 1.5rem;
+  box-shadow: 0 0 8px rgba(255, 204, 0, 0.8);
+  border: none;
 }
 
 /* -------------------------------------------
-   투표 버튼 그룹 스타일
-------------------------------------------- */
+   안내 텍스트 스타일
+   - 폰트 크기 크게, 위쪽 여백 제거 */
+.best-reigon {
+  font-size: 1.5rem;
+  margin-top: 0;
+}
+
+/* -------------------------------------------
+   투표 버튼 그룹 컨테이너
+   - flexbox로 감싸고 버튼 간격 8px
+   - 중앙 정렬 및 하단 마진 */
 .vote-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -85,7 +116,11 @@
   margin-bottom: 1.5rem;
 }
 
-/* 개별 투표 버튼 스타일 */
+/* 개별 투표 버튼 스타일
+   - 최소 및 최대 너비 지정으로 크기 제한
+   - 패딩, 둥근 모서리, 포인터 커서 적용
+   - 배경 파란색, 글자 연한 회색
+   - 부드러운 배경색 전환 효과 */
 .vote-buttons button {
   flex: 0 1 auto;
   min-width: 90px;
@@ -102,12 +137,16 @@
   font-weight: 500;
 }
 
+/* 버튼 호버 시
+   - 배경색 흰색, 글자색 짙은 회색으로 변경 */
 .vote-buttons button:hover:not(:disabled) {
   background-color: #eee;
   color: #222;
 }
 
-/* 선택된 투표 버튼 강조 스타일 */
+/* 선택된 지역 버튼 스타일
+   - 진한 초록색 배경 및 내부 그림자 효과
+   - 흰색 글자 */
 .selected-region {
   font-weight: bold;
   box-shadow: inset 0 0 8px #4caf50;
@@ -116,8 +155,11 @@
 }
 
 /* -------------------------------------------
-   투표하기 및 결과보기 버튼 스타일
-------------------------------------------- */
+   투표 진행 및 결과 버튼 스타일
+   - 너비 100%로 중앙 정렬
+   - 최대 너비 240px, 패딩과 둥근 모서리 적용
+   - 밝은 파란색 배경, 흰색 글자
+   - 마우스 커서 포인터, 배경색 부드러운 전환 */
 .vote-todo-Button,
 .vote-result-Button {
   display: block;
@@ -134,6 +176,9 @@
   border: none;
 }
 
+/* 버튼 비활성화 상태 스타일
+   - 연한 회색 배경과 글자색
+   - 커서 비활성화 표시 */
 .vote-todo-Button:disabled {
   background-color: #ccc;
   color: #666;
@@ -141,49 +186,59 @@
 }
 
 /* -------------------------------------------
-   슬라이드 전체 컨테이너: 버튼과 이미지가 가로 정렬됨
-------------------------------------------- */
+   슬라이드 컨테이너 스타일
+   - 중앙 정렬 및 가로 최대 600px
+   - flexbox로 좌우 정렬, 요소 간 간격 1rem */
 .slide-container {
   position: relative;
   width: 100%;
-  max-width: 600px;   /* 최대 넓이 제한 */
-  margin: 2rem auto 3rem auto; /* 위아래 마진 */
+  max-width: 600px;
+  margin: 2rem auto 3rem auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;          /* 버튼과 이미지 사이 간격 */
+  gap: 1rem;
 }
 
-/* 이미지와 이름 표시 영역 */
+/* 슬라이드 내부 콘텐츠 박스
+   - 너비 80%, 최대 500px, 둥근 모서리 및 그림자
+   - 배경 어두운 회색, 텍스트 중앙 정렬, 선택 방지 */
 .slide-content {
   width: 80%;
   max-width: 500px;
   border-radius: 20px;
   overflow: hidden;
   text-align: center;
-  user-select: none;   /* 이미지 및 텍스트 드래그 방지 */
+  user-select: none;
   box-shadow: 0 4px 10px rgba(0,0,0,0.5);
   background-color: #222;
 }
 
-/* 슬라이드 이미지 스타일 */
+/* 슬라이드 이미지 스타일
+   - 100% 너비, 고정 높이 300px
+   - 이미지 크기 비율 유지하며 박스에 맞춤 */
 .slide-image {
   width: 100%;
   height: 300px;
-  object-fit: cover;   /* 이미지 비율 유지하며 꽉 채우기 */
+  object-fit: cover;
   display: block;
 }
 
-/* 이미지 밑의 라벨 (여행지 이름) */
+/* 슬라이드 이미지 아래 라벨 텍스트
+   - 상하 패딩, 크기 및 굵기 지정
+   - 반투명 검은 배경, 흰색 글자 */
 .slide-label {
   padding: 0.8rem 0;
   font-size: 1.3rem;
   font-weight: 700;
   color: #fff;
-  background-color: rgba(0,0,0,0.6); /* 반투명 배경 */
+  background-color: rgba(0,0,0,0.6);
 }
 
-/* 좌우 슬라이드 버튼 공통 스타일 */
+/* 슬라이드 좌우 버튼 스타일
+   - 투명 배경, 테두리 없음
+   - 노란색 아이콘 크기 크게, 포인터 커서
+   - 마우스 오버 시 흰색으로 색상 변경 */
 .slide-btn {
   background-color: transparent;
   border: none;
@@ -193,38 +248,44 @@
   user-select: none;
   transition: color 0.3s ease;
   padding: 0 0.5rem;
-  flex-shrink: 0; /* 버튼 크기 고정 */
+  flex-shrink: 0;
 }
 
-/* 버튼 호버 시 색상 변경 */
 .slide-btn:hover {
   color: #fff;
 }
 
 /* -------------------------------------------
-   슬라이드와 투표 버튼 영역을 좌우로 나란히 배치하는 부모 컨테이너
-------------------------------------------- */
+   메인 컨텐츠 영역 스타일
+   - flexbox로 가로 정렬 및 좌측 상단 정렬
+   - 우측 여백 7rem, 하단 여백 2rem
+   - 여러 줄일 경우 줄바꿈 허용 */
 .vote-main-content {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* 위쪽 정렬 */
+  align-items: flex-start;
   margin-bottom: 2rem;
   margin-right: 7rem;
-  flex-wrap: wrap; /* 화면 작아질 때 세로 배치로 변경 가능 */
+  flex-wrap: wrap;
 }
 
-/* 투표 버튼 및 버튼 그룹 영역 */
+/* 투표 조작 컨트롤 영역
+   - 세로 방향 flex 레이아웃
+   - 최소 너비 300px, 최대 350px
+   - 축소 불가 */
 .vote-controls {
   display: flex;
   flex-direction: column;
-  min-width: 300px; /* 적절한 최소 넓이 설정 */
+  min-width: 300px;
   max-width: 350px;
-  flex-shrink: 0; /* 너무 작아지지 않도록 방지 */
+  flex-shrink: 0;
 }
 
 /* -------------------------------------------
-   투표 결과 영역: 그래프 전체 컨테이너
-------------------------------------------- */
+   투표 결과 컨테이너
+   - 어두운 배경, 둥근 모서리, 그림자 효과
+   - 넉넉한 패딩, 흰색 텍스트
+   - 최대 너비 1000px, 중앙 정렬 */
 .vote-result-container {
   background-color: #1c1c1c;
   padding: 2.5rem;
@@ -236,7 +297,10 @@
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
 }
 
-/* 결과 헤더 타이틀 */
+/* 투표 결과 제목 스타일
+   - 큰 글씨와 굵은 폰트
+   - 노란색 텍스트와 글자 그림자 효과
+   - 중앙 정렬 */
 .vote-result-header {
   font-size: 2rem;
   font-weight: 800;
@@ -246,7 +310,9 @@
   text-shadow: 0 0 8px rgba(255, 204, 0, 0.6);
 }
 
-/* 각 투표 결과 줄 */
+/* 투표 결과 행(한 줄) 스타일
+   - flexbox 가로 정렬, 아이템 간격 1rem
+   - 하단 마진 1.6rem */
 .vote-result-row {
   display: flex;
   align-items: center;
@@ -254,7 +320,10 @@
   margin-bottom: 1.6rem;
 }
 
-/* 순위 번호 */
+/* 순위 텍스트 박스
+   - 고정 너비 40px
+   - 글자 크기와 굵기 지정
+   - 중앙 정렬, 노란색 텍스트 */
 .vote-result-rank {
   width: 40px;
   font-size: 1.3rem;
@@ -263,14 +332,19 @@
   color: #ffcc00;
 }
 
-/* 지역 이름 */
+/* 지역명 텍스트 박스
+   - 고정 너비 140px
+   - 글자 크기 및 색상 지정 */
 .vote-result-region {
   width: 140px;
   font-size: 1.1rem;
   color: #ddd;
 }
 
-/* 막대 배경 컨테이너 */
+/* 투표 바 컨테이너
+   - flex: 1으로 남은 공간 모두 차지
+   - 높이 22px, 둥근 모서리, 배경 어두운 회색
+   - overflow hidden으로 바 넘침 방지 */
 .bar-container {
   flex: 1;
   height: 22px;
@@ -280,7 +354,9 @@
   position: relative;
 }
 
-/* 애니메이션 효과 */
+/* 투표 바 애니메이션 키프레임
+   - 0%: 너비 0, 투명도 0
+   - 100%: 너비 자동, 불투명도 1 */
 @keyframes fillBar {
   0% {
     width: 0%;
@@ -291,7 +367,11 @@
   }
 }
 
-/* 실제 막대 */
+/* 투표 바 스타일
+   - 높이 100%
+   - 그라데이션 배경, 둥근 모서리, 파란빛 그림자
+   - 1.5초 동안 fillBar 애니메이션 재생
+   - 너비 변경 시 부드럽게 전환 */
 .bar {
   height: 100%;
   background: linear-gradient(90deg, #00f0ff, #0072ff, #5f27cd);
@@ -301,7 +381,10 @@
   transition: width 1.2s ease;
 }
 
-/* 퍼센트 숫자 */
+/* 투표 퍼센트 텍스트 스타일
+   - 고정 너비 60px
+   - 오른쪽 정렬, 폰트 크기 및 굵기 지정
+   - 파란색 글자 */
 .percent {
   width: 60px;
   text-align: right;
@@ -311,42 +394,53 @@
 }
 
 /* -------------------------------------------
-   반응형 스타일 (모바일 대응)
+   반응형 스타일: 화면 너비 768px 이하일 때 적용
 ------------------------------------------- */
 @media (max-width: 768px) {
+  /* 헤더 패딩 축소하여 좁은 화면에 맞춤 */
   .vote-header {
     padding: 2rem 4vw;
   }
 
+  /* 탭 영역 세로 정렬 및 좌우 꽉 채우기 */
   .tap-contents {
     flex-direction: column;
     align-items: stretch;
     padding: 1rem;
   }
 
+  /* 탭 버튼 너비 100%, flex-grow 활성화 */
   .tap {
     width: 100%;
+    min-width: auto;
+    flex: 1 1 auto;
   }
 
+  /* 투표 버튼 그룹 세로 정렬, 간격 축소 */
   .vote-buttons {
     flex-direction: column;
     gap: 0.8rem;
   }
 
+  /* 투표 버튼 너비 100% */
   .vote-buttons button {
     max-width: 100%;
   }
 
+  /* 투표 진행 및 결과 버튼 너비 100% */
   .vote-todo-Button,
   .vote-result-Button {
     max-width: 100%;
   }
 
+  /* 메인 컨텐츠 세로 정렬, 우측 마진 제거 */
   .vote-main-content {
     flex-direction: column;
     align-items: center;
+    margin-right: 0;
   }
 
+  /* 컨트롤 영역 너비 100%로 확장 */
   .vote-controls {
     max-width: 100%;
     min-width: auto;
