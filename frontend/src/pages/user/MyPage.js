@@ -37,12 +37,12 @@ function MyPage({ currentUser, isLoggedIn }) {
             <div className="my-page-content"> {/* 새로운 div로 컨텐츠를 묶습니다. */}
                 <div className="my-page-navigation"> {/* 왼쪽에 배치될 네비게이션 섹션 */}
                     <ul>
-                        <li><Link to="/mypage" className="nav-link">내 정보</Link></li>
-                        <li><Link to="/mypage/edit" className="nav-link">회원 정보 수정</Link></li>
-                        <li><Link to="/mypage/posts" className="nav-link">내가 쓴 글</Link></li>
+                        <li><Link to="/mypage" className="nav-link1">내 정보</Link></li>
+                        <li><Link to="/mypage/edit" className="nav-link1">회원 정보 수정</Link></li>
+                        <li><Link to="/mypage/posts" className="nav-link1">내가 쓴 글</Link></li>
                         {/* 팔로워/팔로잉 링크 수정: 현재 로그인된 사용자의 ID를 포함하도록 */}
-                        <li><Link to={`/mypage/followers`} className="nav-link">팔로워</Link></li>
-                        <li><Link to={`/mypage/followings`} className="nav-link">팔로잉</Link></li>
+                        <li><Link to={`/mypage/followers`} className="nav-link1">팔로워</Link></li>
+                        <li><Link to={`/mypage/followings`} className="nav-link1">팔로잉</Link></li>
                         {/* 다른 마이 페이지 메뉴 항목들을 여기에 추가할 수 있습니다. */}
                     </ul>
                 </div>
