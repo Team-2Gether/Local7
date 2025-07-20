@@ -13,13 +13,17 @@
    헤더 영역 스타일
 --------------------------------- */
 .vote-header {
-  background: url('./image/vote-header.png') center/contain no-repeat; /* contain으로 변경 */
-  padding: 5rem 15vw;
+  background: url('./image/vote-header.png') center center / 120% auto no-repeat;
+  padding: 5.2rem 22.5vw;
   margin-bottom: 2rem;
   text-align: center;
   box-sizing: border-box;
   user-select: none;
+  border-bottom: 4px solid transparent;
+  border-image: linear-gradient(to right, #FFCC00, #FFCC00);
+  border-image-slice: 1;
 }
+
 /* -------------------------------
    탭 영역 컨테이너
 --------------------------------- */
@@ -42,7 +46,7 @@
   flex: 1 1 100px;            
   min-width: 100px;           
   text-align: center;         
-  padding: 0.5rem 0;          
+  padding: 0.6rem 0;          
   border-radius: 20px;        
   cursor: pointer;            
   user-select: none;          
@@ -50,7 +54,7 @@
   background-color: #444;
   color: white;
   font-weight: 900;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
 }
 
 .tap:hover {
