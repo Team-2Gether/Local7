@@ -105,4 +105,9 @@
         WHERE REPORT_ID = #{reportId}
     </update>
 
+    <delete id="deleteUser">
+        DELETE FROM TB_USER
+        WHERE USER_ID = #{userId}
+    </delete>
+
 </mapper>

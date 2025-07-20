@@ -20,76 +20,114 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    // 사용자 목록 조회
+    // 공통 권한 확인 메서드
+    private ResponseEntity<?> checkAdminAuth(Long userId) {
+        if (userId == null || !adminService.isAdmin(userId)) {
+            return new ResponseEntity<>("접근 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+        return null; // 관리자 권한 확인 성공
+    }
+
+    // --- 사용자 관리 API ---
+
     @GetMapping("/users")
-    public ResponseEntity<List<UserVO>> getAllUsers(@RequestHeader("X-USER-ID") Long adminId) {
-        // 실제 운영 환경에서는 세션 또는 JWT를 통해 관리자 권한을 확인해야 합니다.
-        // 여기서는 임시로 요청 헤더의 X-USER-ID를 사용합니다.
-        if (!adminService.isAdmin(adminId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 권한 없음
+    public ResponseEntity<?> getAllUsers(@RequestHeader("X-USER-ID") Long userId) {
+        ResponseEntity<?> authCheck = checkAdminAuth(userId);
+        if (authCheck != null) {
+            return authCheck;
         }
+
         List<UserVO> users = adminService.getAllUsers();
-        return ResponseEntity.ok(users);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    // 게시글 목록 조회
+    // 사용자 삭제 엔드포인트 추가
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<?> deleteUser(@RequestHeader("X-USER-ID") Long adminId,
+                                        @PathVariable Long userId) {
+        ResponseEntity<?> authCheck = checkAdminAuth(adminId);
+        if (authCheck != null) {
+            return authCheck;
+        }
+
+        adminService.deleteUser(userId);
+        return new ResponseEntity<>("사용자가 성공적으로 삭제되었습니다.", HttpStatus.OK);
+    }
+
+    // --- 게시글 관리 API ---
+
     @GetMapping("/posts")
-    public ResponseEntity<List<PostVO>> getAllPosts(@RequestHeader("X-USER-ID") Long adminId) {
-        if (!adminService.isAdmin(adminId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public ResponseEntity<?> getAllPosts(@RequestHeader("X-USER-ID") Long userId) {
+        ResponseEntity<?> authCheck = checkAdminAuth(userId);
+        if (authCheck != null) {
+            return authCheck;
         }
+
         List<PostVO> posts = adminService.getAllPosts();
-        return ResponseEntity.ok(posts);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    // 댓글 목록 조회
-    @GetMapping("/comments")
-    public ResponseEntity<List<CommentVO>> getAllComments(@RequestHeader("X-USER-ID") Long adminId) {
-        if (!adminService.isAdmin(adminId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        List<CommentVO> comments = adminService.getAllComments();
-        return ResponseEntity.ok(comments);
-    }
-
-    // 신고 목록 조회
-    @GetMapping("/reports")
-    public ResponseEntity<List<ReportVO>> getAllReports(@RequestHeader("X-USER-ID") Long adminId) {
-        if (!adminService.isAdmin(adminId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        List<ReportVO> reports = adminService.getAllReports();
-        return ResponseEntity.ok(reports);
-    }
-
-    // 게시글 삭제
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId, @RequestHeader("X-USER-ID") Long adminId) {
-        if (!adminService.isAdmin(adminId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public ResponseEntity<?> deletePost(@RequestHeader("X-USER-ID") Long userId,
+                                        @PathVariable Long postId) {
+        ResponseEntity<?> authCheck = checkAdminAuth(userId);
+        if (authCheck != null) {
+            return authCheck;
         }
+
         adminService.deletePost(postId);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>("게시글이 성공적으로 삭제되었습니다.", HttpStatus.OK);
     }
 
-    // 댓글 삭제
+    // --- 댓글 관리 API ---
+
+    @GetMapping("/comments")
+    public ResponseEntity<?> getAllComments(@RequestHeader("X-USER-ID") Long userId) {
+        ResponseEntity<?> authCheck = checkAdminAuth(userId);
+        if (authCheck != null) {
+            return authCheck;
+        }
+
+        List<CommentVO> comments = adminService.getAllComments();
+        return new ResponseEntity<>(comments, HttpStatus.OK);
+    }
+
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId, @RequestHeader("X-USER-ID") Long adminId) {
-        if (!adminService.isAdmin(adminId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public ResponseEntity<?> deleteComment(@RequestHeader("X-USER-ID") Long userId,
+                                           @PathVariable Long commentId) {
+        ResponseEntity<?> authCheck = checkAdminAuth(userId);
+        if (authCheck != null) {
+            return authCheck;
         }
+
         adminService.deleteComment(commentId);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>("댓글이 성공적으로 삭제되었습니다.", HttpStatus.OK);
     }
 
-    // 신고 상태 업데이트
-    @PatchMapping("/reports/{reportId}/status")
-    public ResponseEntity<Void> updateReportStatus(@PathVariable Long reportId, @RequestBody Map<String, String> request, @RequestHeader("X-USER-ID") Long adminId) {
-        if (!adminService.isAdmin(adminId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    // --- 신고 관리 API ---
+
+    @GetMapping("/reports")
+    public ResponseEntity<?> getAllReports(@RequestHeader("X-USER-ID") Long userId) {
+        ResponseEntity<?> authCheck = checkAdminAuth(userId);
+        if (authCheck != null) {
+            return authCheck;
         }
+
+        List<ReportVO> reports = adminService.getAllReports();
+        return new ResponseEntity<>(reports, HttpStatus.OK);
+    }
+
+    @PatchMapping("/reports/{reportId}/status")
+    public ResponseEntity<?> updateReportStatus(@RequestHeader("X-USER-ID") Long userId,
+                                                @PathVariable Long reportId,
+                                                @RequestBody Map<String, String> request) {
+        ResponseEntity<?> authCheck = checkAdminAuth(userId);
+        if (authCheck != null) {
+            return authCheck;
+        }
+
         String newStatus = request.get("status");
         adminService.updateReportStatus(reportId, newStatus);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>("신고 상태가 성공적으로 업데이트되었습니다.", HttpStatus.OK);
     }
 }

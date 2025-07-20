@@ -59,4 +59,11 @@ public class AdminServiceImpl implements AdminService {
     public void updateReportStatus(Long reportId, String status) {
         adminDAO.updateReportStatus(reportId, status);
     }
+
+    // 사용자 삭제 메소드 구현
+    @Override
+    public void deleteUser(Long userId) {
+        adminDAO.deleteUser(userId);
+    }
+
 }

@@ -63,6 +63,29 @@ const AdminPage = ({currentUser}) => {
         fetchAdminData();
     }, [activeTab]);
 
+    const handleDeleteUser = async (userId) => {
+        if (ADMIN_ID === userId) {
+            alert("자신을 삭제할 수 없습니다.");
+            return;
+        }
+        if (!window.confirm("정말로 이 사용자를 삭제하시겠습니까?")) {
+            return;
+        }
+        try {
+            const BASE_URL = "http://localhost:8080"; // 백엔드 서버 URL 추가
+            await axios.delete(`${BASE_URL}/api/admin/users/${userId}`, {
+                headers: {
+                    'X-USER-ID': ADMIN_ID
+                }
+            });
+            alert("사용자가 삭제되었습니다.");
+            setUsers(users.filter(user => user.userId !== userId));
+        } catch (err) {
+            console.error("Failed to delete user:", err);
+            alert("사용자 삭제에 실패했습니다.");
+        }
+    };
+
     const handleDeletePost = async (postId) => {
         if (!window.confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
             return;
@@ -141,6 +164,7 @@ const AdminPage = ({currentUser}) => {
                                     <th>이메일</th>
                                     <th>가입일</th>
                                     <th>권한</th>
+                                    <th>관리</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -156,7 +180,13 @@ const AdminPage = ({currentUser}) => {
                                                     user.ruleId === 1
                                                         ? "관리자"
                                                         : "일반"
-                                                }</td>
+                                                }
+                                            </td>
+                                            <td>
+                                                <button
+                                                    onClick={() => handleDeleteUser(user.userId)}
+                                                    className="admin-action-button delete">삭제</button>
+                                            </td>
                                         </tr>
                                     ))
                                 }

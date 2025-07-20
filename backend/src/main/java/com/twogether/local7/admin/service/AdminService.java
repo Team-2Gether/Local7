@@ -26,4 +26,7 @@ public interface AdminService {
     List<ReportVO> getAllReports();
     void updateReportStatus(Long reportId, String status);
 
+    // 사용자 삭제
+    void deleteUser(Long userId);
+
 }
