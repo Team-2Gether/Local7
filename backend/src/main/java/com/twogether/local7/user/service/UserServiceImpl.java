@@ -1,6 +1,7 @@
 // src/main/java/com/twogether/local7/user/service/impl/UserServiceImpl.java
 package com.twogether.local7.user.service.impl;
 
+import com.twogether.local7.like.service.LikeService;
 import com.twogether.local7.pagintion.Pagination;
 import com.twogether.local7.post.service.ImageService;
 import com.twogether.local7.post.vo.ImageVO;
@@ -28,6 +29,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private LikeService likeService;
 
     // 임시로 인증 코드를 저장할 맵 (실제 앱에서는 DB나 Redis 사용)
     private final Map<Long, String> verificationCodes = new HashMap<>();
@@ -181,11 +185,23 @@ public class UserServiceImpl implements UserService {
     private ImageService imageService;
 
     @Override
-    public PostDetailVO getPostById(Long postId) {
+    public PostDetailVO getPostById(Long postId, Long currentUserId) {
         PostDetailVO post = userDAO.findPostById(postId);
+
         if (post != null) {
             List<ImageVO> images = imageService.getImagesByPostId(postId);
             post.setImages(images);
+
+            // 좋아요 수 조회 및 설정
+            int likeCount = likeService.getLikeCount(postId);
+            post.setLikeCount(likeCount);
+
+            if (currentUserId != null) {
+                boolean isLiked = likeService.isLikedByUser(currentUserId, postId);
+                post.setLiked(isLiked);
+            } else {
+                post.setLiked(false); // 비로그인 사용자는 항상 false로 설정
+            }
         }
         return post;
     }

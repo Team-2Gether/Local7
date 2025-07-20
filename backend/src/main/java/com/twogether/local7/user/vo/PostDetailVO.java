@@ -23,5 +23,6 @@ public class PostDetailVO {
 
     // 현재
     private List<ImageVO> images;
-
+    private int likeCount;
+    private boolean liked;
 }

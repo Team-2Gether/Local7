@@ -25,7 +25,7 @@ public interface UserService {
     UserVO getUserProfileByLoginId(String userLoginId);
     UserVO getUserProfileByNickname(String userNickname);
 
-    PostDetailVO getPostById(Long postId);
+    PostDetailVO getPostById(Long postId, Long currentUserId);
 
     void updateUserPassword(Long userId, String newPassword);
     boolean checkUserPassword(Long userId, String currentPassword);
