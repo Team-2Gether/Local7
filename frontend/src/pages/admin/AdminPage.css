@@ -91,20 +91,20 @@
     font-size: 12px;
 }
 
-.admin-action-button.delete {
+.admin-action-button.complete {
     background-color: #e6525b;
 }
 
-.admin-action-button.delete:hover {
+.admin-action-button.complete:hover {
     background-color: #c73942;
 }
 
-.admin-action-button.complete {
-    background-color: #4CAF50;
+.admin-action-button.delete {
+    background-color: #e93440;
 }
 
-.admin-action-button.complete:hover {
-    background-color: #408843;
+.admin-action-button.delete:hover {
+    background-color: #c7212c;
 }
 
 .admin-error-message {
@@ -153,4 +153,10 @@
 .admin-search-input::placeholder {
     color: #aaa;
     font-style: italic;
+}
+
+.admin-action-buttons-container {
+    display: flex;
+    gap: 10px; /* 버튼 사이 간격 */
+    align-items: center;
 }

@@ -77,7 +77,7 @@ const AdminPage = ({ currentUser }) => {
             alert("자신을 삭제할 수 없습니다.");
             return;
         }
-        if (!window.confirm("정말로 이 사용자를 삭제하시겠습니까?")) {
+        if (!window.confirm("정말로 이 사용자를 삭제하시겠습니까? (삭제 시 사용자 관련 게시글, 댓글 다 삭제됩니다.) ")) {
             return;
         }
         try {
@@ -433,18 +433,16 @@ const AdminPage = ({ currentUser }) => {
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="admin-search-input"
                             />
-                            <button
-                                onClick={handleSortReports}
-                                className={`admin-action-button1 ${isSortedByReports ? "sorted" : ""}`}>
-                                {isSortedByReports ? "최신순으로 보기" : "신고 많은 순으로 보기"}
-                            </button>
                         </div>
                         <h3>신고 목록</h3>
                         <table className="admin-table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>신고 유형</th>
+                                    <th>신고한 사람</th>
                                     <th>신고 대상</th>
+                                    <th>신고 대상 내용</th>
                                     <th>사유</th>
                                     <th>상태</th>
                                     <th>신고일</th>
@@ -456,17 +454,37 @@ const AdminPage = ({ currentUser }) => {
                                     sortedReports.map(report => (
                                         <tr key={report.reportId}>
                                             <td>{report.reportId}</td>
+                                            <td>{report.reportType === 'post' ? '스레드' : '댓글'}</td>
+                                            <td>{report.reporterNickname}</td>
                                             <td>{report.targetNickname}</td>
+                                            <td>
+                                                {/* 신고 유형에 따라 게시글 제목 또는 댓글 내용을 표시 */}
+                                                {report.reportType === 'post' && report.postTitle}
+                                                {report.reportType === 'comment' && report.commentContent}
+                                            </td>
                                             <td>{report.reportReason}</td>
-                                            <td>{report.reportStatus}</td>
+                                            <td>{report.status === 'PENDING' ? '대기 중' : '처리 완료'}</td>
                                             <td>{new Date(report.createdDate).toLocaleDateString()}</td>
                                             <td>
                                                 {
-                                                    report.reportStatus === '처리중'
+                                                    report.status === 'PENDING'
                                                         ? (
-                                                            <button
-                                                                onClick={() => handleUpdateReportStatus(report.reportId, '처리완료')}
-                                                                className="admin-action-button complete">처리 완료</button>
+                                                            <div className="admin-action-buttons-container">
+                                                                <button
+                                                                    onClick={() => handleUpdateReportStatus(report.reportId, 'COMPLETED')}
+                                                                    className="admin-action-button complete">
+                                                                    처리
+                                                                </button>
+
+                                                                {/* 신고 대상 사용자의 ID가 있을 경우에만 '탈퇴' 버튼 표시 */}
+                                                                {report.targetUserId && (
+                                                                    <button
+                                                                        onClick={() => handleDeleteUser(report.targetUserId, report.targetNickname)}
+                                                                        className="admin-action-button delete">
+                                                                        탈퇴
+                                                                    </button>
+                                                                )}
+                                                            </div>
                                                         )
                                                         : (<span>처리 완료됨</span>)
                                                 }
@@ -499,7 +517,7 @@ const AdminPage = ({ currentUser }) => {
                     className={activeTab === "posts"
                         ? "active"
                         : ""}>
-                    게시글 관리
+                    스레드 관리
                 </button>
                 <button
                     onClick={() => setActiveTab("comments")}

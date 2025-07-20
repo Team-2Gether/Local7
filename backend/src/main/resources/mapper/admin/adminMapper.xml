@@ -63,6 +63,7 @@
         <result property="postTitle" column="POST_TITLE" />
         <result property="commentContent" column="COMMENT_CONTENT" />
         <result property="targetNickname" column="TARGET_NICKNAME" />
+        <result property="targetUserId" column="TARGET_USER_ID" />
     </resultMap>
 
     <select id="selectAllUsers" resultMap="userMap">
@@ -92,7 +93,11 @@
             ru.USER_NICKNAME AS REPORTER_NICKNAME,
             p.POST_TITLE,
             c.CONTENT AS COMMENT_CONTENT,
-            tu.USER_NICKNAME AS TARGET_NICKNAME
+            tu.USER_NICKNAME AS TARGET_NICKNAME,
+            CASE r.REPORT_TYPE
+                WHEN 'post' THEN p.USER_ID
+                WHEN 'comment' THEN c.USER_ID
+            END AS TARGET_USER_ID
         FROM TB_REPORT r
         LEFT JOIN TB_USER ru ON r.REPORTER_ID = ru.USER_ID
         LEFT JOIN TB_POST p ON r.REPORT_TYPE = 'post' AND r.TARGET_ID = p.POST_ID
@@ -122,6 +127,21 @@
     <delete id="deleteUser">
         DELETE FROM TB_USER
         WHERE USER_ID = #{userId}
+    </delete>
+
+    <delete id="deleteAllPostsByUserId">
+        DELETE FROM TB_POST
+        WHERE USER_ID = #{userId}
+    </delete>
+
+    <delete id="deleteAllCommentsByUserId">
+        DELETE FROM TB_COMMENT
+        WHERE USER_ID = #{userId}
+    </delete>
+
+    <delete id="deleteAllReportsByUserId">
+        DELETE FROM TB_REPORT
+        WHERE REPORTER_ID = #{userId} OR TARGET_ID = #{userId}
     </delete>
 
 </mapper>

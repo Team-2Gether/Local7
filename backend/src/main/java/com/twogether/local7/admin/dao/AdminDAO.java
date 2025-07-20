@@ -28,7 +28,12 @@ public interface AdminDAO {
     List<ReportVO> selectAllReports();
     int updateReportStatus(Long reportId, String status);
 
-    // 사용자 삭제 메소드 추가
+    // 사용자가 작성한 기록 삭제
+    void deleteAllPostsByUserId(@Param("userId") Long userId);
+    void deleteAllCommentsByUserId(@Param("userId") Long userId);
+    void deleteAllReportsByUserId(@Param("userId") Long userId);
+
+    // 사용자 삭제 메소드
     void deleteUser(@Param("userId") Long userId);
 
 }

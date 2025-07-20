@@ -112,7 +112,7 @@ public class AdminController {
 
     // --- 신고 관리 API ---
 
-    @GetMapping(value = "/reports", params = "sortBy") // 기존 엔드포인트와 충돌 해결
+    @GetMapping(value = "/reports", params = "sortBy")
     public ResponseEntity<?> getAllReports(@RequestHeader("X-USER-ID") Long userId) {
         ResponseEntity<?> authCheck = checkAdminAuth(userId);
         if (authCheck != null) {
@@ -122,6 +122,7 @@ public class AdminController {
         List<ReportVO> reports = adminService.getAllReports();
         return new ResponseEntity<>(reports, HttpStatus.OK);
     }
+
     @PatchMapping("/reports/{reportId}/status")
     public ResponseEntity<?> updateReportStatus(@RequestHeader("X-USER-ID") Long userId,
                                                 @PathVariable Long reportId,

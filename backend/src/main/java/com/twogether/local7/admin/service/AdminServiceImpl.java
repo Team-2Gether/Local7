@@ -63,6 +63,9 @@ public class AdminServiceImpl implements AdminService {
     // 사용자 삭제 메소드 구현
     @Override
     public void deleteUser(Long userId) {
+        adminDAO.deleteAllPostsByUserId(userId);
+        adminDAO.deleteAllCommentsByUserId(userId);
+        adminDAO.deleteAllReportsByUserId(userId);
         adminDAO.deleteUser(userId);
     }
 

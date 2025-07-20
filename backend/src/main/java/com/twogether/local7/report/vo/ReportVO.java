@@ -27,4 +27,7 @@ public class ReportVO {
 
     // 신고 대상 닉네임
     private String targetNickname;
+
+    private Long targetUserId;
+
 }
