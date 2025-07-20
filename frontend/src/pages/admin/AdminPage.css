@@ -37,8 +37,8 @@
 }
 
 .admin-tabs button.active {
-    border-bottom: 3px solid #67a3f4;
-    color: #67a3f4;
+    border-bottom: 3px solid #FFCC00;
+    color: #FFCC00;
     font-weight: bold;
 }
 
