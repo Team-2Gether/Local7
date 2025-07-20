@@ -218,7 +218,7 @@ export const useMap = (
                     .current
                     .setMap(null);
             }
-            const imageSrc = "/compass.png";
+            const imageSrc = "/local7Compass1.png";
             const imageSize = new window
                 .kakao
                 .maps
