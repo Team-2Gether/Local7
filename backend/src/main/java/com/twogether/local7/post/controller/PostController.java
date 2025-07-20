@@ -3,6 +3,8 @@ package com.twogether.local7.post.controller;
 import com.twogether.local7.like.service.LikeService;
 import com.twogether.local7.post.service.PostService;
 import com.twogether.local7.post.vo.PostVO;
+import com.twogether.local7.report.service.ReportService;
+import com.twogether.local7.report.vo.ReportVO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,9 @@ public class PostController {
 
     @Autowired
     private LikeService likeService;
+
+    @Autowired
+    private ReportService reportService;
 
 
     // 모든 게시글 조회 (GET /api/posts)
@@ -224,6 +229,34 @@ public class PostController {
         } catch (Exception e) {
             response.put("status", "error");
             response.put("message", "좋아요 처리 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    // **게시글 신고 API (POST /api/posts/{postId}/report)**
+    @PostMapping("/{postId}/report")
+    public ResponseEntity<Map<String, Object>> reportPost(@PathVariable Long postId, @RequestBody ReportVO reportVO, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Long reporterId = (Long) session.getAttribute("userId");
+
+        if (reporterId == null) {
+            response.put("status", "error");
+            response.put("message", "로그인이 필요합니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+
+        try {
+            reportVO.setReporterId(reporterId);
+            reportVO.setTargetId(postId);
+            reportVO.setReportType("post");
+            reportService.createReport(reportVO);
+
+            response.put("status", "success");
+            response.put("message", "게시글 신고가 성공적으로 접수되었습니다.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "게시글 신고 접수 중 오류가 발생했습니다: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

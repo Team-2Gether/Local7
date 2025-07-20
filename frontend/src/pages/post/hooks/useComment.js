@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { fetchComments, createComment, updateComment, deleteComment, toggleLikeComment } from '../../../api/CommentApi'; 
+import { fetchComments, createComment, updateComment, deleteComment, toggleLikeComment, reportComment } from '../../../api/CommentApi'; 
 
 const useComment = () => {
     const [comments, setComments] = useState([]);
@@ -14,11 +14,11 @@ const useComment = () => {
         try {
             const data = await fetchComments(postId, sortOrder); 
             setComments(data);
-            return data; // 댓글 데이터 반환
+            return data;
         } catch (err) {
             setCommentError('댓글을 불러오는 데 실패했습니다.');
             console.error('Failed to load comments:', err);
-            throw err; // 에러를 호출자에게 다시 던져서 처리할 수 있도록 함
+            throw err;
         } finally {
             setCommentsLoading(false);
         }
@@ -29,13 +29,13 @@ const useComment = () => {
         setMessage(null);
         try {
             const response = await createComment(postId, content);
-            setMessage(response); // 성공 메시지 설정
+            setMessage(response);
             return response;
         } catch (err) {
             const errorMsg = err.response?.data?.message || err.message || '댓글 작성 중 오류가 발생했습니다.';
             setCommentError(errorMsg);
-            console.error('Failed to create comment:', err);
-            throw new Error(errorMsg); // 에러 메시지를 포함하여 던지기
+            console.error('Failed to add comment:', err);
+            throw new Error(errorMsg);
         }
     }, []);
 
@@ -44,7 +44,7 @@ const useComment = () => {
         setMessage(null);
         try {
             const response = await updateComment(postId, commentId, content);
-            setMessage(response); // 성공 메시지 설정
+            setMessage(response);
             return response;
         } catch (err) {
             const errorMsg = err.response?.data?.message || err.message || '댓글 수정 중 오류가 발생했습니다.';
@@ -59,7 +59,7 @@ const useComment = () => {
         setMessage(null);
         try {
             const response = await deleteComment(postId, commentId);
-            setMessage(response); // 성공 메시지 설정
+            setMessage(response);
             return response;
         } catch (err) {
             const errorMsg = err.response?.data?.message || err.message || '댓글 삭제 중 오류가 발생했습니다.';
@@ -69,13 +69,13 @@ const useComment = () => {
         }
     }, []);
 
-    // (추가) 댓글 좋아요 토글 함수
+    // 댓글 좋아요 토글 함수
     const toggleCommentLike = useCallback(async (commentId, userId) => {
         setCommentError(null);
         setMessage(null);
         try {
             const response = await toggleLikeComment(commentId, userId);
-            setMessage(response.message); // CommentApi에서 반환하는 메시지를 사용
+            setMessage(response.message);
             return response;
         } catch (err) {
             const errorMsg = err.response?.data?.message || err.message || '좋아요 처리 중 오류가 발생했습니다.';
@@ -83,6 +83,22 @@ const useComment = () => {
             console.error('Failed to toggle comment like:', err);
             throw new Error(errorMsg);
         }
+    }, []);
+    
+    // 신고
+    const handleReportComment = useCallback(async (commentId, reportReason) => {
+      setCommentError(null);
+      setMessage(null);
+      try {
+        const response = await reportComment(commentId, reportReason);
+        setMessage(response.message);
+        return response;
+      } catch (err) {
+        const errorMsg = err.response?.data?.message || err.message || '댓글 신고 중 오류가 발생했습니다.';
+        setCommentError(errorMsg);
+        console.error('Failed to report comment:', err);
+        throw new Error(errorMsg);
+      }
     }, []);
 
     return {
@@ -97,7 +113,8 @@ const useComment = () => {
         addComment,
         modifyComment,
         removeComment,
-        toggleCommentLike, 
+        toggleCommentLike,
+        handleReportComment ,
     };
 };
 

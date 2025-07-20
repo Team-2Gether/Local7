@@ -2,13 +2,17 @@ package com.twogether.local7.comment.controller;
 
 import com.twogether.local7.comment.service.CommentService;
 import com.twogether.local7.comment.vo.CommentVO;
+import com.twogether.local7.report.service.ReportService;
+import com.twogether.local7.report.vo.ReportVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api") // 기본 경로 변경
@@ -16,6 +20,9 @@ public class CommentController {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private ReportService reportService;
 
     // 특정 게시글의 댓글 전체 조회
     @GetMapping("/posts/{postId}/comments")
@@ -101,6 +108,33 @@ public class CommentController {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("좋아요 처리 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/comments/{commentId}/report") // "/comments"를 추가
+    public ResponseEntity<Map<String, Object>> reportComment(@PathVariable Long commentId, @RequestBody ReportVO reportVO, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Long reporterId = (Long) session.getAttribute("userId");
+
+        if (reporterId == null) {
+            response.put("status", "error");
+            response.put("message", "로그인이 필요합니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+
+        try {
+            reportVO.setReporterId(reporterId);
+            reportVO.setTargetId(commentId);
+            reportVO.setReportType("comment");
+            reportService.createReport(reportVO);
+
+            response.put("status", "success");
+            response.put("message", "댓글 신고가 성공적으로 접수되었습니다.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "댓글 신고 접수 중 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }
