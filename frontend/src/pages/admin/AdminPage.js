@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import "./AdminPage.css";
 
-const AdminPage = ({currentUser}) => {
+const AdminPage = ({ currentUser }) => {
     const [activeTab, setActiveTab] = useState("users");
     const [users, setUsers] = useState([]);
     const [posts, setPosts] = useState([]);
@@ -11,6 +11,8 @@ const AdminPage = ({currentUser}) => {
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isSortedByReports, setIsSortedByReports] = useState(false);
 
     const ADMIN_ID = currentUser
         ?.userId; // 관리자 자신의 userId
@@ -30,27 +32,27 @@ const AdminPage = ({currentUser}) => {
 
         try {
             let response;
-            const BASE_URL = "http://localhost:8080"; // 백엔드 서버 URL 추가
+            const BASE_URL = "http://localhost:8080";
 
             switch (activeTab) {
                 case "users":
-                    response = await axios.get(`${BASE_URL}/api/admin/users`, {headers});
+                    response = await axios.get(`${BASE_URL}/api/admin/users`, { headers });
                     setUsers(response.data);
                     break;
                 case "posts":
-                    response = await axios.get(`${BASE_URL}/api/admin/posts`, {headers});
+                    response = await axios.get(`${BASE_URL}/api/admin/posts`, { headers });
                     setPosts(response.data);
                     break;
                 case "comments":
-                    response = await axios.get(`${BASE_URL}/api/admin/comments`, {headers});
+                    response = await axios.get(`${BASE_URL}/api/admin/comments`, { headers });
                     setComments(response.data);
                     break;
-                case "reviews": 
-                    response = await axios.get(`${BASE_URL}/api/admin/reviews`, {headers});
+                case "reviews":
+                    response = await axios.get(`${BASE_URL}/api/admin/reviews`, { headers });
                     setReviews(response.data);
                     break;
                 case "reports":
-                    response = await axios.get(`${BASE_URL}/api/admin/reports`, {headers});
+                    response = await axios.get(`${BASE_URL}/api/admin/reports`, { headers });
                     setReports(response.data);
                     break;
                 default:
@@ -66,6 +68,7 @@ const AdminPage = ({currentUser}) => {
 
     useEffect(() => {
         fetchAdminData();
+        setSearchTerm("");
     }, [activeTab]);
 
     const handleDeleteUser = async (userId) => {
@@ -77,7 +80,7 @@ const AdminPage = ({currentUser}) => {
             return;
         }
         try {
-            const BASE_URL = "http://localhost:8080"; // 백엔드 서버 URL 추가
+            const BASE_URL = "http://localhost:8080";
             await axios.delete(`${BASE_URL}/api/admin/users/${userId}`, {
                 headers: {
                     'X-USER-ID': ADMIN_ID
@@ -96,7 +99,7 @@ const AdminPage = ({currentUser}) => {
             return;
         }
         try {
-            const BASE_URL = "http://localhost:8080"; // 백엔드 서버 URL 추가
+            const BASE_URL = "http://localhost:8080";
             await axios.delete(`${BASE_URL}/api/admin/posts/${postId}`, {
                 headers: {
                     'X-USER-ID': ADMIN_ID
@@ -115,7 +118,7 @@ const AdminPage = ({currentUser}) => {
             return;
         }
         try {
-            const BASE_URL = "http://localhost:8080"; // 백엔드 서버 URL 추가
+            const BASE_URL = "http://localhost:8080";
             await axios.delete(`${BASE_URL}/api/admin/comments/${commentId}`, {
                 headers: {
                     'X-USER-ID': ADMIN_ID
@@ -129,7 +132,7 @@ const AdminPage = ({currentUser}) => {
         }
     };
 
-    const handleDeleteReview = async (reviewId) => { // 리뷰 삭제 함수 추가
+    const handleDeleteReview = async (reviewId) => {
         if (!window.confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
             return;
         }
@@ -150,7 +153,7 @@ const AdminPage = ({currentUser}) => {
 
     const handleUpdateReportStatus = async (reportId, newStatus) => {
         try {
-            const BASE_URL = "http://localhost:8080"; // 백엔드 서버 URL 추가
+            const BASE_URL = "http://localhost:8080";
             await axios.patch(`${BASE_URL}/api/admin/reports/${reportId}/status`, {
                 status: newStatus
             }, {
@@ -166,6 +169,66 @@ const AdminPage = ({currentUser}) => {
         }
     };
 
+    const handleSortReports = () => {
+        setIsSortedByReports(prev => !prev);
+    };
+
+    const lowercasedSearchTerm = searchTerm.toLowerCase();
+
+    // useMemo를 사용하여 검색/정렬된 목록을 캐싱
+    const filteredUsers = useMemo(() => {
+        return users.filter(user =>
+            user.userId.toString().includes(lowercasedSearchTerm) ||
+            user.userLoginId.toLowerCase().includes(lowercasedSearchTerm) ||
+            user.userNickname.toLowerCase().includes(lowercasedSearchTerm) ||
+            user.userEmail.toLowerCase().includes(lowercasedSearchTerm)
+        );
+    }, [users, lowercasedSearchTerm]);
+
+    const filteredPosts = useMemo(() => {
+        return posts.filter(post =>
+            post.postTitle.toLowerCase().includes(lowercasedSearchTerm) ||
+            post.userNickname.toLowerCase().includes(lowercasedSearchTerm)
+        );
+    }, [posts, lowercasedSearchTerm]);
+
+    const filteredComments = useMemo(() => {
+        return comments.filter(comment =>
+            comment.content.toLowerCase().includes(lowercasedSearchTerm) ||
+            comment.userNickname.toLowerCase().includes(lowercasedSearchTerm)
+        );
+    }, [comments, lowercasedSearchTerm]);
+
+    const filteredReviews = useMemo(() => {
+        return reviews.filter(review =>
+            review.reviewContent.toLowerCase().includes(lowercasedSearchTerm) ||
+            review.userNickname.toLowerCase().includes(lowercasedSearchTerm)
+        );
+    }, [reviews, lowercasedSearchTerm]);
+
+    const sortedReports = useMemo(() => {
+        const reportCounts = reports.reduce((acc, report) => {
+            const reportedItemId = report.postId || report.commentId;
+            acc[reportedItemId] = (acc[reportedItemId] || 0) + 1;
+            return acc;
+        }, {});
+
+        const tempReports = [...reports];
+        if (isSortedByReports) {
+            // 신고 횟수 기준으로 정렬
+            tempReports.sort((a, b) => {
+                const countA = reportCounts[a.postId || a.commentId] || 0;
+                const countB = reportCounts[b.postId || b.commentId] || 0;
+                return countB - countA;
+            });
+        } else {
+            // 기본 정렬: 최신순
+            tempReports.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+        }
+
+        return tempReports;
+    }, [reports, isSortedByReports]);
+
     const renderContent = () => {
         if (loading) {
             return <p>로딩 중...</p>;
@@ -178,6 +241,15 @@ const AdminPage = ({currentUser}) => {
             case "users":
                 return (
                     <div>
+                        <div className="search-bar-container">
+                            <input
+                                type="text"
+                                placeholder="사용자 ID, 로그인 ID, 닉네임, 이메일 검색"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="admin-search-input"
+                            />
+                        </div>
                         <h3>사용자 목록</h3>
                         <table className="admin-table">
                             <thead>
@@ -193,7 +265,7 @@ const AdminPage = ({currentUser}) => {
                             </thead>
                             <tbody>
                                 {
-                                    users.map(user => (
+                                    filteredUsers.map(user => (
                                         <tr key={user.userId}>
                                             <td>{user.userId}</td>
                                             <td>{user.userLoginId}</td>
@@ -201,10 +273,10 @@ const AdminPage = ({currentUser}) => {
                                             <td>{user.userEmail}</td>
                                             <td>{new Date(user.createDate).toLocaleDateString()}</td>
                                             <td>{
-                                                    user.ruleId === 1
-                                                        ? "관리자"
-                                                        : "일반"
-                                                }
+                                                user.ruleId === 1
+                                                    ? "관리자"
+                                                    : "일반"
+                                            }
                                             </td>
                                             <td>
                                                 <button
@@ -221,6 +293,15 @@ const AdminPage = ({currentUser}) => {
             case "posts":
                 return (
                     <div>
+                        <div className="search-bar-container">
+                            <input
+                                type="text"
+                                placeholder="게시글 제목, 작성자 검색"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="admin-search-input"
+                            />
+                        </div>
                         <h3>게시글 목록</h3>
                         <table className="admin-table">
                             <thead>
@@ -234,7 +315,7 @@ const AdminPage = ({currentUser}) => {
                             </thead>
                             <tbody>
                                 {
-                                    posts.map(post => (
+                                    filteredPosts.map(post => (
                                         <tr key={post.postId}>
                                             <td>{post.postId}</td>
                                             <td>{post.postTitle}</td>
@@ -255,6 +336,15 @@ const AdminPage = ({currentUser}) => {
             case "comments":
                 return (
                     <div>
+                        <div className="search-bar-container">
+                            <input
+                                type="text"
+                                placeholder="댓글 내용, 작성자 검색"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="admin-search-input"
+                            />
+                        </div>
                         <h3>댓글 목록</h3>
                         <table className="admin-table">
                             <thead>
@@ -268,7 +358,7 @@ const AdminPage = ({currentUser}) => {
                             </thead>
                             <tbody>
                                 {
-                                    comments.map(comment => (
+                                    filteredComments.map(comment => (
                                         <tr key={comment.commentId}>
                                             <td>{comment.commentId}</td>
                                             <td>{comment.content}</td>
@@ -286,9 +376,18 @@ const AdminPage = ({currentUser}) => {
                         </table>
                     </div>
                 );
-            case "reviews": // 리뷰 목록 렌더링 로직 추가
+            case "reviews":
                 return (
                     <div>
+                        <div className="search-bar-container">
+                            <input
+                                type="text"
+                                placeholder="리뷰 내용, 작성자 검색"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="admin-search-input"
+                            />
+                        </div>
                         <h3>리뷰 목록</h3>
                         <table className="admin-table">
                             <thead>
@@ -303,7 +402,7 @@ const AdminPage = ({currentUser}) => {
                             </thead>
                             <tbody>
                                 {
-                                    reviews.map(review => (
+                                    filteredReviews.map(review => (
                                         <tr key={review.reviewId}>
                                             <td>{review.reviewId}</td>
                                             <td>{review.reviewContent}</td>
@@ -325,6 +424,20 @@ const AdminPage = ({currentUser}) => {
             case "reports":
                 return (
                     <div>
+                        <div className="search-bar-container">
+                            <input
+                                type="text"
+                                placeholder="신고 대상, 사유 검색"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="admin-search-input"
+                            />
+                            <button
+                                onClick={handleSortReports}
+                                className={`admin-action-button1 ${isSortedByReports ? "sorted" : ""}`}>
+                                {isSortedByReports ? "최신순으로 보기" : "신고 많은 순으로 보기"}
+                            </button>
+                        </div>
                         <h3>신고 목록</h3>
                         <table className="admin-table">
                             <thead>
@@ -339,7 +452,7 @@ const AdminPage = ({currentUser}) => {
                             </thead>
                             <tbody>
                                 {
-                                    reports.map(report => (
+                                    sortedReports.map(report => (
                                         <tr key={report.reportId}>
                                             <td>{report.reportId}</td>
                                             <td>{report.postTitle || report.commentContent}</td>
@@ -394,7 +507,7 @@ const AdminPage = ({currentUser}) => {
                         : ""}>
                     댓글 관리
                 </button>
-                <button 
+                <button
                     onClick={() => setActiveTab("reviews")}
                     className={activeTab === "reviews"
                         ? "active"
