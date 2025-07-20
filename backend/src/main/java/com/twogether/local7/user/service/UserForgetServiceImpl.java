@@ -1,7 +1,7 @@
 // src/main/java/com/twogether/local7/user/service/impl/UserForgetServiceImpl.java
 package com.twogether.local7.user.service;
 
-import com.twogether.local7.user.dao.UserDAO; // 기존 UserDAO 사용
+import com.twogether.local7.user.dao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,30 +16,27 @@ import java.util.Random;
 public class UserForgetServiceImpl implements UserForgetService {
 
     @Autowired
-    private UserDAO userDAO; // UserForgetDAO 대신 기존 UserDAO 사용
+    private UserDAO userDAO;
 
     @Autowired
-    private JavaMailSender mailSender; // 이메일 전송을 위한 MailSender
+    private JavaMailSender mailSender;
 
-    private final Map<String, String> authCodeStore = new HashMap<>(); // 이메일 - 인증 코드 저장 (임시)
-    private final Map<String, Long> authCodeExpiry = new HashMap<>(); // 이메일 - 인증 코드 만료 시간 저장 (임시)
+    private final Map<String, String> authCodeStore = new HashMap<>();
+    private final Map<String, Long> authCodeExpiry = new HashMap<>();
     private static final long AUTH_CODE_VALIDITY_PERIOD = 5 * 60 * 1000; // 5분
 
     @Override
     @Transactional
     public boolean sendAuthCodeToEmail(String email) {
-        // 1. 이메일로 사용자 존재 여부 확인
-        String userId = userDAO.findUserLoginIdByEmail(email); // UserDAO에 추가된 메서드 사용
+        String userId = userDAO.findUserLoginIdByEmail(email);
         if (userId == null) {
-            return false; // 등록되지 않은 이메일
+            return false;
         }
 
-        // 2. 인증 코드 생성
         String authCode = generateAuthCode();
         authCodeStore.put(email, authCode);
         authCodeExpiry.put(email, System.currentTimeMillis() + AUTH_CODE_VALIDITY_PERIOD);
 
-        // 3. 이메일 전송
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
@@ -58,12 +55,10 @@ public class UserForgetServiceImpl implements UserForgetService {
         String storedCode = authCodeStore.get(email);
         Long expiryTime = authCodeExpiry.get(email);
 
+        // verifyAuthCode 메소드에서는 인증 코드를 삭제하지 않습니다.
+        // 인증 코드는 resetPassword가 성공적으로 완료된 후에 삭제됩니다.
         if (storedCode != null && expiryTime != null && System.currentTimeMillis() < expiryTime && storedCode.equals(authCode)) {
-            authCodeStore.remove(email); // 사용된 코드 삭제
-            authCodeExpiry.remove(email); // 사용된 코드 만료 시간 삭제
-
-            // 인증 성공 시 아이디 반환 (아이디 찾기 기능의 경우)
-            return userDAO.findUserLoginIdByEmail(email); // UserDAO에 추가된 메서드 사용
+            return userDAO.findUserLoginIdByEmail(email);
         }
         return null; // 인증 실패 (코드 불일치 또는 만료)
     }
@@ -71,7 +66,7 @@ public class UserForgetServiceImpl implements UserForgetService {
     @Override
     @Transactional
     public boolean resetPassword(String email, String authCode, String newPassword) {
-        // 1. 인증 코드 재확인 (혹시 모를 상황 대비)
+        // 1. 인증 코드 재확인
         String storedCode = authCodeStore.get(email);
         Long expiryTime = authCodeExpiry.get(email);
 
@@ -84,13 +79,13 @@ public class UserForgetServiceImpl implements UserForgetService {
 
         // 3. DB에 비밀번호 업데이트
         Map<String, Object> params = new HashMap<>();
-        params.put("userEmail", email); // 파라미터 이름 수정
-        params.put("newPassword", plainPassword); // 암호화되지 않은 비밀번호 사용
-        int updatedRows = userDAO.updateUserPasswordByEmail(params); // UserDAO에 추가된 메서드 사용
+        params.put("userEmail", email);
+        params.put("newPassword", plainPassword);
+        int updatedRows = userDAO.updateUserPasswordByEmail(params);
 
         if (updatedRows > 0) {
-            authCodeStore.remove(email); // 사용된 코드 삭제
-            authCodeExpiry.remove(email); // 사용된 코드 만료 시간 삭제
+            authCodeStore.remove(email); // 비밀번호 변경 성공 시 코드 삭제
+            authCodeExpiry.remove(email); // 비밀번호 변경 성공 시 만료 시간 삭제
             return true;
         }
         return false;
