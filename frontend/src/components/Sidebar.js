@@ -1,8 +1,8 @@
 import React from 'react';
-import {FaHome, FaUser, FaRobot, FaAward, FaUtensils, FaBullhorn} from 'react-icons/fa';
+import {FaHome, FaUser, FaRobot, FaAward, FaShieldAlt, FaBullhorn} from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
 
-const Sidebar = ({onMenuItemClick}) => {
+const Sidebar = ({ onMenuItemClick, currentUser }) => {
     const navigate = useNavigate(); // useNavigate 훅 초기화
 
     const handleSidebarClick = (item) => {
@@ -29,6 +29,8 @@ const Sidebar = ({onMenuItemClick}) => {
                 navigate("/notice");
             else if (item === 'ai')
                 navigate("/ai");
+            else if (item === 'admin')
+                navigate("/admin"); 
         }
     };
 
@@ -44,7 +46,7 @@ const Sidebar = ({onMenuItemClick}) => {
                 <FaAward className="sidebar-icon"/>
                 <span>TOP10</span>
             </button>
-            
+
             {/*
             <button className="sidebar-button" onClick={() => handleSidebarClick('restaurants')}>
                 <FaUtensils className="sidebar-icon" />
@@ -71,6 +73,13 @@ const Sidebar = ({onMenuItemClick}) => {
                 <FaRobot className="sidebar-icon"/>
                 <span>7봇</span>
             </button>
+
+            {currentUser && currentUser.ruleId === 1 && (
+                <button className="sidebar-button" onClick={() => handleSidebarClick('admin')}>
+                    <FaShieldAlt className="sidebar-icon"/>
+                    <span>관리자</span>
+                </button>
+            )}
 
         </div>
     );

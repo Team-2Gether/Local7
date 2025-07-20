@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.twogether.local7.admin.dao.AdminDAO">
+
+    <resultMap id="userMap" type="com.twogether.local7.user.vo.UserVO">
+        <id property="userId" column="USER_ID" />
+        <result property="ruleId" column="RULE_ID" />
+        <result property="userLoginId" column="LOGIN_ID" />
+        <result property="userName" column="USER_NAME" />
+        <result property="userPassword" column="USER_PASSWORD" />
+        <result property="userEmail" column="USER_EMAIL" />
+        <result property="userNickname" column="USER_NICKNAME" />
+        <result property="userProfileImageUrl" column="USER_PROF_IMG_URL" />
+        <result property="userBio" column="USER_BIO" />
+        <result property="createDate" column="CREATE_DATE" />
+        <result property="createdId" column="CREATED_ID" />
+        <result property="updatedDate" column="UPDATED_DATE" />
+        <result property="updatedId" column="UPDATED_ID" />
+    </resultMap>
+
+    <resultMap id="postMap" type="com.twogether.local7.post.vo.PostVO">
+        <id property="postId" column="POST_ID" />
+        <result property="userId" column="USER_ID" />
+        <result property="restaurantId" column="RESTAURANT_ID" />
+        <result property="postTitle" column="POST_TITLE" />
+        <result property="postContent" column="POST_CONTENT" />
+        <result property="locationTag" column="LOCATION_TAG" />
+        <result property="createdDate" column="CREATED_DATE" />
+        <result property="createdId" column="CREATED_ID" />
+        <result property="updatedDate" column="UPDATED_DATE" />
+        <result property="updatedId" column="UPDATED_ID" />
+        <result property="commentCount" column="COMMENT_COUNT" />
+        <result property="userNickname" column="USER_NICKNAME" />
+    </resultMap>
+
+    <resultMap id="commentMap" type="com.twogether.local7.comment.vo.CommentVO">
+        <id property="commentId" column="COMMENT_ID" />
+        <result property="postId" column="POST_ID" />
+        <result property="userId" column="USER_ID" />
+        <result property="content" column="CONTENT" />
+        <result property="createdDate" column="CREATED_DATE" />
+        <result property="createdId" column="CREATED_ID" />
+        <result property="updatedDate" column="UPDATED_DATE" />
+        <result property="updatedId" column="UPDATED_ID" />
+        <result property="likeCount" column="LIKE_COUNT" />
+        <result property="userNickname" column="USER_NICKNAME" />
+    </resultMap>
+
+    <resultMap id="reportMap" type="com.twogether.local7.report.vo.ReportVO">
+        <id property="reportId" column="REPORT_ID" />
+        <result property="reporterId" column="REPORTER_ID" />
+        <result property="targetId" column="TARGET_ID" />
+        <result property="reportType" column="REPORT_TYPE" />
+        <result property="reportReason" column="REPORT_REASON" />
+        <result property="status" column="STATUS" />
+        <result property="createdDate" column="CREATED_DATE" />
+        <result property="createdId" column="CREATED_ID" />
+        <result property="updatedDate" column="UPDATED_DATE" />
+        <result property="updatedId" column="UPDATED_ID" />
+    </resultMap>
+
+    <select id="selectAllUsers" resultMap="userMap">
+        SELECT *
+        FROM TB_USER
+    </select>
+
+    <select id="selectAllPosts" resultMap="postMap">
+        SELECT
+            p.*,
+            u.USER_NICKNAME AS USER_NICKNAME
+        FROM TB_POST p
+        LEFT JOIN TB_USER u ON p.USER_ID = u.USER_ID
+    </select>
+
+    <select id="selectAllComments" resultMap="commentMap">
+        SELECT
+            c.*,
+            u.USER_NICKNAME AS USER_NICKNAME
+        FROM TB_COMMENT c
+        LEFT JOIN TB_USER u ON c.USER_ID = u.USER_ID
+    </select>
+
+    <select id="selectAllReports" resultMap="reportMap">
+        SELECT *
+        FROM TB_REPORT
+    </select>
+
+    <delete id="deletePost">
+        DELETE FROM TB_POST
+        WHERE POST_ID = #{postId}
+    </delete>
+
+    <delete id="deleteComment">
+        DELETE FROM TB_COMMENT
+        WHERE COMMENT_ID = #{commentId}
+    </delete>
+
+    <update id="updateReportStatus">
+        UPDATE TB_REPORT
+        SET
+            STATUS = #{status},
+            UPDATED_DATE = SYSTIMESTAMP
+        WHERE REPORT_ID = #{reportId}
+    </update>
+
+</mapper>
