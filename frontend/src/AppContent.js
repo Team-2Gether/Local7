@@ -38,7 +38,7 @@ export function AppContent() {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
     const [isAiModalOpen, setIsAiModalOpen] = useState(false);
-    const [selectedCity, setSelectedCity] = useState("속초");
+    const [selectedCity, setSelectedCity] = useState("전체");
 
     const navigate = useNavigate();
 
