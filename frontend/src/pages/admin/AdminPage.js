@@ -7,6 +7,7 @@ const AdminPage = ({currentUser}) => {
     const [users, setUsers] = useState([]);
     const [posts, setPosts] = useState([]);
     const [comments, setComments] = useState([]);
+    const [reviews, setReviews] = useState([]);
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -43,6 +44,10 @@ const AdminPage = ({currentUser}) => {
                 case "comments":
                     response = await axios.get(`${BASE_URL}/api/admin/comments`, {headers});
                     setComments(response.data);
+                    break;
+                case "reviews": 
+                    response = await axios.get(`${BASE_URL}/api/admin/reviews`, {headers});
+                    setReviews(response.data);
                     break;
                 case "reports":
                     response = await axios.get(`${BASE_URL}/api/admin/reports`, {headers});
@@ -121,6 +126,25 @@ const AdminPage = ({currentUser}) => {
         } catch (err) {
             console.error("Failed to delete comment:", err);
             alert("댓글 삭제에 실패했습니다.");
+        }
+    };
+
+    const handleDeleteReview = async (reviewId) => { // 리뷰 삭제 함수 추가
+        if (!window.confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
+            return;
+        }
+        try {
+            const BASE_URL = "http://localhost:8080";
+            await axios.delete(`${BASE_URL}/api/admin/reviews/${reviewId}`, {
+                headers: {
+                    'X-USER-ID': ADMIN_ID
+                }
+            });
+            alert("리뷰가 삭제되었습니다.");
+            setReviews(reviews.filter(review => review.reviewId !== reviewId));
+        } catch (err) {
+            console.error("Failed to delete review:", err);
+            alert("리뷰 삭제에 실패했습니다.");
         }
     };
 
@@ -262,6 +286,42 @@ const AdminPage = ({currentUser}) => {
                         </table>
                     </div>
                 );
+            case "reviews": // 리뷰 목록 렌더링 로직 추가
+                return (
+                    <div>
+                        <h3>리뷰 목록</h3>
+                        <table className="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>내용</th>
+                                    <th>작성자</th>
+                                    <th>별점</th>
+                                    <th>작성일</th>
+                                    <th>관리</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    reviews.map(review => (
+                                        <tr key={review.reviewId}>
+                                            <td>{review.reviewId}</td>
+                                            <td>{review.reviewContent}</td>
+                                            <td>{review.userNickname}</td>
+                                            <td>{review.reviewRating}</td>
+                                            <td>{new Date(review.createdDate).toLocaleDateString()}</td>
+                                            <td>
+                                                <button
+                                                    onClick={() => handleDeleteReview(review.reviewId)}
+                                                    className="admin-action-button delete">삭제</button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                );
             case "reports":
                 return (
                     <div>
@@ -333,6 +393,13 @@ const AdminPage = ({currentUser}) => {
                         ? "active"
                         : ""}>
                     댓글 관리
+                </button>
+                <button 
+                    onClick={() => setActiveTab("reviews")}
+                    className={activeTab === "reviews"
+                        ? "active"
+                        : ""}>
+                    리뷰 관리
                 </button>
                 <button
                     onClick={() => setActiveTab("reports")}

@@ -4,11 +4,14 @@ import com.twogether.local7.admin.service.AdminService;
 import com.twogether.local7.comment.vo.CommentVO;
 import com.twogether.local7.post.vo.PostVO;
 import com.twogether.local7.report.vo.ReportVO;
+import com.twogether.local7.review.service.ReviewService;
+import com.twogether.local7.review.vo.ReviewVO;
 import com.twogether.local7.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +22,10 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    // ReviewService 주입
+    @Autowired
+    private ReviewService reviewService;
 
     // 공통 권한 확인 메서드
     private ResponseEntity<?> checkAdminAuth(Long userId) {
@@ -41,7 +48,6 @@ public class AdminController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    // 사용자 삭제 엔드포인트 추가
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<?> deleteUser(@RequestHeader("X-USER-ID") Long adminId,
                                         @PathVariable Long userId) {
@@ -129,5 +135,32 @@ public class AdminController {
         String newStatus = request.get("status");
         adminService.updateReportStatus(reportId, newStatus);
         return new ResponseEntity<>("신고 상태가 성공적으로 업데이트되었습니다.", HttpStatus.OK);
+    }
+
+    // --- 리뷰 관리 API 추가 ---
+
+    // 리뷰 목록 조회
+    @GetMapping("/reviews")
+    public Mono<ResponseEntity<?>> getAllReviews(@RequestHeader("X-USER-ID") Long userId) {
+        ResponseEntity<?> authCheck = checkAdminAuth(userId);
+        if (authCheck != null) {
+            return Mono.just(authCheck);
+        }
+
+        return reviewService.getAllReviews()
+                .map(reviews -> new ResponseEntity<>(reviews, HttpStatus.OK));
+    }
+
+    // 리뷰 삭제
+    @DeleteMapping("/reviews/{reviewId}")
+    public Mono<ResponseEntity<?>> deleteReview(@RequestHeader("X-USER-ID") Long userId,
+                                                @PathVariable Long reviewId) {
+        ResponseEntity<?> authCheck = checkAdminAuth(userId);
+        if (authCheck != null) {
+            return Mono.just(authCheck);
+        }
+
+        return reviewService.deleteReview(reviewId)
+                .thenReturn(new ResponseEntity<>("리뷰가 성공적으로 삭제되었습니다.", HttpStatus.OK));
     }
 }

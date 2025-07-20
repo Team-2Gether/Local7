@@ -10,8 +10,9 @@ public interface ReviewService {
 
     Mono<List<ReviewVO>> getReviewsByRestaurantId(Long restaurantId);
 
+    Mono<List<ReviewVO>> getAllReviews(); // 리뷰 전체 목록 조회 메서드 추가
+
     Mono<ReviewVO> updateReview(ReviewVO review);
 
     Mono<Void> deleteReview(Long reviewId);
-
 }

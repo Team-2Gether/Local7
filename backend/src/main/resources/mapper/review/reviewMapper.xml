@@ -24,44 +24,61 @@
             SELECT SEQ_TB_REVIEW.NEXTVAL FROM DUAL
         </selectKey>
         INSERT INTO TB_REVIEW (
-            REVIEW_ID,
-            USER_ID,
-            RESTAURANT_ID,
-            REVIEW_RATING,
-            REVIEW_CONTENT,
-            AI_SUMMARY,
-            AI_KEYWORDS,
-            CREATED_DATE,
-            CREATED_ID
+        REVIEW_ID,
+        USER_ID,
+        RESTAURANT_ID,
+        REVIEW_RATING,
+        REVIEW_CONTENT,
+        AI_SUMMARY,
+        AI_KEYWORDS,
+        CREATED_DATE,
+        CREATED_ID
         ) VALUES (
-            #{reviewId},
-            #{userId},
-            #{restaurantId},
-            #{reviewRating},
-            #{reviewContent},
-            <!-- AI_SUMMARY에 null이 올 경우를 대비하여 jdbcType=CLOB 명시 -->
-            #{aiSummary, jdbcType=CLOB},
-            <!-- AI_KEYWORDS에 null이 올 경우를 대비하여 jdbcType=VARCHAR 명시 -->
-            #{aiKeywords, jdbcType=VARCHAR},
-            SYSTIMESTAMP,
-            #{createdId}
+        #{reviewId},
+        #{userId},
+        #{restaurantId},
+        #{reviewRating},
+        #{reviewContent},
+        #{aiSummary, jdbcType=CLOB},
+        #{aiKeywords, jdbcType=VARCHAR},
+        SYSTIMESTAMP,
+        #{createdId}
         )
     </insert>
 
+    <select id="findAllReviews" resultMap="reviewResultMap">
+        SELECT
+        TR.REVIEW_ID,
+        TR.USER_ID,
+        TR.RESTAURANT_ID,
+        TR.REVIEW_RATING,
+        TR.REVIEW_CONTENT,
+        TR.AI_SUMMARY,
+        TR.AI_KEYWORDS,
+        TR.CREATED_DATE,
+        TR.CREATED_ID,
+        TR.UPDATED_DATE,
+        TR.UPDATED_ID,
+        TU.USER_NICKNAME
+        FROM TB_REVIEW TR
+        JOIN TB_USER TU ON TR.USER_ID = TU.USER_ID
+        ORDER BY TR.CREATED_DATE DESC
+    </select>
+
     <select id="findReviewsByRestaurantId" parameterType="long" resultMap="reviewResultMap">
         SELECT
-            TR.REVIEW_ID,
-            TR.USER_ID,
-            TR.RESTAURANT_ID,
-            TR.REVIEW_RATING,
-            TR.REVIEW_CONTENT,
-            TR.AI_SUMMARY,
-            TR.AI_KEYWORDS,
-            TR.CREATED_DATE,
-            TR.CREATED_ID,
-            TR.UPDATED_DATE,
-            TR.UPDATED_ID,
-            TU.USER_NICKNAME
+        TR.REVIEW_ID,
+        TR.USER_ID,
+        TR.RESTAURANT_ID,
+        TR.REVIEW_RATING,
+        TR.REVIEW_CONTENT,
+        TR.AI_SUMMARY,
+        TR.AI_KEYWORDS,
+        TR.CREATED_DATE,
+        TR.CREATED_ID,
+        TR.UPDATED_DATE,
+        TR.UPDATED_ID,
+        TU.USER_NICKNAME
         FROM TB_REVIEW TR
         JOIN TB_USER TU ON TR.USER_ID = TU.USER_ID
         WHERE TR.RESTAURANT_ID = #{restaurantId}
@@ -70,18 +87,18 @@
 
     <select id="findReviewsByUserId" parameterType="long" resultMap="reviewResultMap">
         SELECT
-            TR.REVIEW_ID,
-            TR.USER_ID,
-            TR.RESTAURANT_ID,
-            TR.REVIEW_RATING,
-            TR.REVIEW_CONTENT,
-            TR.AI_SUMMARY,
-            TR.AI_KEYWORDS,
-            TR.CREATED_DATE,
-            TR.CREATED_ID,
-            TR.UPDATED_DATE,
-            TR.UPDATED_ID,
-            TU.USER_NICKNAME
+        TR.REVIEW_ID,
+        TR.USER_ID,
+        TR.RESTAURANT_ID,
+        TR.REVIEW_RATING,
+        TR.REVIEW_CONTENT,
+        TR.AI_SUMMARY,
+        TR.AI_KEYWORDS,
+        TR.CREATED_DATE,
+        TR.CREATED_ID,
+        TR.UPDATED_DATE,
+        TR.UPDATED_ID,
+        TU.USER_NICKNAME
         FROM TB_REVIEW TR
         JOIN TB_USER TU ON TR.USER_ID = TU.USER_ID
         WHERE TR.USER_ID = #{userId}
@@ -91,14 +108,12 @@
     <update id="updateReview" parameterType="com.twogether.local7.review.vo.ReviewVO">
         UPDATE TB_REVIEW
         SET
-            REVIEW_RATING = #{reviewRating},
-            REVIEW_CONTENT = #{reviewContent},
-            <!-- AI_SUMMARY에 null이 올 경우를 대비하여 jdbcType=CLOB 명시 -->
-            AI_SUMMARY = #{aiSummary, jdbcType=CLOB},
-            <!-- AI_KEYWORDS에 null이 올 경우를 대비하여 jdbcType=VARCHAR 명시 -->
-            AI_KEYWORDS = #{aiKeywords, jdbcType=VARCHAR},
-            UPDATED_DATE = SYSTIMESTAMP,
-            UPDATED_ID = #{updatedId}
+        REVIEW_RATING = #{reviewRating},
+        REVIEW_CONTENT = #{reviewContent},
+        AI_SUMMARY = #{aiSummary, jdbcType=CLOB},
+        AI_KEYWORDS = #{aiKeywords, jdbcType=VARCHAR},
+        UPDATED_DATE = SYSTIMESTAMP,
+        UPDATED_ID = #{updatedId}
         WHERE REVIEW_ID = #{reviewId}
     </update>
 
