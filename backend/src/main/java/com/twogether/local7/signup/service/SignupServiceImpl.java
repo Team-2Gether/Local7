@@ -29,6 +29,7 @@ public class SignupServiceImpl implements SignupService {
     public Mono<Void> registerUser(SignupVO signupVO) {
         // As per the request, password encryption is NOT used.
         // In a real application, you MUST encrypt passwords (e.g., using BCryptPasswordEncoder).
+        signupVO.setRuleId(2); // 기본값으로 2 (사용자) 설정
         return Mono.fromRunnable(() -> signupDAO.insertUser(signupVO));
     }
 

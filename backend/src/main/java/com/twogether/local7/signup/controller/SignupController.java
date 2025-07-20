@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/signup") // Changed mapping to reflect signup functionality
+@RequestMapping("/api/signup")
 public class SignupController {
 
     @Autowired
@@ -21,6 +21,24 @@ public class SignupController {
     // Handles user registration
     @PostMapping("/register")
     public Mono<ResponseEntity<?>> registerUser(@RequestBody SignupVO signupVO) {
+        // Essential field validation based on TB_USER.sql NOT NULL constraints
+        if (signupVO.getUserLoginId() == null || signupVO.getUserLoginId().isEmpty()) {
+            return Mono.just(ResponseEntity.badRequest()
+                    .body(createErrorResponse("missing_login_id", "아이디를 입력해주세요.")));
+        }
+        if (signupVO.getUserName() == null || signupVO.getUserName().isEmpty()) {
+            return Mono.just(ResponseEntity.badRequest()
+                    .body(createErrorResponse("missing_user_name", "이름을 입력해주세요.")));
+        }
+        if (signupVO.getUserPassword() == null || signupVO.getUserPassword().isEmpty()) {
+            return Mono.just(ResponseEntity.badRequest()
+                    .body(createErrorResponse("missing_user_password", "비밀번호를 입력해주세요.")));
+        }
+        if (signupVO.getUserNickname() == null || signupVO.getUserNickname().isEmpty()) {
+            return Mono.just(ResponseEntity.badRequest()
+                    .body(createErrorResponse("missing_user_nickname", "닉네임을 입력해주세요.")));
+        }
+
         return signupService.isLoginIdDuplicate(signupVO.getUserLoginId())
                 .flatMap(isDuplicate -> {
                     if (isDuplicate) {
@@ -30,7 +48,8 @@ public class SignupController {
                     return signupService.isEmailDuplicate(signupVO.getUserEmail());
                 })
                 .flatMap(isDuplicate -> {
-                    if ((boolean) isDuplicate) {
+                    // Check if email is provided and if it's duplicate
+                    if (signupVO.getUserEmail() != null && !signupVO.getUserEmail().isEmpty() && (boolean) isDuplicate) {
                         return Mono.just(ResponseEntity.status(HttpStatus.CONFLICT)
                                 .body(createErrorResponse("duplicate_email", "이미 사용 중인 이메일입니다.")));
                     }
