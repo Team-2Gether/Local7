@@ -23,7 +23,7 @@ import Yangyang from "./components/Yangyang";
 import Yeongdeok from "./components/Yeongdeok";
 
 import "./Home.css";
-import HomeCardFeed from "./HomeCardFeed";
+import Restaurant from "../restaurant/Restaurant";
 import PostList from "../post/components/PostList";
 
 function Home({ currentUser }) {
@@ -248,7 +248,7 @@ function Home({ currentUser }) {
 
           <div className="page-content">
             {activeSection === "restaurants" && (
-              <HomeCardFeed selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
+              <Restaurant currentUser={currentUser} />
             )}
             {activeSection === "posts" && <PostList currentUser={currentUser} selectedCity={selectedCity} />}
           </div>
