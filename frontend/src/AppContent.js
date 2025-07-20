@@ -29,6 +29,7 @@ import OtherUser from "./pages/user/OtherUser";
 import FollowerList from "./pages/user/FollowerList"; // FollowerList import
 import FollowingList from "./pages/user/FollowingList"; // FollowingList import
 import AdminPage from "./pages/admin/AdminPage";
+import ForgetIdOrPWD from "./pages/forget/ForgetIdOrPWD";
 
 
 Modal.setAppElement("#root");
@@ -262,6 +263,7 @@ export function AppContent() {
 
                         <Route path="/signup" element={<SignupForm />} />
                         <Route path="/admin" element={currentUser && currentUser.ruleId === 1 ? <AdminPage currentUser={currentUser} /> : <Navigate to="/" />} />
+                        <Route path="/forget-ID-PWD" element={<ForgetIdOrPWD />} /> {/* */}
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </div>

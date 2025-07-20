@@ -23,7 +23,7 @@ function LoginFormLinks({ onCloseModal, onOpenTermsModal }) {
   return (
     <div className="links-container">
       <Link to="/signup" onClick={handleSignupClick}>회원 가입</Link>
-      <Link to="#">비밀번호 변경</Link> 
+      <Link to="/forget-ID-PWD">ID/비밀번호 찾기</Link> 
       <Link to="#" onClick={handleTermsClick}>Terms</Link> {/* Terms 링크 핸들러 변경 */}
     </div>
   );

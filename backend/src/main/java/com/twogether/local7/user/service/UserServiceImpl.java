@@ -1,9 +1,11 @@
-package com.twogether.local7.user.service;
+// src/main/java/com/twogether/local7/user/service/impl/UserServiceImpl.java
+package com.twogether.local7.user.service.impl;
 
 import com.twogether.local7.pagintion.Pagination;
 import com.twogether.local7.post.service.ImageService;
 import com.twogether.local7.post.vo.ImageVO;
 import com.twogether.local7.user.dao.UserDAO;
+import com.twogether.local7.user.service.UserService;
 import com.twogether.local7.user.vo.UserVO;
 import com.twogether.local7.user.vo.PostDetailVO;
 import com.twogether.local7.pagintion.Pageable;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // BCryptPasswordEncoder 제거
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,8 @@ public class UserServiceImpl implements UserService {
     // 임시로 인증 코드를 저장할 맵 (실제 앱에서는 DB나 Redis 사용)
     private final Map<Long, String> verificationCodes = new HashMap<>();
     private final Map<Long, String> pendingLoginIdChanges = new HashMap<>(); // 아이디 변경 요청 시 임시 저장
+
+    // private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // BCryptPasswordEncoder 인스턴스 제거
 
     @Override
     public boolean checkLoginIdDuplicate(String userLoginId) {
@@ -113,9 +118,8 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
         }
 
-        // 비밀번호 확인 (실제 앱에서는 비밀번호 해싱 후 비교)
-        // Spring Security의 PasswordEncoder를 사용하는 것이 강력히 권장됩니다.
-        if (!checkUserPassword(userId, password)) { // checkUserPassword 메서드 재사용
+        // 비밀번호 확인 (일반 문자열 비교) - 보안 경고: 실제 서비스에서는 암호화된 비밀번호 비교를 사용해야 합니다.
+        if (!user.getUserPassword().equals(password)) { // BCryptPasswordEncoder.matches 대신 일반 equals 사용
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
@@ -188,12 +192,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserPassword(Long userId, String newPassword) {
-        userDAO.updateUserPassword(userId, newPassword);
+        // 기존 updateUserPassword는 userId 기반이므로 그대로 유지.
+        // 비밀번호는 이미 암호화되지 않은 상태로 전달될 것을 가정.
+        userDAO.updateUserPassword(userId, newPassword); // 암호화 없이 바로 저장
     }
 
     @Override
     public boolean checkUserPassword(Long userId, String currentPassword) {
         String storedPassword = userDAO.findUserPassword(userId);
+        // 비밀번호 암호화가 없으므로 일반 문자열 비교
         return currentPassword != null && storedPassword != null && currentPassword.equals(storedPassword);
     }
 

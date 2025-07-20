@@ -162,4 +162,18 @@
         UPDATED_DATE = SYSTIMESTAMP
         WHERE USER_ID = #{userId}
     </update>
+
+    <select id="findUserLoginIdByEmail" parameterType="string" resultType="string">
+        SELECT LOGIN_ID
+        FROM TB_USER
+        WHERE USER_EMAIL = #{userEmail}
+    </select>
+
+    <update id="updateUserPasswordByEmail" parameterType="map">
+        UPDATE TB_USER
+        SET USER_PASSWORD = #{newPassword},
+        UPDATED_DATE = SYSDATE
+        WHERE USER_EMAIL = #{userEmail}
+    </update>
+
 </mapper>
