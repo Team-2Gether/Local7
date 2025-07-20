@@ -16,6 +16,7 @@ function Restaurant({ currentUser }) {
     activeSortBy,
     handleSortClick,
     setFilteredRestaurants,
+    refetchRestaurants,
   } = useRestaurants();
 
   // 모달 관련 상태
@@ -25,7 +26,8 @@ function Restaurant({ currentUser }) {
   const handleRestaurantClick = useCallback((restaurant) => {
     setSelectedRestaurant(restaurant);
     setIsDetailModalOpen(true);
-  }, []);
+    refetchRestaurants();
+  }, [refetchRestaurants]);
 
   const handleModalClose = useCallback(() => {
     setIsDetailModalOpen(false);
@@ -52,6 +54,7 @@ function Restaurant({ currentUser }) {
       <div className="home-container">
         <h1>
           환영합니다, {currentUser ? currentUser.userNickname : '게스트'} 님!
+          <br></br>LOCAL7의 맛을 찾아보세요
         </h1>
         {loading && <p>데이터를 불러오는 중입니다...</p>}
         {error && <p className="error-message">{error}</p>}
@@ -143,6 +146,7 @@ function Restaurant({ currentUser }) {
             onRequestClose={handleModalClose}
             restaurant={selectedRestaurant}
             currentUser={currentUser}
+            onReviewSubmitted={refetchRestaurants}
           />
         )}
       </div>

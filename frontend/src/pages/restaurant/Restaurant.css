@@ -1,66 +1,55 @@
-/* Main.css - 완성형 다크 모던 UI 스타일 */
+/* Restaurant.css - Home과 스타일 통일 및 다크모던 UI 완성본 */
 
-/* =========================================
-   전체 기본 세팅
-========================================= */
-
-/* 전체 페이지 래퍼, 화면 전체 너비, 좌우 여백 조절 */
+/* Wrapper & Container */
+/* Home의 .app-layout 및 .main-content-area에 감싸져 있다고 가정 */
+/* 내부 컨텐츠 레이아웃 통일 */
 .home-wrapper {
-background-color:#212121;
-  width: 100vw;                  /* 화면 가로 전체 */
-  box-sizing: border-box;        /* 패딩, 테두리까지 포함한 너비 계산 */
-  padding-left: 1rem;            /* 왼쪽 여백 */
-  padding-right: 7rem;           /* 오른쪽 여백(주 컨텐츠 외 공간 확보) */
-  padding-top: 1rem;             /* 위쪽 여백 */
-  padding-bottom: 2rem;          /* 아래쪽 여백 */
-  margin: 0 auto;                /* 좌우 중앙 정렬 */
-  display: flex;                 /* 내부 컨텐츠 flex 배치 */
-  justify-content: center;       /* 컨텐츠 가운데 정렬 */
-}
-
-/* 내부 컨텐츠 래퍼, 최대 너비 지정, 세로 방향 배치 */
-.home-container {
-  width: 100%;                  /* 부모 너비 100% 차지 */
-  max-width: 1300px;            /* 최대 1200px 너비 제한 */
+  background-color: #212121;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 1rem;
+  padding-right: 2rem; /* Home에 맞춰 줄임 */
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  margin: 0 auto;
   display: flex;
-  flex-direction: column;       /* 내부 아이템 세로 배치 */
+  justify-content: center;
 }
 
-/* =========================================
-   헤더 타이틀 스타일
-========================================= */
+.home-container {
+  width: 100%;
+  max-width: 1175px; /* Home의 max-width와 맞춤 */
+  display: flex;
+  flex-direction: column;
+  color: #eee;
+}
 
+/* 헤더 타이틀 */
 .home-container > h1 {
-  font-size: 1.8rem;            /* 크고 명확한 글씨 크기 */
-  font-weight: 700;             /* 굵게 */
-  margin-bottom: 1.5rem;        /* 아래 여백 */
-  color: #f0f0f0;               /* 밝은 회색 텍스트 */
-  user-select: none;            /* 텍스트 드래그 방지 */
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #f0f0f0;
+  user-select: none;
 }
 
-/* =========================================
-   에러 메시지 박스 스타일
-========================================= */
-
+/* 에러 메시지 */
 .error-message {
-  color: #ff6b6b;               /* 붉은색 텍스트 (경고 느낌) */
-  background-color: #3b1a1a;    /* 짙은 빨강 배경 */
-  border-radius: 6px;           /* 둥근 모서리 */
-  padding: 0.8rem 1rem;         /* 안쪽 여백 */
-  margin-bottom: 1rem;          /* 아래 여백 */
-  font-weight: 600;             /* 약간 굵게 */
-  user-select: none;            /* 텍스트 선택 방지 */
+  color: #ff6b6b;
+  background-color: #3b1a1a;
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  user-select: none;
 }
 
-/* =========================================
-   지도 래퍼 및 지도 스타일
-========================================= */
-
+/* 지도 래퍼 */
 #map_wrap {
   position: relative;
-  width: 90%;
-  max-width: 800px;
-  aspect-ratio: 16 / 9;
+  width: 100%;
+  max-width: 600px; /* Home 내 지도 크기 맞춤 */
+  aspect-ratio: 16 / 9; /* 380x300 비율 유지 */
   overflow: visible;
   margin: 0 auto 2rem auto;
 }
@@ -68,39 +57,34 @@ background-color:#212121;
 #map {
   width: 100%;
   height: 100%;
-  border-radius: 50px;
+  border-radius: 20px; /* Home은 20px, Restaurant은 50px → 20px으로 통일 */
   border: 3px solid #79AAFF;
   outline: 2px solid #FFCC00;
 }
 
-/* =========================================
-   지도 내 사용자 위치 버튼 및 필터 버튼 그룹
-========================================= */
-
+/* 사용자 위치 및 필터 버튼 */
 .custom-controls {
   position: absolute;
   top: 15px;
   left: 15px;
   z-index: 10;
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
-/* 버튼 스타일 공통 (custom-controls, my-position-btn) */
-/* 네가 준 .tab-button 디자인 기준으로 적용 */
 .custom-controls button,
 .my-position-btn {
   background: #555;
   color: #fff;
-  padding: 10px 20px;
+  padding: 8px 16px;
   border-radius: 20px;
   border: 1px solid transparent;
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s, color 0.2s;
   font-weight: 600;
   user-select: none;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .custom-controls button:hover,
@@ -115,24 +99,23 @@ background-color:#212121;
   border-color: #FFCC00;
 }
 
-/* 필터 버튼 그룹 내부 플렉스, 버튼 사이 간격 */
+/* 필터 버튼 그룹 */
 .filter-buttons {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .filter-buttons button {
   background-color: #292929;
-  border: 1.8px solid #555;
+  border: 1.5px solid #555;
   color: #ddd;
-  padding: 8px 14px;
+  padding: 6px 12px;
   font-size: 0.9rem;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.3s ease, border-color 0.3s ease;
   user-select: none;
-
 }
 
 .filter-buttons button:hover {
@@ -141,7 +124,6 @@ background-color:#212121;
   color: #fff;
 }
 
-/* 만약 선택된 상태(active) 스타일 필요하면 추가 */
 .filter-buttons button.active {
   background-color: #FFCC00;
   color: #222;
@@ -149,15 +131,12 @@ background-color:#212121;
   box-shadow: 0 0 12px #FFCC00;
 }
 
-/* =========================================
-   음식점 목록 헤더 (타이틀 및 정렬 버튼)
-========================================= */
-
+/* 음식점 목록 헤더 */
 .restaurant-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.9rem;
+  margin-bottom: 1rem;
   padding: 0 6px;
 }
 
@@ -167,13 +146,12 @@ background-color:#212121;
   user-select: none;
 }
 
-/* 정렬 버튼 그룹 */
+/* 정렬 버튼 그룹 - Home 탭 버튼 스타일과 동일하게 통일 */
 .sort-buttons1 {
   display: flex;
   gap: 8px;
 }
 
-/* 정렬 버튼 스타일 - .tab-button 스타일 적용 */
 .sort-buttons1 button {
   background: #444;
   color: #fff;
@@ -184,7 +162,7 @@ background-color:#212121;
   transition: background-color 0.2s, border-color 0.2s, color 0.2s;
   font-weight: 600;
   user-select: none;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .sort-buttons1 button:hover {
@@ -197,10 +175,7 @@ background-color:#212121;
   border-color: #FFCC00;
 }
 
-/* =========================================
-   검색 영역 스타일
-========================================= */
-
+/* 검색 영역 */
 .search-container {
   display: flex;
   gap: 12px;
@@ -225,7 +200,7 @@ background-color:#212121;
   border-color: #79AAFF;
 }
 
-/* 검색 및 전체보기 버튼 - .tab-button 스타일 적용 */
+/* 검색 및 전체보기 버튼 - Home 탭 버튼 스타일과 동일하게 통일 */
 .search-container button {
   background: #444;
   color: #fff;
@@ -242,10 +217,7 @@ background-color:#212121;
   border-color: #FFCC00;
 }
 
-/* =========================================
-   음식점 리스트 스타일
-========================================= */
-
+/* 음식점 리스트 스타일 */
 .restaurant-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -291,13 +263,10 @@ background-color:#212121;
   flex-shrink: 0;
 }
 
-/* =========================================
-   반응형 모바일 대응 (max-width: 480px)
-========================================= */
-
+/* 반응형 모바일 대응 */
 @media (max-width: 480px) {
   .home-wrapper {
-    padding: 1rem;
+    padding: 1rem 1rem 2rem 1rem;
   }
 
   .restaurant-list {

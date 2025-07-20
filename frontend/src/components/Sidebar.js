@@ -1,5 +1,5 @@
 import React from 'react';
-import {FaHome, FaUser, FaRobot, FaAward, FaListAlt, FaUtensils, FaBullhorn} from 'react-icons/fa';
+import {FaHome, FaUser, FaRobot, FaAward, FaUtensils, FaBullhorn} from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
 
 const Sidebar = ({onMenuItemClick}) => {
@@ -44,11 +44,13 @@ const Sidebar = ({onMenuItemClick}) => {
                 <FaAward className="sidebar-icon"/>
                 <span>TOP10</span>
             </button>
-
+            
+            {/*
             <button className="sidebar-button" onClick={() => handleSidebarClick('restaurants')}>
                 <FaUtensils className="sidebar-icon" />
                 <span>주변 맛집</span>
             </button>
+            */}
 
             {/* <button className="sidebar-button" onClick={() => handleSidebarClick('posts')}>
                 <FaListAlt className="sidebar-icon"/>
