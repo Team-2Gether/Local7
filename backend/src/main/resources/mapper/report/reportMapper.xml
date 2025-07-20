@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.twogether.local7.report.dao.ReportDAO">
+
+    <resultMap id="reportResultMap" type="com.twogether.local7.report.vo.ReportVO">
+        <id property="reportId" column="REPORT_ID"/>
+        <result property="reporterId" column="REPORTER_ID"/>
+        <result property="targetId" column="TARGET_ID"/>
+        <result property="reportType" column="REPORT_TYPE"/>
+        <result property="reportReason" column="REPORT_REASON"/>
+        <result property="status" column="STATUS"/>
+        <result property="createdDate" column="CREATED_DATE"/>
+        <result property="createdId" column="CREATED_ID"/>
+        <result property="updatedDate" column="UPDATED_DATE"/>
+        <result property="updatedId" column="UPDATED_ID"/>
+
+        <result property="reporterNickname" column="REPORTER_NICKNAME"/>
+    </resultMap>
+
+    <insert id="insertReport" parameterType="com.twogether.local7.report.vo.ReportVO">
+        <selectKey keyProperty="reportId" resultType="long" order="BEFORE">
+            SELECT SEQ_TB_REPORT.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TB_REPORT (
+            REPORT_ID, REPORTER_ID, TARGET_ID, REPORT_TYPE, REPORT_REASON, STATUS, CREATED_DATE
+        ) VALUES (
+            #{reportId}, #{reporterId}, #{targetId}, #{reportType}, #{reportReason}, 'PENDING', SYSTIMESTAMP
+        )
+    </insert>
+
+    <select id="getAllReports" resultMap="reportResultMap">
+        SELECT
+            r.REPORT_ID, r.REPORTER_ID, r.TARGET_ID, r.REPORT_TYPE, r.REPORT_REASON, r.STATUS,
+            r.CREATED_DATE, u.USER_NICKNAME AS REPORTER_NICKNAME
+        FROM TB_REPORT r
+        JOIN TB_USER u ON r.REPORTER_ID = u.USER_ID
+        ORDER BY r.CREATED_DATE DESC
+    </select>
+
+    <update id="updateReportStatus">
+        UPDATE TB_REPORT
+        SET
+            STATUS = #{status},
+            UPDATED_DATE = SYSTIMESTAMP
+        WHERE REPORT_ID = #{reportId}
+    </update>
+
+</mapper>

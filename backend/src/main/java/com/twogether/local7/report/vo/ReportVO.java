@@ -1,7 +1,8 @@
 package com.twogether.local7.report.vo;
 
 import lombok.Data;
-import java.time.LocalDateTime;
+
+import java.sql.Timestamp;
 
 @Data
 public class ReportVO {
@@ -9,12 +10,14 @@ public class ReportVO {
     private Long reportId;
     private Long reporterId;
     private Long targetId;
-    private String reportType;          // 게시글, 댓글, 사용자
+    private String reportType;
     private String reportReason;
-    private String status;              // 처리 상태 (예: PENDING, PROCESSED)
-    private LocalDateTime createdDate;
+    private String status;
+    private Timestamp createdDate;
     private String createdId;
-    private LocalDateTime updatedDate;
+    private Timestamp updatedDate;
     private String updatedId;
 
+    // 조인 시 필요한 추가 필드 (신고한 사용자 닉네임)
+    private String reporterNickname;
 }

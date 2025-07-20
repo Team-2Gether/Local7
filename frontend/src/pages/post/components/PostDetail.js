@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaEdit, FaTrashAlt, FaExclamationTriangle  } from 'react-icons/fa';
 import usePost from '../hooks/usePost';
 import useLike from '../hooks/useLike';
 import CommentSection from './CommentSection';
@@ -10,7 +10,7 @@ import './Post.css';
 function PostDetail({ currentUser }) {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { post, loading, error, loadPostById, removePost, setMessage, setPost } = usePost();
+    const { post, loading, error, loadPostById, removePost, setMessage, setPost, reportPost  } = usePost();
     const { toggleLike, likeLoading, likeError, setLikeError } = useLike();
 
     useEffect(() => {
@@ -59,6 +59,25 @@ function PostDetail({ currentUser }) {
         }));
     }, [setPost]);
 
+    const handleReportPost = async () => {
+        if (!currentUser) {
+            alert('로그인 후 신고할 수 있습니다.');
+            return;
+        }
+
+        const reportReason = window.prompt('신고 사유를 입력해주세요:');
+        if (reportReason) {
+            try {
+                // **usePost 훅의 reportPost 함수 호출**
+                const response = await reportPost(post.postId, reportReason);
+                alert(response.message);
+            } catch (err) {
+                // usePost 훅에서 에러 메시지를 이미 처리하므로, 여기서는 alert만 표시
+                alert('신고 접수에 실패했습니다.');
+            }
+        }
+    };
+
     if (loading) {
         return <div className="post-detail-container loading">게시글을 불러오는 중...</div>;
     }
@@ -72,6 +91,9 @@ function PostDetail({ currentUser }) {
     }
 
     console.log('Post images:', post.images);
+
+    const isPostAuthor = currentUser && post && currentUser.userId === post.userId;
+    const showReportButton = currentUser && post && !isPostAuthor;
 
     return (
         <div className="post-detail-page">
@@ -127,6 +149,15 @@ function PostDetail({ currentUser }) {
                         </button>
                         <span className="like-count">❤️{post.likeCount || 0}</span>
                         <span className="post-detail-comment-count"> | 댓글: {post.commentCount}</span>
+                        {showReportButton && (
+                            <button
+                                onClick={handleReportPost}
+                                className="post-detail-button report"
+                                title="게시글 신고"
+                            >
+                                <FaExclamationTriangle />
+                            </button>
+                        )}
                     </div>
 
                     <button

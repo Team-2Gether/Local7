@@ -154,3 +154,21 @@ export const deletePost = async (postId) => {
         throw error;
     }
 };
+
+/**
+ * 게시글 신고
+ * @param {number} postId - 신고할 게시글 ID
+ * @param {string} reportReason - 신고 사유
+ */
+export const reportPost = async (postId, reportReason) => {
+    try {
+        const response = await apiClient.post(`/posts/${postId}/report`, {
+            reportReason: reportReason,
+            // reportType: 'post'와 targetId는 백엔드에서 설정되므로, 여기서는 reportReason만 보냅니다.
+        });
+        return response.data;
+    } catch (error) {
+        console.error('게시글 신고 실패:', error);
+        throw error;
+    }
+};

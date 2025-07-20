@@ -76,3 +76,19 @@ export const toggleLikeComment = async (commentId, userId) => {
     throw error;
   }
 };
+
+export const reportComment = async (commentId, reportReason) => {
+  try {
+    const response = await apiClient.post(
+      `/comments/${commentId}/report`,
+      { reportReason }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('댓글 신고 실패:', error);
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.message || '댓글 신고에 실패했습니다.');
+    }
+    throw error;
+  }
+};

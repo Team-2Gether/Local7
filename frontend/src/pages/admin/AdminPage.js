@@ -52,7 +52,8 @@ const AdminPage = ({ currentUser }) => {
                     setReviews(response.data);
                     break;
                 case "reports":
-                    response = await axios.get(`${BASE_URL}/api/admin/reports`, { headers });
+                    const sortParam = isSortedByReports ? "mostReported" : "latest";
+                    response = await axios.get(`${BASE_URL}/api/admin/reports?sortBy=${sortParam}`, { headers });
                     setReports(response.data);
                     break;
                 default:

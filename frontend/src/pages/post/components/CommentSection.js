@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaEdit, FaTrashAlt, FaExclamationTriangle } from 'react-icons/fa';
 import useComment from '../hooks/useComment';
 import './CommentSection.css';
 
@@ -17,6 +17,7 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
         modifyComment,
         removeComment,
         toggleCommentLike,
+        handleReportComment,
     } = useComment();
 
     const [newCommentContent, setNewCommentContent] = useState('');
@@ -163,6 +164,22 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
         }
     };
 
+    const handleReport = async (commentId) => {
+        if (!currentUser) {
+            alert('로그인 후 신고할 수 있습니다.');
+            return;
+        }
+        const reportReason = prompt('신고 사유를 입력해주세요:');
+        if (reportReason) {
+            try {
+                await handleReportComment(commentId, reportReason);
+                alert('댓글이 성공적으로 신고되었습니다.');
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+    };
+    
     if (commentsLoading) {
         return <p>댓글을 불러오는 중...</p>;
     }
@@ -264,6 +281,15 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
                                 >
                                     ❤️ {comment.likeCount || 0}
                                 </button>
+                                {currentUser && comment.userId !== currentUser.userId && (
+                                    <button
+                                        onClick={() => handleReport(comment.commentId)}
+                                        className="icon-button"
+                                        title="댓글 신고"
+                                    >
+                                        <FaExclamationTriangle />
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))
