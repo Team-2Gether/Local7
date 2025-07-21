@@ -1,7 +1,7 @@
 .my-page-title {
     color: #333;
     margin-bottom: 20px;
-    margin-left:-13%;
+    margin-left:-38%;
 }
 
 .my-page-content {
@@ -64,18 +64,22 @@
 }
 
 .profile-image {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #ddd;
+    width: 200px !important;
+    height: 200px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    border: 3px solid #ddd !important;
+
+    display: block !important;
+    margin-left: -142px !important;
+    margin-right: 1px auto !important;
+}
+.user-details p {
+  font-size: 1rem !important;
+  color: #c7c7c7 !important;
+  margin-bottom: 10px !important;
 }
 
-.user-details p {
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 10px;
-}
 
 .user-details p strong {
     color: #333;

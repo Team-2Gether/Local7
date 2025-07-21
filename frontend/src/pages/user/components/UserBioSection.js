@@ -58,7 +58,7 @@ function UserBioSection({ currentUser }) {
     return (
         <div className="user-section">
             <h3 className="user-section-title">
-                <FaSignature className="section-icon" /> 자기소개
+                <FaSignature className="section-icon" /> 프로필 소개
             </h3>
             <div className="user-section-content">
                 {isEditing ? (

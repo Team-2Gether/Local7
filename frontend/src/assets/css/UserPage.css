@@ -224,6 +224,10 @@ button:disabled {
   justify-content: center; /* 가로 가운데 정렬 */
   align-items: center;     /* 세로 가운데 정렬 */
 }
+.current-info button{
+ margin-left:10px;
+} 
+
 .user-section input[type="file"] {
     margin-top: 10px;
     margin-bottom: 15px;
