@@ -5,7 +5,7 @@ html, body {
     margin: 0;
     padding: 0;
     padding-top: 26px; /* navbar 높이만큼 */
-    margin-left: 40px;
+    padding-left: 40px;
     box-sizing: border-box; /* 모든 요소의 박스 모델을 border-box로 설정 */
     font-family: 'Noto Sans KR', sans-serif;
 }
@@ -33,14 +33,22 @@ html, body {
 /* 로그인 모달 콘텐츠 스타일 */
 .login-modal-content {
     background: white;
-    padding: 20px;
-    border-radius: 8px;
+    padding: 10px;
+    border-radius: 20px;
     outline: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-width: 400px;
-    width: 90%;
+    width: 100%;
     position: relative;
     z-index: 3001;
+}
+
+.login-form-container .navbar-brand{
+    margin-bottom:30px;
+
+}
+.login-form-container .credential{
+    margin-right:10;
 }
 
 /* 초기 로그인 화면 컨테이너 */

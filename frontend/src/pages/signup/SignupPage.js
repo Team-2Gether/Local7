@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSignupForm from './hooks/useSignupForm';
 
-import '../../assets/css/SignupForm.css'; // 리액트 css 경로
+import '../../assets/css/SignupForm.css';
 import StatusMessage from './components/StatusMessage';
 import IdNicknameInputGroup1 from './components/IdNicknameInputGroup';
 import InputField1 from './components/InputField';
@@ -20,7 +20,7 @@ function SignupPage() {
     messages,
     duplicateStatus,
     handleChange,
-    handleImageChange, // 추가
+    handleImageChange,
     handleVerificationCodeChange,
     handleSendVerificationCode,
     handleVerifyEmailCode,
@@ -28,7 +28,6 @@ function SignupPage() {
     handleSubmit,
   } = useSignupForm(navigate);
 
-  // 약관 동의 상태 (필수 2개, 선택 1개)
   const [agreements, setAgreements] = useState({
     termsOfService: false,
     privacyPolicy: false,
@@ -43,13 +42,39 @@ function SignupPage() {
     }));
   };
 
-  // 필수 약관 체크 여부
-  const isSubmitEnabled = agreements.termsOfService && agreements.privacyPolicy;
+  const [requiredFieldsFilled, setRequiredFieldsFilled] = useState(false);
+
+  // ✅ 버튼 클릭 여부 상태 추가
+  const [idChecked, setIdChecked] = useState(false);
+  const [nickChecked, setNickChecked] = useState(false);
+  const [emailChecked, setEmailChecked] = useState(false);
+
+  useEffect(() => {
+    const requiredFields = [
+      formData.userLoginId,
+      formData.userPassword,
+      formData.userPasswordConfirm,
+      formData.userEmail,
+      formData.userNickname,
+      formData.userName,
+    ];
+    const allFilled = requiredFields.every((field) => field && field.trim() !== '');
+    setRequiredFieldsFilled(allFilled);
+  }, [formData]);
+
+  // ✅ 최종 제출 가능 조건에 버튼 클릭 상태도 포함
+  const isSubmitEnabled =
+    agreements.termsOfService &&
+    agreements.privacyPolicy &&
+    requiredFieldsFilled &&
+    idChecked &&
+    nickChecked &&
+    emailChecked;
 
   const onSubmit = (e) => {
     if (!isSubmitEnabled) {
       e.preventDefault();
-      alert('서비스 이용약관과 개인정보 처리방침에 반드시 동의해야 합니다.');
+      alert('모든 필수 항목, 약관 동의, 중복/인증 확인이 필요합니다.');
       return;
     }
     handleSubmit(e);
@@ -72,8 +97,14 @@ function SignupPage() {
           name="userLoginId"
           value={formData.userLoginId}
           onChange={handleChange}
-          onBlur={() => checkDuplicate('login-id', formData.userLoginId)}
-          onClickCheck={() => checkDuplicate('login-id', formData.userLoginId)}
+          onBlur={() => {
+            checkDuplicate('login-id', formData.userLoginId);
+            setIdChecked(true);
+          }}
+          onClickCheck={() => {
+            checkDuplicate('login-id', formData.userLoginId);
+            setIdChecked(true);
+          }}
           isDuplicate={duplicateStatus.userLoginId}
           fieldMessage={messages.userLoginId}
         />
@@ -105,7 +136,10 @@ function SignupPage() {
           emailSent={emailSent}
           handleEmailChange={handleChange}
           handleVerificationCodeChange={handleVerificationCodeChange}
-          handleSendVerificationCode={handleSendVerificationCode}
+          handleSendVerificationCode={() => {
+            handleSendVerificationCode();
+            setEmailChecked(true);
+          }}
           handleVerifyEmailCode={handleVerifyEmailCode}
           checkDuplicateEmail={() => checkDuplicate('email', formData.userEmail)}
           emailFieldMessage={messages.userEmail}
@@ -119,8 +153,14 @@ function SignupPage() {
           name="userNickname"
           value={formData.userNickname}
           onChange={handleChange}
-          onBlur={() => checkDuplicate('nickname', formData.userNickname)}
-          onClickCheck={() => checkDuplicate('nickname', formData.userNickname)}
+          onBlur={() => {
+            checkDuplicate('nickname', formData.userNickname);
+            setNickChecked(true);
+          }}
+          onClickCheck={() => {
+            checkDuplicate('nickname', formData.userNickname);
+            setNickChecked(true);
+          }}
           isDuplicate={duplicateStatus.userNickname}
           fieldMessage={messages.nickname}
         />
@@ -136,14 +176,13 @@ function SignupPage() {
         />
 
         <div>
-          {/* 이미지 업로드 관련 div */}
           <label htmlFor="userProfImg">프로필 이미지 (선택 사항):</label>
           <input
             type="file"
             id="userProfImg"
             name="userProfImg"
             accept="image/*"
-            onChange={handleImageChange} // handleImageChange 연결
+            onChange={handleImageChange}
           />
           {formData.userProfImgUrl && (
             <img
@@ -162,7 +201,6 @@ function SignupPage() {
           onChange={handleChange}
         />
 
-        {/* 약관 동의 체크박스 */}
         <div className="agreement-group" style={{ marginBottom: '20px', fontSize: '14px', color: '#ddd' }}>
           <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', cursor: 'pointer' }}>
             <input
@@ -211,6 +249,13 @@ function SignupPage() {
           style={{
             cursor: isSubmitEnabled ? 'pointer' : 'not-allowed',
             opacity: isSubmitEnabled ? 1 : 0.6,
+            backgroundColor: isSubmitEnabled ? '#FFCC00' : '#444',
+            color: isSubmitEnabled ? '#000' : '#aaa',
+            border: 'none',
+            padding: '12px 20px',
+            borderRadius: '20px',
+            fontWeight: 'bold',
+            transition: 'background-color 0.3s ease',
           }}
         >
           회원가입
