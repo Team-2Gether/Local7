@@ -135,39 +135,18 @@ h2 {
   background-color: #d4edda;
   color: #79AAFF;
 }
-.agreement-group {
-  margin-bottom: 20px;
-  font-size: 14px;
-  color: #ddd;
-}
 
-.agreement-group label {
+.checkbox-group1 {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #ffffff;
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+}
+
+.checkbox-group1 input[type="checkbox"] {
+  accent-color: #79AAFF; /* 체크박스 색상 */
   cursor: pointer;
-}
-
-.agreement-group input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-}
-
-.agreement-group a {
-  color: #79AAFF;
-  text-decoration: underline;
-  font-weight: 600;
-}
-
-.agreement-group a:hover {
-  color: #5c8ddf;
-}
-
-.message1.error {
-  color: #ff6666;
-  font-weight: 700;
-  margin-top: 4px;
-  text-align: left;
+  margin-right: 8px;
 }
