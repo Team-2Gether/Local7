@@ -76,7 +76,7 @@ h2 {
   font-size: 15px;
   font-weight: bold;
   border: none;
-  border-radius: 6px;
+  border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.1s;
 }
@@ -186,7 +186,7 @@ p {
   background-color: var(--surface-color);
   color: var(--text-color);
   border: 1px solid var(--border-color);
-  border-radius: 5px;
+  border-radius: 20px;
   padding: 7px 12px;
   font-size: 13px;
   cursor: pointer;
