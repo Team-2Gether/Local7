@@ -1,173 +1,224 @@
-/* SearchUser.css */
+/*
+    다크모드 유저 검색 컴포넌트 최종 스타일
+*/
 
-.search-user-container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+/* --- 전역 변수 설정 (선택 사항) --- */
+:root {
+  --background-color: #121212;
+  --surface-color: #1e1e1e;
+  --text-color: #e0e0e0;
+  --primary-color: #ffcc00;
+  --accent-color: #18a0fb;  /* 노란색 */
+  --border-color: #333333;
+  --error-color: #cf6679;
+  --placeholder-color: #a0a0a0;
+  --hover-color: #2b2b2b;
+  --active-color: #3a3a3a;
+}
+
+/* --- 기본 스타일 --- */
+.search-user-container1 {
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  width: 90%;
+  max-width: 590px;
+  margin: 40px auto;
 }
 
 h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.search-form {
-    display: flex;
+/* --- 검색 폼 --- */
+.search-form1 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.search-input1,
+.search-select1 {
+  flex-grow: 1;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  font-size: 15px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-input1::placeholder {
+  color: var(--placeholder-color);
+}
+
+.search-input1:focus,
+.search-select1:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(24, 160, 251, 0.3);
+}
+
+.search-button1 {
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: var(--surface-color);
+  font-size: 15px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+.search-button1:hover {
+  background-color: #1181d1;
+}
+
+.search-button1:active {
+  transform: translateY(1px);
+}
+
+.search-criteria-select1 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+.search-select1 {
+  padding: 8px 12px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23e0e0e0' viewBox='0 0 24 24'%3E%3Cpath d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 25px;
+}
+
+/* --- 메시지 --- */
+p {
+  color: var(--text-color);
+  text-align: center;
+  margin-top: 14px;
+  font-size: 15px;
+}
+
+.error-message1 {
+  color: var(--error-color);
+  font-weight: bold;
+}
+
+/* --- 사용자 목록 (그리드 레이아웃으로 변경) --- */
+.user-list1 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.user-item1 {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--surface-color);
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+.user-item1:hover {
+  background-color: var(--hover-color);
+  transform: translateY(-1px);
+}
+
+.profile-image1 {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  /* 파란색 테두리 적용 */
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 0 6px rgba(24, 160, 251, 0.4);
+}
+
+.user-details1 {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 13px;
+}
+
+.user-details1 p {
+  margin: 0;
+  text-align: left;
+}
+
+.user-details1 strong {
+  /* 노란색 적용 */
+  color: var(--accent-color);
+}
+
+/* --- 페이지네이션 --- */
+.pagination-controls1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.pagination-button1 {
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 7px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.pagination-button1:hover:not(:disabled) {
+  background-color: var(--hover-color);
+  border-color: var(--primary-color);
+}
+
+.pagination-button1.active1 {
+  /* 파란색 적용 */
+  background-color: var(--primary-color);
+  color: var(--surface-color);
+  border-color: var(--primary-color);
+  font-weight: bold;
+}
+
+.pagination-button1:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* --- 반응형 디자인 --- */
+@media (max-width: 600px) {
+  .search-user-container1 {
+    padding: 12px;
+  }
+
+  .search-form1 {
     flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.search-input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 100%;
-    box-sizing: border-box; /* Padding and border included in element's total width and height */
-}
-
-.search-button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-.search-button:hover {
-    background-color: #0056b3;
-}
-
-/* 셀렉트 박스 관련 스타일 추가 */
-.search-criteria-select {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.search-criteria-select label {
-    font-size: 16px;
-    color: #333;
-}
-
-.search-select {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: #f8f8f8;
-    cursor: pointer;
-    appearance: none; /* 기본 브라우저 스타일 제거 */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2C118.8L146.2%2C259.6L5.4%2C118.8L37.8%2C86.4L146.2%2C194.8L254.6%2C86.4L287%2C118.8z%22%2F%3E%3C%2Fsvg%3E'); /* 사용자 정의 화살표 */
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 12px;
-    padding-right: 30px; /* 화살표 공간 확보 */
-}
-
-.search-select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-
-.error-message {
-    color: red;
-    text-align: center;
-    margin-top: 10px;
-}
-
-.user-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.user-item {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    border: 1px solid #eee;
-    border-radius: 6px;
-    background-color: #f9f9f9;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.user-item:hover {
-    background-color: #f0f0f0;
-    transform: translateY(-2px);
-}
-
-.profile-image {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 15px;
-    border: 1px solid #ddd;
-}
-
-.user-details {
-    flex-grow: 1;
-}
-
-.user-details p {
-    margin: 0;
-    line-height: 1.5;
-    color: #333;
-}
-
-.user-details strong {
-    color: #000;
-}
-
-.pagination-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.pagination-button {
-    padding: 8px 12px;
-    border: 1px solid #007bff;
-    border-radius: 20px;
-    background-color: #fff;
-    color: #007bff;
-    cursor: pointer;
-    font-size: 15px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.pagination-button:hover:not(:disabled) {
-    background-color: #e9f5ff;
-}
-
-.pagination-button.active {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-}
-
-.pagination-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background-color: #000000;
-    color: #ffffff;
-    border-color: #000000;
+    gap: 12px;
+  }
 }
