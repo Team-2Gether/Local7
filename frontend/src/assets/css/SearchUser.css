@@ -198,17 +198,18 @@ p {
   border-color: var(--primary-color);
 }
 
-.pagination-button1.active1 {
-  /* 파란색 적용 */
-  background-color: var(--primary-color);
-  color: var(--surface-color);
+pagination-button1.active1 {
+  background-color: var(--accent-color);
   border-color: var(--primary-color);
   font-weight: bold;
+  /* 글자색을 검은색에 가깝게 변경하여 가독성 향상 */
+  color: #111111;
 }
 
 .pagination-button1:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+  color:black;
 }
 
 /* --- 반응형 디자인 --- */
