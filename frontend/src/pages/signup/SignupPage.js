@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSignupForm from './hooks/useSignupForm';
 
@@ -28,12 +28,44 @@ function SignupPage() {
     handleSubmit,
   } = useSignupForm(navigate);
 
+  // 약관 동의 상태 (필수 2개, 선택 1개)
+  const [agreements, setAgreements] = useState({
+    termsOfService: false,
+    privacyPolicy: false,
+    marketingConsent: false,
+  });
+
+  const handleAgreementChange = (e) => {
+    const { name, checked } = e.target;
+    setAgreements((prev) => ({
+      ...prev,
+      [name]: checked,
+    }));
+  };
+
+  // 필수 약관 체크 여부
+  const isSubmitEnabled = agreements.termsOfService && agreements.privacyPolicy;
+
+  const onSubmit = (e) => {
+    if (!isSubmitEnabled) {
+      e.preventDefault();
+      alert('서비스 이용약관과 개인정보 처리방침에 반드시 동의해야 합니다.');
+      return;
+    }
+    handleSubmit(e);
+  };
+
   return (
     <div className="signup-container1">
       <h2>회원가입</h2>
-      {messages.general && <StatusMessage type={messages.general.includes('성공') ? 'success' : 'error'} message={messages.general} />}
+      {messages.general && (
+        <StatusMessage
+          type={messages.general.includes('성공') ? 'success' : 'error'}
+          message={messages.general}
+        />
+      )}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={onSubmit}>
         <IdNicknameInputGroup1
           label="아이디:"
           id="userLoginId"
@@ -103,7 +135,8 @@ function SignupPage() {
           required
         />
 
-        <div> {/* 이미지 업로드 관련 div */}
+        <div>
+          {/* 이미지 업로드 관련 div */}
           <label htmlFor="userProfImg">프로필 이미지 (선택 사항):</label>
           <input
             type="file"
@@ -113,7 +146,11 @@ function SignupPage() {
             onChange={handleImageChange} // handleImageChange 연결
           />
           {formData.userProfImgUrl && (
-            <img src={formData.userProfImgUrl} alt="프로필 미리보기" style={{ maxWidth: '100px', maxHeight: '100px', marginTop: '10px' }} />
+            <img
+              src={formData.userProfImgUrl}
+              alt="프로필 미리보기"
+              style={{ maxWidth: '100px', maxHeight: '100px', marginTop: '10px' }}
+            />
           )}
         </div>
 
@@ -125,7 +162,59 @@ function SignupPage() {
           onChange={handleChange}
         />
 
-        <button type="submit" className="btn-submit1">회원가입</button>
+        {/* 약관 동의 체크박스 */}
+        <div className="agreement-group" style={{ marginBottom: '20px', fontSize: '14px', color: '#ddd' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              name="termsOfService"
+              checked={agreements.termsOfService}
+              onChange={handleAgreementChange}
+              style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+            />
+            서비스 이용약관에 동의합니다.{' '}
+            <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: '#79AAFF', textDecoration: 'underline', fontWeight: '600' }}>
+              자세히 보기
+            </a>
+          </label>
+
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              name="privacyPolicy"
+              checked={agreements.privacyPolicy}
+              onChange={handleAgreementChange}
+              style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+            />
+            개인정보 처리방침에 동의합니다.{' '}
+            <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#79AAFF', textDecoration: 'underline', fontWeight: '600' }}>
+              자세히 보기
+            </a>
+          </label>
+
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              name="marketingConsent"
+              checked={agreements.marketingConsent}
+              onChange={handleAgreementChange}
+              style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+            />
+            마케팅 정보 수신에 동의합니다. (선택)
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          className="btn-submit1"
+          disabled={!isSubmitEnabled}
+          style={{
+            cursor: isSubmitEnabled ? 'pointer' : 'not-allowed',
+            opacity: isSubmitEnabled ? 1 : 0.6,
+          }}
+        >
+          회원가입
+        </button>
       </form>
     </div>
   );
