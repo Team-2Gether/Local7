@@ -98,17 +98,17 @@ const usePost = () => {
         try {
             const response = await reportPostApi(postId, reportReason);
             setMessage(response.message || '게시글이 성공적으로 신고되었습니다.');
-            return response;
+            return response; // 성공 응답 객체 반환
         } catch (err) {
             const errorMsg = err.response?.data?.message || err.message || '게시글 신고에 실패했습니다.';
             setError(errorMsg);
             console.error('Failed to report post:', err);
-            throw new Error(errorMsg);
+            throw new Error(errorMsg); // 실패 메시지를 담아 에러를 throw
         } finally {
             setLoading(false);
         }
     }, []);
-
+    
     return {
         posts,
         setPost,
