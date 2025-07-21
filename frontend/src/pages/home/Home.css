@@ -153,12 +153,12 @@ html, body {
     font-size: 1.8em;
     margin-bottom: 10px;
     margin-right: 239px;
-    color: #9bd5fc;
+    color: #9bd5fc !important;
 }
 
 .description-area h2 span {
     font-size: 0.7em;
-    color: #fff;
+    color: #FFCC00 !important;
 }
 
 .description-area p {
