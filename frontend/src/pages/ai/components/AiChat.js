@@ -13,7 +13,7 @@ const AiChat = () => {
 
     return (
         <div className="ai-chat-container">
-            <h3>AI 7봇</h3>
+            <h3>AI R7봇</h3>
             <textarea
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
