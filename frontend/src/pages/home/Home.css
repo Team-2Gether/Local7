@@ -76,6 +76,7 @@ html, body {
     gap: 20px;
     flex-wrap: wrap;
     margin-left: 50px;
+    margin-top: 50px;
     position: relative;
 }
 
@@ -90,7 +91,7 @@ html, body {
     grid-template-columns: repeat(2, 60px);
     gap: 2px;
     background: #222222;
-    padding: 20px;
+    padding: 15px;
     border-radius: 20px;
 }
 
