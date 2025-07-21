@@ -53,7 +53,7 @@ function ReportModal({ isOpen, onClose, onReport, target }) {
                 />
                 <div className="modal-actions">
                     <button onClick={handleReportSubmit} className="report-button">
-                        신고하기
+                        신고
                     </button>
                     <button onClick={handleCancel} className="cancel-button">
                         취소

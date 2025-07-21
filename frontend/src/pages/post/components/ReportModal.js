@@ -30,8 +30,8 @@ const ReportModal = ({ isOpen, onClose, onReport, title, target }) => {
                     rows="5"
                 />
                 <div className="modal-actions11">
-                    <button onClick={onClose} className="modal-button cancel11">취소</button>
                     <button onClick={handleReport} className="modal-button submit11">신고</button>
+                    <button onClick={onClose} className="modal-button cancel11">취소</button>
                 </div>
             </div>
         </div>

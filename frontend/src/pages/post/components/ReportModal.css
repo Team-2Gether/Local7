@@ -33,14 +33,21 @@
 }
 
 .modal-content11 textarea {
-    width: 100%;
+    /* 너비를 100% 대신 원하는 값으로 설정하거나, 반응형을 위해 max-width를 사용하세요. */
+    width: 90%; 
+    max-width: 500px;
+    
     padding: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border: 1px solid #555;
     background-color: #444;
     color: #f0f0f0;
     border-radius: 4px;
     resize: none;
+
+    /* 블록 요소를 중앙 정렬하는 핵심 속성 */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .modal-actions11 {
@@ -49,20 +56,20 @@
     gap: 10px;
 }
 
-.modal-button11 {
+.modal-button {
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
 }
 
-.modal-button11.cancel {
+.modal-button.cancel11 {
     background-color: #555;
     color: #f0f0f0;
 }
 
-.modal-button11.submit {
+.modal-button.submit11 {
     background-color: #e6525b; /* 빨간색으로 경고성 강조 */
     color: white;
 }
