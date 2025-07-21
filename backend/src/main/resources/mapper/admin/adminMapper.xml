@@ -141,6 +141,11 @@
         WHERE COMMENT_ID = #{commentId}
     </delete>
 
+    <delete id="deleteReview">
+        DELETE FROM TB_REVIEW
+        WHERE REVIEW_ID = #{reviewId}
+    </delete>
+
     <update id="updateReportStatus">
         UPDATE TB_REPORT
         SET

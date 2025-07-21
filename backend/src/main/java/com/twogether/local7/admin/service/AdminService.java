@@ -18,6 +18,9 @@ public interface AdminService {
     List<PostVO> getAllPosts();
     void deletePost(Long postId);
 
+    // 리뷰 관련
+    void deleteReview(Long reviewId);
+
     // 댓글 관련
     List<CommentVO> getAllComments();
     void deleteComment(Long commentId);
@@ -25,6 +28,8 @@ public interface AdminService {
     // 신고 관련
     List<ReportVO> getAllReports();
     void updateReportStatus(Long reportId, String status);
+
+    void deleteContentFromReport(Long reportId);
 
     // 사용자 삭제
     void deleteUser(Long userId);

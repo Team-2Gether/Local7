@@ -163,4 +163,16 @@ public class AdminController {
         return reviewService.deleteReview(reviewId)
                 .thenReturn(new ResponseEntity<>("리뷰가 성공적으로 삭제되었습니다.", HttpStatus.OK));
     }
+
+    @DeleteMapping("/reports/{reportId}/content")
+    public ResponseEntity<?> deleteContentFromReport(@RequestHeader("X-USER-ID") Long userId,
+                                                     @PathVariable Long reportId) {
+        ResponseEntity<?> authCheck = checkAdminAuth(userId);
+        if (authCheck != null) {
+            return authCheck;
+        }
+
+        adminService.deleteContentFromReport(reportId);
+        return new ResponseEntity<>("신고된 콘텐츠가 성공적으로 삭제되었습니다.", HttpStatus.OK);
+    }
 }

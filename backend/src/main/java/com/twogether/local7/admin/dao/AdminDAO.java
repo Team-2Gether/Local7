@@ -24,9 +24,15 @@ public interface AdminDAO {
     List<CommentVO> selectAllComments();
     int deleteComment(Long commentId);
 
+    // 리뷰 관련
+    int deleteReview(Long reviewId);
+
     // 신고 관련
     List<ReportVO> selectAllReports();
-    int updateReportStatus(Long reportId, String status);
+    int updateReportStatus(@Param("reportId") Long reportId, @Param("status") String status);
+
+    // 특정 신고 내역 조회
+    ReportVO getReportById(@Param("reportId") Long reportId);
 
     // 사용자가 작성한 기록 삭제
     void deleteAllPostsByUserId(@Param("userId") Long userId);
