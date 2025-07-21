@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { FaUser, FaHeart, FaMapMarkerAlt, FaFileAlt, FaCalendarAlt } from 'react-icons/fa';
 import axios from 'axios';
+import './VotePage_post.css';
+
 function VotePagePost() {
   const [posts, setPosts] = useState([]);
 
@@ -23,19 +26,20 @@ function VotePagePost() {
           <div key={post.postId} className="post-item">
             <p className="rank">NO.{index + 1}</p> {/*순위 표시*/}
             <div className="post-item-img">
-              <img className="post-img" src={post.imageUrl} alt="post" />
+              <img className="post-img" src={`data:image/jpeg;base64,${post.imageUrl}`} alt="post" />
             </div>
-            <p>{post.postTitle}</p>
-            <img
-              className="profile-img"
-              src={post.userProfImgUrl}
-              alt="profile"
-            />
-            <p>{post.userNickname}</p>
-            <p>{post.userCount} like</p>
-            <p>{post.locationTag}</p>
-            <p>{post.postContent}</p>
-            <p>{post.createdDate}</p>
+            <div className="user-info55">
+              <img
+                className="profile-img"
+                src={post.userProfImgUrl}
+                alt="profile"
+              />
+              <p className="user-nickname">{post.userNickname}</p>
+            </div>
+            <p><FaHeart /> {post.userCount} like</p>
+            <p><FaMapMarkerAlt /> {post.locationTag}</p>
+            <p><FaFileAlt /> {post.postContent}</p>
+            <p><FaCalendarAlt /> {post.createdDate}</p>
           </div>
         ))}
       </div>
