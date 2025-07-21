@@ -80,7 +80,7 @@ const Sidebar = ({ onMenuItemClick, currentUser }) => {
 
             <button className="sidebar-button" onClick={() => handleSidebarClick('ai')}>
                 <FaRobot className="sidebar-icon"/>
-                <span>7봇</span>
+                <span>R7봇</span>
             </button>
 
             {currentUser && currentUser.ruleId === 1 && (
