@@ -13,16 +13,13 @@ function NoticeForm({ currentUser, noticeId }) {
   const { id: paramId } = useParams(); // 수정 시 id 있음
   const id = noticeId || paramId;
   const isEdit = !!id;
-  const isAdmin = currentUser && currentUser.ruleId === 1;
-  const isReadOnly = isEdit && !isAdmin; // 수정 모드이면서 관리자가 아닐 경우 true
 
   useEffect(() => {
-    // 관리자가 아닌데 '글쓰기' 페이지에 직접 접근하려고 할 때 차단
-    if (!isAdmin && !isEdit) {
+    if (!currentUser || currentUser.ruleId !== 1) {
       alert("관리자만 접근 가능합니다.");
       navigate("/notice");
     }
-  }, [currentUser, navigate, isAdmin, isEdit]);
+  }, [currentUser, navigate]);
 
   const [notice, setNotice] = useState({
     noticeTitle: "",
@@ -36,7 +33,7 @@ function NoticeForm({ currentUser, noticeId }) {
     if (isEdit) {
       loadNotice();
     }
-  }, [id, isEdit]);
+  }, [id]);
 
   const loadNotice = async () => {
     try {
@@ -56,7 +53,6 @@ function NoticeForm({ currentUser, noticeId }) {
   };
 
   const handleSubmit = async () => {
-    if (!isAdmin) return; // 관리자만 저장/수정 가능
     try {
       if (isEdit) {
         await updateNotice(notice);
@@ -72,7 +68,6 @@ function NoticeForm({ currentUser, noticeId }) {
   };
 
   const handleDelete = async () => {
-    if (!isAdmin) return;
     if (window.confirm("정말 삭제하시겠습니까?")) {
       try {
         await deleteNotice(id);
@@ -93,10 +88,9 @@ function NoticeForm({ currentUser, noticeId }) {
             <td>
               <input
                 type="text"
-                className="noticeTitle"
+                name="noticeTitle"
                 value={notice.noticeTitle}
                 onChange={handleChange}
-                disabled={isReadOnly}
               />
             </td>
           </tr>
@@ -104,11 +98,10 @@ function NoticeForm({ currentUser, noticeId }) {
             <td>본문</td>
             <td>
               <textarea
-                className="noticeContent"
+                name="noticeContent"
                 value={notice.noticeContent}
                 onChange={handleChange}
                 rows="15"
-                disabled={isReadOnly}
               ></textarea>
             </td>
           </tr>
@@ -116,13 +109,11 @@ function NoticeForm({ currentUser, noticeId }) {
       </table>
 
       <div className="notice-form-buttons">
-        {isAdmin && (
-          <button className="btn-write" onClick={handleSubmit}>
-            {isEdit ? "수정" : "등록"}
-          </button>
-        )}
+        <button className="btn-write" onClick={handleSubmit}>
+          {isEdit ? "수정" : "등록"}
+        </button>
 
-        {isEdit && isAdmin && (
+        {isEdit && (
           <button className="btn-delete" onClick={handleDelete}>
             삭제
           </button>
