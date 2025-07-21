@@ -21,7 +21,7 @@ const ReportModal = ({ isOpen, onClose, onReport, title, target }) => {
     return (
         <div className="modal-backdrop11">
             <div className="modal-content11">
-                <h3>{target} 신고하기</h3>
+                <h2>{target} 신고하기</h2>
                 <p>신고 사유를 구체적으로 작성해 주세요.</p>
                 <textarea
                     value={reportReason}
