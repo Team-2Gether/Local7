@@ -42,7 +42,7 @@
 }
 
 /* 텍스트 영역(textarea) 스타일 */
-.modal-content11 textarea {
+.modal-content textarea {
     /* 너비를 100% 대신 원하는 값으로 설정하거나, 반응형을 위해 max-width를 사용하세요. */
     width: 90%; 
     max-width: 500px;
