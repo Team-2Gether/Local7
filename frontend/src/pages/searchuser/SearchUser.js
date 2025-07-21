@@ -89,26 +89,26 @@ function SearchUser() {
 
 
     return (
-        <div className="search-user-container">
+        <div className="search-user-container1">
             <h2>유저 검색</h2>
-            <form onSubmit={handleSearch} className="search-form">
+            <form onSubmit={handleSearch} className="search-form1">
                 <input
                     type="text"
                     placeholder="검색어를 입력하세요"
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
-                    className="search-input"
+                    className="search-input1"
                 />
-                <button type="submit" className="search-button">검색</button>
+                <button type="submit" className="search-button1">검색</button>
 
-                <div className="search-criteria-select">
+                <div className="search-criteria-select1">
                     <label htmlFor="searchField">검색 기준:</label>
                     <select
                         id="searchField"
                         name="searchField"
                         value={searchField}
                         onChange={handleSelectChange}
-                        className="search-select"
+                        className="search-select1"
                     >
                         <option value="all">전체</option>
                         <option value="userLoginId">아이디</option>
@@ -120,23 +120,22 @@ function SearchUser() {
             </form>
 
             {loading && <p>사용자 정보를 불러오는 중입니다...</p>}
-            {error && <p className="error-message">{error}</p>}
+            {error && <p className="error-message1">{error}</p>}
 
-            {/* 초기 로드 시에는 '사용자를 검색해주세요.' 메시지 표시, 키워드 입력 후 검색 결과 없을 때만 '검색 결과가 없습니다.' */}
             {!loading && !error && users.length === 0 && (
                 (keyword !== '' || searchField !== 'all') ? <p>검색 결과가 없습니다.</p> : <p>사용자를 검색해주세요.</p>
             )}
 
             {!loading && !error && users.length > 0 && (
-                <div className="user-list">
+                <div className="user-list1">
                     {users.map(user => (
-                        <div key={user.userId} className="user-item" onClick={() => handleUserClick(user.userLoginId)}>
+                        <div key={user.userId} className="user-item1" onClick={() => handleUserClick(user.userLoginId)}>
                             <img
                                 src={user.userProfileImageUrl || "https://via.placeholder.com/50"}
                                 alt="프로필"
-                                className="profile-image"
+                                className="profile-image1"
                             />
-                            <div className="user-details">
+                            <div className="user-details1">
                                 <p><strong>아이디:</strong> {user.userLoginId}</p>
                                 <p><strong>닉네임:</strong> {user.userNickname}</p>
                                 <p><strong>이름:</strong> {user.userName}</p>
@@ -148,11 +147,11 @@ function SearchUser() {
             )}
 
             {!loading && !error && totalPages > 1 && (
-                <div className="pagination-controls">
+                <div className="pagination-controls1">
                     <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 0}
-                        className="pagination-button"
+                        className="pagination-button1"
                     >
                         이전
                     </button>
@@ -160,7 +159,7 @@ function SearchUser() {
                         <button
                             key={i}
                             onClick={() => handlePageChange(i)}
-                            className={`pagination-button ${currentPage === i ? 'active' : ''}`}
+                            className={`pagination-button1 ${currentPage === i ? 'active1' : ''}`}
                         >
                             {i + 1}
                         </button>
@@ -168,7 +167,7 @@ function SearchUser() {
                     <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages - 1}
-                        className="pagination-button"
+                        className="pagination-button1"
                     >
                         다음
                     </button>
