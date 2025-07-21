@@ -144,6 +144,8 @@
   font-size: 1.5rem;
   font-weight: 700;
   user-select: none;
+  color:white;
+  border-bottom: 2px solid #ffcc00;
 }
 
 /* 정렬 버튼 그룹 - Home 탭 버튼 스타일과 동일하게 통일 */

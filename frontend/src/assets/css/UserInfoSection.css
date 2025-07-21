@@ -1,15 +1,14 @@
 /* UserInfoSection.css */
 .user-info-section {
-    flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    background: #444444;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    gap: 10px; /* 간격 약간 줄임 */
+    flex-wrap: wrap;
+    border-radius: 20px;
+    padding: 0px 115px; /* 패딩 줄임 */
+    margin-bottom: 20px; /* margin 줄임 */
 }
-
 .profile-image-container {
     margin-bottom: 20px;
 }

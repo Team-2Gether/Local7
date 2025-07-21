@@ -180,11 +180,15 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
 
     // 댓글 신고 제출
     const handleCommentReport = async (reportReason) => {
+        if (!targetCommentId) return;
         try {
-            await handleReportComment(targetCommentId, reportReason);
-            alert('댓글이 성공적으로 신고되었습니다.');
+            const response = await handleReportComment(targetCommentId, reportReason);
+            alert(response.message); // 신고 성공 알림
+            setIsReportModalOpen(false); // 모달 닫기
+            loadComments(postId, sortOrder); // 댓글 목록 다시 불러오기
         } catch (err) {
-            alert(err.message);
+            alert("이미 신고를 하셨습니다.");
+            loadComments(postId, sortOrder);
         }
     };
     

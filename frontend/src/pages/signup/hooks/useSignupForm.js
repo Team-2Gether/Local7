@@ -32,6 +32,29 @@ function useSignupForm(navigate) {
 
   const { duplicateStatus, checkDuplicate, resetDuplicateStatus, setDuplicateStatus } = useDuplicateCheck(setMessages);
 
+  // --- 약관동의 상태 추가 ---
+  const [agreements, setAgreements] = useState({
+    termsOfService: false,
+    privacyPolicy: false,
+    marketingConsent: false,
+  });
+
+  // --- 약관동의 변경 핸들러 추가 ---
+  const handleAgreementChange = (e) => {
+    const { name, checked } = e.target;
+    setAgreements((prev) => ({
+      ...prev,
+      [name]: checked,
+    }));
+
+    setMessages((prev) => {
+      const newMessages = { ...prev };
+      delete newMessages.agreements;
+      return newMessages;
+    });
+  };
+  // --- 약관동의 관련 끝 ---
+
   const handleAllChanges = (e) => {
     const { name } = e.target;
     handleFormDataChange(e);
@@ -99,6 +122,12 @@ function useSignupForm(navigate) {
       return false;
     }
 
+    // --- 약관 필수 동의 체크 추가 ---
+    if (!agreements.termsOfService || !agreements.privacyPolicy) {
+      setMessages({ agreements: '서비스 이용약관과 개인정보 처리방침에 동의해 주세요.' });
+      return false;
+    }
+
     try {
       const { userPasswordConfirm, ...dataToSend } = formData;
       const response = await registerUser(dataToSend);
@@ -119,6 +148,11 @@ function useSignupForm(navigate) {
     resetEmailVerification();
     resetDuplicateStatus();
     setMessages({});
+    setAgreements({              // 약관 동의 초기화 추가
+      termsOfService: false,
+      privacyPolicy: false,
+      marketingConsent: false,
+    });
   };
 
   return {
@@ -128,13 +162,15 @@ function useSignupForm(navigate) {
     emailSent,
     messages,
     duplicateStatus,
+    agreements,                 // 추가
     handleChange: handleAllChanges,
-    handleImageChange, // 추가
+    handleImageChange,
     handleEmailChange: handleAllChanges,
     handleVerificationCodeChange,
     handleSendVerificationCode: sendVerificationCode,
     handleVerifyEmailCode: verifyEmailCode,
     checkDuplicate,
+    handleAgreementChange,      // 추가
     handleSubmit,
     resetFormAndStates
   };

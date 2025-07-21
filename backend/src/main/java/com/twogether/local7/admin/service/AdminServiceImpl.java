@@ -51,6 +51,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public void deleteReview(Long reviewId) { adminDAO.deleteReview(reviewId); }
+
+    @Override
     public List<ReportVO> getAllReports() {
         return adminDAO.selectAllReports();
     }
@@ -58,6 +61,26 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void updateReportStatus(Long reportId, String status) {
         adminDAO.updateReportStatus(reportId, status);
+    }
+
+    @Override
+    public void deleteContentFromReport(Long reportId) {
+        ReportVO report = adminDAO.getReportById(reportId);
+
+        if (report != null) {
+            String reportType = report.getReportType();
+            Long targetId = report.getTargetId();
+
+            if ("post".equals(reportType)) {
+                adminDAO.deletePost(targetId);
+            } else if ("comment".equals(reportType)) {
+                adminDAO.deleteComment(targetId);
+            } else if ("review".equals(reportType)) {
+                adminDAO.deleteReview(targetId);
+            }
+
+            adminDAO.updateReportStatus(reportId, "PROCESSED");
+        }
     }
 
     // 사용자 삭제 메소드 구현

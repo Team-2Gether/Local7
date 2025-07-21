@@ -19,9 +19,9 @@ const ReportModal = ({ isOpen, onClose, onReport, title, target }) => {
     }
 
     return (
-        <div className="modal-backdrop">
-            <div className="modal-content">
-                <h3>{target} 신고하기</h3>
+        <div className="modal-backdrop11">
+            <div className="modal-content11">
+                <h2>{target} 신고하기</h2>
                 <p>신고 사유를 구체적으로 작성해 주세요.</p>
                 <textarea
                     value={reportReason}
@@ -29,9 +29,9 @@ const ReportModal = ({ isOpen, onClose, onReport, title, target }) => {
                     placeholder="신고 사유를 입력하세요..."
                     rows="5"
                 />
-                <div className="modal-actions">
-                    <button onClick={onClose} className="modal-button cancel">취소</button>
-                    <button onClick={handleReport} className="modal-button submit">신고</button>
+                <div className="modal-actions11">
+                    <button onClick={handleReport} className="modal-button submit11">신고</button>
+                    <button onClick={onClose} className="modal-button cancel11">취소</button>
                 </div>
             </div>
         </div>

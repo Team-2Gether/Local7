@@ -1,4 +1,5 @@
-.modal-backdrop11 {
+/* 오버레이 스타일 */
+.report-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +12,8 @@
     z-index: 1000;
 }
 
-.modal-content11 {
+/* 모달 본체 스타일 */
+.report-modal {
     background-color: #333;
     color: #f0f0f0;
     padding: 30px;
@@ -22,18 +24,25 @@
     text-align: center;
 }
 
-.modal-content11 h2 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color:white;
+/* 모달 내용 컨테이너 */
+.modal-content {
+    /* 기존 스타일이 .report-modal에 적용되어 있어 추가적인 스타일이 필요 없어 보입니다. */
 }
 
-.modal-content11 p {
+/* 제목(h3) 스타일 */
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+/* 설명 문구(p) 스타일 */
+.modal-content p {
     margin-bottom: 20px;
     color: #bbb;
 }
 
-.modal-content11 textarea {
+/* 텍스트 영역(textarea) 스타일 */
+.modal-content textarea {
     /* 너비를 100% 대신 원하는 값으로 설정하거나, 반응형을 위해 max-width를 사용하세요. */
     width: 90%; 
     max-width: 500px;
@@ -51,26 +60,31 @@
     margin-right: auto;
 }
 
-.modal-actions11 {
+/* 버튼 컨테이너 스타일 */
+.modal-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
 }
 
-.modal-button {
+/* 신고하기 버튼 스타일 */
+.report-button {
     padding: 10px 20px;
     border: none;
     border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
-}
-
-.modal-button.cancel11 {
-    background-color: #555;
-    color: #f0f0f0;
-}
-
-.modal-button.submit11 {
     background-color: #e6525b; /* 빨간색으로 경고성 강조 */
     color: white;
+}
+
+/* 취소 버튼 스타일 */
+.cancel-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #555;
+    color: #f0f0f0;
 }

@@ -46,4 +46,12 @@
         WHERE REPORT_ID = #{reportId}
     </update>
 
+    <select id="findReportByUserIdAndTargetId" resultMap="reportResultMap">
+        SELECT *
+        FROM TB_REPORT
+        WHERE REPORTER_ID = #{userId}
+            AND TARGET_ID = #{targetId}
+            AND REPORT_TYPE = #{reportType}
+    </select>
+
 </mapper>

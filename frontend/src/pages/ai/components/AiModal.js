@@ -18,7 +18,7 @@ const AiModal = ({ isOpen, onRequestClose }) => {
         className="AiModal__content"
         overlayClassName="AiModal__overlay"
     >
-        <h2>AI 채팅</h2>
+        <h2>AI R7봇 채팅</h2>
 
         <div className="AiModal__chat-container">
             {activeTab === 'chat' && <AiChat />}

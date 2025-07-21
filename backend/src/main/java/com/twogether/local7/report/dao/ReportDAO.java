@@ -16,4 +16,9 @@ public interface ReportDAO {
 
     // 특정 신고의 상태 업데이트
     void updateReportStatus(@Param("reportId") Long reportId, @Param("status") String status);
+
+    // 신고 여부 확인
+    ReportVO findReportByUserIdAndTargetId(@Param("userId") Long userId,
+                                           @Param("targetId") Long targetId,
+                                           @Param("reportType") String reportType);
 }

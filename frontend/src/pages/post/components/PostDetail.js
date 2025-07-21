@@ -73,11 +73,15 @@ function PostDetail({ currentUser }) {
 
     // 신고 제출
     const handlePostReport = async (reportReason) => {
+        if (!post) return;
         try {
-            await reportPost(post.postId, reportReason);
-            alert('게시글이 성공적으로 신고되었습니다.');
+            const response = await reportPost(post.postId, reportReason);
+            alert(response.message); // 신고 성공 알림
+            setIsReportModalOpen(false); 
+            loadPostById(post.postId); // 게시글 정보 새로고침
         } catch (err) {
-            alert(err.message);
+            alert("이미 신고를 하셨습니다.");
+            loadPostById(post.postId);
         }
     };
 

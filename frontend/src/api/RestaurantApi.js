@@ -26,3 +26,27 @@ export const fetchAllRestaurants = async () => {
     throw new Error('음식점 데이터를 가져오는 데 실패했습니다.');
   }
 };
+
+export const reportReview = async (reviewId, reportReason, reviewContent, targetNickname, targetUserId) => {
+    try {
+        // 백엔드에 전송할 데이터에 필요한 정보들을 모두 포함시킵니다.
+        const requestBody = {
+            reportReason,
+            reviewContent,
+            targetNickname,
+            targetUserId,
+        };
+
+        const response = await apiClient.post(`/reviews/${reviewId}/report`, requestBody);
+        
+        if (response.data?.status === 'success') {
+            return response.data;
+        } else {
+            throw new Error(response.data?.message || '리뷰 신고에 실패했습니다.');
+        }
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || error.message || '리뷰 신고 중 오류가 발생했습니다.';
+        console.error('리뷰 신고 오류:', error);
+        throw new Error(errorMessage);
+    }
+};

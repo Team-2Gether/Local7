@@ -92,12 +92,12 @@ const useComment = () => {
       try {
         const response = await reportComment(commentId, reportReason);
         setMessage(response.message);
-        return response;
+        return response; // 성공 응답 객체 반환
       } catch (err) {
         const errorMsg = err.response?.data?.message || err.message || '댓글 신고 중 오류가 발생했습니다.';
         setCommentError(errorMsg);
         console.error('Failed to report comment:', err);
-        throw new Error(errorMsg);
+        throw new Error(errorMsg); // 실패 메시지를 담아 에러를 throw
       }
     }, []);
 

@@ -21,13 +21,17 @@ public class ReportVO {
     // 신고한 사용자 닉네임
     private String reporterNickname;
 
-    // 신고 대상 정보
+    // 신고 대상 내용 정보
     private String postTitle;
     private String commentContent;
 
     // 신고 대상 닉네임
     private String targetNickname;
 
+    // 신고 당한 사람
     private Long targetUserId;
+
+    // 리뷰 내용
+    private String reviewContent;
 
 }

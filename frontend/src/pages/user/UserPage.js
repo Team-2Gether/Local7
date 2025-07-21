@@ -15,15 +15,11 @@ function UserPage({ currentUser, onLogout }) {
 
     return (
         <div>
-            <h2><FaLock /> 내 정보</h2>
             {message && (
                 <div className={`message ${messageType === 'success' ? 'success' : 'error'}`}>
                     {message}
                 </div>
             )}
-
-            <div className="user-page-content">
-                <div className="user-update-sections-wrapper">
                     {/* 프로필 이미지 변경 섹션 */}
                     <UserIMGSection currentUser={currentUser} onLogout={onLogout} />
 
@@ -42,8 +38,6 @@ function UserPage({ currentUser, onLogout }) {
                     {/* 회원 탈퇴 섹션 */}
                     <UserWithdrawalSection currentUser={currentUser} onLogout={onLogout} />
                 </div>
-            </div>
-        </div>
     );
 }
 
