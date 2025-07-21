@@ -481,7 +481,7 @@ const AdminPage = ({ currentUser }) => {
                                                                     <button
                                                                         onClick={() => handleDeleteUser(report.targetUserId, report.targetNickname)}
                                                                         className="admin-action-button delete">
-                                                                        탈퇴
+                                                                        삭제
                                                                     </button>
                                                                 )}
                                                             </div>
