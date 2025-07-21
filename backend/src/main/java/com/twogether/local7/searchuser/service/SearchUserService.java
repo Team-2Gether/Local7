@@ -1,3 +1,4 @@
+// SearchUserService.java
 package com.twogether.local7.searchuser.service;
 
 import com.twogether.local7.user.vo.UserVO;
