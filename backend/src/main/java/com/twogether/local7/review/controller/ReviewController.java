@@ -1,7 +1,10 @@
 package com.twogether.local7.review.controller;
 
+import com.twogether.local7.report.service.ReportService;
 import com.twogether.local7.review.service.ReviewService;
 import com.twogether.local7.review.vo.ReviewVO;
+import com.twogether.local7.report.vo.ReportVO;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,9 @@ public class ReviewController {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private ReportService reportService;
 
     // 리뷰 작성 (POST 요청)
     @PostMapping
@@ -126,6 +132,42 @@ public class ReviewController {
                     errorResponse.put("status", "error");
                     errorResponse.put("message", "리뷰 삭제 중 오류 발생: " + e.getMessage());
                     return Mono.just(new ResponseEntity<Map<String, Object>>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR));
+                });
+    }
+
+    @PostMapping("/{reviewId}/report")
+    public Mono<ResponseEntity<Map<String, Object>>> reportReview(@PathVariable Long reviewId, @RequestBody ReportVO reportVO, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Long reporterId = (Long) session.getAttribute("userId");
+
+        if (reporterId == null) {
+            response.put("status", "error");
+            response.put("message", "로그인이 필요합니다.");
+            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response));
+        }
+
+        return Mono.fromCallable(() -> {
+                    reportVO.setReporterId(reporterId);
+                    reportVO.setTargetId(reviewId);
+                    reportVO.setReportType("review"); // 신고 유형을 'review'로 설정
+                    reportService.createReport(reportVO);
+                    return ResponseEntity.ok(response);
+                })
+                .map(okResponse -> {
+                    response.put("status", "success");
+                    response.put("message", "리뷰 신고가 성공적으로 접수되었습니다.");
+                    return ResponseEntity.ok(response);
+                })
+                .onErrorResume(IllegalStateException.class, e -> {
+                    response.put("status", "error");
+                    response.put("message", e.getMessage()); // '이미 신고 접수를 하셨습니다' 메시지
+                    return Mono.just(ResponseEntity.status(HttpStatus.CONFLICT).body(response));
+                })
+                .onErrorResume(Exception.class, e -> {
+                    logger.error("ReviewController: 리뷰 신고 접수 중 오류 발생: {}", e.getMessage(), e);
+                    response.put("status", "error");
+                    response.put("message", "리뷰 신고 접수 중 오류가 발생했습니다: " + e.getMessage());
+                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response));
                 });
     }
 }

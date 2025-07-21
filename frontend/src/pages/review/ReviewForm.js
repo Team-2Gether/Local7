@@ -3,7 +3,7 @@ import axios from 'axios';
 import { summarizeReview } from '../../api/AiApi'; // AI API 호출 함수 임포트
 import './ReviewForm.css';
 
-function ReviewForm({ restaurantId, userId, existingReview, onReviewSubmitted, onCancel }) {
+function ReviewForm({ restaurantId, userId, userNickname, existingReview, onReviewSubmitted, onCancel }) {
     const [reviewContent, setReviewContent] = useState('');
     const [reviewRating, setReviewRating] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,7 +42,8 @@ function ReviewForm({ restaurantId, userId, existingReview, onReviewSubmitted, o
                 reviewRating,
                 reviewContent,
                 aiSummary: aiResponse.summary,
-                aiKeywords: aiResponse.keywords.join(', ')
+                aiKeywords: aiResponse.keywords.join(', '),
+                userNickname: userNickname
             };
 
             // 3. 리뷰를 백엔드에 전송합니다 (수정 또는 등록)

@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { MdPushPin, MdLink } from 'react-icons/md';
+import { FaExclamationTriangle } from 'react-icons/fa';
 import Modal from 'react-modal';
 import axios from 'axios';
 import ReviewForm from '../../review/ReviewForm'; 
 import { summarizeReview } from '../../../api/AiApi';
 import './RestaurantDetailModal.css';
+import { reportReview } from '../../../api/RestaurantApi';
+import ReportModal from './ReportModal';
 
 Modal.setAppElement('#root');
 
@@ -14,6 +17,7 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
     const [reviewError, setReviewError] = useState(null);
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [editingReview, setEditingReview] = useState(null);
+    const [targetReview, setTargetReview] = useState(null);
 
     const [restaurantAiSummary, setRestaurantAiSummary] = useState('');
     const [restaurantAiKeywords, setRestaurantAiKeywords] = useState([]);
@@ -132,6 +136,37 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
         ? (reviews.reduce((sum, review) => sum + (review.reviewRating || 0), 0) / reviews.length).toFixed(1)
         : '0.0';
 
+    //  리뷰 신고 처리
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
+    const handleOpenReportModal = (review) => {
+        setTargetReview(review);
+        setIsReportModalOpen(true);
+    };
+
+    const handleReviewReport = async (reportReason) => {
+        if (!targetReview) {
+            alert('신고 대상 리뷰를 찾을 수 없습니다.');
+            return;
+        }
+
+        try {
+            // targetReview 객체에서 필요한 정보를 추출하여 전달
+            await reportReview(
+                targetReview.reviewId,
+                reportReason,
+                targetReview.reviewContent,
+                targetReview.userNickname,
+                targetReview.userId
+            );
+            alert('리뷰 신고가 접수되었습니다. 감사합니다.');
+            setIsReportModalOpen(false);
+            fetchReviews(restaurant.restaurantId);
+        } catch (err) {
+            alert(err.message || '리뷰 신고 중 오류가 발생했습니다.');
+        }
+    };
+
     return (
         <Modal
             isOpen={isOpen}
@@ -245,10 +280,26 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                                             </div>
                                         </div>
                                         <p className="review-content">{review.reviewContent}</p>
-                                        {currentUser && currentUser.userId === review.userId && (
+                                        {currentUser && currentUser.userId === review.userId ? (
                                             <div className="review-actions">
                                                 <button onClick={() => handleEditReview(review)}>수정</button>
                                                 <button onClick={() => handleDeleteReview(review.reviewId)}>삭제</button>
+                                            </div>
+                                        ) : (
+                                            // 다른 사람 리뷰의 경우
+                                            <div className="review-actions">
+                                                {
+                                                    // 작성자가 관리자(userId가 1 또는 닉네임이 '관리자')가 아닐 때만 신고 버튼 표시
+                                                    review.userId !== 1 && review.userNickname !== '관리자' && (
+                                                        <button
+                                                            onClick={() => handleOpenReportModal(review)}
+                                                            className="icon-button"
+                                                            title="리뷰 신고"
+                                                        >
+                                                            <FaExclamationTriangle />
+                                                        </button>
+                                                    )
+                                                }
                                             </div>
                                         )}
                                     </li>
@@ -259,6 +310,12 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                 )}
             </div>
             <button className="modal-close-button" onClick={onRequestClose}>닫기</button>
+            <ReportModal
+                isOpen={isReportModalOpen}
+                onClose={() => setIsReportModalOpen(false)}
+                onReport={handleReviewReport} // 완성된 리뷰 신고 함수 연결
+                target="리뷰"
+            />
         </Modal>
     );
 }
