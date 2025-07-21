@@ -2,24 +2,28 @@ package com.twogether.local7.login.controller;
 
 import com.twogether.local7.login.service.LoginService;
 import com.twogether.local7.login.vo.LoginVO;
-import jakarta.servlet.http.HttpSession; // HttpSession import
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.servlet.view.RedirectView; // RedirectView import 추가
+
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/auth") // 인증 관련 URL이므로 auth로 변경
+@RequestMapping("/api/auth")
 public class LoginController {
 
     @Autowired
     private LoginService loginService;
 
     @PostMapping("/login")
-    public ResponseEntity<? extends Map<String,? extends Object>> login(@RequestBody Map<String, String> loginRequest, HttpSession session) { // HttpSession 추가
+    public ResponseEntity<? extends Map<String,? extends Object>> login(@RequestBody Map<String, String> loginRequest, HttpSession session) {
         String credential = loginRequest.get("credential");
         String password = loginRequest.get("password");
 
@@ -35,7 +39,7 @@ public class LoginController {
             session.setAttribute("isLoggedIn", true);
             session.setAttribute("userId", user.getUserId());
             session.setAttribute("userLoginId", user.getUserLoginId());
-            session.setAttribute("userName", user.getUserName());
+            session.setAttribute("userName", user.getUsername());
             session.setAttribute("userNickname", user.getUserNickname());
             session.setAttribute("userEmail", user.getUserEmail());
             session.setAttribute("userProfileImageUrl", user.getUserProfileImageUrl());
@@ -53,7 +57,7 @@ public class LoginController {
             response.put("isLoggedIn", true);
             response.put("userId", user.getUserId());
             response.put("userLoginId", user.getUserLoginId());
-            response.put("userName", user.getUserName());
+            response.put("userName", user.getUsername());
             response.put("userNickname", user.getUserNickname());
             response.put("userEmail", user.getUserEmail());
             response.put("userProfileImageUrl", user.getUserProfileImageUrl());
@@ -74,17 +78,8 @@ public class LoginController {
         }
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<Map<String, Object>> logout(HttpSession session) { // HttpSession 추가
-        // HttpSession 무효화
-        if (session != null) {
-            session.invalidate();
-        }
-        return ResponseEntity.ok(createSuccessResponse("로그아웃되었습니다."));
-    }
-
     @GetMapping("/status")
-    public ResponseEntity<Map<String, ?>> checkLoginStatus(HttpSession session) { // HttpSession 추가
+    public ResponseEntity<Map<String, ?>> checkLoginStatus(HttpSession session) {
         Map<String, Object> response = new HashMap<>();
         Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn");
 
@@ -107,6 +102,46 @@ public class LoginController {
         } else {
             response.put("isLoggedIn", false);
             return ResponseEntity.ok(response);
+        }
+    }
+
+    // Google 로그인 성공 후 백엔드로 이동 -> 백엔드에서 프론트엔드로 리다이렉트
+    @GetMapping("/login/oauth2/code/google")
+    public RedirectView googleLoginSuccess(@AuthenticationPrincipal OAuth2User oauth2User, HttpSession session) {
+        if (oauth2User != null) {
+            String email = oauth2User.getAttribute("email");
+            String name = oauth2User.getAttribute("name");
+            String picture = oauth2User.getAttribute("picture");
+
+            try {
+                // OAuth 사용자 정보 처리 (신규 등록 또는 기존 사용자 업데이트)
+                LoginVO user = loginService.processOAuthUser(email, name, picture);
+
+                // 세션에 사용자 정보 저장
+                session.setAttribute("isLoggedIn", true);
+                session.setAttribute("userId", user.getUserId());
+                session.setAttribute("userLoginId", user.getUserLoginId());
+                session.setAttribute("userName", user.getUsername());
+                session.setAttribute("userNickname", user.getUserNickname());
+                session.setAttribute("userEmail", user.getUserEmail());
+                session.setAttribute("userProfileImageUrl", user.getUserProfileImageUrl());
+                session.setAttribute("userBio", user.getUserBio());
+                session.setAttribute("ruleId", user.getRuleId());
+                session.setAttribute("createDate", user.getCreateDate());
+                session.setAttribute("createdId", user.getCreatedId());
+                session.setAttribute("updatedDate", user.getUpdatedDate());
+                session.setAttribute("updatedId", user.getUpdatedId());
+
+                // 프론트엔드 메인 페이지로 리다이렉트
+                return new RedirectView("http://localhost:3000/");
+            } catch (Exception e) {
+                System.err.println("Error processing Google OAuth user: " + e.getMessage());
+                // 오류 발생 시 로그인 실패 페이지 또는 메인 페이지로 리다이렉트 (필요에 따라 변경)
+                return new RedirectView("http://localhost:3000/login"); // 예시: 로그인 페이지로 리다이렉트
+            }
+        } else {
+            // OAuth2User가 null인 경우 (로그인 실패)
+            return new RedirectView("http://localhost:3000/login"); // 예시: 로그인 페이지로 리다이렉트
         }
     }
 

@@ -1,3 +1,4 @@
+// src/AppContent.js
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -26,12 +27,12 @@ import PostList from "./pages/post/components/PostList";
 import PostDetail from "./pages/post/components/PostDetail";
 import Notice from "./pages/notice/Notice";
 import OtherUser from "./pages/user/OtherUser";
-import FollowerList from "./pages/user/FollowerList"; // FollowerList import
-import FollowingList from "./pages/user/FollowingList"; // FollowingList import
+import FollowerList from "./pages/user/FollowerList";
+import FollowingList from "./pages/user/FollowingList";
 import AdminPage from "./pages/admin/AdminPage";
 import ForgetIdOrPWD from "./pages/forget/ForgetIdOrPWD";
-import SearchUser from "./pages/searchuser/SearchUser"; // SearchUser import 추가
-
+import SearchUser from "./pages/searchuser/SearchUser";
+import OAuth2RedirectHandler from './pages/OAuth2RedirectHandler';
 
 Modal.setAppElement("#root");
 
@@ -45,7 +46,23 @@ export function AppContent() {
 
     const navigate = useNavigate();
 
+    // Axios 기본 설정: 모든 요청에 자격 증명(쿠키) 포함
     axios.defaults.withCredentials = true;
+
+    // Axios 요청 인터셉터: CSRF 토큰을 요청 헤더에 추가
+    // Spring Security의 CookieCsrfTokenRepository.withHttpOnlyFalse()와 연동됩니다.
+    axios.interceptors.request.use(config => {
+        // 'XSRF-TOKEN' 쿠키에서 CSRF 토큰 값을 찾습니다.
+        const csrfToken = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN='));
+
+        // 토큰이 존재하면 'X-XSRF-TOKEN' 헤더에 추가합니다.
+        if (csrfToken) {
+            config.headers['X-XSRF-TOKEN'] = csrfToken.split('=')[1];
+        }
+        return config;
+    }, error => {
+        return Promise.reject(error);
+    });
 
     const checkLoginStatus = async () => {
         try {
@@ -93,19 +110,26 @@ export function AppContent() {
 
     const handleLogout = async () => {
         try {
+            // Spring Security의 HttpStatusReturningLogoutSuccessHandler는 본문을 반환하지 않으므로
+            // response.data 대신 response.status만 확인합니다.
             const response = await axios.post("http://localhost:8080/api/auth/logout");
-            const data = response.data;
-            if (response.status === 200) {
-                alert(data.message);
+            if (response.status === 200) { // HTTP 200 OK는 성공적인 로그아웃을 의미합니다.
+                alert("로그아웃되었습니다."); // 직접 메시지 출력
                 setIsLoggedIn(false);
                 setCurrentUser(null);
                 navigate("/");
             } else {
-                alert("로그아웃 실패: " + data.message);
+                // 200 OK가 아닌 다른 상태 코드가 반환될 경우
+                alert("로그아웃 실패: 예상치 못한 응답입니다.");
             }
         } catch (error) {
             console.error("로그아웃 실패:", error);
-            alert("로그아웃 중 오류가 발생했습니다.");
+            // 서버에서 에러 응답을 보낼 경우 (예: 500 Internal Server Error)
+            if (error.response) {
+                alert(`로그아웃 중 오류가 발생했습니다: ${error.response.status} ${error.response.statusText}`);
+            } else {
+                alert("로그아웃 중 네트워크 오류가 발생했습니다.");
+            }
         }
     };
 
@@ -119,7 +143,6 @@ export function AppContent() {
             setIsAiModalOpen(false);
         }
     };
-
 
     return (
         <div className="app-layout">
@@ -247,7 +270,10 @@ export function AppContent() {
                         <Route path="/user/profile/:userId/followers" element={<FollowerList currentUser={currentUser} />} />
                         <Route path="/user/profile/:userId/followings" element={<FollowingList currentUser={currentUser} />} />
 
-                        <Route path="/search-user" element={<SearchUser />} /> {/* Added SearchUser Route */}
+                        <Route path="/search-user" element={<SearchUser />} />
+
+                        {/* OAuth2RedirectHandler 경로가 src/pages/OAuth2RedirectHandler.js 에 있다면 이 경로를 사용 */}
+                        <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
 
 
                         <Route
@@ -266,7 +292,7 @@ export function AppContent() {
 
                         <Route path="/signup" element={<SignupForm />} />
                         <Route path="/admin" element={currentUser && currentUser.ruleId === 1 ? <AdminPage currentUser={currentUser} /> : <Navigate to="/" />} />
-                        <Route path="/forget-ID-PWD" element={<ForgetIdOrPWD />} /> {/* */}
+                        <Route path="/forget-ID-PWD" element={<ForgetIdOrPWD />} />
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </div>
@@ -294,6 +320,7 @@ export function AppContent() {
     );
 }
 
+// UserInfo 함수 정의는 여기에 단 한 번만 있어야 합니다.
 function UserInfo({ currentUser }) {
     const [userData, setUserData] = useState(null);
     const [followerCount, setFollowerCount] = useState(0);
