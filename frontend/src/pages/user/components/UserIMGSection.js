@@ -82,12 +82,12 @@ function UserIMGSection({ currentUser, onLogout }) {
                         <FaUserCircle size={100} color="#ccc" />
                         <p>이미지 없음</p>
                     </div>
-                )}
-            </div>
+                )}           
             <input type="file" accept="image/*" onChange={handleFileChange} />
             <button onClick={handleImageUpdate} disabled={!selectedFile}>
                 이미지 변경
             </button>
+            </div>
         </div>
     );
 }
