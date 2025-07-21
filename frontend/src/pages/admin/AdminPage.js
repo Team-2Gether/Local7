@@ -454,12 +454,17 @@ const AdminPage = ({ currentUser }) => {
                                     sortedReports.map(report => (
                                         <tr key={report.reportId}>
                                             <td>{report.reportId}</td>
-                                            <td>{report.reportType === 'post' ? '스레드' : '댓글'}</td>
+                                            <td>
+                                                {report.reportType === 'post' ? '스레드' : 
+                                                report.reportType === 'review' ? '리뷰' : 
+                                                '댓글'}
+                                            </td>
                                             <td>{report.reporterNickname}</td>
                                             <td>{report.targetNickname}</td>
                                             <td>
                                                 {/* 신고 유형에 따라 게시글 제목 또는 댓글 내용을 표시 */}
                                                 {report.reportType === 'post' && report.postTitle}
+                                                {report.reportType === 'review' && report.reviewContent}
                                                 {report.reportType === 'comment' && report.commentContent}
                                             </td>
                                             <td>{report.reportReason}</td>

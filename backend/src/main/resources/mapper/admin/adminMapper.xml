@@ -62,8 +62,9 @@
         <result property="reporterNickname" column="REPORTER_NICKNAME" />
         <result property="postTitle" column="POST_TITLE" />
         <result property="commentContent" column="COMMENT_CONTENT" />
-        <result property="targetNickname" column="TARGET_NICKNAME" />
+        <result property="targetNickname" column="TARGET_USER_NICKNAME" />
         <result property="targetUserId" column="TARGET_USER_ID" />
+        <result property="reviewContent" column="REVIEW_CONTENT" />
     </resultMap>
 
     <select id="selectAllUsers" resultMap="userMap">
@@ -89,20 +90,44 @@
 
     <select id="selectAllReports" resultMap="reportMap">
         SELECT
-            r.*,
-            ru.USER_NICKNAME AS REPORTER_NICKNAME,
-            p.POST_TITLE,
-            c.CONTENT AS COMMENT_CONTENT,
-            tu.USER_NICKNAME AS TARGET_NICKNAME,
-            CASE r.REPORT_TYPE
-                WHEN 'post' THEN p.USER_ID
-                WHEN 'comment' THEN c.USER_ID
-            END AS TARGET_USER_ID
+        r.REPORT_ID,
+        r.REPORTER_ID,
+        r.TARGET_ID,
+        r.REPORT_TYPE,
+        r.REPORT_REASON,
+        r.STATUS,
+        r.CREATED_DATE,
+        ru.USER_NICKNAME AS REPORTER_NICKNAME,
+        CASE
+        WHEN r.REPORT_TYPE = 'post' THEN p.POST_TITLE
+        ELSE NULL
+        END AS POST_TITLE,
+        CASE
+        WHEN r.REPORT_TYPE = 'comment' THEN c.CONTENT
+        ELSE NULL
+        END AS COMMENT_CONTENT,
+        CASE
+        WHEN r.REPORT_TYPE = 'review' THEN rv.REVIEW_CONTENT
+        ELSE NULL
+        END AS REVIEW_CONTENT,
+        CASE r.REPORT_TYPE
+        WHEN 'post' THEN p.USER_ID
+        WHEN 'comment' THEN c.USER_ID
+        WHEN 'review' THEN rv.USER_ID
+        END AS TARGET_USER_ID,
+        CASE r.REPORT_TYPE
+        WHEN 'post' THEN tu.USER_NICKNAME
+        WHEN 'comment' THEN tu.USER_NICKNAME
+        WHEN 'review' THEN tu.USER_NICKNAME
+        END AS TARGET_USER_NICKNAME
         FROM TB_REPORT r
         LEFT JOIN TB_USER ru ON r.REPORTER_ID = ru.USER_ID
         LEFT JOIN TB_POST p ON r.REPORT_TYPE = 'post' AND r.TARGET_ID = p.POST_ID
         LEFT JOIN TB_COMMENT c ON r.REPORT_TYPE = 'comment' AND r.TARGET_ID = c.COMMENT_ID
-        LEFT JOIN TB_USER tu ON (r.REPORT_TYPE = 'post' AND p.USER_ID = tu.USER_ID) OR (r.REPORT_TYPE = 'comment' AND c.USER_ID = tu.USER_ID)
+        LEFT JOIN TB_REVIEW rv ON r.REPORT_TYPE = 'review' AND r.TARGET_ID = rv.REVIEW_ID
+        LEFT JOIN TB_USER tu ON (r.REPORT_TYPE = 'post' AND p.USER_ID = tu.USER_ID) OR
+        (r.REPORT_TYPE = 'comment' AND c.USER_ID = tu.USER_ID) OR
+        (r.REPORT_TYPE = 'review' AND rv.USER_ID = tu.USER_ID)
         ORDER BY r.CREATED_DATE DESC
     </select>
 
