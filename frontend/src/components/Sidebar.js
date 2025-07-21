@@ -1,5 +1,6 @@
 import React from 'react';
 import {FaHome, FaUser, FaRobot, FaAward, FaBullhorn} from 'react-icons/fa';
+import { FaUserPlus } from "react-icons/fa6";
 import {RiAdminLine} from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom'; 
 
@@ -32,6 +33,8 @@ const Sidebar = ({ onMenuItemClick, currentUser }) => {
                 navigate("/ai");
             else if (item === 'admin')
                 navigate("/admin"); 
+            else if (item === 'search-user') // Added route for SearchUser
+                navigate("/search-user");
         }
     };
 
@@ -63,6 +66,11 @@ const Sidebar = ({ onMenuItemClick, currentUser }) => {
             <button className="sidebar-button" onClick={() => handleSidebarClick('mypage')}>
                 <FaUser className="sidebar-icon"/>
                 <span>마이</span>
+            </button>
+
+            <button className="sidebar-button" onClick={() => handleSidebarClick('search-user')}>
+                <FaUserPlus className="sidebar-icon"/>
+                <span>유저 검색</span>
             </button>
 
             <button className="sidebar-button" onClick={() => handleSidebarClick('notice')}>

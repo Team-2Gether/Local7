@@ -251,7 +251,6 @@ public class UserController {
     }
 
     // 새로운 엔드포인트: 현재 비밀번호 확인
-    //
     @PostMapping("/check-password")
     public ResponseEntity<Map<String, Object>> checkPassword(
             @RequestParam Long userId,

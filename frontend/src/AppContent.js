@@ -30,6 +30,7 @@ import FollowerList from "./pages/user/FollowerList"; // FollowerList import
 import FollowingList from "./pages/user/FollowingList"; // FollowingList import
 import AdminPage from "./pages/admin/AdminPage";
 import ForgetIdOrPWD from "./pages/forget/ForgetIdOrPWD";
+import SearchUser from "./pages/searchuser/SearchUser"; // SearchUser import 추가
 
 
 Modal.setAppElement("#root");
@@ -246,6 +247,8 @@ export function AppContent() {
                         <Route path="/user/profile/:userId/followers" element={<FollowerList currentUser={currentUser} />} />
                         <Route path="/user/profile/:userId/followings" element={<FollowingList currentUser={currentUser} />} />
 
+                        <Route path="/search-user" element={<SearchUser />} /> {/* Added SearchUser Route */}
+
 
                         <Route
                             path="/notice/*"
@@ -297,7 +300,6 @@ function UserInfo({ currentUser }) {
     const [followingCount, setFollowingCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { userLoginId } = useParams();
 
     useEffect(() => {
         const fetchUserDataAndFollowCounts = async () => {
@@ -373,8 +375,9 @@ function UserInfo({ currentUser }) {
         return <p className="error-message">{error}</p>;
     }
 
-    if (!userData)
+    if (!userData) {
         return <p>사용자 정보를 불러올 수 없습니다.</p>;
+    }
 
     return (
         <div className="user-info-section">
@@ -407,7 +410,7 @@ function UserInfo({ currentUser }) {
                     {userData.userBio || "작성된 소개가 없습니다."}
                 </p>
                 <p>
-                    <strong>가입일:</strong>{" "}
+                    <strong>가입일:</strong>
                     {new Date(userData.createDate).toLocaleDateString()}
                 </p>
                 <p>

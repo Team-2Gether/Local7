@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.twogether.local7.searchuser.dao.SearchUserDAO">
+
+    <resultMap id="userResultMap" type="com.twogether.local7.user.vo.UserVO">
+        <id property="userId" column="USER_ID"/>
+        <result property="userLoginId" column="LOGIN_ID"/>
+        <result property="userEmail" column="USER_EMAIL"/>
+        <result property="userPassword" column="USER_PASSWORD"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="userNickname" column="USER_NICKNAME"/>
+        <result property="userProfileImageUrl" column="USER_PROF_IMG_URL"/>
+        <result property="userBio" column="USER_BIO"/>
+        <result property="ruleId" column="RULE_ID"/>
+        <result property="ruleName" column="RULE_NAME"/>
+        <result property="createDate" column="CREATE_DATE"/>
+        <result property="createdId" column="CREATED_ID"/>
+        <result property="updatedDate" column="UPDATED_DATE"/>
+        <result property="updatedId" column="UPDATED_ID"/>
+    </resultMap>
+
+    <select id="searchUsers" parameterType="com.twogether.local7.searchuser.vo.SearchUserVO" resultMap="userResultMap"> SELECT *
+        FROM (
+        SELECT
+        ROWNUM AS rn,
+        A.USER_ID,
+        A.LOGIN_ID,
+        A.USER_EMAIL,
+        A.USER_PASSWORD,
+        A.USER_NAME,
+        A.USER_NICKNAME,
+        A.USER_PROF_IMG_URL,
+        A.USER_BIO,
+        A.RULE_ID,
+        B.RULE_NAME,
+        A.CREATE_DATE,
+        A.CREATED_ID,
+        A.UPDATED_DATE,
+        A.UPDATED_ID
+        FROM
+        TB_USER A JOIN TB_RULE B ON A.RULE_ID = B.RULE_ID
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (
+                A.LOGIN_ID LIKE '%' || #{keyword} || '%' OR A.USER_NAME LIKE '%' || #{keyword} || '%' OR
+                A.USER_NICKNAME LIKE '%' || #{keyword} || '%' OR
+                A.USER_EMAIL LIKE '%' || #{keyword} || '%'
+                )
+            </if>
+        </where>
+        ORDER BY A.USER_ID DESC
+        )
+        WHERE rn BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <select id="countSearchUsers" parameterType="com.twogether.local7.searchuser.vo.SearchUserVO" resultType="int">
+        SELECT
+        COUNT(*)
+        FROM
+        TB_USER A JOIN TB_RULE B ON A.RULE_ID = B.RULE_ID
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (
+                A.LOGIN_ID LIKE '%' || #{keyword} || '%' OR A.USER_NAME LIKE '%' || #{keyword} || '%' OR
+                A.USER_NICKNAME LIKE '%' || #{keyword} || '%' OR
+                A.USER_EMAIL LIKE '%' || #{keyword} || '%'
+                )
+            </if>
+        </where>
+    </select>
+
+</mapper>
