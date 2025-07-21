@@ -254,10 +254,18 @@ public class PostController {
             response.put("status", "success");
             response.put("message", "게시글 신고가 성공적으로 접수되었습니다.");
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+
+        } catch (IllegalStateException e) {
+            // [수정된 부분] 중복 신고 예외를 명확히 처리하여 409 Conflict 반환
             response.put("status", "error");
-            response.put("message", "게시글 신고 접수 중 오류가 발생했습니다: " + e.getMessage());
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        } catch (Exception e) {
+            // 그 외 다른 예외 처리
+            response.put("status", "error");
+            response.put("message", "게시글 신고 접수를 이미 하셨습니다. " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+    
 }

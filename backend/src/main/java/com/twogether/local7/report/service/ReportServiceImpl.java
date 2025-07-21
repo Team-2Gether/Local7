@@ -15,7 +15,18 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void createReport(ReportVO reportVO) {
-        // 신고 유형(게시글, 댓글 등)에 대한 유효성 검사 로직 추가 가능
+        // 신고 중복 체크
+        ReportVO existingReport = reportDAO.findReportByUserIdAndTargetId(
+                reportVO.getReporterId(),
+                reportVO.getTargetId(),
+                reportVO.getReportType()
+        );
+
+        if (existingReport != null) {
+            // 이미 신고한 경우 예외 발생
+            throw new IllegalStateException("이미 해당 콘텐츠를 신고했습니다.");
+        }
+
         if (reportVO.getReportType() == null || reportVO.getReportReason() == null) {
             throw new IllegalArgumentException("신고 유형과 사유는 필수 입력 항목입니다.");
         }
@@ -31,4 +42,5 @@ public class ReportServiceImpl implements ReportService {
     public void updateReportStatus(Long reportId, String status) {
         reportDAO.updateReportStatus(reportId, status);
     }
+
 }
