@@ -66,6 +66,7 @@ async def summarize_review(request: ReviewRequest):
         return {"summary": summary, "keywords": keywords}
 
     except Exception as e:
+        print(f"AI 응답 생성 중 오류 발생: {e}")
         raise HTTPException(status_code=500, detail=f"리뷰 요약 중 오류 발생: {str(e)}")
         
 # --- 감성 분석 엔드포인트 ---
