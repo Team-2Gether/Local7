@@ -21,6 +21,33 @@
 
 .form-group {
   margin-bottom: 15px; /* Space between input fields */
+  text-align: center;  /* 안의 인라인/인라인블록 요소를 가운데 정렬 */
+}
+
+.form-group .form-control {
+  display: inline-block; /* 너비가 있으면 인라인블록으로 */
+  /* 필요하면 width 지정 */
+  width: 300px; /* 예시 너비 */
+  /* margin: 0 auto; 는 인라인 요소에 적용 안 됨 */
+}
+
+.form-control {
+  display: inline-block;
+  width: 300px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #333;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  outline: none;
+  cursor: text;
+}
+
+.form-control:focus {
+  border-color: #ffcc00;
 }
 
 .login-form-container input[type="text"],
