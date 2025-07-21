@@ -1,4 +1,4 @@
-.modal-backdrop {
+.modal-backdrop11 {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +11,7 @@
     z-index: 1000;
 }
 
-.modal-content {
+.modal-content11 {
     background-color: #333;
     color: #f0f0f0;
     padding: 30px;
@@ -22,17 +22,17 @@
     text-align: center;
 }
 
-.modal-content h3 {
+.modal-content11 h3 {
     margin-top: 0;
     margin-bottom: 15px;
 }
 
-.modal-content p {
+.modal-content11 p {
     margin-bottom: 20px;
     color: #bbb;
 }
 
-.modal-content textarea {
+.modal-content11 textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
@@ -43,13 +43,13 @@
     resize: none;
 }
 
-.modal-actions {
+.modal-actions11 {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
 }
 
-.modal-button {
+.modal-button11 {
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
@@ -57,12 +57,12 @@
     font-weight: bold;
 }
 
-.modal-button.cancel {
+.modal-button11.cancel {
     background-color: #555;
     color: #f0f0f0;
 }
 
-.modal-button.submit {
+.modal-button11.submit {
     background-color: #e6525b; /* 빨간색으로 경고성 강조 */
     color: white;
 }

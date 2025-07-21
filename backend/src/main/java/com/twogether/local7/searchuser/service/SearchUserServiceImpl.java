@@ -1,3 +1,4 @@
+// SearchUserServiceImpl.java
 package com.twogether.local7.searchuser.service;
 
 import com.twogether.local7.searchuser.dao.SearchUserDAO;

@@ -21,7 +21,8 @@
         <result property="updatedId" column="UPDATED_ID"/>
     </resultMap>
 
-    <select id="searchUsers" parameterType="com.twogether.local7.searchuser.vo.SearchUserVO" resultMap="userResultMap"> SELECT *
+    <select id="searchUsers" parameterType="com.twogether.local7.searchuser.vo.SearchUserVO" resultMap="userResultMap">
+        SELECT *
         FROM (
         SELECT
         ROWNUM AS rn,
@@ -44,9 +45,21 @@
         <where>
             <if test="keyword != null and keyword != ''">
                 AND (
-                A.LOGIN_ID LIKE '%' || #{keyword} || '%' OR A.USER_NAME LIKE '%' || #{keyword} || '%' OR
-                A.USER_NICKNAME LIKE '%' || #{keyword} || '%' OR
-                A.USER_EMAIL LIKE '%' || #{keyword} || '%'
+                <if test="searchLoginId">
+                    A.LOGIN_ID LIKE '%' || #{keyword} || '%'
+                </if>
+                <if test="searchName">
+                    <if test="searchLoginId or searchNickname or searchEmail">OR</if>
+                    A.USER_NAME LIKE '%' || #{keyword} || '%'
+                </if>
+                <if test="searchNickname">
+                    <if test="searchLoginId or searchName or searchEmail">OR</if>
+                    A.USER_NICKNAME LIKE '%' || #{keyword} || '%'
+                </if>
+                <if test="searchEmail">
+                    <if test="searchLoginId or searchName or searchNickname">OR</if>
+                    A.USER_EMAIL LIKE '%' || #{keyword} || '%'
+                </if>
                 )
             </if>
         </where>
@@ -63,9 +76,21 @@
         <where>
             <if test="keyword != null and keyword != ''">
                 AND (
-                A.LOGIN_ID LIKE '%' || #{keyword} || '%' OR A.USER_NAME LIKE '%' || #{keyword} || '%' OR
-                A.USER_NICKNAME LIKE '%' || #{keyword} || '%' OR
-                A.USER_EMAIL LIKE '%' || #{keyword} || '%'
+                <if test="searchLoginId">
+                    A.LOGIN_ID LIKE '%' || #{keyword} || '%'
+                </if>
+                <if test="searchName">
+                    <if test="searchLoginId or searchNickname or searchEmail">OR</if>
+                    A.USER_NAME LIKE '%' || #{keyword} || '%'
+                </if>
+                <if test="searchNickname">
+                    <if test="searchLoginId or searchName or searchEmail">OR</if>
+                    A.USER_NICKNAME LIKE '%' || #{keyword} || '%'
+                </if>
+                <if test="searchEmail">
+                    <if test="searchLoginId or searchName or searchNickname">OR</if>
+                    A.USER_EMAIL LIKE '%' || #{keyword} || '%'
+                </if>
                 )
             </if>
         </where>
