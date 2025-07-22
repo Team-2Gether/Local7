@@ -175,7 +175,7 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
             className="restaurant-detail-modal"
             overlayClassName="restaurant-detail-overlay"
         >
-            <div className="modal-content">
+            <div>
                 <button className="modal-close-top-button1" onClick={onRequestClose} aria-label="Close modal">×</button>
                 <h2>{restaurant?.restaurantName}</h2>
                 <p>주소: {`${restaurant?.addrSido || ''} ${restaurant?.addrSigungu || ''} ${restaurant?.addrDong || ''} ${restaurant?.addrDetail || ''}`}</p>
