@@ -1,256 +1,29 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate } from 'react-router-dom';
-import axios from "axios";
+import React from "react";
+import useAdmin from "./hooks/useAdmin"; 
 import "./AdminPage.css";
 
 const AdminPage = ({ currentUser }) => {
-    const [activeTab, setActiveTab] = useState("users");
-    const [users, setUsers] = useState([]);
-    const [posts, setPosts] = useState([]);
-    const [comments, setComments] = useState([]);
-    const [reviews, setReviews] = useState([]);
-    const [reports, setReports] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [isSortedByReports, setIsSortedByReports] = useState(false);
-
-    const navigate = useNavigate();
-
-    const ADMIN_ID = currentUser
-        ?.userId; // 관리자 자신의 userId
-
-    const fetchAdminData = async () => {
-        if (!ADMIN_ID) {
-            setError("사용자 정보를 불러올 수 없습니다.");
-            return;
-        }
-
-        setLoading(true);
-        setError(null);
-
-        const headers = {
-            'X-USER-ID': ADMIN_ID
-        };
-
-        try {
-            let response;
-            const BASE_URL = "http://localhost:8080";
-
-            switch (activeTab) {
-                case "users":
-                    response = await axios.get(`${BASE_URL}/api/admin/users`, { headers });
-                    setUsers(response.data);
-                    break;
-                case "posts":
-                    response = await axios.get(`${BASE_URL}/api/admin/posts`, { headers });
-                    setPosts(response.data);
-                    break;
-                case "comments":
-                    response = await axios.get(`${BASE_URL}/api/admin/comments`, { headers });
-                    setComments(response.data);
-                    break;
-                case "reviews":
-                    response = await axios.get(`${BASE_URL}/api/admin/reviews`, { headers });
-                    setReviews(response.data);
-                    break;
-                case "reports":
-                    const sortParam = isSortedByReports ? "mostReported" : "latest";
-                    response = await axios.get(`${BASE_URL}/api/admin/reports?sortBy=${sortParam}`, { headers });
-                    setReports(response.data);
-                    break;
-                default:
-                    break;
-            }
-        } catch (err) {
-            console.error("Failed to fetch admin data:", err);
-            setError("데이터를 불러오는 데 실패했습니다.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchAdminData();
-        setSearchTerm("");
-    }, [activeTab]);
-
-    const handleDeleteUser = async (userId) => {
-        if (ADMIN_ID === userId) {
-            alert("자신을 삭제할 수 없습니다.");
-            return;
-        }
-        if (!window.confirm("정말로 이 사용자를 삭제하시겠습니까? (삭제 시 사용자 관련 게시글, 댓글 다 삭제됩니다.) ")) {
-            return;
-        }
-        try {
-            const BASE_URL = "http://localhost:8080";
-            await axios.delete(`${BASE_URL}/api/admin/users/${userId}`, {
-                headers: {
-                    'X-USER-ID': ADMIN_ID
-                }
-            });
-            alert("사용자가 삭제되었습니다.");
-            setUsers(users.filter(user => user.userId !== userId));
-        } catch (err) {
-            console.error("Failed to delete user:", err);
-            alert("사용자 삭제에 실패했습니다.");
-        }
-    };
-
-    const handleDeletePost = async (postId) => {
-        if (!window.confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
-            return;
-        }
-        try {
-            const BASE_URL = "http://localhost:8080";
-            await axios.delete(`${BASE_URL}/api/admin/posts/${postId}`, {
-                headers: {
-                    'X-USER-ID': ADMIN_ID
-                }
-            });
-            alert("게시글이 삭제되었습니다.");
-            setPosts(posts.filter(post => post.postId !== postId));
-        } catch (err) {
-            console.error("Failed to delete post:", err);
-            alert("게시글 삭제에 실패했습니다.");
-        }
-    };
-
-    const handleDeleteComment = async (commentId) => {
-        if (!window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
-            return;
-        }
-        try {
-            const BASE_URL = "http://localhost:8080";
-            await axios.delete(`${BASE_URL}/api/admin/comments/${commentId}`, {
-                headers: {
-                    'X-USER-ID': ADMIN_ID
-                }
-            });
-            alert("댓글이 삭제되었습니다.");
-            setComments(comments.filter(comment => comment.commentId !== commentId));
-        } catch (err) {
-            console.error("Failed to delete comment:", err);
-            alert("댓글 삭제에 실패했습니다.");
-        }
-    };
-
-    const handleDeleteReview = async (reviewId) => {
-        if (!window.confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
-            return;
-        }
-        try {
-            const BASE_URL = "http://localhost:8080";
-            await axios.delete(`${BASE_URL}/api/admin/reviews/${reviewId}`, {
-                headers: {
-                    'X-USER-ID': ADMIN_ID
-                }
-            });
-            alert("리뷰가 삭제되었습니다.");
-            setReviews(reviews.filter(review => review.reviewId !== reviewId));
-        } catch (err) {
-            console.error("Failed to delete review:", err);
-            alert("리뷰 삭제에 실패했습니다.");
-        }
-    };
-
-    const handleUpdateReportStatus = async (reportId, newStatus) => {
-        try {
-            const BASE_URL = "http://localhost:8080";
-            await axios.patch(`${BASE_URL}/api/admin/reports/${reportId}/status`, {
-                status: newStatus
-            }, {
-                headers: {
-                    'X-USER-ID': ADMIN_ID
-                }
-            });
-            alert("신고 상태가 업데이트되었습니다.");
-            fetchAdminData(); // 상태 업데이트 후 데이터 새로고침
-        } catch (err) {
-            console.error("Failed to update report status:", err);
-            alert("신고 상태 업데이트에 실패했습니다.");
-        }
-    };
-
-    // 상세 페이지로 이동하는 함수
-    const handleRowClick = (id, type) => {
-        // type에 따라 적절한 경로로 이동
-        switch (type) {
-            case "user":
-                navigate(`/user/profile/${id}`);
-                break;
-            case "post":
-                navigate(`/posts/${id}`);
-                break;
-            case "comment":
-                navigate(`/posts/${id}`);
-                break;
-            default:
-                break;
-        }
-    };
-
-    /*
-    const handleSortReports = () => {
-        setIsSortedByReports(prev => !prev);
-    };
-    */
-    const lowercasedSearchTerm = searchTerm.toLowerCase();
-
-    // useMemo를 사용하여 검색/정렬된 목록을 캐싱
-    const filteredUsers = useMemo(() => {
-        return users.filter(user =>
-            user.userId.toString().includes(lowercasedSearchTerm) ||
-            user.userLoginId.toLowerCase().includes(lowercasedSearchTerm) ||
-            user.userNickname.toLowerCase().includes(lowercasedSearchTerm) ||
-            user.userEmail.toLowerCase().includes(lowercasedSearchTerm)
-        );
-    }, [users, lowercasedSearchTerm]);
-
-    const filteredPosts = useMemo(() => {
-        return posts.filter(post =>
-            post.postTitle.toLowerCase().includes(lowercasedSearchTerm) ||
-            post.userNickname.toLowerCase().includes(lowercasedSearchTerm)
-        );
-    }, [posts, lowercasedSearchTerm]);
-
-    const filteredComments = useMemo(() => {
-        return comments.filter(comment =>
-            comment.content.toLowerCase().includes(lowercasedSearchTerm) ||
-            comment.userNickname.toLowerCase().includes(lowercasedSearchTerm)
-        );
-    }, [comments, lowercasedSearchTerm]);
-
-    const filteredReviews = useMemo(() => {
-        return reviews.filter(review =>
-            review.reviewContent.toLowerCase().includes(lowercasedSearchTerm) ||
-            review.userNickname.toLowerCase().includes(lowercasedSearchTerm)
-        );
-    }, [reviews, lowercasedSearchTerm]);
-
-    const sortedReports = useMemo(() => {
-        const reportCounts = reports.reduce((acc, report) => {
-            const reportedItemId = report.postId || report.commentId;
-            acc[reportedItemId] = (acc[reportedItemId] || 0) + 1;
-            return acc;
-        }, {});
-
-        const tempReports = [...reports];
-        if (isSortedByReports) {
-            // 신고 횟수 기준으로 정렬
-            tempReports.sort((a, b) => {
-                const countA = reportCounts[a.postId || a.commentId] || 0;
-                const countB = reportCounts[b.postId || b.commentId] || 0;
-                return countB - countA;
-            });
-        } else {
-            // 기본 정렬: 최신순
-            tempReports.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
-        }
-
-        return tempReports;
-    }, [reports, isSortedByReports]);
+    // useAdmin 훅을 사용하여 필요한 상태와 함수들을 가져옴
+    const {
+        activeTab,
+        setActiveTab,
+        users,
+        posts,
+        comments,
+        reviews,
+        reports,
+        loading,
+        error,
+        searchTerm,
+        setSearchTerm,
+        handleDeleteUser,
+        handleDeletePost,
+        handleDeleteComment,
+        handleDeleteReview,
+        handleUpdateReportStatus,
+        handleRowClick,
+        ADMIN_ID 
+    } = useAdmin(currentUser); // currentUser를 훅에 전달
 
     const renderContent = () => {
         if (loading) {
@@ -288,12 +61,11 @@ const AdminPage = ({ currentUser }) => {
                             </thead>
                             <tbody>
                                 {
-                                    filteredUsers.map(user => (
+                                    users.map(user => (
                                         <tr key={user.userId}>
                                             <td onClick={() => handleRowClick(user.userLoginId, "user")}>{user.userId}</td>
                                             <td onClick={() => handleRowClick(user.userLoginId, "user")}>{user.userLoginId}</td>
                                             <td onClick={() => handleRowClick(user.userLoginId, "user")}>{user.userNickname}</td>
-                                            <td onClick={() => handleRowClick(user.userLoginId, "user")}>{user.userEmail}</td>
                                             <td onClick={() => handleRowClick(user.userLoginId, "user")}>{new Date(user.createDate).toLocaleDateString()}</td>
                                             <td onClick={() => handleRowClick(user.userLoginId, "user")}>{
                                                 user.ruleId === 1
@@ -338,7 +110,7 @@ const AdminPage = ({ currentUser }) => {
                             </thead>
                             <tbody>
                                 {
-                                    filteredPosts.map(post => (
+                                    posts.map(post => (
                                         <tr key={post.postId}>
                                             <td onClick={() => handleRowClick(post.postId, "post")}>{post.postId}</td>
                                             <td onClick={() => handleRowClick(post.postId, "post")}>{post.postTitle}</td>
@@ -381,7 +153,7 @@ const AdminPage = ({ currentUser }) => {
                             </thead>
                             <tbody>
                                 {
-                                    filteredComments.map(comment => (
+                                    comments.map(comment => (
                                         <tr key={comment.commentId}>
                                             <td onClick={() => handleRowClick(comment.postId, "comment")}>{comment.commentId}</td>
                                             <td onClick={() => handleRowClick(comment.postId, "comment")}>{comment.content}</td>
@@ -425,7 +197,7 @@ const AdminPage = ({ currentUser }) => {
                             </thead>
                             <tbody>
                                 {
-                                    filteredReviews.map(review => (
+                                    reviews.map(review => (
                                         <tr key={review.reviewId}>
                                             <td>{review.reviewId}</td>
                                             <td>{review.reviewContent}</td>
@@ -473,13 +245,13 @@ const AdminPage = ({ currentUser }) => {
                             </thead>
                             <tbody>
                                 {
-                                    sortedReports.map(report => (
+                                    reports.map(report => (
                                         <tr key={report.reportId}>
                                             <td>{report.reportId}</td>
                                             <td>
-                                                {report.reportType === 'post' ? '스레드' : 
-                                                report.reportType === 'review' ? '리뷰' : 
-                                                '댓글'}
+                                                {report.reportType === 'post' ? '스레드' :
+                                                    report.reportType === 'review' ? '리뷰' :
+                                                        '댓글'}
                                             </td>
                                             <td>{report.reporterNickname}</td>
                                             <td>{report.targetNickname}</td>
@@ -503,7 +275,7 @@ const AdminPage = ({ currentUser }) => {
                                                                     처리
                                                                 </button>
 
-                                                                {/* 신고 대상 사용자의 ID가 있을 경우에만 '탈퇴' 버튼 표시 */}
+                                                                {/* 신고 대상 사용자의 ID가 있을 경우에만 '삭제' 버튼 표시 */}
                                                                 {report.targetUserId && (
                                                                     <button
                                                                         onClick={() => handleDeleteUser(report.targetUserId, report.targetNickname)}
@@ -534,37 +306,27 @@ const AdminPage = ({ currentUser }) => {
             <div className="admin-tabs">
                 <button
                     onClick={() => setActiveTab("users")}
-                    className={activeTab === "users"
-                        ? "active"
-                        : ""}>
+                    className={activeTab === "users" ? "active" : ""}>
                     사용자 관리
                 </button>
                 <button
                     onClick={() => setActiveTab("posts")}
-                    className={activeTab === "posts"
-                        ? "active"
-                        : ""}>
+                    className={activeTab === "posts" ? "active" : ""}>
                     스레드 관리
                 </button>
                 <button
                     onClick={() => setActiveTab("comments")}
-                    className={activeTab === "comments"
-                        ? "active"
-                        : ""}>
+                    className={activeTab === "comments" ? "active" : ""}>
                     댓글 관리
                 </button>
                 <button
                     onClick={() => setActiveTab("reviews")}
-                    className={activeTab === "reviews"
-                        ? "active"
-                        : ""}>
+                    className={activeTab === "reviews" ? "active" : ""}>
                     리뷰 관리
                 </button>
                 <button
                     onClick={() => setActiveTab("reports")}
-                    className={activeTab === "reports"
-                        ? "active"
-                        : ""}>
+                    className={activeTab === "reports" ? "active" : ""}>
                     신고 관리
                 </button>
             </div>
