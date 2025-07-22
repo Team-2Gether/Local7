@@ -29,7 +29,8 @@
 .post-detail-content-area {
     width: 100%;
     background-color: #222;
-    padding: 3.0rem;
+    padding: 0rem;
+    border-radius: 20px;
 }
 
 /* 로딩, 에러, 게시글 없음 메시지 컨테이너 (PostList & PostDetail 공통) */
@@ -90,14 +91,21 @@
 
 /* 게시글 메타 정보 (작성자, 작성일) */
 .post-detail-meta {
-    font-size: 1rem;
-    color: #b1b1b1;
+    font-size: 1.2rem;
+    color: #FFCC00;
     margin-bottom: 1.5rem;
 }
+
+.post-detail-meta a{
+    font-size: 1.2rem;
+    color: #FFCC00;
+    margin-bottom: 1.5rem;
+}
+
 .post-detail-meta .post-detail-comment-count { /* PostDetail.css의 특정 스타일 */
     margin-left: 10px;
     font-weight: bold;
-    color: #ffffff;
+    color: #FFCC00;
 }
 
 /* 공통 댓글 수 표시 */
@@ -304,7 +312,7 @@
 .post-detail-likes {
     display: flex;
     flex-wrap: wrap; /* 글씨 길어지면 줄바꿈 가능 */
-    gap: 50px; /* 항목 간 간격 */
+    gap: 100px; /* 항목 간 간격 */
     align-items: center;
     margin-top: 20px;
     margin-left: 0;
@@ -414,10 +422,9 @@
     gap: 15px;
     margin-bottom: 25px;
     justify-content: center;
-    border: 1px solid #444;
     padding: 15px;
-    border-radius: 8px;
-    background-color: #333;
+    border-radius: 20px;
+    background-color: #000000;
 }
 
 /* 개별 이미지 (PostDetail) */
@@ -426,7 +433,7 @@
     height: auto;
     max-height: 400px;
     object-fit: contain;
-    border-radius: 6px;
+    border-radius: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -437,17 +444,20 @@
     margin-bottom: 20px;
     color: #e0e0e0;
 }
+.post-detail-content p{
+    padding:1.3%;
+    font-size: 1.8rem;
+    text-align: left;
+}
 
 /* 위치 태그 (PostDetail) */
 .post-detail-location-tag {
-    font-size: 0.95rem;
+    font-size: 1.2rem;
     color: #a0a0a0;
-    font-style: italic;
     margin-bottom: 20px;
     padding: 10px 15px;
-    background-color: #333;
-    border-left: 4px solid #007bff;
     border-radius: 4px;
+    text-align: left;
 }
 
 /* 게시글 액션 버튼 컨테이너 (PostList) */
@@ -493,8 +503,8 @@
 /* 게시글 액션 버튼 컨테이너 (PostDetail) */
 .post-detail-actions {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    justify-content: center;
+    gap: 20px;
     margin-top: 25px;
     padding-top: 15px;
     border-top: 1px solid #444;
@@ -502,7 +512,7 @@
 
 /* 게시글 상세 페이지 버튼 공통 스타일 (PostDetail) */
 .post-detail-button {
-    padding: 10px 20px;
+    padding: 10px 40px;
     border: none;
     border-radius: 20px;
     cursor: pointer;
