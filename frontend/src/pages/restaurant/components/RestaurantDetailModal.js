@@ -280,7 +280,7 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                                             </div>
                                         </div>
                                         <p className="review-content">{review.reviewContent}</p>
-                                        {currentUser && currentUser.userId === review.userId ? (
+                                        {currentUser && (currentUser.userId === review.userId || currentUser.ruleId === 1) ? (
                                             <div className="review-actions">
                                                 <button onClick={() => handleEditReview(review)}>수정</button>
                                                 <button onClick={() => handleDeleteReview(review.reviewId)}>삭제</button>
