@@ -3,12 +3,7 @@
 
 .follow-list-container {
     width: 100%;
-    max-width: 600px;
-    margin: 30px auto;
-    padding: 25px;
-    background-color: #f9f9f9;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
