@@ -1,6 +1,43 @@
 import React from 'react';
 
-const ReviewList = ({ reviews, searchTerm, setSearchTerm, handleDeleteReview }) => {
+const ReviewList = ({ reviews, searchTerm, setSearchTerm, handleDeleteReview, currentPage, totalPages, handlePageChange}) => {
+    
+    const PaginationControls = () => {
+        const pageNumbers = [];
+        // totalPages가 유효한 숫자인지 확인
+        for (let i = 0; i < totalPages; i++) {
+            pageNumbers.push(i);
+        }
+
+        return (
+            <div className="pagination-controls">
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 0}
+                    className="pagination-button"
+                >
+                    이전
+                </button>
+                {pageNumbers.map(number => (
+                    <button
+                        key={number}
+                        onClick={() => handlePageChange(number)}
+                        className={`pagination-button ${currentPage === number ? 'active' : ''}`}
+                    >
+                        {number + 1}
+                    </button>
+                ))}
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages - 1}
+                    className="pagination-button"
+                >
+                    다음
+                </button>
+            </div>
+        );
+    };
+
     return (
         <div>
             <div className="search-bar-container">
@@ -25,25 +62,37 @@ const ReviewList = ({ reviews, searchTerm, setSearchTerm, handleDeleteReview }) 
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        reviews.map(review => (
-                            <tr key={review.reviewId}>
-                                <td>{review.reviewId}</td>
-                                <td>{review.reviewContent}</td>
-                                <td>{review.userNickname}</td>
-                                <td>{review.reviewRating}</td>
-                                <td>{new Date(review.createdDate).toLocaleDateString()}</td>
-                                <td>
-                                    <button
-                                        onClick={() => handleDeleteReview(review.reviewId)}
-                                        className="admin-action-button delete">삭제</button>
-                                </td>
-                            </tr>
-                        ))
-                    }
+                    {/* reviews가 배열인지 확인 후 map 호출 */}
+                    {Array.isArray(reviews) && reviews.map(review => (
+                        <tr key={review.reviewId}>
+                            <td>{review.reviewId}</td>
+                            <td>{review.reviewContent}</td>
+                            <td>{review.userNickname}</td>
+                            <td>{review.reviewRating}</td>
+                            <td>{new Date(review.createdDate).toLocaleDateString()}</td>
+                            <td>
+                                <button
+                                    onClick={() => handleDeleteReview(review.reviewId)}
+                                    className="admin-action-button delete">삭제</button>
+                            </td>
+                        </tr>
+                    ))}
+                    {/* reviews가 비어있을 경우 메시지 표시 */}
+                    {Array.isArray(reviews) && reviews.length === 0 && !searchTerm && (
+                        <tr>
+                            <td colSpan="6" style={{ textAlign: 'center' }}>데이터가 없습니다.</td>
+                        </tr>
+                    )}
+                     {Array.isArray(reviews) && reviews.length === 0 && searchTerm && (
+                        <tr>
+                            <td colSpan="6" style={{ textAlign: 'center' }}>검색 결과가 없습니다.</td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
+            {totalPages > 1 && <PaginationControls />}
         </div>
+    
     );
 };
 

@@ -48,6 +48,19 @@
         <result property="userNickname" column="USER_NICKNAME" />
     </resultMap>
 
+    <resultMap id="reviewMap" type="com.twogether.local7.review.vo.ReviewVO">
+        <id property="reviewId" column="REVIEW_ID" />
+        <result property="userId" column="USER_ID" />
+        <result property="restaurantId" column="RESTAURANT_ID" />
+        <result property="reviewRating" column="REVIEW_RATING" />
+        <result property="reviewContent" column="REVIEW_CONTENT" />
+        <result property="createdDate" column="CREATED_DATE" />
+        <result property="createdId" column="CREATED_ID" />
+        <result property="updatedDate" column="UPDATED_DATE" />
+        <result property="updatedId" column="UPDATED_ID" />
+        <result property="userNickname" column="USER_NICKNAME" />
+    </resultMap>
+
     <resultMap id="reportMap" type="com.twogether.local7.report.vo.ReportVO">
         <id property="reportId" column="REPORT_ID" />
         <result property="reporterId" column="REPORTER_ID" />
@@ -67,68 +80,159 @@
         <result property="reviewContent" column="REVIEW_CONTENT" />
     </resultMap>
 
+    <!-- 사용자 관련 -->
     <select id="selectAllUsers" resultMap="userMap">
         SELECT *
         FROM TB_USER
+        ORDER BY USER_ID DESC
+        OFFSET #{pageable.offset} ROWS FETCH NEXT #{pageable.pageSize} ROWS ONLY
     </select>
 
+    <select id="countAllUsers" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_USER
+    </select>
+
+    <!-- 게시글 관련 -->
     <select id="selectAllPosts" resultMap="postMap">
         SELECT
             p.*,
             u.USER_NICKNAME AS USER_NICKNAME
         FROM TB_POST p
         LEFT JOIN TB_USER u ON p.USER_ID = u.USER_ID
+        ORDER BY p.POST_ID DESC
+        OFFSET #{pageable.offset} ROWS FETCH NEXT #{pageable.pageSize} ROWS ONLY
     </select>
 
+    <select id="countAllPosts" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_POST
+    </select>
+
+    <!-- 댓글 관련 -->
     <select id="selectAllComments" resultMap="commentMap">
         SELECT
             c.*,
             u.USER_NICKNAME AS USER_NICKNAME
         FROM TB_COMMENT c
         LEFT JOIN TB_USER u ON c.USER_ID = u.USER_ID
+        ORDER BY c.COMMENT_ID DESC
+        OFFSET #{pageable.offset} ROWS FETCH NEXT #{pageable.pageSize} ROWS ONLY
     </select>
 
+    <select id="countAllComments" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_COMMENT
+    </select>
+
+    <!-- 리뷰 관련 -->
+    <select id="selectAllReviews" resultMap="reviewMap">
+        SELECT
+            rv.*,
+            u.USER_NICKNAME AS USER_NICKNAME
+        FROM TB_REVIEW rv
+        LEFT JOIN TB_USER u ON rv.USER_ID = u.USER_ID
+        ORDER BY rv.REVIEW_ID DESC
+        OFFSET #{pageable.offset} ROWS FETCH NEXT #{pageable.pageSize} ROWS ONLY
+    </select>
+
+    <select id="countAllReviews" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_REVIEW
+    </select>
+
+    <!-- 신고 관련 -->
     <select id="selectAllReports" resultMap="reportMap">
         SELECT
-        r.REPORT_ID,
-        r.REPORTER_ID,
-        r.TARGET_ID,
-        r.REPORT_TYPE,
-        r.REPORT_REASON,
-        r.STATUS,
-        r.CREATED_DATE,
-        ru.USER_NICKNAME AS REPORTER_NICKNAME,
-        CASE
-        WHEN r.REPORT_TYPE = 'post' THEN p.POST_TITLE
-        ELSE NULL
-        END AS POST_TITLE,
-        CASE
-        WHEN r.REPORT_TYPE = 'comment' THEN c.CONTENT
-        ELSE NULL
-        END AS COMMENT_CONTENT,
-        CASE
-        WHEN r.REPORT_TYPE = 'review' THEN rv.REVIEW_CONTENT
-        ELSE NULL
-        END AS REVIEW_CONTENT,
-        CASE r.REPORT_TYPE
-        WHEN 'post' THEN p.USER_ID
-        WHEN 'comment' THEN c.USER_ID
-        WHEN 'review' THEN rv.USER_ID
-        END AS TARGET_USER_ID,
-        CASE r.REPORT_TYPE
-        WHEN 'post' THEN tu.USER_NICKNAME
-        WHEN 'comment' THEN tu.USER_NICKNAME
-        WHEN 'review' THEN tu.USER_NICKNAME
-        END AS TARGET_USER_NICKNAME
+            r.REPORT_ID,
+            r.REPORTER_ID,
+            r.TARGET_ID,
+            r.REPORT_TYPE,
+            r.REPORT_REASON,
+            r.STATUS,
+            r.CREATED_DATE,
+            ru.USER_NICKNAME AS REPORTER_NICKNAME,
+            CASE
+                WHEN r.REPORT_TYPE = 'post' THEN p.POST_TITLE
+                ELSE NULL
+            END AS POST_TITLE,
+            CASE
+                WHEN r.REPORT_TYPE = 'comment' THEN c.CONTENT
+                ELSE NULL
+            END AS COMMENT_CONTENT,
+            CASE
+                WHEN r.REPORT_TYPE = 'review' THEN rv.REVIEW_CONTENT
+                ELSE NULL
+            END AS REVIEW_CONTENT,
+            CASE r.REPORT_TYPE
+                WHEN 'post' THEN p.USER_ID
+                WHEN 'comment' THEN c.USER_ID
+                WHEN 'review' THEN rv.USER_ID
+            END AS TARGET_USER_ID,
+            CASE r.REPORT_TYPE
+                WHEN 'post' THEN tu.USER_NICKNAME
+                WHEN 'comment' THEN tu.USER_NICKNAME
+                WHEN 'review' THEN tu.USER_NICKNAME
+            END AS TARGET_USER_NICKNAME
         FROM TB_REPORT r
         LEFT JOIN TB_USER ru ON r.REPORTER_ID = ru.USER_ID
         LEFT JOIN TB_POST p ON r.REPORT_TYPE = 'post' AND r.TARGET_ID = p.POST_ID
         LEFT JOIN TB_COMMENT c ON r.REPORT_TYPE = 'comment' AND r.TARGET_ID = c.COMMENT_ID
         LEFT JOIN TB_REVIEW rv ON r.REPORT_TYPE = 'review' AND r.TARGET_ID = rv.REVIEW_ID
         LEFT JOIN TB_USER tu ON (r.REPORT_TYPE = 'post' AND p.USER_ID = tu.USER_ID) OR
-        (r.REPORT_TYPE = 'comment' AND c.USER_ID = tu.USER_ID) OR
-        (r.REPORT_TYPE = 'review' AND rv.USER_ID = tu.USER_ID)
+                                (r.REPORT_TYPE = 'comment' AND c.USER_ID = tu.USER_ID) OR
+                                (r.REPORT_TYPE = 'review' AND rv.USER_ID = tu.USER_ID)
         ORDER BY r.CREATED_DATE DESC
+        OFFSET #{pageable.offset} ROWS FETCH NEXT #{pageable.pageSize} ROWS ONLY
+    </select>
+
+    <select id="countAllReports" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_REPORT
+    </select>
+
+    <!-- 단일 신고 내역 조회 (필요 시) -->
+    <select id="getReportById" resultMap="reportMap">
+        SELECT
+            r.REPORT_ID,
+            r.REPORTER_ID,
+            r.TARGET_ID,
+            r.REPORT_TYPE,
+            r.REPORT_REASON,
+            r.STATUS,
+            r.CREATED_DATE,
+            ru.USER_NICKNAME AS REPORTER_NICKNAME,
+            CASE
+                WHEN r.REPORT_TYPE = 'post' THEN p.POST_TITLE
+                ELSE NULL
+            END AS POST_TITLE,
+            CASE
+                WHEN r.REPORT_TYPE = 'comment' THEN c.CONTENT
+                ELSE NULL
+            END AS COMMENT_CONTENT,
+            CASE
+                WHEN r.REPORT_TYPE = 'review' THEN rv.REVIEW_CONTENT
+                ELSE NULL
+            END AS REVIEW_CONTENT,
+            CASE r.REPORT_TYPE
+                WHEN 'post' THEN p.USER_ID
+                WHEN 'comment' THEN c.USER_ID
+                WHEN 'review' THEN rv.USER_ID
+            END AS TARGET_USER_ID,
+            CASE r.REPORT_TYPE
+                WHEN 'post' THEN tu.USER_NICKNAME
+                WHEN 'comment' THEN tu.USER_NICKNAME
+                WHEN 'review' THEN tu.USER_NICKNAME
+            END AS TARGET_USER_NICKNAME
+        FROM TB_REPORT r
+        LEFT JOIN TB_USER ru ON r.REPORTER_ID = ru.USER_ID
+        LEFT JOIN TB_POST p ON r.REPORT_TYPE = 'post' AND r.TARGET_ID = p.POST_ID
+        LEFT JOIN TB_COMMENT c ON r.REPORT_TYPE = 'comment' AND r.TARGET_ID = c.COMMENT_ID
+        LEFT JOIN TB_REVIEW rv ON r.REPORT_TYPE = 'review' AND r.TARGET_ID = rv.REVIEW_ID
+        LEFT JOIN TB_USER tu ON (r.REPORT_TYPE = 'post' AND p.USER_ID = tu.USER_ID) OR
+                                (r.REPORT_TYPE = 'comment' AND c.USER_ID = tu.USER_ID) OR
+                                (r.REPORT_TYPE = 'review' AND rv.USER_ID = tu.USER_ID)
+        WHERE r.REPORT_ID = #{reportId}
     </select>
 
     <delete id="deletePost">
@@ -172,6 +276,11 @@
     <delete id="deleteAllReportsByUserId">
         DELETE FROM TB_REPORT
         WHERE REPORTER_ID = #{userId} OR TARGET_ID = #{userId}
+    </delete>
+
+    <delete id="deleteAllReviewsByUserId">
+        DELETE FROM TB_REVIEW
+        WHERE USER_ID = #{userId}
     </delete>
 
 </mapper>

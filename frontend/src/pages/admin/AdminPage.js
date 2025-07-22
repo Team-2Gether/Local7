@@ -8,7 +8,6 @@ import ReportList from "./components/AdminReportList";
 import "./AdminPage.css";
 
 const AdminPage = ({ currentUser }) => {
-    // useAdmin 훅을 사용하여 필요한 상태와 함수들을 가져옴
     const {
         activeTab,
         setActiveTab,
@@ -27,7 +26,10 @@ const AdminPage = ({ currentUser }) => {
         handleDeleteReview,
         handleUpdateReportStatus,
         handleRowClick,
-    } = useAdmin(currentUser); // currentUser를 훅에 전달
+        currentPage, // 추가
+        totalPages, // 추가
+        handlePageChange, // 추가
+    } = useAdmin(currentUser);
 
     const renderContent = () => {
         if (loading) {
@@ -46,6 +48,9 @@ const AdminPage = ({ currentUser }) => {
                         setSearchTerm={setSearchTerm}
                         handleDeleteUser={handleDeleteUser}
                         handleRowClick={handleRowClick}
+                        currentPage={currentPage} // 추가
+                        totalPages={totalPages} // 추가
+                        handlePageChange={handlePageChange} // 추가
                     />
                 );
             case "posts":
@@ -56,6 +61,9 @@ const AdminPage = ({ currentUser }) => {
                         setSearchTerm={setSearchTerm}
                         handleDeletePost={handleDeletePost}
                         handleRowClick={handleRowClick}
+                        currentPage={currentPage} // 추가
+                        totalPages={totalPages} // 추가
+                        handlePageChange={handlePageChange} // 추가
                     />
                 );
             case "comments":
@@ -66,6 +74,9 @@ const AdminPage = ({ currentUser }) => {
                         setSearchTerm={setSearchTerm}
                         handleDeleteComment={handleDeleteComment}
                         handleRowClick={handleRowClick}
+                        currentPage={currentPage} // 추가
+                        totalPages={totalPages} // 추가
+                        handlePageChange={handlePageChange} // 추가
                     />
                 );
             case "reviews":
@@ -75,6 +86,9 @@ const AdminPage = ({ currentUser }) => {
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
                         handleDeleteReview={handleDeleteReview}
+                        currentPage={currentPage} // 추가
+                        totalPages={totalPages} // 추가
+                        handlePageChange={handlePageChange} // 추가
                     />
                 );
             case "reports":
@@ -85,6 +99,9 @@ const AdminPage = ({ currentUser }) => {
                         setSearchTerm={setSearchTerm}
                         handleUpdateReportStatus={handleUpdateReportStatus}
                         handleDeleteUser={handleDeleteUser}
+                        currentPage={currentPage} // 추가
+                        totalPages={totalPages} // 추가
+                        handlePageChange={handlePageChange} // 추가
                     />
                 );
             default:

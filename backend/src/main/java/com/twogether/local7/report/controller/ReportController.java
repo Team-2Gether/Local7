@@ -19,22 +19,22 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-    // 관리자: 모든 신고 내역 조회 API (GET /api/admin/reports)
-    @GetMapping({"", "/"})
-    public ResponseEntity<Map<String, Object>> getAllReports() {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            List<ReportVO> reports = reportService.getAllReports();
-            response.put("status", "success");
-            response.put("message", "신고 내역을 성공적으로 조회했습니다.");
-            response.put("reports", reports);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            response.put("status", "error");
-            response.put("message", "신고 내역 조회 중 오류가 발생했습니다: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
+//    // 관리자: 모든 신고 내역 조회 API (GET /api/admin/reports)
+//    @GetMapping({"", "/"})
+//    public ResponseEntity<Map<String, Object>> getAllReports() {
+//        Map<String, Object> response = new HashMap<>();
+//        try {
+//            List<ReportVO> reports = reportService.getAllReports();
+//            response.put("status", "success");
+//            response.put("message", "신고 내역을 성공적으로 조회했습니다.");
+//            response.put("reports", reports);
+//            return ResponseEntity.ok(response);
+//        } catch (Exception e) {
+//            response.put("status", "error");
+//            response.put("message", "신고 내역 조회 중 오류가 발생했습니다: " + e.getMessage());
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//        }
+//    }
 
     // 관리자: 신고 상태 업데이트 API (POST /api/admin/reports/{reportId}/status)
     @PostMapping("/{reportId}/status")
