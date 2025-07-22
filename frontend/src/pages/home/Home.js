@@ -90,14 +90,14 @@ function Home({ currentUser }) {
         circle.setMap(map);
 
         const overlayContent = `<div style="
-          padding: 4px 8px;
+          padding: 2px 6px;
           background: rgba(255, 255, 255, 0.8);
-          border: 1px solid #ff6a6a;
-          border-radius: 6px;
+          border: 3px solid #ffee00ff;
+          border-radius: 20px;
           font-weight: bold;
-          color: #d33;
+          color: #000000ff;
           white-space: nowrap;
-          font-size: 13px;
+          font-size: 12px;
           text-align: center;
         ">${city.name}</div>`;
 
