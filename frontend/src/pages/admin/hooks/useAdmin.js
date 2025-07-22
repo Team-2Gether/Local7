@@ -17,7 +17,7 @@ const useAdmin = (currentUser) => {
     // 페이지네이션 상태 추가
     const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 (0부터 시작)
     const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
-    const [itemsPerPage, setItemsPerPage] = useState(10); // 페이지당 항목 수
+    const [itemsPerPage, setItemsPerPage] = useState(8); // 페이지당 항목 수
 
     // RestaurantDetailModal 관련 상태 추가
     const [isRestaurantDetailModalOpen, setIsRestaurantDetailModalOpen] = useState(false);
