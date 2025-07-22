@@ -22,12 +22,11 @@
   color: var(--text-color);
   background-color: var(--background-color);
   border-radius: 10px;
-  padding: 50px;
+  padding: 190px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  width: 80%;
-  max-width: 1200px;
+  width: 100%;
+  max-width: 800px;
 }
-
 h2 {
   font-size: 24px;
   font-weight: 600;
@@ -40,7 +39,7 @@ h2 {
 .search-form1 {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 300px;
   margin-bottom: 20px;
   align-items: center;
 }
@@ -94,6 +93,7 @@ h2 {
   gap: 6px;
   color: var(--text-color);
   font-size: 14px;
+  margin-top: ;
 }
 
 .search-select1 {
@@ -106,6 +106,8 @@ h2 {
   background-position: right 10px center;
   padding-right: 25px;
 }
+
+
 
 /* --- 메시지 --- */
 p {
@@ -125,7 +127,7 @@ p {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
-  margin-top: 20px;
+  margin-top: -40%;
 }
 
 .user-item1 {
