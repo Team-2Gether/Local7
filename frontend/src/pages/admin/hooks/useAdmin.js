@@ -228,17 +228,19 @@ const useAdmin = (currentUser) => {
             let path = '';
             switch (type) {
                 case "user":
-                    path = `/admin/user-detail/${id}`;
+                    path = `/user/profile/${id}`;
                     break;
                 case "post":
-                    path = `/admin/post-detail/${id}`;
+                    path = `/posts/${id}`;
                     break;
                 case "comment":
-                    path = `/admin/comment-detail/${id}`;
+                    path = `/posts/${id}`;
                     break;
+                /*
                 case "report":
                     path = `/admin/report-detail/${id}`;
                     break;
+                */
                 default:
                     return;
             }
