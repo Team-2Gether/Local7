@@ -172,7 +172,6 @@ function Home({ currentUser }) {
 
   return (
     <div className="app-layout">
-      <div className="main-content-area">
         <div className="dark-box">
           {/* 배너 영역 */}
           <div className="banner">
@@ -255,7 +254,6 @@ function Home({ currentUser }) {
 
           <hr className="separator" />
         </div>
-      </div>
     </div>
   );
 }
