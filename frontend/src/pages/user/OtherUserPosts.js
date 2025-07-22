@@ -1,6 +1,7 @@
 // src/pages/user/OtherUserPosts.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../../assets/css/OtherUserPosts.css';
 import { Link } from 'react-router-dom'; // Link 컴포넌트 추가
 
 function OtherUserPosts({ userId }) {
