@@ -134,6 +134,7 @@
     color: #888;
     font-style: italic;
     padding: 8px 30px; /* padding 줄임 */
+    text-align:left;
 }
 
 .post-list1 {
