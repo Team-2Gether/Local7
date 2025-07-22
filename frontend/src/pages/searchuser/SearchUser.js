@@ -93,7 +93,7 @@ function SearchUser() {
             <h2>유저 검색</h2>
             <form onSubmit={handleSearch} className="search-form1">
                 <div className="search-criteria-select1">
-                    <label htmlFor="searchField">검색 기준:</label>
+                    <label htmlFor="searchField"></label>
                     <select
                         id="searchField"
                         name="searchField"
