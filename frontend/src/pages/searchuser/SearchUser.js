@@ -106,7 +106,8 @@ function SearchUser() {
                         <option value="userName">이름</option>
                         <option value="userNickname">닉네임</option>
                         <option value="userEmail">이메일</option>
-                    </select>               
+                    </select>
+                
                 <input
                     type="text"
                     placeholder="검색어를 입력하세요"

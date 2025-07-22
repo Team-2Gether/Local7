@@ -29,7 +29,7 @@ function VotePagePost() {
       <h2>Like TOP 10</h2>
       <div className="post-list">
         {posts.map((post, index) => (
-          <div key={post.postId} className="post-item" onClick={() => handlePostClick(post.postId)}>
+          <div key={post.postId} className="post-item1" onClick={() => handlePostClick(post.postId)}>
             <p className="rank">NO.{index + 1}</p> {/*순위 표시*/}
             <div className="post-item-img">
               <img className="post-img" src={`data:image/jpeg;base64,${post.imageUrl}`} alt="post" />

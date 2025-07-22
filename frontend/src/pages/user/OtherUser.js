@@ -136,7 +136,7 @@ function OtherUser({ currentUser }) {
 
     return (
         <div className="other-user-page">
-            <div className="user-info-section">
+            <div className="user-info-section1">
                 <h2 className="user-profile-title">{otherUserProfile.userNickname}님의 프로필</h2>
                 <div className="profile-image-container">
                     <img
