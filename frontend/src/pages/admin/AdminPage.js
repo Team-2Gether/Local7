@@ -1,9 +1,9 @@
-import React, {useState, useEffect, useMemo} from "react";
-import {useNavigate} from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import "./AdminPage.css";
 
-const AdminPage = ({currentUser}) => {
+const AdminPage = ({ currentUser }) => {
     const [activeTab, setActiveTab] = useState("users");
     const [users, setUsers] = useState([]);
     const [posts, setPosts] = useState([]);
@@ -39,29 +39,24 @@ const AdminPage = ({currentUser}) => {
 
             switch (activeTab) {
                 case "users":
-                    response = await axios.get(`${BASE_URL}/api/admin/users`, {headers});
+                    response = await axios.get(`${BASE_URL}/api/admin/users`, { headers });
                     setUsers(response.data);
                     break;
                 case "posts":
-                    response = await axios.get(`${BASE_URL}/api/admin/posts`, {headers});
+                    response = await axios.get(`${BASE_URL}/api/admin/posts`, { headers });
                     setPosts(response.data);
                     break;
                 case "comments":
-                    response = await axios.get(`${BASE_URL}/api/admin/comments`, {headers});
+                    response = await axios.get(`${BASE_URL}/api/admin/comments`, { headers });
                     setComments(response.data);
                     break;
                 case "reviews":
-                    response = await axios.get(`${BASE_URL}/api/admin/reviews`, {headers});
+                    response = await axios.get(`${BASE_URL}/api/admin/reviews`, { headers });
                     setReviews(response.data);
                     break;
                 case "reports":
-                    const sortParam = isSortedByReports
-                        ? "mostReported"
-                        : "latest";
-                    response = await axios.get(
-                        `${BASE_URL}/api/admin/reports?sortBy=${sortParam}`,
-                        {headers}
-                    );
+                    const sortParam = isSortedByReports ? "mostReported" : "latest";
+                    response = await axios.get(`${BASE_URL}/api/admin/reports?sortBy=${sortParam}`, { headers });
                     setReports(response.data);
                     break;
                 default:
@@ -191,47 +186,46 @@ const AdminPage = ({currentUser}) => {
             case "comment":
                 navigate(`/posts/${id}`);
                 break;
-            /*
-            case "review":
-                navigate(`/admin/reviews/${id}`);
-                break;
-            case "report":
-                navigate(`/user/profile/${id}`);
-                break;
-            */
             default:
                 break;
         }
     };
 
+    /*
     const handleSortReports = () => {
         setIsSortedByReports(prev => !prev);
     };
-
+    */
     const lowercasedSearchTerm = searchTerm.toLowerCase();
 
     // useMemo를 사용하여 검색/정렬된 목록을 캐싱
     const filteredUsers = useMemo(() => {
-        return users.filter(
-            user => user.userId.toString().includes(lowercasedSearchTerm) || user.userLoginId.toLowerCase().includes(lowercasedSearchTerm) || user.userNickname.toLowerCase().includes(lowercasedSearchTerm) || user.userEmail.toLowerCase().includes(lowercasedSearchTerm)
+        return users.filter(user =>
+            user.userId.toString().includes(lowercasedSearchTerm) ||
+            user.userLoginId.toLowerCase().includes(lowercasedSearchTerm) ||
+            user.userNickname.toLowerCase().includes(lowercasedSearchTerm) ||
+            user.userEmail.toLowerCase().includes(lowercasedSearchTerm)
         );
     }, [users, lowercasedSearchTerm]);
 
     const filteredPosts = useMemo(() => {
-        return posts.filter(
-            post => post.postTitle.toLowerCase().includes(lowercasedSearchTerm) || post.userNickname.toLowerCase().includes(lowercasedSearchTerm)
+        return posts.filter(post =>
+            post.postTitle.toLowerCase().includes(lowercasedSearchTerm) ||
+            post.userNickname.toLowerCase().includes(lowercasedSearchTerm)
         );
     }, [posts, lowercasedSearchTerm]);
 
     const filteredComments = useMemo(() => {
-        return comments.filter(
-            comment => comment.content.toLowerCase().includes(lowercasedSearchTerm) || comment.userNickname.toLowerCase().includes(lowercasedSearchTerm)
+        return comments.filter(comment =>
+            comment.content.toLowerCase().includes(lowercasedSearchTerm) ||
+            comment.userNickname.toLowerCase().includes(lowercasedSearchTerm)
         );
     }, [comments, lowercasedSearchTerm]);
 
     const filteredReviews = useMemo(() => {
-        return reviews.filter(
-            review => review.reviewContent.toLowerCase().includes(lowercasedSearchTerm) || review.userNickname.toLowerCase().includes(lowercasedSearchTerm)
+        return reviews.filter(review =>
+            review.reviewContent.toLowerCase().includes(lowercasedSearchTerm) ||
+            review.userNickname.toLowerCase().includes(lowercasedSearchTerm)
         );
     }, [reviews, lowercasedSearchTerm]);
 
@@ -276,7 +270,8 @@ const AdminPage = ({currentUser}) => {
                                 placeholder="사용자 ID, 로그인 ID, 닉네임, 이메일 검색"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="admin-search-input"/>
+                                className="admin-search-input"
+                            />
                         </div>
                         <h3>사용자 목록</h3>
                         <table className="admin-table">
@@ -301,8 +296,10 @@ const AdminPage = ({currentUser}) => {
                                             <td onClick={() => handleRowClick(user.userLoginId, "user")}>{user.userEmail}</td>
                                             <td onClick={() => handleRowClick(user.userLoginId, "user")}>{new Date(user.createDate).toLocaleDateString()}</td>
                                             <td onClick={() => handleRowClick(user.userLoginId, "user")}>{
-                                                    user.ruleId === 1 ? "관리자" : "일반"
-                                                }
+                                                user.ruleId === 1
+                                                    ? "관리자"
+                                                    : "일반"
+                                            }
                                             </td>
                                             <td>
                                                 <button
@@ -325,7 +322,8 @@ const AdminPage = ({currentUser}) => {
                                 placeholder="게시글 제목, 작성자 검색"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="admin-search-input"/>
+                                className="admin-search-input"
+                            />
                         </div>
                         <h3>게시글 목록</h3>
                         <table className="admin-table">
@@ -367,7 +365,8 @@ const AdminPage = ({currentUser}) => {
                                 placeholder="댓글 내용, 작성자 검색"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="admin-search-input"/>
+                                className="admin-search-input"
+                            />
                         </div>
                         <h3>댓글 목록</h3>
                         <table className="admin-table">
@@ -409,7 +408,8 @@ const AdminPage = ({currentUser}) => {
                                 placeholder="리뷰 내용, 작성자 검색"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="admin-search-input"/>
+                                className="admin-search-input"
+                            />
                         </div>
                         <h3>리뷰 목록</h3>
                         <table className="admin-table">
@@ -453,7 +453,8 @@ const AdminPage = ({currentUser}) => {
                                 placeholder="신고 대상, 사유 검색"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="admin-search-input"/>
+                                className="admin-search-input"
+                            />
                         </div>
                         <h3>신고 목록</h3>
                         <table className="admin-table">
@@ -476,13 +477,9 @@ const AdminPage = ({currentUser}) => {
                                         <tr key={report.reportId}>
                                             <td>{report.reportId}</td>
                                             <td>
-                                                {
-                                                    report.reportType === 'post'
-                                                        ? '스레드'
-                                                        : report.reportType === 'review'
-                                                            ? '리뷰'
-                                                            : '댓글'
-                                                }
+                                                {report.reportType === 'post' ? '스레드' : 
+                                                report.reportType === 'review' ? '리뷰' : 
+                                                '댓글'}
                                             </td>
                                             <td>{report.reporterNickname}</td>
                                             <td>{report.targetNickname}</td>
@@ -493,11 +490,7 @@ const AdminPage = ({currentUser}) => {
                                                 {report.reportType === 'comment' && report.commentContent}
                                             </td>
                                             <td>{report.reportReason}</td>
-                                            <td>{
-                                                    report.status === 'PENDING'
-                                                        ? '대기 중'
-                                                        : '처리 완료'
-                                                }</td>
+                                            <td>{report.status === 'PENDING' ? '대기 중' : '처리 완료'}</td>
                                             <td>{new Date(report.createdDate).toLocaleDateString()}</td>
                                             <td>
                                                 {
@@ -511,15 +504,13 @@ const AdminPage = ({currentUser}) => {
                                                                 </button>
 
                                                                 {/* 신고 대상 사용자의 ID가 있을 경우에만 '탈퇴' 버튼 표시 */}
-                                                                {
-                                                                    report.targetUserId && (
-                                                                        <button
-                                                                            onClick={() => handleDeleteUser(report.targetUserId, report.targetNickname)}
-                                                                            className="admin-action-button delete">
-                                                                            삭제
-                                                                        </button>
-                                                                    )
-                                                                }
+                                                                {report.targetUserId && (
+                                                                    <button
+                                                                        onClick={() => handleDeleteUser(report.targetUserId, report.targetNickname)}
+                                                                        className="admin-action-button delete">
+                                                                        삭제
+                                                                    </button>
+                                                                )}
                                                             </div>
                                                         )
                                                         : (<span>처리 완료됨</span>)
