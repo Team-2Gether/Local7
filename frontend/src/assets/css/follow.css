@@ -1,0 +1,171 @@
+/* src/assets/css/follow.css */
+/* 팔로워/팔로잉 목록 공통 스타일 */
+
+.follow-list-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.follow-list-container.loading,
+.follow-list-container.error-message {
+    padding: 30px;
+    font-size: 1.3em;
+    color: #555;
+}
+
+.follow-list-container.error-message {
+    color: #d9534f;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+}
+
+.follow-list-title {
+    font-size: 2.2em;
+    color: #333;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 15px;
+}
+
+.follow-no-list-message { /* 팔로워/팔로잉 없을 때 메시지 */
+    font-size: 1.1em;
+    color: #777;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+.follow-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.follow-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.follow-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.follow-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    width: 100%; /* Link 전체 영역 클릭 가능하게 */
+}
+
+.follow-profile-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+    border: 2px solid #007bff;
+    flex-shrink: 0; /* 이미지 크기 고정 */
+}
+
+.follow-details {
+    text-align: left;
+    flex-grow: 1; /* 남은 공간 모두 사용 */
+    overflow: hidden; /* 텍스트 오버플로우 처리 */
+}
+
+.follow-nickname {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.follow-id {
+    font-size: 0.9em;
+    color: #777;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .follow-list-container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .follow-list-title {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    .follow-item {
+        padding: 12px;
+    }
+
+    .follow-profile-image {
+        width: 50px;
+        height: 50px;
+        margin-right: 12px;
+    }
+
+    .follow-nickname {
+        font-size: 1.2em;
+    }
+
+    .follow-id {
+        font-size: 0.85em;
+    }
+}
+
+@media (max-width: 480px) {
+    .follow-list-container {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .follow-list-title {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+    }
+
+    .follow-item {
+        padding: 10px;
+    }
+
+    .follow-profile-image {
+        width: 45px;
+        height: 45px;
+        margin-right: 10px;
+    }
+
+    .follow-nickname {
+        font-size: 1.1em;
+    }
+
+    .follow-id {
+        font-size: 0.8em;
+    }
+}

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, Link } from 'react-router-dom'; // Link import 추가
+import { useParams, Link } from 'react-router-dom';
+import '../../assets/css/follow.css'; // 통합 CSS 파일 import
 
 function FollowerList({ currentUser }) {
-    const { userId: urlUserId } = useParams(); // URL 파라미터에서 userId를 가져옵니다.
+    const { userId: urlUserId } = useParams();
     const [followers, setFollowers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [targetUserId, setTargetUserId] = useState(null); // 실제 API 호출에 사용될 userId
+    const [targetUserId, setTargetUserId] = useState(null);
 
     useEffect(() => {
         const fetchFollowers = async () => {
@@ -16,11 +17,9 @@ function FollowerList({ currentUser }) {
 
             let idToFetch = null;
 
-            // 1. URL 파라미터에 userId가 있다면 그 값을 사용 (OtherUser 페이지에서 접근 시)
             if (urlUserId) {
                 idToFetch = parseInt(urlUserId);
             }
-            // 2. MyPage에서 접근 시 currentUser의 userId를 사용
             else if (currentUser && currentUser.userId) {
                 idToFetch = currentUser.userId;
             }
@@ -31,7 +30,7 @@ function FollowerList({ currentUser }) {
                 return;
             }
 
-            setTargetUserId(idToFetch); // API 호출에 사용할 최종 userId 설정
+            setTargetUserId(idToFetch);
 
             try {
                 const response = await axios.get(`http://localhost:8080/api/follows/followers/${idToFetch}`);
@@ -49,10 +48,10 @@ function FollowerList({ currentUser }) {
         };
 
         fetchFollowers();
-    }, [urlUserId, currentUser]); // currentUser 또는 URL userId 변경 시 재호출
+    }, [urlUserId, currentUser]);
 
     if (loading) {
-        return <div className="follow-list-container">로딩 중...</div>;
+        return <div className="follow-list-container loading">로딩 중...</div>;
     }
 
     if (error) {
@@ -65,17 +64,16 @@ function FollowerList({ currentUser }) {
                 {targetUserId === currentUser?.userId ? "내 팔로워 목록" : "팔로워 목록"}
             </h2>
             {followers.length === 0 ? (
-                <p className="no-followers-message">팔로워가 없습니다.</p>
+                <p className="follow-no-list-message">팔로워가 없습니다.</p>
             ) : (
                 <ul className="follow-items">
                     {followers.map((follow) => (
                         <li key={follow.followerId} className="follow-item">
-                            {/* Link 컴포넌트 수정 */}
                             <Link to={`/user/profile/${follow.followerUserLoginId}`} className="follow-link">
                                 <img
                                     src={follow.followerUserProfileImageUrl || "https://via.placeholder.com/50"}
                                     alt="프로필"
-                                    className="profile-image"
+                                    className="follow-profile-image"
                                 />
                                 <div className="follow-details">
                                     <p className="follow-nickname">{follow.followerUserNickname}</p>
