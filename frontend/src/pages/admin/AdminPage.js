@@ -191,12 +191,14 @@ const AdminPage = ({currentUser}) => {
             case "comment":
                 navigate(`/posts/${id}`);
                 break;
+            /*
             case "review":
                 navigate(`/admin/reviews/${id}`);
                 break;
             case "report":
                 navigate(`/user/profile/${id}`);
                 break;
+            */
             default:
                 break;
         }
@@ -425,11 +427,11 @@ const AdminPage = ({currentUser}) => {
                                 {
                                     filteredReviews.map(review => (
                                         <tr key={review.reviewId}>
-                                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{review.reviewId}</td>
-                                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{review.reviewContent}</td>
-                                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{review.userNickname}</td>
-                                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{review.reviewRating}</td>
-                                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{new Date(review.createdDate).toLocaleDateString()}</td>
+                                            <td>{review.reviewId}</td>
+                                            <td>{review.reviewContent}</td>
+                                            <td>{review.userNickname}</td>
+                                            <td>{review.reviewRating}</td>
+                                            <td>{new Date(review.createdDate).toLocaleDateString()}</td>
                                             <td>
                                                 <button
                                                     onClick={() => handleDeleteReview(review.reviewId)}
@@ -472,8 +474,8 @@ const AdminPage = ({currentUser}) => {
                                 {
                                     sortedReports.map(report => (
                                         <tr key={report.reportId}>
-                                            <td onClick={() => handleRowClick(report.reportId, "report")}>{report.reportId}</td>
-                                            <td onClick={() => handleRowClick(report.reportId, "report")}>
+                                            <td>{report.reportId}</td>
+                                            <td>
                                                 {
                                                     report.reportType === 'post'
                                                         ? '스레드'
@@ -482,21 +484,21 @@ const AdminPage = ({currentUser}) => {
                                                             : '댓글'
                                                 }
                                             </td>
-                                            <td onClick={() => handleRowClick(report.reportId, "report")}>{report.reporterNickname}</td>
-                                            <td onClick={() => handleRowClick(report.reportId, "report")}>{report.targetNickname}</td>
-                                            <td onClick={() => handleRowClick(report.reportId, "report")}>
+                                            <td>{report.reporterNickname}</td>
+                                            <td>{report.targetNickname}</td>
+                                            <td>
                                                 {/* 신고 유형에 따라 게시글 제목 또는 댓글 내용을 표시 */}
                                                 {report.reportType === 'post' && report.postTitle}
                                                 {report.reportType === 'review' && report.reviewContent}
                                                 {report.reportType === 'comment' && report.commentContent}
                                             </td>
-                                            <td onClick={() => handleRowClick(report.reportId, "report")}>{report.reportReason}</td>
-                                            <td onClick={() => handleRowClick(report.reportId, "report")}>{
+                                            <td>{report.reportReason}</td>
+                                            <td>{
                                                     report.status === 'PENDING'
                                                         ? '대기 중'
                                                         : '처리 완료'
                                                 }</td>
-                                            <td onClick={() => handleRowClick(report.reportId, "report")}>{new Date(report.createdDate).toLocaleDateString()}</td>
+                                            <td>{new Date(report.createdDate).toLocaleDateString()}</td>
                                             <td>
                                                 {
                                                     report.status === 'PENDING'
