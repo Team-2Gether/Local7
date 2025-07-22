@@ -27,32 +27,33 @@
   width: 100%;
   max-width: 800px;
 }
-h2 {
+.search-user-container1 h2 {
   font-size: 24px;
   font-weight: 600;
   color: var(--primary-color);
   margin-bottom: 20px;
   text-align: center;
+  transform: translateY(-120px); /* 원하는 만큼 위로 */
 }
 
 /* --- 검색 폼 --- */
 .search-form1 {
   display: flex;
   flex-wrap: wrap;
-  gap: 300px;
-  margin-bottom: 20px;
+  margin-top:30%;
   align-items: center;
 }
 
 .search-input1,
 .search-select1 {
   flex-grow: 1;
-  padding: 10px 14px;
-  border-radius: 6px;
+  padding: 15px 25px;
+  border-radius: 20px;
   border: 1px solid var(--border-color);
   background-color: var(--surface-color);
   color: var(--text-color);
   font-size: 15px;
+  margin-left: -13%;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
@@ -68,7 +69,8 @@ h2 {
 }
 
 .search-button1 {
-  padding: 10px 20px;
+  margin-right:0%;
+  padding: 10px 30px;
   background-color: var(--primary-color);
   color: var(--surface-color);
   font-size: 15px;
@@ -90,10 +92,16 @@ h2 {
 .search-criteria-select1 {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 121px;
   color: var(--text-color);
   font-size: 14px;
-  margin-top: ;
+  margin-top: 10%;         /* 이건 제거하고 */
+  
+  position: relative;
+  top: -350px;             /* 원하는 만큼 위로 이동 */
+}
+.search-criteria-select1 label{
+gap: -10%;
 }
 
 .search-select1 {
@@ -126,7 +134,7 @@ p {
 .user-list1 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
+  gap: 10px;
   margin-top: -40%;
 }
 
@@ -136,7 +144,7 @@ p {
   gap: 16px;
   background-color: var(--surface-color);
   padding: 14px;
-  border-radius: 8px;
+  border-radius: 20px;
   border: 1px solid var(--border-color);
   cursor: pointer;
   transition: background-color 0.3s, transform 0.1s;

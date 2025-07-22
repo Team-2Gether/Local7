@@ -92,15 +92,6 @@ function SearchUser() {
         <div className="search-user-container1">
             <h2>유저 검색</h2>
             <form onSubmit={handleSearch} className="search-form1">
-                <input
-                    type="text"
-                    placeholder="검색어를 입력하세요"
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
-                    className="search-input1"
-                />
-                <button type="submit" className="search-button1">검색</button>
-
                 <div className="search-criteria-select1">
                     <label htmlFor="searchField">검색 기준:</label>
                     <select
@@ -115,8 +106,17 @@ function SearchUser() {
                         <option value="userName">이름</option>
                         <option value="userNickname">닉네임</option>
                         <option value="userEmail">이메일</option>
-                    </select>
+                    </select>               
+                <input
+                    type="text"
+                    placeholder="검색어를 입력하세요"
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                    className="search-input1"
+                />
+                <button type="submit" className="search-button1">검색</button>
                 </div>
+                
             </form>
 
             {loading && <p>사용자 정보를 불러오는 중입니다...</p>}
