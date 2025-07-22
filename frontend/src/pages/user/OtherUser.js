@@ -1,8 +1,9 @@
 // src/pages/user/OtherUser.js
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom'; // Link 추가
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import OtherUserPosts from './OtherUserPosts';
+import '../../assets/css/OtherUser.css'; // OtherUser.css 경로
 
 function OtherUser({ currentUser }) {
     const { userLoginId } = useParams();
@@ -121,31 +122,31 @@ function OtherUser({ currentUser }) {
     };
 
     if (loading) {
-        return <div className="user-profile-container loading">사용자 프로필을 불러오는 중...</div>;
+        return <div className="OtherUser-container loading">사용자 프로필을 불러오는 중...</div>;
     }
 
     if (error) {
-        return <div className="user-profile-container error-message">오류: {error}</div>;
+        return <div className="OtherUser-container error-message">오류: {error}</div>;
     }
 
     if (!otherUserProfile) {
-        return <div className="user-profile-container no-user">사용자를 찾을 수 없습니다.</div>;
+        return <div className="OtherUser-container no-user">사용자를 찾을 수 없습니다.</div>;
     }
 
     const showFollowButton = currentUser && currentUser.userId !== otherUserProfile.userId;
 
     return (
-        <div className="other-user-page">
-            <div className="user-info-section1">
-                <h2 className="user-profile-title">{otherUserProfile.userNickname}님의 프로필</h2>
-                <div className="profile-image-container">
+        <div className="OtherUser-page">
+            <div className="OtherUser-info-section">
+                <h2 className="OtherUser-profile-title">{otherUserProfile.userNickname}님의 프로필</h2>
+                <div className="OtherUser-profile-image-container">
                     <img
                         src={otherUserProfile.userProfileImageUrl || "https://via.placeholder.com/150"}
                         alt="프로필 이미지"
-                        className="profile-image"
+                        className="OtherUser-profile-image"
                     />
                 </div>
-                <div className="user-details">
+                <div className="OtherUser-user-details">
                     <p><strong>아이디:</strong> {otherUserProfile.userLoginId}</p>
                     <p><strong>닉네임:</strong> {otherUserProfile.userNickname}</p>
                     <p><strong>이메일:</strong> {otherUserProfile.userEmail}</p>
@@ -160,7 +161,7 @@ function OtherUser({ currentUser }) {
                     </p>
                 </div>
                 {showFollowButton && (
-                    <button onClick={handleFollowToggle} className="follow-button">
+                    <button onClick={handleFollowToggle} className="OtherUser-follow-button">
                         {isFollowing ? '언팔로우' : '팔로우'}
                     </button>
                 )}
