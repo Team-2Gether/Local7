@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PostList = ({ posts, searchTerm, setSearchTerm, handleDeletePost, handleRowClick, currentPage, totalPages, handlePageChange }) => {
+const PostList = ({ posts, searchTerm, setSearchTerm, handleDeletePost, handleRowClick, currentPage, totalPages, handlePageChange, }) => {
 
     const PaginationControls = () => {
         const pageNumbers = [];
@@ -71,7 +71,8 @@ const PostList = ({ posts, searchTerm, setSearchTerm, handleDeletePost, handleRo
                             <td>
                                 <button
                                     onClick={() => handleDeletePost(post.postId)}
-                                    className="admin-action-button delete">삭제</button>
+                                    className="admin-action-button delete">삭제
+                                </button>
                             </td>
                         </tr>
                     ))}

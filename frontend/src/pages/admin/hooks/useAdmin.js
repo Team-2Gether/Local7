@@ -16,7 +16,7 @@ const useAdmin = (currentUser) => {
     // 페이지네이션 상태 추가
     const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 (0부터 시작)
     const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
-    const [itemsPerPage, setItemsPerPage] = useState(10); // 페이지당 항목 수
+    const [itemsPerPage, setItemsPerPage] = useState(8); // 페이지당 항목 수
 
     const navigate = useNavigate();
 
@@ -157,9 +157,32 @@ const useAdmin = (currentUser) => {
         }
     }, [ADMIN_ID, fetchAdminData, currentPage, itemsPerPage]);
 
+    // handleRowClick 함수 업데이트
     const handleRowClick = useCallback((id, type) => {
-        // ... 기존 로직 유지
-    }, []);
+        let path = '';
+        switch (type) {
+            case "user":
+                path = `/user/profile/${id}`;
+                break;
+            case "post":
+                path = `/posts/${id}`;
+                break;
+            case "comment":
+                path = `/posts/${id}`;
+                break;
+            /*
+            case "review":
+                path = `/`;
+                break;
+            case "report":
+                path = `/admin/report-detail/${id}`;
+                break;
+            */
+            default:
+                return;
+        }
+        navigate(path);
+    }, [navigate]);
 
     const lowercasedSearchTerm = searchTerm.toLowerCase();
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ReportList = ({ reports, searchTerm, setSearchTerm, handleUpdateReportStatus, handleDeleteUser, currentPage, totalPages, handlePageChange }) => {
+const ReportList = ({ reports, searchTerm, setSearchTerm, handleDeleteUser, currentPage, totalPages, handlePageChange, handleRowClick  }) => {
 
  const PaginationControls = () => {
         const pageNumbers = [];
@@ -67,22 +67,22 @@ const ReportList = ({ reports, searchTerm, setSearchTerm, handleUpdateReportStat
                     {/* reports가 배열인지 확인 후 map 호출 */}
                     {Array.isArray(reports) && reports.map(report => (
                         <tr key={report.reportId}>
-                            <td>{report.reportId}</td>
-                            <td>
+                            <td onClick={() => handleRowClick(report.reportId, "report")}>{report.reportId}</td>
+                            <td onClick={() => handleRowClick(report.reportId, "report")}>
                                 {report.reportType === 'post' ? '스레드' :
                                     report.reportType === 'review' ? '리뷰' :
                                         '댓글'}
                             </td>
-                            <td>{report.reporterNickname}</td>
-                            <td>{report.targetNickname}</td>
-                            <td>
+                            <td onClick={() => handleRowClick(report.reportId, "report")}>{report.reporterNickname}</td>
+                            <td onClick={() => handleRowClick(report.reportId, "report")}>{report.targetNickname}</td>
+                            <td onClick={() => handleRowClick(report.reportId, "report")}>
                                 {/* 신고 유형에 따라 게시글 제목 또는 댓글 내용을 표시 */}
                                 {report.reportType === 'post' && report.postTitle}
                                 {report.reportType === 'review' && report.reviewContent}
                                 {report.reportType === 'comment' && report.commentContent}
                             </td>
-                            <td>{report.reportReason}</td>
-                            <td>{new Date(report.createdDate).toLocaleDateString()}</td>
+                            <td onClick={() => handleRowClick(report.reportId, "report")}>{report.reportReason}</td>
+                            <td onClick={() => handleRowClick(report.reportId, "report")}>{new Date(report.createdDate).toLocaleDateString()}</td>
                             <td>
                                 <div className="admin-action-buttons-container">
 

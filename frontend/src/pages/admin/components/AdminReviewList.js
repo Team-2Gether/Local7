@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ReviewList = ({ reviews, searchTerm, setSearchTerm, handleDeleteReview, currentPage, totalPages, handlePageChange}) => {
+const ReviewList = ({ reviews, searchTerm, setSearchTerm, handleDeleteReview, currentPage, totalPages, handlePageChange, handleRowClick}) => {
     
     const PaginationControls = () => {
         const pageNumbers = [];
@@ -65,11 +65,11 @@ const ReviewList = ({ reviews, searchTerm, setSearchTerm, handleDeleteReview, cu
                     {/* reviews가 배열인지 확인 후 map 호출 */}
                     {Array.isArray(reviews) && reviews.map(review => (
                         <tr key={review.reviewId}>
-                            <td>{review.reviewId}</td>
-                            <td>{review.reviewContent}</td>
-                            <td>{review.userNickname}</td>
-                            <td>{review.reviewRating}</td>
-                            <td>{new Date(review.createdDate).toLocaleDateString()}</td>
+                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{review.reviewId}</td>
+                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{review.reviewContent}</td>
+                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{review.userNickname}</td>
+                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{review.reviewRating}</td>
+                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{new Date(review.createdDate).toLocaleDateString()}</td>
                             <td>
                                 <button
                                     onClick={() => handleDeleteReview(review.reviewId)}
