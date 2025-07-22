@@ -16,6 +16,7 @@ html, body {
     min-height: 100vh; /* 최소 높이를 뷰포트 높이로 설정 */
 }
 
+
 /* 로그인 모달 오버레이 스타일 */
 .login-modal-overlay {
     position: fixed;

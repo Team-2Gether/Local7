@@ -95,9 +95,8 @@
     position: absolute;
     top: 0;               /* h3 맨 위 */
     left: 0;
-    width: 150%;          /* 선 길이 조절 (100%보다 크게) */
-    border-top: 2px solid #000000;
-    transform: translateX(-6.5%); /* 좌측으로 좀 빼서 중앙정렬 느낌 주기 */
+    width: 100%;          /* 선 길이 조절 (100%보다 크게) */
+    border-top: 2px solid #333333;
 }
 /* 폼 그룹 */
 .form-group {
@@ -110,7 +109,7 @@
 }
 .form-group input[type="text"],
 .form-group input[type="password"] {
-    width:100%;
+    width:96%;
     padding: 10px;
     border: none;
     border-radius: 20px;
@@ -119,11 +118,7 @@
 }
 
 /* 입력 + 버튼 묶음 */
-.input-with-button {
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-}
+
 .input-with-button input {
     flex-grow: 1;
     padding: 12px;
@@ -155,7 +150,7 @@ button {
 .submit-button {
     background-color: #79AAFF;
     color: white;
-    width: 104%;
+    width: 100%;
     margin-bottom: 15px; /* 오른쪽 정렬 */
 }
 .submit-button:hover:not(:disabled) {
@@ -190,6 +185,21 @@ button:disabled {
     margin-right: 20px;
     text-align: center;
 }
+
+.custom-file-input1 {
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 20px;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.custom-file-input1:hover {
+  background-color: #e6b800;
+}
+
 
 .profile-preview-image {
     width: 150px;

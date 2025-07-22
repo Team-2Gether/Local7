@@ -1,14 +1,16 @@
 /* OtherUserPosts.css */
 /* 리액트 컴포넌트 만들때 classname 작명규칙은 function 이름을 앞에 붙여줘 */
-
-.OtherUserPosts-section {
-    width: 100%;
+.OtherUser-page{
+    width: 80%;
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.OtherUserPosts-section {
+
 }
 
 .OtherUserPosts-section-title { /* classname 변경 */

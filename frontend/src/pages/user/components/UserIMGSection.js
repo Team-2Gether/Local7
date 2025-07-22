@@ -83,7 +83,13 @@ function UserIMGSection({ currentUser, onLogout }) {
                         <p>이미지 없음</p>
                     </div>
                 )}           
-            <input type="file" accept="image/*" onChange={handleFileChange} />
+            <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="custom-file-input1"
+            />
+
             <button onClick={handleImageUpdate} disabled={!selectedFile}>
                 이미지 변경
             </button>

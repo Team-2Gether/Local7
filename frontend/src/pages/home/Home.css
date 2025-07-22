@@ -321,7 +321,7 @@ html, body {
 /* 대형 데스크탑 및 와이드 모니터 - 1200px 이상 */
 @media (min-width: 1200px) {
   .app-layout {
-    max-width: 1175px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 0 0px;
   }

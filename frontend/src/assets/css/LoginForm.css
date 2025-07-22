@@ -21,7 +21,6 @@
 
 .form-group {
   margin-bottom: 15px; /* Space between input fields */
-  text-align: center;  /* 안의 인라인/인라인블록 요소를 가운데 정렬 */
 }
 
 .form-group .form-control {
