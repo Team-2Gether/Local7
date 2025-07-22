@@ -44,6 +44,11 @@ export function AppContent() {
     const [isAiModalOpen, setIsAiModalOpen] = useState(false);
     const [selectedCity, setSelectedCity] = useState("전체");
 
+    // 새로 추가된 모달 상태
+    const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+    const [isForgetIdPwdModalOpen, setIsForgetIdPwdModalOpen] = useState(false);
+
+
     const navigate = useNavigate();
 
     // Axios 기본 설정: 모든 요청에 자격 증명(쿠키) 포함
@@ -135,6 +140,33 @@ export function AppContent() {
 
     const openTermsModal = () => setIsTermsModalOpen(true);
     const closeTermsModal = () => setIsTermsModalOpen(false);
+
+    // 새로 추가된 모달 열기/닫기 함수
+    const openSignupModal = () => {
+        setIsLoginModalOpen(false); // 로그인 모달 닫기
+        setIsSignupModalOpen(true);
+    };
+    const closeSignupModal = () => {
+        setIsSignupModalOpen(false);
+        setIsLoginModalOpen(true); // 회원가입 모달 닫고 로그인 모달 다시 열기
+    };
+
+    // 회원가입 성공 시 호출될 함수
+    const handleSignupSuccess = () => {
+        closeSignupModal(); // 회원가입 모달 닫기
+        setIsLoginModalOpen(true); // 로그인 모달 다시 열기
+        alert('회원가입이 완료되었습니다. 로그인 해주세요.'); // 사용자에게 메시지 알림
+    };
+
+
+    const openForgetIdPwdModal = () => {
+        setIsLoginModalOpen(false); // 로그인 모달 닫기
+        setIsForgetIdPwdModalOpen(true);
+    };
+    const closeForgetIdPwdModal = () => {
+        setIsForgetIdPwdModalOpen(false);
+        setIsLoginModalOpen(true); // 비밀번호 찾기 모달 닫고 로그인 모달 다시 열기
+    };
 
     const handleSidebarMenuItemClick = (item) => {
         if (item === "ai") {
@@ -290,9 +322,11 @@ export function AppContent() {
                                 )} />
                         <Route path="/userpage" element={<Navigate to="/mypage/edit" replace />} />
 
-                        <Route path="/signup" element={<SignupForm />} />
+                        {/* 이 부분은 이제 모달로 띄우므로 주석 처리하거나 삭제합니다. */}
+                        {/* <Route path="/signup" element={<SignupForm />} /> */}
+                        {/* <Route path="/forget-ID-PWD" element={<ForgetIdOrPWD />} /> */}
+
                         <Route path="/admin" element={currentUser && currentUser.ruleId === 1 ? <AdminPage currentUser={currentUser} /> : <Navigate to="/" />} />
-                        <Route path="/forget-ID-PWD" element={<ForgetIdOrPWD />} />
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </div>
@@ -307,7 +341,10 @@ export function AppContent() {
                 <LoginForm
                     onLoginSuccess={handleLoginSuccess}
                     onCloseModal={() => setIsLoginModalOpen(false)}
-                    onOpenTermsModal={openTermsModal} />
+                    onOpenTermsModal={openTermsModal}
+                    onOpenSignupModal={openSignupModal} /* 새로 추가 */
+                    onOpenForgetIdPwdModal={openForgetIdPwdModal} /* 새로 추가 */
+                />
             </Modal>
 
             <TermsOfServiceModal
@@ -316,6 +353,26 @@ export function AppContent() {
                 showAgreeButton={false} />
 
             <AiModal isOpen={isAiModalOpen} onRequestClose={() => setIsAiModalOpen(false)} />
+
+            {/* 회원가입 모달 추가 */}
+            <Modal
+                isOpen={isSignupModalOpen}
+                onRequestClose={closeSignupModal}
+                className="signup-modal-content" /* CSS 클래스 필요 */
+                overlayClassName="signup-modal-overlay" /* CSS 클래스 필요 */
+                contentLabel="회원가입 모달">
+                <SignupForm onCloseModal={closeSignupModal} onSignupSuccess={handleSignupSuccess} /> {/* ✅ onSignupSuccess prop 추가 */}
+            </Modal>
+
+            {/* ID/비밀번호 찾기 모달 추가 */}
+            <Modal
+                isOpen={isForgetIdPwdModalOpen}
+                onRequestClose={closeForgetIdPwdModal}
+                className="forgetIdPwd-modal-content" /* CSS 클래스 필요 */
+                overlayClassName="forgetIdPwd-modal-overlay" /* CSS 클래스 필요 */
+                contentLabel="ID/비밀번호 찾기 모달">
+                <ForgetIdOrPWD onCloseModal={closeForgetIdPwdModal} />
+            </Modal>
         </div>
     );
 }

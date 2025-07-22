@@ -1,3 +1,4 @@
+// src/pages/signup/SignupPage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSignupForm from './hooks/useSignupForm';
@@ -9,8 +10,10 @@ import InputField1 from './components/InputField';
 import PasswordConfirmField1 from './components/PasswordConfirmField';
 import EmailVerificationGroup1 from './components/EmailVerificationGroup';
 import TextAreaField1 from './components/TextAreaField';
+import TermsAndPrivacyModal from './components/TermsAndPrivacyModal'; // 새로운 모달 컴포넌트 임포트
 
-function SignupPage() {
+// onSignupSuccess prop을 추가합니다.
+function SignupPage({ onCloseModal, onSignupSuccess }) {
   const navigate = useNavigate();
   const {
     formData,
@@ -19,23 +22,22 @@ function SignupPage() {
     emailSent,
     messages,
     duplicateStatus,
-    agreements, // useSignupForm에서 agreements 상태를 가져옴
+    agreements,
     handleChange,
     handleImageChange,
     handleVerificationCodeChange,
     handleSendVerificationCode,
     handleVerifyEmailCode,
     checkDuplicate,
-    handleAgreementChange, // useSignupForm에서 handleAgreementChange 함수를 가져옴
+    handleAgreementChange,
     handleSubmit,
-  } = useSignupForm(navigate);
-  
-  const [requiredFieldsFilled, setRequiredFieldsFilled] = useState(false);
+  } = useSignupForm(onSignupSuccess);
 
-  // ✅ 버튼 클릭 여부 상태 추가
+  const [requiredFieldsFilled, setRequiredFieldsFilled] = useState(false);
   const [idChecked, setIdChecked] = useState(false);
   const [nickChecked, setNickChecked] = useState(false);
   const [emailChecked, setEmailChecked] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false); // 모달 표시 여부 상태
 
   useEffect(() => {
     const requiredFields = [
@@ -50,28 +52,33 @@ function SignupPage() {
     setRequiredFieldsFilled(allFilled);
   }, [formData]);
 
-  // ✅ 최종 제출 가능 조건에 버튼 클릭 상태도 포함
   const isSubmitEnabled =
-    agreements.termsOfService && // useSignupForm에서 가져온 agreements 사용
-    agreements.privacyPolicy && // useSignupForm에서 가져온 agreements 사용
+    agreements.termsAndPrivacy &&
     requiredFieldsFilled &&
     idChecked &&
     nickChecked &&
     emailChecked &&
-    duplicateStatus.userLoginId === false && // 중복 확인 통과 여부 추가
-    duplicateStatus.userNickname === false && // 중복 확인 통과 여부 추가
-    duplicateStatus.userEmail === false && // 중복 확인 통과 여부 추가
-    emailVerified; // 이메일 인증 완료 여부 추가
+    duplicateStatus.userLoginId === false &&
+    duplicateStatus.userNickname === false &&
+    duplicateStatus.userEmail === false &&
+    emailVerified;
 
-
-  const onSubmit = (e) => {
-    // isSubmitEnabled 로직이 useSignupForm에서 이미 처리되므로 여기서는 간단히 체크
+  const onSubmit = async (e) => {
+    e.preventDefault();
     if (!isSubmitEnabled) {
-      e.preventDefault();
       alert('모든 필수 항목, 약관 동의, 중복/인증 확인이 필요합니다.');
       return;
     }
-    handleSubmit(e);
+    await handleSubmit(e);
+  };
+
+  const handleTermsAndPrivacyClick = (e) => {
+    e.preventDefault();
+    setShowTermsModal(true); // 모달 열기
+  };
+
+  const handleCloseTermsModal = () => {
+    setShowTermsModal(false); // 모달 닫기
   };
 
   return (
@@ -199,27 +206,13 @@ function SignupPage() {
           <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', cursor: 'pointer' }}>
             <input
               type="checkbox"
-              name="termsOfService"
-              checked={agreements.termsOfService} // useSignupForm에서 가져온 agreements 사용
-              onChange={handleAgreementChange} // useSignupForm에서 가져온 handleAgreementChange 사용
+              name="termsAndPrivacy"
+              checked={agreements.termsAndPrivacy}
+              onChange={handleAgreementChange}
               style={{ width: '16px', height: '16px', cursor: 'pointer' }}
             />
-            서비스 이용약관에 동의합니다.{' '}
-            <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: '#79AAFF', textDecoration: 'underline', fontWeight: '600' }}>
-              자세히 보기
-            </a>
-          </label>
-
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              name="privacyPolicy"
-              checked={agreements.privacyPolicy} // useSignupForm에서 가져온 agreements 사용
-              onChange={handleAgreementChange} // useSignupForm에서 가져온 handleAgreementChange 사용
-              style={{ width: '16px', height: '16px', cursor: 'pointer' }}
-            />
-            개인정보 처리방침에 동의합니다.{' '}
-            <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#79AAFF', textDecoration: 'underline', fontWeight: '600' }}>
+            서비스 이용약관 및 개인정보 처리방침에 동의합니다.{' '}
+            <a href="#" onClick={handleTermsAndPrivacyClick} style={{ color: '#79AAFF', textDecoration: 'underline', fontWeight: '600' }}>
               자세히 보기
             </a>
           </label>
@@ -228,8 +221,8 @@ function SignupPage() {
             <input
               type="checkbox"
               name="marketingConsent"
-              checked={agreements.marketingConsent} // useSignupForm에서 가져온 agreements 사용
-              onChange={handleAgreementChange} // useSignupForm에서 가져온 handleAgreementChange 사용
+              checked={agreements.marketingConsent}
+              onChange={handleAgreementChange}
               style={{ width: '16px', height: '16px', cursor: 'pointer' }}
             />
             마케팅 정보 수신에 동의합니다. (선택)
@@ -255,6 +248,9 @@ function SignupPage() {
           회원가입
         </button>
       </form>
+
+      {/* 약관 모달 */}
+      {showTermsModal && <TermsAndPrivacyModal onClose={handleCloseTermsModal} />}
     </div>
   );
 }
