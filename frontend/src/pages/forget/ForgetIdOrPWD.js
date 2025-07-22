@@ -1,6 +1,7 @@
 // src/pages/forget/ForgetIdOrPWD.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import "../../assets/css/ForgetIdOrPWD.css";
 
 // onCloseModal prop 추가
 function ForgetIdOrPWD({ onCloseModal }) {
