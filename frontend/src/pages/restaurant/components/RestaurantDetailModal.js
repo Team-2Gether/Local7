@@ -176,7 +176,7 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
             overlayClassName="restaurant-detail-overlay"
         >
             <div>
-                <button className="modal-close-top-button1" onClick={onRequestClose} aria-label="Close modal">×</button>
+                
                 <h2>{restaurant?.restaurantName}</h2>
                 <p>주소: {`${restaurant?.addrSido || ''} ${restaurant?.addrSigungu || ''} ${restaurant?.addrDong || ''} ${restaurant?.addrDetail || ''}`}</p>
                 <p>전화번호: {restaurant?.phoneNumber}</p>
