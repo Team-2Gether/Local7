@@ -292,7 +292,12 @@
     font-size: 0.9em;
     color: #c4c4c4;
     margin: 5px 15px;
+    text-align: left;
 }
+.post-card-meta{
+    text-align: left;
+}
+
 
 /* 좋아요 섹션 (PostList & PostDetail 공통) */
 .post-card-likes,
