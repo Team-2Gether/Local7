@@ -20,8 +20,11 @@
 }
 
 .form-group {
-  margin-bottom: 15px; /* Space between input fields */
+  margin: 0 auto 3px auto;  /* 상단 0, 하단 15px, 좌우 auto로 중앙 정렬 */
+  margin-left:-2.4%;
+  width: 100%;                /* 너비 설정 (필요에 따라 조정) */
 }
+
 
 .form-group .form-control {
   display: inline-block; /* 너비가 있으면 인라인블록으로 */
@@ -69,11 +72,11 @@
 
 .login-form-container button[type="submit"] {
   width: 100%;
-  padding: 15px;
+  padding: 11px;
   background-color: #6a9cfd; /* Blue color for the login button */
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
