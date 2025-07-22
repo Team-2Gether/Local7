@@ -10,10 +10,11 @@
   position: relative;
   margin-left: 0;          /* 왼쪽 붙이기 */
   margin-right: 0;         /* 오른쪽 여백도 제거 */
-  width: 90vw;            /* 뷰포트 전체 너비 */
+  width: 80vw;            /* 뷰포트 전체 너비 */
   max-width: none;         /* 최대 너비 제한 제거 */
   box-sizing: border-box;
   padding-right: 270px;   /* 약간 들여쓰기 원할 경우 */
+  border-radius: 20px;            /* 테이블 전체 둥근 테두리 */
 }
 
 .content-container h2 {
@@ -90,8 +91,8 @@ width: 120px;
 /* 공지사항 폼(등록/수정) 테이블 스타일 */
 .notice-form-table {
 width: 100%;                   /* 전체 너비 */
-border-collapse: collapse;     /* 셀 간격 제거 */
-margin-top: 200px;              /* 위쪽 여백 */
+margin-top: 10px;              /* 위쪽 여백 */
+border-radius: 20px; 
 }
 
 /* 폼 테이블 셀 스타일 */
@@ -108,7 +109,7 @@ width: 100%;                   /* 전체 너비 */
 padding: 10px;                  /* 내부 여백 */
 font-size: 20px;               /* 글자 크기 */
 box-sizing: border-box;        /* 패딩 포함한 전체 크기 계산 */
-border-radius: 10px; 
+border-radius: 20px; 
 }
 
 /* 폼 하단 버튼 영역 */
