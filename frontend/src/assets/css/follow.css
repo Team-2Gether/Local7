@@ -3,6 +3,7 @@
 
 .follow-list-container {
     width: 100%;
+    min-width: 320px;
     border-radius: 10px;
     text-align: center;
 }
