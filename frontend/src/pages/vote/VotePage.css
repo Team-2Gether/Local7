@@ -166,11 +166,11 @@
   max-width: 240px;
   margin: 0.5rem auto;
   padding: 0.5rem 1rem;
-  border-radius: 12px;
+  border-radius: 20px;
   font-size: 0.95rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  background-color: #84b7eb;
+  background-color: #0154e4;
   color: white;
   border: none;
 }
@@ -275,8 +275,9 @@
 .vote-controls {
   display: flex;
   flex-direction: column;
-  min-width: 300px;
-  max-width: 350px;
+  margin-top:8%;
+  min-width: 30%;
+  max-width: 35%;
   flex-shrink: 0;
 }
 
