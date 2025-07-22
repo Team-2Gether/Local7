@@ -187,6 +187,7 @@ button:disabled {
 
 .profile-image-container {
     margin-bottom: 20px;
+    margin-right: 20px;
     text-align: center;
 }
 
@@ -218,13 +219,21 @@ button:disabled {
     font-size: 0.9em;
 }
 
-
 .user-section-content, .user-section-title {
   justify-content: center; /* 가로 가운데 정렬 */
   align-items: center;     /* 세로 가운데 정렬 */
 }
+
+.current-info {
+  width: 100%;            /* 가로 길이는 부모 기준으로 설정 */
+  overflow-wrap: break-word;  /* 긴 단어가 있으면 줄바꿈 */
+  word-break: break-word;     /* 단어 단위로 줄바꿈 */
+  overflow-x: hidden;     /* 가로 스크롤 방지 */
+  box-sizing: border-box; /* 패딩/테두리 포함한 크기 계산 */
+}
+
 .current-info button{
- margin-left:10px;
+ margin-left:44%;
 } 
 
 .user-section input[type="file"] {
