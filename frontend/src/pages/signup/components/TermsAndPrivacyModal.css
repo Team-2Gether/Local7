@@ -51,12 +51,12 @@
   background-color: #FFCC00;
   color: #000;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 8px 20px;
+  border-radius: 20px;
   cursor: pointer;
   font-weight: bold;
   position: absolute;
-  bottom: 20px;
+  top: 2%;
   right: 30px;
   transition: background-color 0.2s ease;
 }

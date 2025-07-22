@@ -36,9 +36,9 @@
 
 /* 각 게시글 아이템 카드 */
 .post-item1 {
-  border: 1px solid var(--border-color);
+  border: 0px solid var(--border-color);
   border-radius: 20px;
-  padding: 20px;
+  padding: 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,12 +47,18 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
+  cursor: pointer; /* ✅ 커서가 손모양으로 바뀜 */
 }
 
+.post-item1 p{
+  font-size:18px;
+
+}
+
+
 /* 마우스 오버 시 효과 */
-.post-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+.post-item1:hover {
+  box-shadow: 0 8px 16px #79AAFF;
 }
 
 /* 순위 표시 */
@@ -157,16 +163,14 @@
   align-items: center; 
   
   /* 배경색, 테두리, 그림자 강조 */
-  border-radius: 20px; /* 모서리 부드럽게 */
-  border: 1px solid #494949; /* 얇은 테두리 */
   margin: 5px 0;
   width: 100%;
 }
 
 
 .user-info55 .profile-img {
-  width: 60px;
-  height: 60px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--accent-color); /* 테두리 강조 */
