@@ -117,6 +117,7 @@ const AdminPage = ({ currentUser }) => {
 
     return (
         <div className="admin-page-container">
+            <h2>관리자 페이지</h2>
             <div className="admin-tabs">
                 <button
                     onClick={() => setActiveTab("users")}
