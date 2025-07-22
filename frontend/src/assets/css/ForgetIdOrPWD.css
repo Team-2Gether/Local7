@@ -1,0 +1,129 @@
+/* ForgetIdOrPWD 내부 스타일링도 필요하면 추가 */
+.forgetIdOrPWD-container h2,
+.signup-container1 h2 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.forgetIdOrPWD-container input[type="email"],
+.forgetIdOrPWD-container input[type="text"],
+.forgetIdOrPWD-container input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    box-sizing: border-box;
+}
+
+.forgetIdOrPWD-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #6a9cfd;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.forgetIdOrPWD-container button:hover {
+    background-color: #5a8be0;
+}
+
+/* 기존 CSS 내용은 유지 */
+.signup-modal-overlay,
+.forgetIdPwd-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.forgetIdPwd-modal-content {
+  background: #000; /* 검은색 배경 */
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  outline: none; /* 모달 오픈 시 생기는 아웃라인 제거 */
+  color: #fff; /* 내부 텍스트 색상 */
+
+  /* 필요시 ForgetIdOrPWD 모달도 스크롤 가능하게 설정 */
+  max-height: 90vh; 
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.forgetIdOrPWD-container h2,
+.signup-container1 h2 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.forgetIdOrPWD-container input[type="email"],
+.forgetIdOrPWD-container input[type="text"],
+.forgetIdOrPWD-container input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    box-sizing: border-box;
+}
+
+.forgetIdOrPWD-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #6a9cfd;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.forgetIdOrPWD-container button:hover {
+    background-color: #5a8be0;
+}
+
+.forgetIdPwd-modal-content {
+  background: #000; /* 검은색 배경 */
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  outline: none; /* 모달 오픈 시 생기는 아웃라인 제거 */
+  color: #fff; /* 내부 텍스트 색상 */
+}
+
+.forgetIdPwd-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
