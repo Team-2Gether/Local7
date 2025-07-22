@@ -161,9 +161,6 @@ const useAdmin = (currentUser) => {
         // ... 기존 로직 유지
     }, []);
 
-    // 검색어 필터링 로직은 백엔드에서 페이징이 되므로 주석 처리하거나 제거할 수 있습니다.
-    // 현재는 프론트엔드에서 필터링하는 방식으로 되어 있으나, 대량 데이터 시 비효율적입니다.
-    // 백엔드에서 검색 기능을 구현하고 API를 통해 필터링된 데이터를 받는 것이 좋습니다.
     const lowercasedSearchTerm = searchTerm.toLowerCase();
 
     const filteredUsers = useMemo(() => {
@@ -221,7 +218,7 @@ const useAdmin = (currentUser) => {
     return {
         activeTab,
         setActiveTab,
-        users: filteredUsers, // 필터링된 데이터 반환
+        users: filteredUsers, 
         posts: filteredPosts,
         comments: filteredComments,
         reviews: filteredReviews,
@@ -236,9 +233,9 @@ const useAdmin = (currentUser) => {
         handleDeleteReview,
         handleUpdateReportStatus,
         handleRowClick,
-        currentPage, // 페이지네이션 상태 추가
+        currentPage, 
         totalPages,
-        handlePageChange, // 페이지 변경 핸들러 추가
+        handlePageChange, 
         ADMIN_ID
     };
 };

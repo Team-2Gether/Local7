@@ -26,9 +26,9 @@ const AdminPage = ({ currentUser }) => {
         handleDeleteReview,
         handleUpdateReportStatus,
         handleRowClick,
-        currentPage, // 추가
-        totalPages, // 추가
-        handlePageChange, // 추가
+        currentPage, 
+        totalPages, 
+        handlePageChange, 
     } = useAdmin(currentUser);
 
     const renderContent = () => {
@@ -48,9 +48,9 @@ const AdminPage = ({ currentUser }) => {
                         setSearchTerm={setSearchTerm}
                         handleDeleteUser={handleDeleteUser}
                         handleRowClick={handleRowClick}
-                        currentPage={currentPage} // 추가
-                        totalPages={totalPages} // 추가
-                        handlePageChange={handlePageChange} // 추가
+                        currentPage={currentPage} 
+                        totalPages={totalPages} 
+                        handlePageChange={handlePageChange} 
                     />
                 );
             case "posts":
@@ -61,9 +61,9 @@ const AdminPage = ({ currentUser }) => {
                         setSearchTerm={setSearchTerm}
                         handleDeletePost={handleDeletePost}
                         handleRowClick={handleRowClick}
-                        currentPage={currentPage} // 추가
-                        totalPages={totalPages} // 추가
-                        handlePageChange={handlePageChange} // 추가
+                        currentPage={currentPage} 
+                        totalPages={totalPages} 
+                        handlePageChange={handlePageChange} 
                     />
                 );
             case "comments":
@@ -74,9 +74,9 @@ const AdminPage = ({ currentUser }) => {
                         setSearchTerm={setSearchTerm}
                         handleDeleteComment={handleDeleteComment}
                         handleRowClick={handleRowClick}
-                        currentPage={currentPage} // 추가
-                        totalPages={totalPages} // 추가
-                        handlePageChange={handlePageChange} // 추가
+                        currentPage={currentPage} 
+                        totalPages={totalPages} 
+                        handlePageChange={handlePageChange} 
                     />
                 );
             case "reviews":
@@ -86,9 +86,9 @@ const AdminPage = ({ currentUser }) => {
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
                         handleDeleteReview={handleDeleteReview}
-                        currentPage={currentPage} // 추가
-                        totalPages={totalPages} // 추가
-                        handlePageChange={handlePageChange} // 추가
+                        currentPage={currentPage} 
+                        totalPages={totalPages} 
+                        handlePageChange={handlePageChange} 
                     />
                 );
             case "reports":
@@ -99,9 +99,9 @@ const AdminPage = ({ currentUser }) => {
                         setSearchTerm={setSearchTerm}
                         handleUpdateReportStatus={handleUpdateReportStatus}
                         handleDeleteUser={handleDeleteUser}
-                        currentPage={currentPage} // 추가
-                        totalPages={totalPages} // 추가
-                        handlePageChange={handlePageChange} // 추가
+                        currentPage={currentPage} 
+                        totalPages={totalPages} 
+                        handlePageChange={handlePageChange} 
                     />
                 );
             default:
@@ -111,7 +111,6 @@ const AdminPage = ({ currentUser }) => {
 
     return (
         <div className="admin-page-container">
-            <h2 className="admin-page-title">관리자 페이지</h2>
             <div className="admin-tabs">
                 <button
                     onClick={() => setActiveTab("users")}

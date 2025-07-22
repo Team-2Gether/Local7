@@ -59,7 +59,6 @@ const ReportList = ({ reports, searchTerm, setSearchTerm, handleUpdateReportStat
                         <th>신고 대상</th>
                         <th>신고 대상 내용</th>
                         <th>사유</th>
-                        <th>상태</th>
                         <th>신고일</th>
                         <th>관리</th>
                     </tr>
@@ -83,31 +82,19 @@ const ReportList = ({ reports, searchTerm, setSearchTerm, handleUpdateReportStat
                                 {report.reportType === 'comment' && report.commentContent}
                             </td>
                             <td>{report.reportReason}</td>
-                            <td>{report.status === 'PENDING' ? '대기 중' : '처리 완료'}</td>
                             <td>{new Date(report.createdDate).toLocaleDateString()}</td>
                             <td>
-                                {
-                                    report.status === 'PENDING'
-                                        ? (
-                                            <div className="admin-action-buttons-container">
-                                                <button
-                                                    onClick={() => handleUpdateReportStatus(report.reportId, 'COMPLETED')}
-                                                    className="admin-action-button complete">
-                                                    처리
-                                                </button>
+                                <div className="admin-action-buttons-container">
 
-                                                {/* 신고 대상 사용자의 ID가 있을 경우에만 '삭제' 버튼 표시 */}
-                                                {report.targetUserId && (
-                                                    <button
-                                                        onClick={() => handleDeleteUser(report.targetUserId, report.targetNickname)}
-                                                        className="admin-action-button delete">
-                                                        삭제
-                                                    </button>
-                                                )}
-                                            </div>
-                                        )
-                                        : (<span>처리 완료됨</span>)
-                                }
+                                    {/* 신고 대상 사용자의 ID가 있을 경우에만 '삭제' 버튼 표시 */}
+                                    {report.targetUserId && (
+                                        <button
+                                            onClick={() => handleDeleteUser(report.targetUserId, report.targetNickname)}
+                                            className="admin-action-button delete">
+                                            삭제
+                                        </button>
+                                    )}
+                                </div>            
                             </td>
                         </tr>
                     ))}
