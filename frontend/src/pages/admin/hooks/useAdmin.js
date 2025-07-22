@@ -1,6 +1,7 @@
+// useAdmin.js 파일 수정
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
-import { AdminApi } from '../../../api/AdminApi';
+import { AdminApi } from '../../../api/AdminApi'; // AdminApi 경로 확인
 
 const useAdmin = (currentUser) => {
     const [activeTab, setActiveTab] = useState("users");
@@ -16,7 +17,11 @@ const useAdmin = (currentUser) => {
     // 페이지네이션 상태 추가
     const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 (0부터 시작)
     const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
-    const [itemsPerPage, setItemsPerPage] = useState(8); // 페이지당 항목 수
+    const [itemsPerPage, setItemsPerPage] = useState(10); // 페이지당 항목 수
+
+    // RestaurantDetailModal 관련 상태 추가
+    const [isRestaurantDetailModalOpen, setIsRestaurantDetailModalOpen] = useState(false);
+    const [selectedRestaurantForModal, setSelectedRestaurantForModal] = useState(null);
 
     const navigate = useNavigate();
 
@@ -24,8 +29,12 @@ const useAdmin = (currentUser) => {
 
     // 데이터를 가져오는 함수 (페이지네이션 파라미터 추가)
     const fetchAdminData = useCallback(async (page, size) => {
+        // --- 디버깅을 위한 로그 추가 ---
+        console.log("DEBUG: fetchAdminData 호출 시 ADMIN_ID:", ADMIN_ID);
+        // --- 여기까지 ---
+
         if (!ADMIN_ID) {
-            setError("관리자 정보를 불러올 수 없습니다. 로그인 상태를 확인해주세요.");
+            setError("관리자 ID를 알 수 없습니다. 로그인 상태를 확인해주세요."); // 더 구체적인 에러 메시지
             setLoading(false);
             return;
         }
@@ -84,7 +93,7 @@ const useAdmin = (currentUser) => {
         } finally {
             setLoading(false);
         }
-    }, [activeTab, ADMIN_ID]);
+    }, [activeTab, ADMIN_ID, itemsPerPage]); // itemsPerPage도 의존성 배열에 추가
 
     // 탭 또는 페이지 변경 시 데이터 다시 불러오기
     useEffect(() => {
@@ -100,6 +109,13 @@ const useAdmin = (currentUser) => {
 
     // 각 목록의 삭제 핸들러들은 AdminApi.js의 변경된 파라미터에 맞게 adminId를 추가합니다.
     const handleDeleteUser = useCallback(async (userId, nickname) => {
+        // --- 디버깅을 위한 로그 추가 ---
+        console.log("DEBUG: handleDeleteUser 호출 시 ADMIN_ID:", ADMIN_ID);
+        // --- 여기까지 ---
+        if (!ADMIN_ID) {
+            alert("관리자 ID를 알 수 없어 사용자 삭제를 진행할 수 없습니다.");
+            return;
+        }
         if (window.confirm(`${nickname} 사용자를 정말로 삭제하시겠습니까?`)) {
             try {
                 await AdminApi.deleteUser(userId, ADMIN_ID); // adminId 추가
@@ -112,6 +128,13 @@ const useAdmin = (currentUser) => {
     }, [ADMIN_ID, fetchAdminData, currentPage, itemsPerPage]);
 
     const handleDeletePost = useCallback(async (postId) => {
+        // --- 디버깅을 위한 로그 추가 ---
+        console.log("DEBUG: handleDeletePost 호출 시 ADMIN_ID:", ADMIN_ID);
+        // --- 여기까지 ---
+        if (!ADMIN_ID) {
+            alert("관리자 ID를 알 수 없어 게시글 삭제를 진행할 수 없습니다.");
+            return;
+        }
         if (window.confirm("이 게시글을 정말로 삭제하시겠습니까?")) {
             try {
                 await AdminApi.deletePost(postId, ADMIN_ID); // adminId 추가
@@ -124,6 +147,13 @@ const useAdmin = (currentUser) => {
     }, [ADMIN_ID, fetchAdminData, currentPage, itemsPerPage]);
 
     const handleDeleteComment = useCallback(async (commentId) => {
+        // --- 디버깅을 위한 로그 추가 ---
+        console.log("DEBUG: handleDeleteComment 호출 시 ADMIN_ID:", ADMIN_ID);
+        // --- 여기까지 ---
+        if (!ADMIN_ID) {
+            alert("관리자 ID를 알 수 없어 댓글 삭제를 진행할 수 없습니다.");
+            return;
+        }
         if (window.confirm("이 댓글을 정말로 삭제하시겠습니까?")) {
             try {
                 await AdminApi.deleteComment(commentId, ADMIN_ID); // adminId 추가
@@ -136,6 +166,13 @@ const useAdmin = (currentUser) => {
     }, [ADMIN_ID, fetchAdminData, currentPage, itemsPerPage]);
 
     const handleDeleteReview = useCallback(async (reviewId) => {
+        // --- 디버깅을 위한 로그 추가 ---
+        console.log("DEBUG: handleDeleteReview 호출 시 ADMIN_ID:", ADMIN_ID);
+        // --- 여기까지 ---
+        if (!ADMIN_ID) {
+            alert("관리자 ID를 알 수 없어 리뷰 삭제를 진행할 수 없습니다.");
+            return;
+        }
         if (window.confirm("이 리뷰를 정말로 삭제하시겠습니까?")) {
             try {
                 await AdminApi.deleteReview(reviewId, ADMIN_ID); // adminId 추가
@@ -148,6 +185,13 @@ const useAdmin = (currentUser) => {
     }, [ADMIN_ID, fetchAdminData, currentPage, itemsPerPage]);
 
     const handleUpdateReportStatus = useCallback(async (reportId, newStatus) => {
+        // --- 디버깅을 위한 로그 추가 ---
+        console.log("DEBUG: handleUpdateReportStatus 호출 시 ADMIN_ID:", ADMIN_ID);
+        // --- 여기까지 ---
+        if (!ADMIN_ID) {
+            alert("관리자 ID를 알 수 없어 신고 상태 업데이트를 진행할 수 없습니다.");
+            return;
+        }
         try {
             await AdminApi.updateReportStatus(reportId, newStatus, ADMIN_ID); // adminId 추가
             alert("신고 상태가 업데이트되었습니다.");
@@ -158,31 +202,55 @@ const useAdmin = (currentUser) => {
     }, [ADMIN_ID, fetchAdminData, currentPage, itemsPerPage]);
 
     // handleRowClick 함수 업데이트
-    const handleRowClick = useCallback((id, type) => {
-        let path = '';
-        switch (type) {
-            case "user":
-                path = `/user/profile/${id}`;
-                break;
-            case "post":
-                path = `/posts/${id}`;
-                break;
-            case "comment":
-                path = `/posts/${id}`;
-                break;
-            /*
-            case "review":
-                path = `/`;
-                break;
-            case "report":
-                path = `/admin/report-detail/${id}`;
-                break;
-            */
-            default:
-                return;
+    // 이제 restaurantId를 세 번째 인자로 받을 수 있도록 변경
+    const handleRowClick = useCallback(async (id, type, restaurantId = null) => {
+        // --- 디버깅을 위한 로그 추가 ---
+        console.log("DEBUG: handleRowClick 호출 시 ADMIN_ID:", ADMIN_ID);
+        console.log("DEBUG: handleRowClick 호출 시 restaurantId:", restaurantId);
+        // --- 여기까지 ---
+
+        if (!ADMIN_ID) {
+            alert("관리자 ID를 알 수 없어 상세 정보를 볼 수 없습니다.");
+            return;
         }
-        navigate(path);
-    }, [navigate]);
+
+        if (type === "review" && restaurantId) {
+            try {
+                // AdminApi 호출 시에도 ADMIN_ID가 유효한지 확인하고 전달
+                const restaurantData = await AdminApi.getRestaurantById(restaurantId, ADMIN_ID);
+                setSelectedRestaurantForModal(restaurantData);
+                setIsRestaurantDetailModalOpen(true);
+            } catch (err) {
+                alert(`음식점 정보 불러오기 실패: ${err.message}`);
+                console.error("Failed to fetch restaurant details:", err);
+            }
+        } else {
+            let path = '';
+            switch (type) {
+                case "user":
+                    path = `/admin/user-detail/${id}`;
+                    break;
+                case "post":
+                    path = `/admin/post-detail/${id}`;
+                    break;
+                case "comment":
+                    path = `/admin/comment-detail/${id}`;
+                    break;
+                case "report":
+                    path = `/admin/report-detail/${id}`;
+                    break;
+                default:
+                    return;
+            }
+            navigate(path);
+        }
+    }, [navigate, ADMIN_ID]);
+
+    // 모달 닫기 핸들러
+    const closeRestaurantDetailModal = useCallback(() => {
+        setIsRestaurantDetailModalOpen(false);
+        setSelectedRestaurantForModal(null);
+    }, []);
 
     const lowercasedSearchTerm = searchTerm.toLowerCase();
 
@@ -259,7 +327,11 @@ const useAdmin = (currentUser) => {
         currentPage, 
         totalPages,
         handlePageChange, 
-        ADMIN_ID
+        ADMIN_ID,
+        // RestaurantDetailModal 관련 상태 및 함수 반환
+        isRestaurantDetailModalOpen,
+        selectedRestaurantForModal,
+        closeRestaurantDetailModal
     };
 };
 

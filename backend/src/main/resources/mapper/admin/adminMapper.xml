@@ -80,6 +80,35 @@
         <result property="reviewContent" column="REVIEW_CONTENT" />
     </resultMap>
 
+    <resultMap id="restaurantMap" type="com.twogether.local7.restaurant.vo.RestaurantVO">
+        <id property="restaurantId" column="RESTAURANT_ID"/>
+        <result property="restaurantName" column="RESTAURANT_NAME"/>
+        <result property="addrSido" column="ADDR_SIDO"/>
+        <result property="addrSigungu" column="ADDR_SIGUNGU"/>
+        <result property="addrDong" column="ADDR_DONG"/>
+        <result property="addrDetail" column="ADDR_DETAIL"/>
+        <result property="phoneNumber" column="PHONE_NUMBER"/>
+        <result property="restaurantCategory" column="RESTAURANT_CATEGORY"/>
+        <result property="restaurantLat" column="RESTAURANT_LAT"/>
+        <result property="restaurantLon" column="RESTAURANT_LON"/>
+        <result property="openHour" column="OPEN_HOUR"/>
+        <result property="openMinute" column="OPEN_MINUTE"/>
+        <result property="closeHour" column="CLOSE_HOUR"/>
+        <result property="closeMinute" column="CLOSE_MINUTE"/>
+        <result property="breakStartHour" column="BREAK_START_HOUR"/>
+        <result property="breakStartMinute" column="BREAK_START_MINUTE"/>
+        <result property="breakEndHour" column="BREAK_END_HOUR"/>
+        <result property="breakEndMinute" column="BREAK_END_MINUTE"/>
+        <result property="restaurantHoliday" column="RESTAURANT_HOLIDAY"/>
+        <result property="parkingInfo" column="PARKING_INFO"/>
+        <result property="createdDate" column="CREATED_DATE"/>
+        <result property="createdId" column="CREATED_ID"/>
+        <result property="updatedDate" column="UPDATED_DATE"/>
+        <result property="updatedId" column="UPDATED_ID"/>
+        <result property="averageRating" column="averageRating"/>
+        <result property="totalComments" column="totalComments"/>
+    </resultMap>
+
     <!-- 사용자 관련 -->
     <select id="selectAllUsers" resultMap="userMap">
         SELECT *
@@ -282,5 +311,37 @@
         DELETE FROM TB_REVIEW
         WHERE USER_ID = #{userId}
     </delete>
+
+    <select id="findRestaurantById" parameterType="java.lang.Long" resultMap="restaurantMap">
+        SELECT
+            R.RESTAURANT_ID,
+            R.RESTAURANT_NAME,
+            R.ADDR_SIDO,
+            R.ADDR_SIGUNGU,
+            R.ADDR_DONG,
+            R.ADDR_DETAIL,
+            R.PHONE_NUMBER,
+            R.RESTAURANT_CATEGORY,
+            R.RESTAURANT_LAT,
+            R.RESTAURANT_LON,
+            R.OPEN_HOUR,
+            R.OPEN_MINUTE,
+            R.CLOSE_HOUR,
+            R.CLOSE_MINUTE,
+            R.BREAK_START_HOUR,
+            R.BREAK_START_MINUTE,
+            R.BREAK_END_HOUR,
+            R.BREAK_END_MINUTE,
+            R.RESTAURANT_HOLIDAY,
+            R.PARKING_INFO,
+            R.CREATED_DATE,
+            R.CREATED_ID,
+            R.UPDATED_DATE,
+            R.UPDATED_ID,
+            (SELECT AVG(TR.REVIEW_RATING) FROM TB_REVIEW TR WHERE TR.RESTAURANT_ID = R.RESTAURANT_ID) AS averageRating,
+            (SELECT COUNT(TR.REVIEW_ID) FROM TB_REVIEW TR WHERE TR.RESTAURANT_ID = R.RESTAURANT_ID) AS totalComments
+        FROM TB_RESTAURANT R
+        WHERE R.RESTAURANT_ID = #{restaurantId}
+    </select>
 
 </mapper>

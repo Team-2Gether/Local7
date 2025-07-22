@@ -8,6 +8,7 @@ import com.twogether.local7.pagintion.Pagination;
 import com.twogether.local7.pagintion.SimplePageable;
 import com.twogether.local7.post.vo.PostVO;
 import com.twogether.local7.report.vo.ReportVO;
+import com.twogether.local7.restaurant.vo.RestaurantVO;
 import com.twogether.local7.review.vo.ReviewVO; // ReviewVO import
 import com.twogether.local7.user.dao.UserDAO;
 import com.twogether.local7.user.vo.UserVO;
@@ -117,4 +118,11 @@ public class AdminServiceImpl implements AdminService {
         adminDAO.deleteAllReviewsByUserId(userId); // 리뷰 기록 삭제 추가
         adminDAO.deleteUser(userId); // 최종 사용자 삭제
     }
+
+    // 음식점 ID로 음식점 상세 정보 조회 메서드
+    @Override
+    public RestaurantVO getRestaurantById(Long restaurantId) {
+        return adminDAO.findRestaurantById(restaurantId);
+    }
+
 }

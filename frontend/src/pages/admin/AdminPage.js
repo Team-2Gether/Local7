@@ -5,6 +5,7 @@ import PostList from "./components/AdminPostList";
 import CommentList from "./components/AdminCommentList";
 import ReviewList from "./components/AdminReviewList";
 import ReportList from "./components/AdminReportList";
+import RestaurantDetailModal from "../restaurant/components/RestaurantDetailModal"
 import "./AdminPage.css";
 
 const AdminPage = ({ currentUser }) => {
@@ -29,6 +30,10 @@ const AdminPage = ({ currentUser }) => {
         currentPage, 
         totalPages, 
         handlePageChange, 
+        ADMIN_ID,
+        isRestaurantDetailModalOpen,
+        selectedRestaurantForModal,
+        closeRestaurantDetailModal
     } = useAdmin(currentUser);
 
     const renderContent = () => {
@@ -86,6 +91,7 @@ const AdminPage = ({ currentUser }) => {
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
                         handleDeleteReview={handleDeleteReview}
+                        handleRowClick={handleRowClick}
                         currentPage={currentPage} 
                         totalPages={totalPages} 
                         handlePageChange={handlePageChange} 
@@ -141,6 +147,17 @@ const AdminPage = ({ currentUser }) => {
             <div className="admin-content-area">
                 {renderContent()}
             </div>
+
+            {isRestaurantDetailModalOpen && selectedRestaurantForModal && (
+                <RestaurantDetailModal
+                    isOpen={isRestaurantDetailModalOpen}
+                    onRequestClose={closeRestaurantDetailModal}
+                    restaurant={selectedRestaurantForModal}
+                    currentUser={currentUser} 
+                    onReviewSubmitted={() => {}}
+                />
+            )}
+
         </div>
     );
 };

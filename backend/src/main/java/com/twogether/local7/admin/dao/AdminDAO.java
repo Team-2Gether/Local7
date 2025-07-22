@@ -4,6 +4,7 @@ import com.twogether.local7.comment.vo.CommentVO;
 import com.twogether.local7.pagintion.Pageable;
 import com.twogether.local7.post.vo.PostVO;
 import com.twogether.local7.report.vo.ReportVO;
+import com.twogether.local7.restaurant.vo.RestaurantVO;
 import com.twogether.local7.review.vo.ReviewVO;
 import com.twogether.local7.user.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -50,5 +51,7 @@ public interface AdminDAO {
     void deleteAllReportsByUserId(@Param("userId") Long userId);
     void deleteAllReviewsByUserId(@Param("userId") Long userId); // 리뷰 기록 삭제 추가
     int deleteUser(Long userId); // 사용자 삭제 추가
+
+    RestaurantVO findRestaurantById(Long restaurantId);
 
 }

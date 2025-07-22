@@ -5,6 +5,7 @@ import com.twogether.local7.comment.vo.CommentVO;
 import com.twogether.local7.pagintion.Pagination;
 import com.twogether.local7.post.vo.PostVO;
 import com.twogether.local7.report.vo.ReportVO;
+import com.twogether.local7.restaurant.vo.RestaurantVO;
 import com.twogether.local7.review.service.ReviewService;
 import com.twogether.local7.review.vo.ReviewVO;
 import com.twogether.local7.user.vo.UserVO;
@@ -201,5 +202,32 @@ public class AdminController {
 
         adminService.deleteContentFromReport(reportId);
         return new ResponseEntity<>("신고된 콘텐츠가 성공적으로 삭제되었습니다.", HttpStatus.OK);
+    }
+
+    // --- 음식점 상세 정보 조회 API (리뷰 클릭 시 사용) ---
+    @GetMapping("/restaurants/{restaurantId}")
+    public Mono<ResponseEntity<?>> getRestaurantById(
+            @RequestHeader("X-USER-ID") Long userId, // 관리자 ID 헤더
+            @PathVariable Long restaurantId) {
+        ResponseEntity<?> authCheck = checkAdminAuth(userId);
+        if (authCheck != null) {
+            return Mono.just(authCheck);
+        }
+
+        return Mono.fromCallable(() -> {
+            // AdminService에서 음식점 상세 정보를 조회하도록 호출
+            RestaurantVO restaurant = adminService.getRestaurantById(restaurantId);
+            return restaurant;
+        }).map(restaurant -> {
+            if (restaurant != null) {
+                return new ResponseEntity<>(restaurant, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("음식점을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+            }
+        }).onErrorResume(e -> {
+            // 오류 처리 로직 추가 (예: DB 연결 문제 등)
+            System.err.println("음식점 정보 조회 중 오류 발생: " + e.getMessage());
+            return Mono.just(new ResponseEntity<>("음식점 정보 조회 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR));
+        });
     }
 }

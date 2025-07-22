@@ -65,11 +65,11 @@ const ReviewList = ({ reviews, searchTerm, setSearchTerm, handleDeleteReview, cu
                     {/* reviews가 배열인지 확인 후 map 호출 */}
                     {Array.isArray(reviews) && reviews.map(review => (
                         <tr key={review.reviewId}>
-                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{review.reviewId}</td>
-                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{review.reviewContent}</td>
-                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{review.userNickname}</td>
-                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{review.reviewRating}</td>
-                            <td onClick={() => handleRowClick(review.reviewId, "review")}>{new Date(review.createdDate).toLocaleDateString()}</td>
+                            <td onClick={() => handleRowClick(review.reviewId, "review", review.restaurantId)}>{review.reviewId}</td>
+                            <td onClick={() => handleRowClick(review.reviewId, "review", review.restaurantId)}>{review.reviewContent}</td>
+                            <td onClick={() => handleRowClick(review.reviewId, "review", review.restaurantId)}>{review.userNickname}</td>
+                            <td onClick={() => handleRowClick(review.reviewId, "review", review.restaurantId)}>{review.reviewRating}</td>
+                            <td onClick={() => handleRowClick(review.reviewId, "review", review.restaurantId)}>{new Date(review.createdDate).toLocaleDateString()}</td>
                             <td>
                                 <button
                                     onClick={() => handleDeleteReview(review.reviewId)}
