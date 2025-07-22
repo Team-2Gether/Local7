@@ -1,7 +1,9 @@
+// src/pages/forget/ForgetIdOrPWD.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function ForgetIdOrPWD() {
+// onCloseModal prop 추가
+function ForgetIdOrPWD({ onCloseModal }) {
     const [email, setEmail] = useState('');
     const [authCode, setAuthCode] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -126,7 +128,7 @@ function ForgetIdOrPWD() {
                     <div>
                         <h2>완료되었습니다.</h2>
                         <p>{message}</p>
-                        <button onClick={() => window.location.href = '/login'}>로그인 페이지로 이동</button>
+                        <button onClick={onCloseModal}>로그인 페이지로 돌아가기</button> {/* 로그인 페이지로 이동 대신 모달 닫기 */}
                     </div>
                 );
             default:
@@ -136,6 +138,7 @@ function ForgetIdOrPWD() {
 
     return (
         <div className="forgetIdOrPWD-container">
+            <button onClick={onCloseModal} style={{ position: 'absolute', top: '10px', right: '10px', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#fff' }}>&times;</button>
             {renderStepContent()}
             {message && <p className="message">{message}</p>}
         </div>

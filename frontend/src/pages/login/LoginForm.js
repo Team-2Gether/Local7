@@ -1,12 +1,13 @@
-// src/pages/login/LoginForm.js (기존 LoginForm.js에 추가)
+// src/pages/login/LoginForm.js
 import React from 'react';
-import '../../assets/css/LoginForm.css'; //
-import AppLogo from './components/AppLogo'; //
-import LoginFormComponent from './components/LoginFormComponent'; //
-import LoginFormLinks from './components/LoginFormLinks'; //
-import useLogin from './hooks/useLogin'; //
+import '../../assets/css/LoginForm.css';
+import AppLogo from './components/AppLogo';
+import LoginFormComponent from './components/LoginFormComponent';
+import LoginFormLinks from './components/LoginFormLinks';
+import useLogin from './hooks/useLogin';
 
-function LoginForm({ onLoginSuccess, onCloseModal, onOpenTermsModal }) { // onOpenTermsModal prop 추가
+// onOpenSignupModal, onOpenForgetIdPwdModal props 추가
+function LoginForm({ onLoginSuccess, onCloseModal, onOpenTermsModal, onOpenSignupModal, onOpenForgetIdPwdModal }) {
   const {
     credential,
     setCredential,
@@ -30,7 +31,13 @@ function LoginForm({ onLoginSuccess, onCloseModal, onOpenTermsModal }) { // onOp
         setPassword={setPassword}
         handleSubmit={handleSubmit}
       />
-      <LoginFormLinks onCloseModal={onCloseModal} onOpenTermsModal={onOpenTermsModal} /> {/* onOpenTermsModal prop 전달 */}
+      {/* 새로 추가된 props 전달 */}
+      <LoginFormLinks
+        onCloseModal={onCloseModal}
+        onOpenTermsModal={onOpenTermsModal}
+        onOpenSignupModal={onOpenSignupModal}
+        onOpenForgetIdPwdModal={onOpenForgetIdPwdModal}
+      />
 
       {/* Google 로그인 버튼 추가 */}
       <div className="social-login-section">
