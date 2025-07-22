@@ -157,22 +157,12 @@
   align-items: center; 
   
   /* 배경색, 테두리, 그림자 강조 */
-  background-color: var(--dark-surface-color); /* 기존 아이템과 동일한 색상 */
-  border-radius: 12px; /* 모서리 부드럽게 */
-  border: 1px solid var(--border-color); /* 얇은 테두리 */
-  
-  /* 그림자 효과 강화 */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.1); 
-  
-  margin: 15px 0;
-  width: 70%;
-  transition: all 0.3s ease;
+  border-radius: 20px; /* 모서리 부드럽게 */
+  border: 1px solid #494949; /* 얇은 테두리 */
+  margin: 5px 0;
+  width: 100%;
 }
 
-.user-info55:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.7);
-}
 
 .user-info55 .profile-img {
   width: 60px;
