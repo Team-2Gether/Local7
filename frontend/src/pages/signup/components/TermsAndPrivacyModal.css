@@ -1,0 +1,66 @@
+/* src/pages/signup/components/TermsAndPrivacyModal.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #333; /* Dark background */
+  color: #ddd; /* Light text */
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 700px;
+  max-height: 80vh; /* Max height for scrollability */
+  overflow-y: auto; /* Enable scrolling for long content */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.modal-content h3 {
+  color: #FFCC00; /* Highlight color for title */
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.modal-content h4 {
+  color: #79AAFF; /* Highlight color for section titles */
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+.modal-content p {
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.modal-scroll-content {
+  /* 추가적인 스타일링이 필요할 수 있습니다. */
+}
+
+.modal-close-button {
+  background-color: #FFCC00;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+  transition: background-color 0.2s ease;
+}
+
+.modal-close-button:hover {
+  background-color: #e6b800;
+}

@@ -32,14 +32,13 @@ function useSignupForm(navigate) {
 
   const { duplicateStatus, checkDuplicate, resetDuplicateStatus, setDuplicateStatus } = useDuplicateCheck(setMessages);
 
-  // --- 약관동의 상태 추가 ---
+  // --- 약관동의 상태 변경: termsOfService, privacyPolicy 대신 termsAndPrivacy 사용 ---
   const [agreements, setAgreements] = useState({
-    termsOfService: false,
-    privacyPolicy: false,
+    termsAndPrivacy: false, // 통합된 약관 동의
     marketingConsent: false,
   });
 
-  // --- 약관동의 변경 핸들러 추가 ---
+  // --- 약관동의 변경 핸들러 유지 (name이 'termsAndPrivacy'로 들어옴) ---
   const handleAgreementChange = (e) => {
     const { name, checked } = e.target;
     setAgreements((prev) => ({
@@ -122,9 +121,9 @@ function useSignupForm(navigate) {
       return false;
     }
 
-    // --- 약관 필수 동의 체크 추가 ---
-    if (!agreements.termsOfService || !agreements.privacyPolicy) {
-      setMessages({ agreements: '서비스 이용약관과 개인정보 처리방침에 동의해 주세요.' });
+    // --- 약관 필수 동의 체크 변경: 통합된 termsAndPrivacy 확인 ---
+    if (!agreements.termsAndPrivacy) {
+      setMessages({ agreements: '서비스 이용약관 및 개인정보 처리방침에 동의해 주세요.' });
       return false;
     }
 
@@ -148,9 +147,8 @@ function useSignupForm(navigate) {
     resetEmailVerification();
     resetDuplicateStatus();
     setMessages({});
-    setAgreements({              // 약관 동의 초기화 추가
-      termsOfService: false,
-      privacyPolicy: false,
+    setAgreements({              // 약관 동의 초기화 변경
+      termsAndPrivacy: false, // 통합된 약관 동의 초기화
       marketingConsent: false,
     });
   };

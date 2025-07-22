@@ -151,6 +151,14 @@ export function AppContent() {
         setIsLoginModalOpen(true); // 회원가입 모달 닫고 로그인 모달 다시 열기
     };
 
+    // 회원가입 성공 시 호출될 함수
+    const handleSignupSuccess = () => {
+        closeSignupModal(); // 회원가입 모달 닫기
+        setIsLoginModalOpen(true); // 로그인 모달 다시 열기
+        alert('회원가입이 완료되었습니다. 로그인 해주세요.'); // 사용자에게 메시지 알림
+    };
+
+
     const openForgetIdPwdModal = () => {
         setIsLoginModalOpen(false); // 로그인 모달 닫기
         setIsForgetIdPwdModalOpen(true);
@@ -353,7 +361,7 @@ export function AppContent() {
                 className="signup-modal-content" /* CSS 클래스 필요 */
                 overlayClassName="signup-modal-overlay" /* CSS 클래스 필요 */
                 contentLabel="회원가입 모달">
-                <SignupForm onCloseModal={closeSignupModal} />
+                <SignupForm onCloseModal={closeSignupModal} onSignupSuccess={handleSignupSuccess} /> {/* ✅ onSignupSuccess prop 추가 */}
             </Modal>
 
             {/* ID/비밀번호 찾기 모달 추가 */}
