@@ -100,6 +100,12 @@
    - 폰트 크기 크게, 위쪽 여백 제거 */
 .best-reigon {
   font-size: 1.5rem;
+  color:rgb(255, 255, 255);
+  margin-top: 0;
+}
+.best-reigon1 {
+  font-size: 3.0rem;
+  color: #ffe680;
   margin-top: 0;
 }
 
