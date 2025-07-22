@@ -13,23 +13,23 @@ function VotePage() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [topRegionName, setTopRegionName] = useState('없음');
 
-  // 지역 이름 기준 이미지 경로 매핑 함수 (한글명 → public/assets/images/top/폴더 이미지)
+  // 지역 이름 기준 이미지 경로 매핑 함수 (한글명 → /폴더 이미지)
   const getImageByRegionName = (name) => {
     const map = {
-      부산: '/assets/images/top/busan.png',
-      동해: '/assets/images/top/donghae.png',
-      강릉: '/assets/images/top/gangneung.png',
-      고성: '/assets/images/top/goseong.png',
-      경주: '/assets/images/top/gyeongju.png',
-      포항: '/assets/images/top/pohang.png',
-      삼척: '/assets/images/top/samcheok.png',
-      속초: '/assets/images/top/sokcho.png',
-      울진: '/assets/images/top/uljin.png',
-      울산: '/assets/images/top/ulsan.png',
-      양양: '/assets/images/top/yangyang.png',
-      영덕: '/assets/images/top/yeongdeok.png',
+      부산: '/busan.png',
+      동해: '/donghae.png',
+      강릉: '/gangneung.png',
+      고성: '/goseong.png',
+      경주: '/gyeongju.png',
+      포항: '/pohang.png',
+      삼척: '/samcheok.png',
+      속초: '/sokcho.png',
+      울진: '/uljin.png',
+      울산: '/ulsan.png',
+      양양: '/yangyang.png',
+      영덕: '/yeongdeok.png',
     };
-    return map[name] || '/assets/images/top/default-image.jpg';
+    return map[name] || '/default-image.jpg';
   };
 
   useEffect(() => {
