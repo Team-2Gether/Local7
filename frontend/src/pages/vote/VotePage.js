@@ -33,8 +33,11 @@ function VotePage() {
   };
 
   useEffect(() => {
-    fetchUserStatus();
-    fetchRegions();
+    const init = async () => {
+      fetchUserStatus();
+      fetchRegions();
+    };
+    init();
   }, []);
 
   useEffect(() => {
@@ -54,14 +57,18 @@ function VotePage() {
 
   const fetchUserVoteStatus = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:8080/api/vote/user/${userId}`,
-        { withCredentials: true }
-      );
-      if (res.data && res.data.hasVoted === 'Y') {
+      const res = await axios.get('http://localhost:8080/api/vote/userId', {
+        withCredentials: true,
+      });
+
+      const voteData = Array.isArray(res.data) ? res.data[0] : res.data;
+
+      console.log('user vote 상태', voteData);
+      console.log('hasVoted 설정:', voteData.hasVoted === 'Y');
+      if (voteData && voteData.hasVoted === 'Y') {
         setHasVoted(true);
-        setSelectedOption(res.data.regionId);
-        const idx = regions.findIndex((r) => r.key === res.data.regionId);
+        setSelectedOption(voteData.regionId);
+        const idx = regions.findIndex((r) => r.key === voteData.regionId);
         if (idx >= 0) setSlideIndex(idx);
       }
     } catch (err) {
