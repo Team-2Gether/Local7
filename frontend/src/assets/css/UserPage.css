@@ -109,7 +109,7 @@
 }
 .form-group input[type="text"],
 .form-group input[type="password"] {
-    width:96%;
+    width:100%;
     padding: 10px;
     border: none;
     border-radius: 20px;
