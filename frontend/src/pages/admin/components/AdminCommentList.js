@@ -66,7 +66,9 @@ const CommentList = ({ comments, searchTerm, setSearchTerm, handleDeleteComment,
                         <tr key={comment.commentId}>
                             <td onClick={() => handleRowClick(comment.postId, "comment")}>{comment.commentId}</td>
                             <td onClick={() => handleRowClick(comment.postId, "comment")}>{comment.content}</td>
-                            <td onClick={() => handleRowClick(comment.postId, "comment")}>{comment.userNickname}</td>
+                            <td onClick={() => handleRowClick(comment.postId, "comment")}>
+                                {comment.userNickname === "Google_User" ? comment.createdId : comment.userNickname}
+                            </td>
                             <td onClick={() => handleRowClick(comment.postId, "comment")}>{new Date(comment.createdDate).toLocaleDateString()}</td>
                             <td>
                                 <button
