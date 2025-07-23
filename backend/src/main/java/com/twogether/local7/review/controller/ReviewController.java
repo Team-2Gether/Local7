@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/reviews")
-@CrossOrigin(origins = "http://localhost:3000")
 public class ReviewController {
 
     // 로거 인스턴스 생성
