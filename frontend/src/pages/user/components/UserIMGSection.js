@@ -4,7 +4,7 @@ import axios from 'axios';
 import useMessageDisplay from '../hook/useMessageDisplay';
 import { FaUserCircle } from 'react-icons/fa';
 
-function UserIMGSection({ currentUser, onLogout }) {
+function UserIMGSection({ currentUser, setCurrentUser }) { // setCurrentUser prop 추가
     const { message, messageType, displayMessage } = useMessageDisplay();
 
     const [selectedFile, setSelectedFile] = useState(null);
@@ -41,17 +41,19 @@ function UserIMGSection({ currentUser, onLogout }) {
             const base64Image = reader.result; // "data:image/jpeg;base64,..." 형태의 문자열
 
             try {
-                // `params` 대신 직접 JSON 객체를 요청 본문으로 전달
-                const response = await axios.post('http://localhost:8080/api/user/update-profile-image', {
-                    userId: currentUser.userId,
-                    userProfileImageUrl: base64Image
+                const response = await axios.post('http://localhost:8080/api/user/update-profile-image', null, {
+                    params: {
+                        userId: currentUser.userId,
+                        profileImageBase64: base64Image
+                    }
                 });
-
                 if (response.data.status === 'success') {
                     displayMessage('프로필 이미지가 성공적으로 변경되었습니다.', 'success');
-                    if (onLogout) {
-                        onLogout();
-                    }
+                    // sessionStorage 및 currentUser 상태 업데이트
+                    const updatedUser = { ...currentUser, userProfileImageUrl: response.data.newProfileImageUrl };
+                    sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                    setCurrentUser(updatedUser); // 부모 컴포넌트의 상태 업데이트
+                    setSelectedFile(null); // 파일 선택 초기화
                 } else {
                     displayMessage(response.data.message || '프로필 이미지 변경에 실패했습니다.', 'error');
                 }
@@ -82,17 +84,17 @@ function UserIMGSection({ currentUser, onLogout }) {
                         <FaUserCircle size={100} color="#ccc" />
                         <p>이미지 없음</p>
                     </div>
-                )}           
-            <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="custom-file-input1"
-            />
+                )}
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="custom-file-input1"
+                />
 
-            <button onClick={handleImageUpdate} disabled={!selectedFile}>
-                이미지 변경
-            </button>
+                <button onClick={handleImageUpdate} disabled={!selectedFile}>
+                    이미지 변경
+                </button>
             </div>
         </div>
     );
