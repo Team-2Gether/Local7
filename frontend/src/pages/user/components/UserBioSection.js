@@ -4,22 +4,22 @@ import axios from 'axios';
 import { FaSignature } from 'react-icons/fa';
 import useMessageDisplay from '../hook/useMessageDisplay';
 
-function UserBioSection({ currentUser, setCurrentUser }) { // setCurrentUser prop 추가
+function UserBioSection({ currentUser }) {
     const [userBio, setUserBio] = useState('');
-    const { message, messageType, displayMessage } = useMessageDisplay();
+    const { message, messageType, displayMessage } = useMessageDisplay(); // Corrected: changed showMessage to displayMessage
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         if (currentUser && currentUser.userBio) {
             setUserBio(currentUser.userBio);
         } else {
-            setUserBio('');
+            setUserBio(''); // currentUser.userBio가 없는 경우 빈 문자열로 초기화
         }
     }, [currentUser]);
 
     const handleUpdateBio = async () => {
         if (!currentUser || !currentUser.userId) {
-            displayMessage('로그인 정보가 없습니다.', 'error');
+            displayMessage('로그인 정보가 없습니다.', 'error'); // Corrected: changed showMessage to displayMessage
             return;
         }
 
@@ -31,29 +31,27 @@ function UserBioSection({ currentUser, setCurrentUser }) { // setCurrentUser pro
                 }
             });
             if (response.data.status === 'success') {
-                displayMessage('자기소개가 성공적으로 업데이트되었습니다.', 'success');
-                setIsEditing(false);
-
-                // sessionStorage 업데이트
-                const updatedUser = { ...currentUser, userBio: userBio };
-                sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
-                setCurrentUser(updatedUser); // 부모 컴포넌트의 상태 업데이트
-
+                displayMessage('자기소개가 성공적으로 업데이트되었습니다.', 'success'); // Corrected: changed showMessage to displayMessage
+                setIsEditing(false); // 수정 모드 종료
+                // 사용자 정보를 최신 자기소개로 업데이트 (부모 컴포넌트에서 currentUser를 업데이트하는 콜백 필요)
+                // 현재 구조에서는 부모에서 currentUser를 직접 업데이트하는 메커니즘이 없으므로,
+                // 이 부분은 페이지를 새로고침하거나, UserPage에서 전체 사용자 정보를 다시 불러오는 로직이 필요할 수 있습니다.
+                // 편의상 여기서는 메시지만 표시하고 수정 모드를 종료합니다.
             } else {
-                displayMessage(response.data.message || '자기소개 업데이트에 실패했습니다.', 'error');
+                displayMessage(response.data.message || '자기소개 업데이트에 실패했습니다.', 'error'); // Corrected: changed showMessage to displayMessage
             }
         } catch (error) {
             console.error('자기소개 업데이트 오류:', error);
             if (error.response && error.response.data && error.response.data.message) {
-                displayMessage(error.response.data.message, 'error');
+                displayMessage(error.response.data.message, 'error'); // Corrected: changed showMessage to displayMessage
             } else {
-                displayMessage('자기소개 업데이트 중 오류가 발생했습니다.', 'error');
+                displayMessage('자기소개 업데이트 중 오류가 발생했습니다.', 'error'); // Corrected: changed showMessage to displayMessage
             }
         }
     };
 
     const handleCancelEdit = () => {
-        setUserBio(currentUser.userBio || '');
+        setUserBio(currentUser.userBio || ''); // 기존 자기소개로 되돌리기
         setIsEditing(false);
     };
 
