@@ -21,7 +21,7 @@ function VotePageResult() {
 
   return (
     <div className="vote-result-container">
-      <div className="vote-result-header">다음달</div>
+      <div className="vote-result-header">다음달 선정 투표 현황</div>
 
       {voteData.map((item, index) => {
         const percent = ((item.viewCount / totalVotes) * 100).toFixed(1);

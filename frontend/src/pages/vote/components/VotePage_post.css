@@ -36,20 +36,34 @@
 
 /* 각 게시글 아이템 카드 */
 .post-item1 {
-  border: 2px solid var(--border-color);
+  border: 1px solid #757575;
   border-radius: 20px;
-  padding: 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
-  cursor: pointer; /* ✅ 커서가 손모양으로 바뀜 */
+  cursor: pointer;
+  color: #fff; /* 텍스트 색 전체 하얀색 */
 }
 
+/* 내부 링크 밑줄 제거 및 색 통일 */
+.post-item1 a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+/* 혹시 있을 다른 텍스트 태그들도 대비 */
+.post-item1 p,
+.post-item1 span,
+.post-item1 h3,
+.post-item1 h4 {
+  color: #c4c4c4;
+  text-decoration: none;
+}
+
+/* 마우스 호버 시 테두리 강조 및 부드러운 효과 */
 .post-item1 p{
   font-size:18px;
 

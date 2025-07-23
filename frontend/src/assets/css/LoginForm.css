@@ -33,6 +33,7 @@
   /* margin: 0 auto; 는 인라인 요소에 적용 안 됨 */
 }
 
+
 .form-control {
   display: inline-block;
   width: 300px;

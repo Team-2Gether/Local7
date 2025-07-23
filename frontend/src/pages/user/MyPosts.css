@@ -137,7 +137,7 @@
     text-align:left;
 }
 
-.post-list1 {
+.post-list1 .post-list1{
       width: 100%;        /* 또는 고정 너비: 400px 등 */
   max-width: 400px;
     padding: 0;

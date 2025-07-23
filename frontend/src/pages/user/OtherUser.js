@@ -147,17 +147,17 @@ function OtherUser({ currentUser }) {
                     />
                 </div>
                 <div className="OtherUser-user-details">
-                    <p><strong>아이디:</strong> {otherUserProfile.userLoginId}</p>
-                    <p><strong>닉네임:</strong> {otherUserProfile.userNickname}</p>
-                    <p><strong>이메일:</strong> {otherUserProfile.userEmail}</p>
-                    <p><strong>이름:</strong> {otherUserProfile.userName}</p>
-                    <p><strong>소개:</strong> {otherUserProfile.userBio || "작성된 소개가 없습니다."}</p>
-                    <p><strong>가입일:</strong> {new Date(otherUserProfile.createDate).toLocaleDateString()}</p>
+                    <p><strong>아이디 : </strong> {otherUserProfile.userLoginId}</p>
+                    <p><strong>닉네임 : </strong> {otherUserProfile.userNickname}</p>
+                    <p><strong>이메일 : </strong> {otherUserProfile.userEmail}</p>
+                    <p><strong>이름 : </strong> {otherUserProfile.userName}</p>
+                    <p><strong>소개 : </strong> {otherUserProfile.userBio || "작성된 소개가 없습니다."}</p>
+                    <p><strong>가입일 : </strong> {new Date(otherUserProfile.createDate).toLocaleDateString()}</p>
                     <p>
-                        <strong>팔로워:</strong> <Link to={`/user/profile/${otherUserProfile.userId}/followers`}>{followerCount}</Link>
+                        <strong>팔로워 : </strong> <Link to={`/user/profile/${otherUserProfile.userId}/followers`}>{followerCount}</Link>
                     </p>
                     <p>
-                        <strong>팔로잉:</strong> <Link to={`/user/profile/${otherUserProfile.userId}/followings`}>{followingCount}</Link>
+                        <strong>팔로잉 : </strong> <Link to={`/user/profile/${otherUserProfile.userId}/followings`}>{followingCount}</Link>
                     </p>
                 </div>
                 {showFollowButton && (
