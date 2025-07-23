@@ -83,7 +83,7 @@ function TermsAndPrivacyModal({ onClose }) {
     <li>서비스 이용과 관련한 분쟁은 회사의 본사 소재지를 관할하는 법원을 제1심 법원으로 합니다.</li>
   </ol>
 </div>
-        <button onClick={onClose} className="modal-close-button">X</button>
+        <div onClick={onClose} className="modal-close-button">X</div>
       </div>
     </div>
   );

@@ -81,7 +81,7 @@ function ForgetIdOrPWD({ onCloseModal }) {
             case 'requestEmail':
                 return (
                     <div>
-                        <h2>비밀번호 찾기</h2>
+                        <h2>비밀번호 재설정</h2>
                         <input
                             type="email"
                             placeholder="이메일 입력"
@@ -139,9 +139,11 @@ function ForgetIdOrPWD({ onCloseModal }) {
 
     return (
         <div className="forgetIdOrPWD-container">
-            <div className="forgetIdOrPWD-Btn" onClick={onCloseModal} >&times;</div>
-            {renderStepContent()}
-            {message && <p className="message">{message}</p>}
+            <div className="forgetIdOrPWD-container1">
+                <div className="forgetIdOrPWD-Btn" onClick={onCloseModal} >&times;</div>
+                {renderStepContent()}
+                {message && <p className="message">{message}</p>}             
+        </div>
         </div>
     );
 }

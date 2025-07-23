@@ -63,13 +63,6 @@ html, body {
 }
 
 
-.app-layout {
-    /* 기존 flex 및 컬러 유지하며, max-width와 중앙 정렬 추가 */
-    max-width: 1175px;
-    margin: 0 auto;
-    overflow-x: auto;
-}
-
 .map-description-container {
     display: flex;
     align-items: flex-start;
