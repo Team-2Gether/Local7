@@ -1,93 +1,63 @@
 import React from 'react';
-import {FaHome, FaUser, FaRobot, FaAward, FaBullhorn} from 'react-icons/fa';
+import {FaHome, FaUser, FaAward, FaBullhorn, FaRobot} from 'react-icons/fa';
 import { FaUserPlus } from "react-icons/fa6";
 import {RiAdminLine} from 'react-icons/ri';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate, Link } from 'react-router-dom'; 
 
 const Sidebar = ({ onMenuItemClick, currentUser }) => {
     const navigate = useNavigate(); 
 
-    const handleSidebarClick = (item) => {
-        if (item === "ai") {
-            onMenuItemClick(item); 
-        } else {
-            
-            onMenuItemClick(item); 
-            
-            // 라우팅 처리
-            if (item === "home")
-                navigate("/");
-            else if (item === "restaurants")
-                navigate("/restaurants");
-            else if (item === "posts")
-                navigate("/posts");
-            else if (item === "add")
-                navigate("/posts/new");
-            else if (item === "mypage")
-                navigate("/mypage");
-            else if (item === "pick")
-                navigate("/pick");
-            else if (item === "notice")
-                navigate("/notice");
-            else if (item === 'ai')
-                navigate("/ai");
-            else if (item === 'admin')
-                navigate("/admin"); 
-            else if (item === 'search-user') // Added route for SearchUser
-                navigate("/search-user");
-        }
-    };
-
     return (
         <div className="sidebar-container">
-            <button className="sidebar-button" onClick={() => handleSidebarClick('home')}>
+            <Link to="/" className="sidebar-button" >
                 <FaHome className="sidebar-icon"/>
                 <span>홈</span>
-            </button>
+            </Link>
 
             {/* pick 버튼: 이달의 여행지 순위 투표 */}
-            <button className="sidebar-button" onClick={() => handleSidebarClick('pick')}>
+            <Link to="/pick" className="sidebar-button" >
                 <FaAward className="sidebar-icon"/>
                 <span>TOP10</span>
-            </button>
+            </Link>
 
             {/*
-            <button className="sidebar-button" onClick={() => handleSidebarClick('restaurants')}>
+            <button className="sidebar-button" onClick={() => onMenuItemClick('restaurants')}>
                 <FaUtensils className="sidebar-icon" />
                 <span>주변 맛집</span>
             </button>
             */}
 
-            {/* <button className="sidebar-button" onClick={() => handleSidebarClick('posts')}>
+            {/* <button className="sidebar-button" onClick={() => onMenuItemClick('posts')}>
                 <FaListAlt className="sidebar-icon"/>
                 <span>스레드</span>
             </button> */}
 
-            <button className="sidebar-button" onClick={() => handleSidebarClick('mypage')}>
+            <Link to="/mypage" className="sidebar-button" >
                 <FaUser className="sidebar-icon"/>
                 <span>마이</span>
-            </button>
+            </Link>
 
-            <button className="sidebar-button" onClick={() => handleSidebarClick('search-user')}>
+            <Link to="/search-user" className="sidebar-button" >
                 <FaUserPlus className="sidebar-icon"/>
                 <span>유저 검색</span>
-            </button>
+            </Link>
 
-            <button className="sidebar-button" onClick={() => handleSidebarClick('notice')}>
+            <Link to="/notice" className="sidebar-button" >
                 <FaBullhorn className="sidebar-icon"/>
                 <span>공지/문의</span>
-            </button>
+            </Link>
 
-            <button className="sidebar-button" onClick={() => handleSidebarClick('ai')}>
+            {/* AI 버튼은 모달이므로 Link 대신 Button 유지 */}
+            <button className="sidebar-button" onClick={() => onMenuItemClick('ai')}>
                 <FaRobot className="sidebar-icon"/>
                 <span>R7봇</span>
             </button>
 
             {currentUser && currentUser.ruleId === 1 && (
-                <button className="sidebar-button" onClick={() => handleSidebarClick('admin')}>
+                <Link to="/admin" className="sidebar-button" >
                     <RiAdminLine className="sidebar-icon"/>
                     <span>관리자</span>
-                </button>
+                </Link>
             )}
 
         </div>

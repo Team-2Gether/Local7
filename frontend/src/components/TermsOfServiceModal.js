@@ -9,7 +9,7 @@ import './TermsOfServiceModal.css'; // 별도 CSS 파일을 import
 //          이 함수는 부모 컴포넌트에서 isOpen 상태를 false로 변경하는 역할을 해야 합니다.
 // onAgree: (선택) '동의하기' 버튼 클릭 시 호출될 함수. (showAgreeButton이 true일 때만 호출)
 // showAgreeButton: (선택, 기본값 true) '동의하기' 버튼을 표시할지 여부를 결정합니다.
-const TermsOfServiceModal = ({ isOpen, onClose, onAgree, showAgreeButton = true }) => {
+const TermsOfServiceModal = ({ isOpen, onClose }) => {
 
     // 모달이 열릴 때 body 스크롤 방지, 닫힐 때 스크롤 복원
     useEffect(() => {
@@ -119,9 +119,6 @@ const TermsOfServiceModal = ({ isOpen, onClose, onAgree, showAgreeButton = true 
                     </ol>
                 </div>
                 <div className="terms-of-service-footer">
-                    {showAgreeButton && (
-                        <button className="agree-button" onClick={onAgree}>동의하기</button>
-                    )}
                     <button className="close-button" onClick={onClose}>닫기</button>
                 </div>
             </div>

@@ -11,7 +11,7 @@ import NoticeForm from "./NoticeForm";
 import NoticeDetail from "./NoticeDetail";
 import "./Notice.css"; // CSS 파일은 그대로 유지
 
-function Notice({ currentUser, onMenuItemClick }) {
+function Notice({ currentUser }) {
   const navigate = useNavigate();
   const location = useLocation();
 

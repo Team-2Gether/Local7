@@ -139,7 +139,7 @@ function ForgetIdOrPWD({ onCloseModal }) {
 
     return (
         <div className="forgetIdOrPWD-container">
-            <button onClick={onCloseModal} style={{ position: 'absolute', top: '10px', right: '10px', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#fff' }}>&times;</button>
+            <button className="forgetIdOrPWD-Btn" onClick={onCloseModal} style={{ position: 'absolute', top: '10px', right: '10px', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#fff' }}>&times;</button>
             {renderStepContent()}
             {message && <p className="message">{message}</p>}
         </div>
