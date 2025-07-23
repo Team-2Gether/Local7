@@ -61,7 +61,7 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2 -> oauth2
                         // Google 로그인 성공 후 백엔드 컨트롤러 엔드포인트로 리다이렉트
-                        .defaultSuccessUrl("http://localh  ost:8080/api/auth/login/oauth2/code/google", true)
+                        .defaultSuccessUrl("http://localhost:8080/api/auth/login/oauth2/code/google", true)
                         .successHandler((request, response, authentication) -> {
                             if (authentication instanceof OAuth2AuthenticationToken) {
                                 OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
