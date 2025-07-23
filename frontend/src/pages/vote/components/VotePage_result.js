@@ -28,9 +28,18 @@ function VotePageResult() {
         return (
           <div className="vote-result-row" key={item.regionId}>
             <div className="vote-result-rank">{index + 1}</div>
-            <div className="vote-result-region">{item.krName}</div>
+            <div
+              className={`vote-result-region ${
+                index === 0 ? 'first-rank' : ''
+              }`}
+            >
+              {item.krName}
+            </div>
             <div className="bar-container">
-              <div className="bar" style={{ width: `${percent}%` }}></div>
+              <div
+                className={`bar ${index === 0 ? 'first-rank' : ''}`}
+                style={{ width: `${percent}%` }}
+              ></div>
             </div>
             <div className="percent">{percent}%</div>
           </div>

@@ -334,6 +334,25 @@
   color: #ffcc00;
 }
 
+/* 1위 지역 애니메이션 */
+.first-rank {
+  animation: glow 1.5s infinite ease-in-out;
+  color: #ffd700;
+  font-weight: bold;
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 5px #ffd700, 0 0 10px #ffa500;
+  }
+  50% {
+    text-shadow: 0 0 15px #ffff00, 0 0 30px #ffa500;
+  }
+  100% {
+    text-shadow: 0 0 5px #ffd700, 0 0 10px #ffa500;
+  }
+}
+
 /* 지역명 텍스트 박스
    - 고정 너비 140px
    - 글자 크기 및 색상 지정 */
@@ -369,6 +388,32 @@
   }
 }
 
+/* 1위 막대 빛나는 효과 */
+@keyframes pulseGlow {
+  0%,
+  100% {
+    filter: brightness(0.5);
+    box-shadow: 0 0 10px rgba(0, 198, 255, 0.6);
+  }
+  50% {
+    filter: brightness(2);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.9);
+  }
+}
+
+/* 1위 지역 이름 반짝임 효과 */
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 5px #ffd700, 0 0 10px #ffa500;
+  }
+  50% {
+    text-shadow: 0 0 15px #ffff00, 0 0 30px #ffa500;
+  }
+  100% {
+    text-shadow: 0 0 5px #ffd700, 0 0 10px #ffa500;
+  }
+}
+
 /* 투표 바 스타일
    - 높이 100%
    - 그라데이션 배경, 둥근 모서리, 파란빛 그림자
@@ -380,6 +425,16 @@
   border-radius: 999px;
   box-shadow: 0 0 10px rgba(0, 198, 255, 0.7);
   animation: fillBar 1.5s ease-out forwards;
+  transition: width 1.2s ease;
+}
+
+/* 1위 막대 전용 반짝임 애니메이션 */
+.bar.first-rank {
+  height: 100%;
+  background: linear-gradient(90deg, #00f0ff, #0072ff, #5f27cd);
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(0, 198, 255, 0.7);
+  animation: fillBar 1.5s ease-out forwards, pulseGlow 1.5s ease-in-out infinite;
   transition: width 1.2s ease;
 }
 
