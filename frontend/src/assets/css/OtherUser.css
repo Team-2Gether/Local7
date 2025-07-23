@@ -1,199 +1,120 @@
-/* OtherUserPosts.css */
-/* 리액트 컴포넌트 만들때 classname 작명규칙은 function 이름을 앞에 붙여줘 */
-.OtherUser-page{
-    width: 80%;
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* === OtherUser 페이지 메인 컨테이너 === */
+.OtherUser-page {
+    width: 80vw;               /* 화면의 90% 사용 → 너무 벌어지지 않음 */
+    max-width: 1200px;         /* 데스크탑에서 너무 넓어지지 않게 제한 */
+    min-width: 360px;          /* 너무 작아지지 않게 제한 */
+    margin: 40px auto;         /* 화면 중앙 정렬 */
+    padding: 80px;
+    background-color: #353535;
+    box-sizing: border-box;
+    overflow: hidden;          /* 내부가 넘치지 않도록 */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
-.OtherUserPosts-section {
-
+/* === 사용자 프로필 정보 영역 === */
+.OtherUser-info-section {
+    background-color: #2c2c2c;
+    padding: 25px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    color: #f1f1f1;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.OtherUserPosts-section-title { /* classname 변경 */
-    font-size: 1.8em;
-    color: #333;
+/* 프로필 제목 */
+.OtherUser-profile-title {
+    font-size: 2em;
+    color: #ffd700;
     margin-bottom: 20px;
     text-align: center;
-    border-bottom: 2px solid #eee;
+    border-bottom: 2px solid #FFCC00;
     padding-bottom: 10px;
 }
 
-.OtherUserPosts-section.loading,
-.OtherUserPosts-section.error-message,
-.OtherUserPosts-section.no-posts {
+/* 프로필 이미지 영역 */
+.OtherUser-profile-image-container {
     text-align: center;
-    font-size: 1.2em;
-    color: #555;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
 }
 
-.OtherUserPosts-section.error-message {
-    color: #d9534f;
-    background-color: #f2dede;
-    border: 1px solid #ebccd1;
-}
-
-.OtherUserPosts-post-list { /* classname 변경 */
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.OtherUserPosts-post-item { /* classname 변경 */
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.OtherUserPosts-post-item:hover { /* classname 변경 */
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.OtherUserPosts-post-link { /* classname 변경 */
-    text-decoration: none;
-    color: inherit;
-    display: block; /* Link 전체 영역 클릭 가능하게 */
-}
-
-.OtherUserPosts-post-title { /* classname 변경 */
-    font-size: 1.5em;
-    color: #007bff;
-    margin-top: 0;
-    margin-bottom: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.OtherUserPosts-post-content { /* classname 변경 */
-    font-size: 1em;
-    color: #555;
-    margin-bottom: 10px;
-    line-height: 1.5;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* 3줄 이상 넘어가면 생략 */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.OtherUserPosts-post-meta { /* classname 변경 */
-    font-size: 0.9em;
-    color: #888;
-    margin-bottom: 10px;
-}
-
-.OtherUserPosts-post-images { /* classname 변경 */
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-}
-
-.OtherUserPosts-post-image-thumbnail { /* classname 변경 */
-    width: 80px;
-    height: 80px;
+.OtherUser-profile-image {
+    width: 300px;
+    height: 300px;
     object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid #eee;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
-.OtherUserPosts-post-comments { /* classname 변경 */
-    font-size: 0.9em;
-    color: #007bff;
-    margin-top: 10px;
-    text-align: right;
-}
-
-.OtherUserPosts-pagination-controls { /* classname 변경 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 30px;
-    gap: 15px;
-}
-
-.OtherUserPosts-pagination-button { /* classname 변경 */
+/* 사용자 상세 정보 */
+.OtherUser-user-details {
+    color: #ddd;
+    line-height: 1.8;
     padding: 10px 20px;
+}
+
+.OtherUser-user-details p {
+    font-size: 1.2em;
+    margin: 5px 150px;
+    text-align: left;
+}
+
+/* 팔로우 버튼 */
+.OtherUser-follow-button {
+    display: block;
+    margin: 20px auto 0;
+    padding: 12px 24px;
     font-size: 1em;
-    color: #fff;
-    background-color: #007bff;
+    background-color: #FFCC00;
+    color: rgb(0, 0, 0);
     border: none;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.OtherUserPosts-pagination-button:hover:not(:disabled) { /* classname 변경 */
-    background-color: #0056b3;
+.OtherUser-follow-button:hover {
+    background-color: #a78500;
 }
 
-.OtherUserPosts-pagination-button:disabled { /* classname 변경 */
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-.OtherUserPosts-page-info { /* classname 변경 */
-    font-size: 1.1em;
-    color: #333;
-    min-width: 100px; /* 가운데 정렬을 위해 너비 확보 */
-    text-align: center;
-}
-
-/* Optional: Add some responsiveness */
+/* === 반응형 === */
 @media (max-width: 768px) {
-    .OtherUserPosts-section {
-        margin: 10px;
-        padding: 15px;
+    .OtherUser-page {
+        width: 90vw;
     }
 
-    .OtherUserPosts-section-title { /* classname 변경 */
-        font-size: 1.5em;
+    .OtherUser-profile-title {
+        font-size: 1.6em;
     }
 
-    .OtherUserPosts-post-title { /* classname 변경 */
-        font-size: 1.3em;
-    }
-
-    .OtherUserPosts-post-content { /* classname 변경 */
+    .OtherUser-user-details {
         font-size: 0.95em;
+        padding: 5px 10px;
     }
 
-    .OtherUserPosts-pagination-button { /* classname 변경 */
-        padding: 8px 15px;
-        font-size: 0.9em;
-    }
-
-    .OtherUserPosts-page-info { /* classname 변경 */
+    .OtherUser-follow-button {
+        width: 100%;
         font-size: 1em;
+    }
+
+    .OtherUser-profile-image {
+        width: 120px;
+        height: 120px;
     }
 }
 
 @media (max-width: 480px) {
-    .OtherUserPosts-post-item { /* classname 변경 */
-        padding: 10px;
+    .OtherUser-profile-title {
+        font-size: 1.4em;
     }
 
-    .OtherUserPosts-post-title { /* classname 변경 */
-        font-size: 1.2em;
+    .OtherUser-profile-image {
+        width: 100px;
+        height: 100px;
     }
 
-    .OtherUserPosts-post-content { /* classname 변경 */
-        font-size: 0.9em;
-    }
-
-    .OtherUserPosts-post-image-thumbnail { /* classname 변경 */
-        width: 60px;
-        height: 60px;
+    .OtherUser-follow-button {
+        font-size: 0.95em;
+        padding: 10px 15px;
     }
 }
