@@ -10,7 +10,7 @@ function ForgetIdOrPWD({ onCloseModal }) {
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [message, setMessage] = useState('');
-    const [step, setStep] = useState('requestEmail'); // 'requestEmail', 'verifyCode', 'resetPassword', 'completed'
+    const [step, setStep] = useState('completed'); // 'requestEmail', 'verifyCode', 'resetPassword', 'completed'
 
     // 이메일로 인증 코드 전송
     const handleSendCode = async () => {
