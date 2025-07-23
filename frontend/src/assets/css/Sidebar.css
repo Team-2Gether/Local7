@@ -33,8 +33,10 @@
     align-items: center;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    border-radius: 5px;
+    text-decoration: none;
+  color: inherit; /* 기본 텍스트 색상 유지하고 싶을 때 */
 }
+
 
 .sidebar-button:hover {
     background-color: #575757;
