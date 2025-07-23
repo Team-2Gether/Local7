@@ -28,11 +28,10 @@
     font-size: 1rem;
     color: #555;
     margin-bottom: 10px;
-    text-align: left;
 }
 
 .user-details p strong {
-    color: #FFCC00;
+    color: #333;
     width: 80px; /* 라벨 너비 고정 */
     display: inline-block;
 }
