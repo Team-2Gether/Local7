@@ -6,6 +6,7 @@
     margin-bottom: 20px;
 }
 
+
 .forgetIdOrPWD-container input[type="email"],
 .forgetIdOrPWD-container input[type="text"],
 .forgetIdOrPWD-container input[type="password"] {
@@ -81,7 +82,7 @@
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #555;
-    border-radius: 5px;
+    border-radius: 20px;
     background-color: #333;
     color: #fff;
     box-sizing: border-box;
