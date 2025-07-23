@@ -77,7 +77,7 @@ public class SecurityConfig {
                                     response.sendRedirect("http://localhost:8080/api/auth/login/oauth2/code/google");
                                 } else {
                                     // 다른 OAuth2 공급자에 대한 기본 처리 또는 오류 처리
-                                    response.sendRedirect("http://localhost:3000/login");
+                                    response.sendRedirect("http://localhost:3000/");
                                 }
                             } else {
                                 // 일반 로그인 또는 다른 인증 방식에 대한 처리
