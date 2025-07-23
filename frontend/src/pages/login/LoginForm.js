@@ -5,6 +5,8 @@ import AppLogo from './components/AppLogo';
 import LoginFormComponent from './components/LoginFormComponent';
 import LoginFormLinks from './components/LoginFormLinks';
 import useLogin from './hooks/useLogin';
+import { FcGoogle } from "react-icons/fc";
+import { SiKakaotalk } from "react-icons/si";
 
 // onOpenSignupModal, onOpenForgetIdPwdModal props 추가
 function LoginForm({ onLoginSuccess, onCloseModal, onOpenTermsModal, onOpenSignupModal, onOpenForgetIdPwdModal }) {
@@ -47,10 +49,10 @@ function LoginForm({ onLoginSuccess, onCloseModal, onOpenTermsModal, onOpenSignu
       {/* 소셜 로그인 버튼 추가 */}
       <div className="social-login-section">
         <button className="google-login-button" onClick={handleGoogleLogin}>
-          Google로 로그인
+          <FcGoogle  size={40}/>
         </button>
         <button className="kakao-login-button" onClick={handleKakaoLogin}>
-          카카오로 로그인
+          <SiKakaotalk  size={40} color='orange'/>
         </button>
       </div>
     </div>

@@ -21,7 +21,7 @@
 
 .form-group {
   margin: 0 auto 3px auto;  /* 상단 0, 하단 15px, 좌우 auto로 중앙 정렬 */
-  margin-left:-2.4%;
+  margin-left:-3.8%;
   width: 100%;                /* 너비 설정 (필요에 따라 조정) */
 }
 
@@ -94,7 +94,7 @@
   justify-content: space-around; /* Distribute links evenly */
   width: 100%;
   max-width: 300px;
-  margin-bottom: 50px; /* Space below links to the "사이트 소개" button */
+  margin-bottom: 10px; /* Space below links to the "사이트 소개" button */
 }
 
 .links-container a {
@@ -106,4 +106,26 @@
 
 .links-container a:hover {
   color: #6a9cfd; /* Blue on hover for links */
+}
+
+.social-login-container {
+    display: flex;
+  justify-content: space-between; /* ← 양쪽으로 벌리기 */
+  gap: 50px;
+}
+
+.google-login-button,
+.kakao-login-button {
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #000000; /* 공통 배경색 */
+  color: white;
+  padding: 10px 25px;
+  border-radius: 100px;
+  transition: background-color 0.3s ease;
+}
+.google-login-button:hover,
+.kakao-login-button:hover {
+  background-color: #2c2c2c;
 }

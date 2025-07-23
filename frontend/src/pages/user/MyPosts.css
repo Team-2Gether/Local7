@@ -139,7 +139,7 @@
 
 .post-list1 {
       width: 100%;        /* 또는 고정 너비: 400px 등 */
-  max-width: 440px;
+  max-width: 400px;
     padding: 0;
     margin: 0;
     display: flex;
