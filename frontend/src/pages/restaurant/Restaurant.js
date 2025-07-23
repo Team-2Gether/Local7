@@ -102,7 +102,9 @@ function Restaurant({ currentUser }) {
 
   // 검색창, 정렬, 카테고리 변경 시 페이지네이션 초기화
   useEffect(() => {
-    handlePageChange(0); // 페이지네이션을 첫 페이지로 초기화
+    if (currentPage !== 0) { // 현재 페이지가 0이 아닌 경우에만 초기화
+      handlePageChange(0);
+    } 
   }, [searchTerm, activeSortBy, selectedMainCategory, selectedSubCategory, handlePageChange]);
 
   if (loading) {

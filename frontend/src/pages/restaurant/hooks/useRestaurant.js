@@ -338,11 +338,11 @@ export const usePagination = (items, pageSize) => {
         return items.slice(start, end);
     }, [items, currentPage, pageSize]);
 
-    const handlePageChange = (newPage) => {
+    const handlePageChange = useCallback((newPage) => {
         if (newPage >= 0 && newPage < totalPages) {
             setCurrentPage(newPage);
         }
-    };
+    }, [totalPages]);
 
     return {paginatedItems, currentPage, totalPages, handlePageChange};
 };
