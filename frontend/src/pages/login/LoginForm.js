@@ -21,6 +21,11 @@ function LoginForm({ onLoginSuccess, onCloseModal, onOpenTermsModal, onOpenSignu
     window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   };
 
+  const handleKakaoLogin = () => {
+    // Spring Boot의 Kakao OAuth2 시작 엔드포인트로 리다이렉트
+    window.location.href = 'http://localhost:8080/oauth2/authorization/kakao';
+  };
+
   return (
     <div className="login-form-container">
       <AppLogo />
@@ -39,10 +44,13 @@ function LoginForm({ onLoginSuccess, onCloseModal, onOpenTermsModal, onOpenSignu
         onOpenForgetIdPwdModal={onOpenForgetIdPwdModal}
       />
 
-      {/* Google 로그인 버튼 추가 */}
+      {/* 소셜 로그인 버튼 추가 */}
       <div className="social-login-section">
         <button className="google-login-button" onClick={handleGoogleLogin}>
           Google로 로그인
+        </button>
+        <button className="kakao-login-button" onClick={handleKakaoLogin}>
+          카카오로 로그인
         </button>
       </div>
     </div>

@@ -145,6 +145,59 @@ public class LoginController {
         }
     }
 
+    // 카카오 로그인 성공 후 백엔드로 이동 -> 백엔드에서 프론트엔드로 리다이렉트
+    @GetMapping("/login/oauth2/code/kakao")
+    public RedirectView kakaoLoginSuccess(@AuthenticationPrincipal OAuth2User oauth2User, HttpSession session) {
+        if (oauth2User != null) {
+            Map<String, Object> kakaoAccount = oauth2User.getAttribute("kakao_account");
+            String email = null;
+            if (kakaoAccount != null) {
+                email = (String) kakaoAccount.get("email"); // 이메일은 null일 수 있음
+            }
+
+            Map<String, Object> profile = oauth2User.getAttribute("properties");
+            String nickname = null;
+            String profileImage = null;
+            if (profile != null) {
+                nickname = (String) profile.get("nickname");
+                profileImage = (String) profile.get("profile_image");
+            }
+
+            try {
+                // OAuth 사용자 정보 처리 (신규 등록 또는 기존 사용자 업데이트)
+                // 카카오 로그인 시 이메일은 null일 수 있으므로, email이 null이면 nickname을 userLoginId로 사용
+                // processOAuthUser의 첫번째 인자 (email)를 null 허용하도록 변경
+                LoginVO user = loginService.processOAuthUser(email, nickname, profileImage);
+
+                // 세션에 사용자 정보 저장
+                session.setAttribute("isLoggedIn", true);
+                session.setAttribute("userId", user.getUserId());
+                session.setAttribute("userLoginId", user.getUserLoginId());
+                session.setAttribute("userName", user.getUsername());
+                session.setAttribute("userNickname", user.getUserNickname());
+                session.setAttribute("userEmail", user.getUserEmail());
+                session.setAttribute("userProfileImageUrl", user.getUserProfileImageUrl());
+                session.setAttribute("userBio", user.getUserBio());
+                session.setAttribute("ruleId", user.getRuleId());
+                session.setAttribute("createDate", user.getCreateDate());
+                session.setAttribute("createdId", user.getCreatedId());
+                session.setAttribute("updatedDate", user.getUpdatedDate());
+                session.setAttribute("updatedId", user.getUpdatedId());
+
+                // 프론트엔드 메인 페이지로 리다이렉트
+                return new RedirectView("http://localhost:3000/");
+            } catch (Exception e) {
+                System.err.println("Error processing Kakao OAuth user: " + e.getMessage());
+                // 오류 발생 시 로그인 실패 페이지 또는 메인 페이지로 리다이렉트 (필요에 따라 변경)
+                return new RedirectView("http://localhost:3000/login"); // 예시: 로그인 페이지로 리다이렉트
+            }
+        } else {
+            // OAuth2User가 null인 경우 (로그인 실패)
+            return new RedirectView("http://localhost:3000/login"); // 예시: 로그인 페이지로 리다이렉트
+        }
+    }
+
+
     private Map<String, Object> createErrorResponse(String code, String message) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "error");

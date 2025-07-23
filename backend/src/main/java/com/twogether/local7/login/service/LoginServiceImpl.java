@@ -39,14 +39,23 @@ public class LoginServiceImpl implements LoginService {
     // 새롭게 추가된 부분
     @Override
     public LoginVO processOAuthUser(String email, String name, String picture) {
-        LoginVO user = loginDAO.findByUserEmail(email); // 이메일로 사용자 조회
+        LoginVO user = null;
+        if (email != null && !email.isEmpty()) {
+            user = loginDAO.findByUserEmail(email); // 이메일로 사용자 조회 (이메일이 있는 경우)
+        } else {
+            // 이메일이 없는 경우 (카카오 같은 경우), nickname으로 사용자 조회 시도 (선택 사항)
+            // 여기서는 일단 이메일이 없는 경우 신규 사용자로 간주
+            // 실제 구현에서는 nickname 등을 활용하여 기존 사용자인지 판단할 수 있음
+        }
+
 
         if (user == null) {
             // 신규 사용자인 경우
             user = new LoginVO();
-            user.setUserEmail(email);
+            user.setUserEmail(email); // 이메일은 null일 수 있음
             user.setUserName(name);
-            user.setUserLoginId(email); // OAuth 사용자의 userLoginId는 이메일로 설정
+            // OAuth 사용자의 userLoginId는 이메일이 없으면 닉네임으로 설정
+            user.setUserLoginId(email != null ? email : name + "_kakao"); // 카카오 로그인 시 이메일이 없으면 닉네임 + "_kakao"로 설정
             user.setUserProfileImageUrl(picture);
             user.setRuleId(2L); // 예시: 일반 사용자 권한 (필요에 따라 변경)
             user.setCreateDate(new Timestamp(System.currentTimeMillis())); // 현재 시간으로 생성 시간 설정
@@ -57,7 +66,7 @@ public class LoginServiceImpl implements LoginService {
             user.setUserPassword(null); // OAuth 사용자는 비밀번호 없음
 
             loginDAO.insertOAuthUser(user); // 새로운 OAuth 사용자 삽입
-            System.out.println("New Google user registered: " + email);
+            System.out.println("New OAuth user registered: " + (email != null ? email : name));
         } else {
             // 기존 사용자인 경우 (정보 업데이트)
             user.setUserName(name);
@@ -65,7 +74,7 @@ public class LoginServiceImpl implements LoginService {
             user.setUpdatedDate(new Timestamp(System.currentTimeMillis())); // 현재 시간으로 업데이트 시간 설정
             user.setUpdatedId("SYSTEM_OAUTH"); // 업데이트자 ID 설정 (예: SYSTEM_OAUTH)
             loginDAO.updateOAuthUser(user); // 기존 OAuth 사용자 정보 업데이트
-            System.out.println("Existing Google user updated: " + email);
+            System.out.println("Existing OAuth user updated: " + (email != null ? email : name));
         }
         return user;
     }
