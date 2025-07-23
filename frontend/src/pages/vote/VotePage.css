@@ -392,7 +392,7 @@
 @keyframes pulseGlow {
   0%,
   100% {
-    filter: brightness(0.5);
+    filter: brightness(1);
     box-shadow: 0 0 10px rgba(0, 198, 255, 0.6);
   }
   50% {
@@ -434,7 +434,7 @@
   background: linear-gradient(90deg, #00f0ff, #0072ff, #5f27cd);
   border-radius: 999px;
   box-shadow: 0 0 10px rgba(0, 198, 255, 0.7);
-  animation: fillBar 1.5s ease-out forwards, pulseGlow 1.5s ease-in-out infinite;
+  animation: fillBar 1.5s ease-out forwards, pulseGlow 2.5s ease-in-out infinite;
   transition: width 1.2s ease;
 }
 
