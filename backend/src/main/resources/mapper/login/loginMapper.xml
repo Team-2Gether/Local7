@@ -82,13 +82,14 @@
         ) VALUES (
         #{userId},
         #{userLoginId},
-        #{userEmail, jdbcType=VARCHAR}, #{userName},
+        COALESCE(#{userEmail, jdbcType=VARCHAR}, ''), #{userName},
         #{userProfileImageUrl, jdbcType=VARCHAR},
         #{ruleId},
         #{createDate},
         #{createdId},
         COALESCE(#{userPassword, jdbcType=VARCHAR}, 'NO_PASSWORD_OAUTH'),
-        COALESCE(#{userNickname, jdbcType=VARCHAR}, 'Kakao_User'), COALESCE(#{userBio, jdbcType=VARCHAR}, 'Self-introduction not provided.')
+        COALESCE(#{userNickname, jdbcType=VARCHAR}, 'Kakao_User'),
+        COALESCE(#{userBio, jdbcType=VARCHAR}, 'Self-introduction not provided.')
         )
     </insert>
 
