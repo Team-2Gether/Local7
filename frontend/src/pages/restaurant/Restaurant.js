@@ -229,11 +229,11 @@ function Restaurant({ currentUser }) {
 
         {/* 페이지네이션 컨트롤 */}
         <div className="pagination">
-          <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
+          <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0} className="pagination-button">
             이전
           </button>
           <span>{currentPage + 1} / {totalPages} ({categorizedRestaurants.length}개)</span>
-          <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage + 1 >= totalPages}>
+          <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage + 1 >= totalPages} className="pagination-button">
             다음
           </button>
         </div>
