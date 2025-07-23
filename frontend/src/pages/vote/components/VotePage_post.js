@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { FaUser, FaHeart, FaMapMarkerAlt, FaFileAlt, FaCalendarAlt } from 'react-icons/fa';
+import {
+  FaUser,
+  FaHeart,
+  FaMapMarkerAlt,
+  FaFileAlt,
+  FaCalendarAlt,
+} from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './VotePage_post.css';
 
 function VotePagePost() {
   const [posts, setPosts] = useState([]);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   //벡엔드 호출
   useEffect(() => {
@@ -29,10 +35,18 @@ function VotePagePost() {
       <h2>Like TOP 10</h2>
       <div className="post-list">
         {posts.map((post, index) => (
-          <div key={post.postId} className="post-item1" onClick={() => handlePostClick(post.postId)}>
+          <div
+            key={post.postId}
+            className="post-item1"
+            onClick={() => handlePostClick(post.postId)}
+          >
             <p className="rank">NO.{index + 1}</p> {/*순위 표시*/}
             <div className="post-item-img">
-              <img className="post-img" src={`data:image/jpeg;base64,${post.imageUrl}`} alt="post" />
+              <img
+                className="post-img"
+                src={`data:image/jpeg;base64,${post.imageUrl}`}
+                alt="post"
+              />
             </div>
             <div className="user-info55">
               <img
@@ -42,10 +56,18 @@ function VotePagePost() {
               />
               <p className="user-nickname">{post.userNickname}</p>
             </div>
-            <p><FaHeart /> {post.userCount} like</p>
-            <p><FaMapMarkerAlt /> {post.locationTag}</p>
-            <p><FaFileAlt /> {post.postContent}</p>
-            <p><FaCalendarAlt /> {post.createdDate}</p>
+            <p>
+              <FaHeart /> {post.userCount} like
+            </p>
+            <p>
+              <FaMapMarkerAlt /> {post.locationTag}
+            </p>
+            <p>
+              <FaFileAlt /> {post.postContent}
+            </p>
+            <p>
+              <FaCalendarAlt /> {post.createdDate}
+            </p>
           </div>
         ))}
       </div>

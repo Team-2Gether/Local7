@@ -33,8 +33,11 @@ function VotePage() {
   };
 
   useEffect(() => {
-    fetchUserStatus();
-    fetchRegions();
+    const init = async () => {
+      fetchUserStatus();
+      fetchRegions();
+    };
+    init();
   }, []);
 
   useEffect(() => {
@@ -43,7 +46,9 @@ function VotePage() {
 
   const fetchUserStatus = async () => {
     try {
-      const res = await axios.get('http://localhost:8080/api/auth/status', { withCredentials: true });
+      const res = await axios.get('http://localhost:8080/api/auth/status', {
+        withCredentials: true,
+      });
       setUserId(res.data.isLoggedIn ? res.data.userId : null);
     } catch (err) {
       console.error('로그인 상태 확인 실패', err);
@@ -52,11 +57,18 @@ function VotePage() {
 
   const fetchUserVoteStatus = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/api/vote/user/${userId}`, { withCredentials: true });
-      if (res.data && res.data.hasVoted === 'Y') {
+      const res = await axios.get('http://localhost:8080/api/vote/userId', {
+        withCredentials: true,
+      });
+
+      const voteData = Array.isArray(res.data) ? res.data[0] : res.data;
+
+      console.log('user vote 상태', voteData);
+      console.log('hasVoted 설정:', voteData.hasVoted === 'Y');
+      if (voteData && voteData.hasVoted === 'Y') {
         setHasVoted(true);
-        setSelectedOption(res.data.regionId);
-        const idx = regions.findIndex(r => r.key === res.data.regionId);
+        setSelectedOption(voteData.regionId);
+        const idx = regions.findIndex((r) => r.key === voteData.regionId);
         if (idx >= 0) setSlideIndex(idx);
       }
     } catch (err) {
@@ -66,13 +78,18 @@ function VotePage() {
 
   const fetchRegions = async () => {
     try {
-      const res = await axios.get('http://localhost:8080/api/vote/regions', { withCredentials: true });
+      const res = await axios.get('http://localhost:8080/api/vote/regions', {
+        withCredentials: true,
+      });
 
       // API에서 imgUrl이 없으면 지역명 매핑 함수로 기본 경로 할당
-      const regionsWithImg = res.data.map(region => ({
+      const regionsWithImg = res.data.map((region) => ({
         key: region.regionId,
         name: region.krName,
-        imgUrl: region.imgUrl && region.imgUrl.trim() !== '' ? region.imgUrl : getImageByRegionName(region.krName),
+        imgUrl:
+          region.imgUrl && region.imgUrl.trim() !== ''
+            ? region.imgUrl
+            : getImageByRegionName(region.krName),
         voteCount: region.voteCount || 0,
       }));
 
@@ -150,7 +167,7 @@ function VotePage() {
           >
             이달의 여행지
           </div>
-            <div
+          <div
             className={selectedTap === 'result' ? 'tap selected-tap' : 'tap'}
             onClick={() => handleTapClick('result')}
           >
@@ -163,8 +180,10 @@ function VotePage() {
             이달의 게시물
           </div>
         </div>
-        <p className="best-reigon">이번달의 선정지는
-        <p className="best-reigon1">{topRegionName}</p></p>
+        <p className="best-reigon">
+          이번달의 선정지는
+          <p className="best-reigon1">{topRegionName}</p>
+        </p>
       </div>
 
       {selectedTap === 'place' && (
@@ -173,7 +192,11 @@ function VotePage() {
           <div className="vote-main-content">
             {regions.length > 0 && (
               <div className="slide-container">
-                <button className="slide-btn prev" onClick={prevSlide} aria-label="이전 이미지">
+                <button
+                  className="slide-btn prev"
+                  onClick={prevSlide}
+                  aria-label="이전 이미지"
+                >
                   &#10094;
                 </button>
                 <div className="slide-content">
@@ -185,19 +208,28 @@ function VotePage() {
                   />
                   <div className="slide-label">{regions[slideIndex].name}</div>
                 </div>
-                <button className="slide-btn next" onClick={nextSlide} aria-label="다음 이미지">
+                <button
+                  className="slide-btn next"
+                  onClick={nextSlide}
+                  aria-label="다음 이미지"
+                >
                   &#10095;
                 </button>
               </div>
             )}
 
-            <div className="vote-controls" style={{ zIndex: 2, position: 'relative' }}>
+            <div
+              className="vote-controls"
+              style={{ zIndex: 2, position: 'relative' }}
+            >
               <div className="vote-buttons">
                 {regions.map((region, index) => (
                   <button
                     key={region.key}
                     onClick={() => handleRegionClick(region.key, index)}
-                    className={selectedOption === region.key ? 'selected-region' : ''}
+                    className={
+                      selectedOption === region.key ? 'selected-region' : ''
+                    }
                     disabled={hasVoted}
                     type="button"
                   >
