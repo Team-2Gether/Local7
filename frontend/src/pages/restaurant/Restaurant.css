@@ -134,10 +134,13 @@
 /* 음식점 목록 헤더 */
 .restaurant-list-header {
   display: flex;
+  /* 제목(h2)과 controls-group을 양쪽 끝으로 정렬 */
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
   padding: 0 6px;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .restaurant-list-header h2 {
@@ -146,12 +149,24 @@
   user-select: none;
   color:white;
   border-bottom: 2px solid #ffcc00;
+  flex-shrink: 0;
+}
+
+/* 정렬 버튼 그룹과 카테고리 드롭다운을 포함하는 새로운 컨테이너 */
+.controls-group {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 카테고리 드롭다운과 정렬 버튼 그룹 사이 간격 (기존 15px에서 8px로 조정) */
+    flex-wrap: wrap;
+    /* controls-group 내부에서 요소들을 오른쪽으로 정렬 */
+    justify-content: flex-end; /* 이 부분이 중요! */
 }
 
 /* 정렬 버튼 그룹 - Home 탭 버튼 스타일과 동일하게 통일 */
 .sort-buttons1 {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .sort-buttons1 button {
@@ -175,6 +190,54 @@
   background: #FFCC00;
   color: #000;
   border-color: #FFCC00;
+}
+
+/* 카테고리 필터링 드롭다운 컨테이너 */
+.category-filter-container {
+    display: flex;
+    gap: 8px; /* 드롭다운 간 간격 */
+    flex-wrap: wrap;
+}
+
+/* 드롭다운 버튼 스타일 - 기존 버튼 스타일과 유사하게 적용 */
+.category-dropdown {
+    background: #444;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    font-weight: 600;
+    user-select: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    /* 기본 드롭다운 화살표 숨기기 및 커스텀 화살표 (필요시) */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.9a17.6%2017.6%200%200%200-24.8%200L146.2%20186.1%2030.2%2069.9A17.6%2017.6%200%200%200%205.4%2094.7l130.8%20130.8a17.6%2017.6%200%200%200%2024.8%200L287%2094.7a17.6%2017.6%200%200%200%200-24.8z%22%20%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px;
+    padding-right: 35px; /* 화살표 공간 확보 */
+}
+
+.category-dropdown:hover {
+  border-color: #FFCC00;
+}
+
+.category-dropdown:focus {
+    outline: none;
+    border-color: #FFCC00;
+    box-shadow: 0 0 0 2px rgba(255, 204, 0, 0.5); /* 포커스 시 노란색 테두리 */
+}
+
+.category-dropdown:disabled {
+    background: #333;
+    color: #777;
+    cursor: not-allowed;
+    border-color: #333;
+    box-shadow: none;
 }
 
 /* 검색 영역 */
@@ -294,5 +357,27 @@
 
   .search-container input[type="text"] {
     font-size: 0.9rem;
+  }
+
+  .restaurant-list-header {
+      flex-direction: column; /* 모바일에서 세로로 정렬 */
+      align-items: flex-start; /* 왼쪽 정렬 */
+  }
+
+  .controls-group {
+      flex-direction: column; /* 모바일에서 세로로 정렬 */
+      align-items: flex-start; /* 왼쪽 정렬 */
+      width: 100%; /* 너비 100% 사용 */
+  }
+
+  .sort-buttons1,
+  .category-filter-container {
+      width: 100%; /* 모바일에서 너비 100% 사용 */
+      justify-content: flex-start; /* 왼쪽 정렬 */
+  }
+
+  .category-dropdown {
+      width: 100%; /* 모바일에서 드롭다운 너비 100% */
+      box-sizing: border-box; /* 패딩, 보더 포함 너비 계산 */
   }
 }
