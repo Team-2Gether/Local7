@@ -119,10 +119,6 @@
 
 /* 입력 + 버튼 묶음 */
 
-.input-with-button {
-    display: flex;
-}
-
 .input-with-button input {
     flex-grow: 1;
     padding: 12px;
@@ -145,7 +141,6 @@ button {
 .check-button {
     background-color: #79AAFF;
     color: white;
-    height: 80%;
 }
 .check-button:hover:not(:disabled) {
     background-color: rgb(81, 113, 141);
@@ -155,7 +150,7 @@ button {
 .submit-button {
     background-color: #79AAFF;
     color: white;
-    width: 95%;
+    width: 100%;
     margin-bottom: 15px; /* 오른쪽 정렬 */
 }
 .submit-button:hover:not(:disabled) {
