@@ -241,10 +241,6 @@ html, body {
     background-color: #5a6268;
 }
 
-.ReactModal__Overlay {
-    z-index: 2000 !important;
-}
-
 .ReactModal__Content {
     z-index: 2001 !important;
 }

@@ -1,6 +1,6 @@
 // TermsOfServiceModal.jsx
 import React, { useEffect } from 'react';
-import './TermsOfServiceModal.css'; // 별도 CSS 파일을 import
+import '../assets/css/TermsOfServiceModal.css'; // 별도 CSS 파일을 import
 
 // props 설명:
 // isOpen: (필수) 모달이 현재 열려있는지 닫혀있는지를 제어하는 boolean 값.

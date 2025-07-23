@@ -32,7 +32,7 @@ function LoginFormLinks({ onCloseModal, onOpenTermsModal, onOpenSignupModal, onO
     <div className="links-container">
       <a href="#" onClick={handleSignupClick}>회원 가입</a> {/* a 태그로 변경 및 onClick 핸들러 적용 */}
       <a href="#" onClick={handleForgetIdPwdClick}>ID/비밀번호 찾기</a> {/* a 태그로 변경 및 onClick 핸들러 적용 */}
-      <a href="#" onClick={handleTermsClick}>Terms</a>
+      <a href="#" onClick={handleTermsClick}>이용약관</a>
     </div>
   );
 }

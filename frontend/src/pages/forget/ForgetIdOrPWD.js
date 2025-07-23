@@ -139,7 +139,7 @@ function ForgetIdOrPWD({ onCloseModal }) {
 
     return (
         <div className="forgetIdOrPWD-container">
-            <button className="forgetIdOrPWD-Btn" onClick={onCloseModal} >&times;</button>
+            <div className="forgetIdOrPWD-Btn" onClick={onCloseModal} >&times;</div>
             {renderStepContent()}
             {message && <p className="message">{message}</p>}
         </div>

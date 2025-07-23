@@ -28,7 +28,6 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 3000;
 }
 
 /* 로그인 모달 콘텐츠 스타일 */
