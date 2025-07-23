@@ -21,13 +21,14 @@
    - 텍스트 중앙 정렬, 선택 방지 처리
 ------------------------------------------- */
 .vote-header {
-  background: url('../../assets/images/vote-header.png') center center / 120% auto no-repeat;
+  background: url('../../assets/images/vote-header.png') center center / 120%
+    auto no-repeat;
   padding: 5.2rem 27.2vw;
   margin-bottom: 2rem;
   text-align: center;
   user-select: none;
   border-bottom: 4px solid transparent;
-  border-image: linear-gradient(to right, #FFCC00, #FFCC00);
+  border-image: linear-gradient(to right, #ffcc00, #ffcc00);
   border-image-slice: 1;
 }
 
@@ -100,11 +101,11 @@
    - 폰트 크기 크게, 위쪽 여백 제거 */
 .best-reigon {
   font-size: 1.5rem;
-  color:rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
   margin-top: 0;
 }
 .best-reigon1 {
-  font-size: 3.0rem;
+  font-size: 3rem;
   color: #ffe680;
   margin-top: 0;
 }
@@ -136,7 +137,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   white-space: nowrap;
-  background-color: #79AAFF;
+  background-color: #79aaff;
   color: #eee;
   font-size: 1.2rem;
   font-weight: 500;
@@ -145,18 +146,14 @@
 /* 버튼 호버 시
    - 배경색 흰색, 글자색 짙은 회색으로 변경 */
 .vote-buttons button:hover:not(:disabled) {
-  background-color: #FFCC00;
+  background-color: #ffcc00;
   color: #222;
 }
 
 /* 선택된 지역 버튼 스타일
-   - 진한 초록색 배경 및 내부 그림자 효과
-   - 흰색 글자 */
+   - 선택지역 배경색 변경 */
 .selected-region {
-  font-weight: bold;
-  box-shadow: inset 8px #FFCC00;
-  background-color: #FFCC00;
-  color: #fff;
+  background-color: #ffcc00 !important;
 }
 
 /* -------------------------------------------
@@ -215,7 +212,7 @@
   overflow: hidden;
   text-align: center;
   user-select: none;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   background-color: #222;
 }
 
@@ -237,7 +234,7 @@
   font-size: 1.3rem;
   font-weight: 700;
   color: #fff;
-  background-color: rgba(0,0,0,0.6);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 /* 슬라이드 좌우 버튼 스타일
@@ -281,7 +278,7 @@
 .vote-controls {
   display: flex;
   flex-direction: column;
-  margin-top:8%;
+  margin-top: 8%;
   min-width: 30%;
   max-width: 35%;
   flex-shrink: 0;

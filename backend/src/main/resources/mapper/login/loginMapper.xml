@@ -38,7 +38,7 @@
         T.UPDATED_DATE,
         T.UPDATED_ID
         FROM TB_USER T
-        LEFT JOIN TB_RULE TR ON T.RULE_ID = TR.RULE_ID
+        JOIN TB_RULE TR ON T.RULE_ID = TR.RULE_ID
         WHERE T.LOGIN_ID = #{userLoginId}
     </select>
 
@@ -59,7 +59,7 @@
         T.UPDATED_DATE,
         T.UPDATED_ID
         FROM TB_USER T
-        LEFT JOIN TB_RULE TR ON T.RULE_ID = TR.RULE_ID
+        JOIN TB_RULE TR ON T.RULE_ID = TR.RULE_ID
         WHERE T.USER_EMAIL = #{userEmail}
     </select>
 
@@ -82,21 +82,24 @@
         ) VALUES (
         #{userId},
         #{userLoginId},
-        #{userEmail},
-        #{userName},
-        #{userProfileImageUrl, jdbcType=VARCHAR}, #{ruleId},
+        COALESCE(#{userEmail, jdbcType=VARCHAR}, ''), #{userName},
+        #{userProfileImageUrl, jdbcType=VARCHAR},
+        #{ruleId},
         #{createDate},
         #{createdId},
-        COALESCE(#{userPassword, jdbcType=VARCHAR}, 'NO_PASSWORD_OAUTH'), COALESCE(#{userNickname, jdbcType=VARCHAR}, 'Google_User'), COALESCE(#{userBio, jdbcType=VARCHAR}, 'Self-introduction not provided.') )
+        COALESCE(#{userPassword, jdbcType=VARCHAR}, 'NO_PASSWORD_OAUTH'),
+        COALESCE(#{userNickname, jdbcType=VARCHAR}, 'Kakao_User'),
+        COALESCE(#{userBio, jdbcType=VARCHAR}, 'Self-introduction not provided.')
+        )
     </insert>
 
     <update id="updateOAuthUser" parameterType="com.twogether.local7.login.vo.LoginVO">
         UPDATE TB_USER
         SET
         USER_NAME = #{userName},
-        USER_PROF_IMG_URL = #{userProfileImageUrl, jdbcType=VARCHAR}, UPDATED_DATE = #{updatedDate},
-        UPDATED_ID = #{updatedId},
-        USER_NICKNAME = COALESCE(#{userNickname, jdbcType=VARCHAR}, USER_NICKNAME), USER_BIO = COALESCE(#{userBio, jdbcType=VARCHAR}, USER_BIO) WHERE USER_ID = #{userId}
+        USER_PROF_IMG_URL = #{userProfileImageUrl, jdbcType=VARCHAR},
+        UPDATED_DATE = #{updatedDate},
+        UPDATED_ID = #{updatedId}
+        WHERE USER_ID = #{userId}
     </update>
-
 </mapper>

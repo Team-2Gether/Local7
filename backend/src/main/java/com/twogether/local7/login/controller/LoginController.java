@@ -9,7 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.servlet.view.RedirectView; // RedirectView import 추가
+import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken; // OAuth2AuthenticationToken import 추가
 
 
 import java.util.HashMap;
@@ -107,15 +108,17 @@ public class LoginController {
 
     // Google 로그인 성공 후 백엔드로 이동 -> 백엔드에서 프론트엔드로 리다이렉트
     @GetMapping("/login/oauth2/code/google")
-    public RedirectView googleLoginSuccess(@AuthenticationPrincipal OAuth2User oauth2User, HttpSession session) {
-        if (oauth2User != null) {
+    public RedirectView googleLoginSuccess(@AuthenticationPrincipal OAuth2User oauth2User, OAuth2AuthenticationToken oauth2AuthenticationToken, HttpSession session) {
+        if (oauth2User != null && oauth2AuthenticationToken != null) {
             String email = oauth2User.getAttribute("email");
             String name = oauth2User.getAttribute("name");
             String picture = oauth2User.getAttribute("picture");
+            String oauthProviderId = oauth2User.getName(); // Google의 'sub' ID
+            String registrationId = oauth2AuthenticationToken.getAuthorizedClientRegistrationId(); // "google"
 
             try {
                 // OAuth 사용자 정보 처리 (신규 등록 또는 기존 사용자 업데이트)
-                LoginVO user = loginService.processOAuthUser(email, name, picture);
+                LoginVO user = loginService.processOAuthUser(email, name, picture, oauthProviderId, registrationId);
 
                 // 세션에 사용자 정보 저장
                 session.setAttribute("isLoggedIn", true);
@@ -136,14 +139,63 @@ public class LoginController {
                 return new RedirectView("http://localhost:3000/");
             } catch (Exception e) {
                 System.err.println("Error processing Google OAuth user: " + e.getMessage());
-                // 오류 발생 시 로그인 실패 페이지 또는 메인 페이지로 리다이렉트 (필요에 따라 변경)
-                return new RedirectView("http://localhost:3000/login"); // 예시: 로그인 페이지로 리다이렉트
+                return new RedirectView("http://localhost:3000/login");
             }
         } else {
-            // OAuth2User가 null인 경우 (로그인 실패)
-            return new RedirectView("http://localhost:3000/login"); // 예시: 로그인 페이지로 리다이렉트
+            return new RedirectView("http://localhost:3000/login");
         }
     }
+
+    // 카카오 로그인 성공 후 백엔드로 이동 -> 백엔드에서 프론트엔드로 리다이렉트
+    @GetMapping("/login/oauth2/code/kakao")
+    public RedirectView kakaoLoginSuccess(@AuthenticationPrincipal OAuth2User oauth2User, OAuth2AuthenticationToken oauth2AuthenticationToken, HttpSession session) {
+        if (oauth2User != null && oauth2AuthenticationToken != null) {
+            Map<String, Object> kakaoAccount = oauth2User.getAttribute("kakao_account");
+            String email = null;
+            if (kakaoAccount != null) {
+                email = (String) kakaoAccount.get("email");
+            }
+
+            Map<String, Object> profile = oauth2User.getAttribute("properties");
+            String nickname = null;
+            String profileImage = null;
+            if (profile != null) {
+                nickname = (String) profile.get("nickname");
+                profileImage = (String) profile.get("profile_image");
+            }
+            String oauthProviderId = oauth2User.getName(); // Kakao의 'id'
+            String registrationId = oauth2AuthenticationToken.getAuthorizedClientRegistrationId(); // "kakao"
+
+            try {
+                // OAuth 사용자 정보 처리 (신규 등록 또는 기존 사용자 업데이트)
+                LoginVO user = loginService.processOAuthUser(email, nickname, profileImage, oauthProviderId, registrationId);
+
+                // 세션에 사용자 정보 저장
+                session.setAttribute("isLoggedIn", true);
+                session.setAttribute("userId", user.getUserId());
+                session.setAttribute("userLoginId", user.getUserLoginId());
+                session.setAttribute("userName", user.getUsername());
+                session.setAttribute("userNickname", user.getUserNickname());
+                session.setAttribute("userEmail", user.getUserEmail());
+                session.setAttribute("userProfileImageUrl", user.getUserProfileImageUrl());
+                session.setAttribute("userBio", user.getUserBio());
+                session.setAttribute("ruleId", user.getRuleId());
+                session.setAttribute("createDate", user.getCreateDate());
+                session.setAttribute("createdId", user.getCreatedId());
+                session.setAttribute("updatedDate", user.getUpdatedDate());
+                session.setAttribute("updatedId", user.getUpdatedId());
+
+                // 프론트엔드 메인 페이지로 리다이렉트
+                return new RedirectView("http://localhost:3000/");
+            } catch (Exception e) {
+                System.err.println("Error processing Kakao OAuth user: " + e.getMessage());
+                return new RedirectView("http://localhost:3000/login");
+            }
+        } else {
+            return new RedirectView("http://localhost:3000/login");
+        }
+    }
+
 
     private Map<String, Object> createErrorResponse(String code, String message) {
         Map<String, Object> response = new HashMap<>();

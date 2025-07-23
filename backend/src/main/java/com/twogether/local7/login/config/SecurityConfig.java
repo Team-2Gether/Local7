@@ -16,6 +16,9 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import org.springframework.web.cors.CorsConfiguration; // 추가
 import org.springframework.web.cors.CorsConfigurationSource; // 추가
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource; // 추가
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken; // 추가
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService; // 추가
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient; // 추가
 
 import java.util.Arrays; // 추가
 import java.util.Collections; // 추가
@@ -25,9 +28,11 @@ import java.util.Collections; // 추가
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
+    private final OAuth2AuthorizedClientService authorizedClientService; // 추가
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(UserDetailsService userDetailsService, OAuth2AuthorizedClientService authorizedClientService) { // 생성자 수정
         this.userDetailsService = userDetailsService;
+        this.authorizedClientService = authorizedClientService; // 초기화
     }
 
     @Bean
@@ -48,7 +53,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 이 줄을 추가합니다.
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**", "/oauth2/**", "/loginFailure", "/api/**").permitAll()
@@ -57,6 +62,28 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         // Google 로그인 성공 후 백엔드 컨트롤러 엔드포인트로 리다이렉트
                         .defaultSuccessUrl("http://localhost:8080/api/auth/login/oauth2/code/google", true)
+                        .successHandler((request, response, authentication) -> {
+                            if (authentication instanceof OAuth2AuthenticationToken) {
+                                OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+                                String clientRegistrationId = oauthToken.getAuthorizedClientRegistrationId();
+
+                                // OAuth2AuthorizedClientService를 사용하여 OAuth2AuthorizedClient를 조회
+                                OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(
+                                        clientRegistrationId, oauthToken.getName());
+
+                                if ("kakao".equals(clientRegistrationId)) {
+                                    response.sendRedirect("http://localhost:8080/api/auth/login/oauth2/code/kakao");
+                                } else if ("google".equals(clientRegistrationId)) {
+                                    response.sendRedirect("http://localhost:8080/api/auth/login/oauth2/code/google");
+                                } else {
+                                    // 다른 OAuth2 공급자에 대한 기본 처리 또는 오류 처리
+                                    response.sendRedirect("http://localhost:3000/");
+                                }
+                            } else {
+                                // 일반 로그인 또는 다른 인증 방식에 대한 처리
+                                response.sendRedirect("http://localhost:3000/"); // 기본 리다이렉션
+                            }
+                        })
                         .failureUrl("/loginFailure")
                 )
                 .logout(logout -> logout
@@ -71,23 +98,17 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 이 Bean을 추가합니다.
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // 모든 오리진 허용 (개발 환경에서 유용하며, 실제 배포 시에는 특정 오리진으로 제한하는 것이 좋습니다.)
         configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
-        // 허용할 HTTP 메서드
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        // 모든 헤더 허용
         configuration.setAllowedHeaders(Collections.singletonList("*"));
-        // 자격 증명(쿠키, HTTP 인증 등) 허용
         configuration.setAllowCredentials(true);
-        // Pre-flight 요청 결과를 캐싱할 시간 (초)
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 CORS 설정 적용
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }
