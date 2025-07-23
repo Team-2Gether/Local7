@@ -66,7 +66,7 @@ function Restaurant({ currentUser }) {
       if (restaurant.restaurantCategory) {
         const parts = restaurant.restaurantCategory.split(' > ');
         if (selectedMainCategory) {
-          if (parts[1] === selectedMainCategory && parts.length > 2) { // '한식 > 해물,생선' 형식
+          if (selectedMainCategory && parts[1] === selectedMainCategory && parts.length > 2) { // '한식 > 해물,생선' 형식
             subCategories.add(parts[2]);
           }
         }
