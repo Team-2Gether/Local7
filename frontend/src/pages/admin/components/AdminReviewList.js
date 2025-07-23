@@ -67,7 +67,9 @@ const ReviewList = ({ reviews, searchTerm, setSearchTerm, handleDeleteReview, cu
                         <tr key={review.reviewId}>
                             <td onClick={() => handleRowClick(review.reviewId, "review", review.restaurantId)}>{review.reviewId}</td>
                             <td onClick={() => handleRowClick(review.reviewId, "review", review.restaurantId)}>{review.reviewContent}</td>
-                            <td onClick={() => handleRowClick(review.reviewId, "review", review.restaurantId)}>{review.userNickname}</td>
+                            <td onClick={() => handleRowClick(review.reviewId, "review", review.restaurantId)}>
+                              {review.userNickname === "Google_User" ? review.createdId : review.userNickname}
+                            </td>
                             <td onClick={() => handleRowClick(review.reviewId, "review", review.restaurantId)}>{review.reviewRating}</td>
                             <td onClick={() => handleRowClick(review.reviewId, "review", review.restaurantId)}>{new Date(review.createdDate).toLocaleDateString()}</td>
                             <td>

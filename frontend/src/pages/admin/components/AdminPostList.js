@@ -66,7 +66,9 @@ const PostList = ({ posts, searchTerm, setSearchTerm, handleDeletePost, handleRo
                         <tr key={post.postId}>
                             <td onClick={() => handleRowClick(post.postId, "post")}>{post.postId}</td>
                             <td onClick={() => handleRowClick(post.postId, "post")}>{post.postTitle}</td>
-                            <td onClick={() => handleRowClick(post.postId, "post")}>{post.userNickname}</td>
+                            <td onClick={() => handleRowClick(post.postId, "post")}>
+                                {post.userNickname === "Google_User" ? post.createdId : post.userNickname}
+                            </td>
                             <td onClick={() => handleRowClick(post.postId, "post")}>{new Date(post.createdDate).toLocaleDateString()}</td>
                             <td>
                                 <button
