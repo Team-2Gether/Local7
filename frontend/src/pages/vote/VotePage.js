@@ -171,7 +171,7 @@ function VotePage() {
             className={selectedTap === 'result' ? 'tap selected-tap' : 'tap'}
             onClick={() => handleTapClick('result')}
           >
-            투표 결과
+            투표 진행 상황
           </div>
           <div
             className={selectedTap === 'post' ? 'tap selected-tap' : 'tap'}
