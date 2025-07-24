@@ -4,7 +4,7 @@ import axios from 'axios';
 import useMessageDisplay from '../hook/useMessageDisplay';
 import { FaUserCircle } from 'react-icons/fa';
 
-function UserIMGSection({ currentUser, onLogout }) {
+function UserIMGSection({ currentUser, onLogout, onUserUpdate }) { // onUserUpdate prop 추가
     const { message, messageType, displayMessage } = useMessageDisplay();
 
     const [selectedFile, setSelectedFile] = useState(null);
@@ -49,9 +49,11 @@ function UserIMGSection({ currentUser, onLogout }) {
 
                 if (response.data.status === 'success') {
                     displayMessage('프로필 이미지가 성공적으로 변경되었습니다.', 'success');
-                    if (onLogout) {
-                        onLogout();
+                    // onUserUpdate를 통해 부모 컴포넌트의 currentUser 상태 업데이트
+                    if (onUserUpdate) {
+                        onUserUpdate({ userProfileImageUrl: response.data.newProfileImageUrl }); // 백엔드에서 새로운 URL을 반환한다고 가정
                     }
+                    setSelectedFile(null); // 파일 선택 초기화
                 } else {
                     displayMessage(response.data.message || '프로필 이미지 변경에 실패했습니다.', 'error');
                 }

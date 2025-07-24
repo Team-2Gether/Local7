@@ -1,9 +1,9 @@
-// src/user/hook/useUserNickname.js
+// src/pages/user/hook/useUserNickname.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import useMessageDisplay from './useMessageDisplay'; // 경로 변경
 
-const useUserNickname = (currentUser, onLogout) => {
+const useUserNickname = (currentUser, onUserUpdate) => { // onLogout 대신 onUserUpdate 인자로 받음
     const [newUserNickname, setNewUserNickname] = useState('');
     const [isNicknameChecked, setIsNicknameChecked] = useState(false);
     const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
@@ -34,9 +34,9 @@ const useUserNickname = (currentUser, onLogout) => {
             return;
         }
         if (currentUser && newUserNickname === currentUser.userNickname) {
-            displayNicknameMessage('현재 닉네임과 동일합니다. 다른 닉네임을 입력해주세요.', 'warning'); // 메시지 타입 변경
+            displayNicknameMessage('현재 닉네임과 동일합니다. 다른 닉네임을 입력해주세요.', 'warning');
             setIsNicknameChecked(true);
-            setIsNicknameAvailable(false); // 동일하면 사용 불가능으로 처리
+            setIsNicknameAvailable(false);
             return;
         }
 
@@ -78,8 +78,6 @@ const useUserNickname = (currentUser, onLogout) => {
 
         setIsUpdatingNickname(true);
         try {
-            // @PatchMapping에서 @PostMapping으로 변경되었으므로 axios.post 사용
-            // 백엔드에서 @RequestParam으로 받으므로 params를 사용
             const response = await axios.post('http://localhost:8080/api/user/update-nickname', null, {
                 params: {
                     userId: currentUser.userId,
@@ -87,13 +85,11 @@ const useUserNickname = (currentUser, onLogout) => {
                 }
             });
             if (response.status === 200 && response.data.status === 'success') {
-                displayNicknameMessage('닉네임이 성공적으로 변경되었습니다. 다시 로그인해야 적용됩니다.', 'success');
+                displayNicknameMessage('닉네임이 성공적으로 변경되었습니다.', 'success'); // 즉시 반영되므로 "다시 로그인해야 적용됩니다" 메시지 삭제
                 setIsNicknameChecked(false);
                 setIsNicknameAvailable(false);
-                if (onLogout) {
-                    onLogout();
-                } else {
-                    window.location.reload();
+                if (onUserUpdate) { // onUserUpdate가 존재하면 호출
+                    onUserUpdate({ userNickname: newUserNickname });
                 }
             } else {
                 displayNicknameMessage(response.data.message || '닉네임 변경에 실패했습니다.', 'error');

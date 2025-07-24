@@ -1,8 +1,8 @@
-// src/user/components/UserNicknameSection.js
+// src/pages/user/components/UserNicknameSection.js
 import React from 'react';
 import useUserNickname from '../hook/useUserNickname'; // 경로 변경
 
-function UserNicknameSection({ currentUser, onLogout }) {
+function UserNicknameSection({ currentUser, onLogout, onUserUpdate }) { // onUserUpdate prop 추가
     const {
         newUserNickname,
         handleNicknameChange,
@@ -14,7 +14,7 @@ function UserNicknameSection({ currentUser, onLogout }) {
         isUpdatingNickname,
         nicknameMessage,
         nicknameMessageType
-    } = useUserNickname(currentUser, onLogout);
+    } = useUserNickname(currentUser, onUserUpdate); // onLogout 대신 onUserUpdate 전달
 
     return (
         <div className="user-update-form">

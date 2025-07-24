@@ -139,6 +139,14 @@ export function AppContent() {
         }
     };
 
+    // 사용자 정보 업데이트 함수 추가
+    const updateCurrentUser = (updatedFields) => {
+        setCurrentUser(prevUser => {
+            if (!prevUser) return null;
+            return { ...prevUser, ...updatedFields };
+        });
+    };
+
     const openTermsModal = () => setIsTermsModalOpen(true);
     const closeTermsModal = () => setIsTermsModalOpen(false);
 
@@ -276,7 +284,9 @@ export function AppContent() {
                                 }
                                     onLogout={
                                         handleLogout
-                                    } />
+                                    }
+                                    onUserUpdate={updateCurrentUser} // updateCurrentUser prop 추가
+                                />
                                 }
                             />
                             <Route

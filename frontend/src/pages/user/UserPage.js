@@ -1,7 +1,6 @@
 // src/pages/user/UserPage.js
 import React from 'react';
 import '../../assets/css/UserPage.css';
-import { FaLock } from 'react-icons/fa';
 import UserLoginIdSection from '../user/components/UserLoginIdSection';
 import UserNicknameSection from '../user/components/UserNicknameSection';
 import UserWithdrawalSection from '../user/components/UserWithdrawalSection';
@@ -10,7 +9,7 @@ import UserIMGSection from '../user/components/UserIMGSection';
 import UserBioSection from '../user/components/UserBioSection'; // 새로 추가된 import
 import useMessageDisplay from '../user/hook/useMessageDisplay';
 
-function UserPage({ currentUser, onLogout }) {
+function UserPage({ currentUser, onLogout, onUserUpdate }) { // onUserUpdate prop 추가
     const { message, messageType } = useMessageDisplay();
 
     return (
@@ -21,13 +20,13 @@ function UserPage({ currentUser, onLogout }) {
                 </div>
             )}
                     {/* 프로필 이미지 변경 섹션 */}
-                    <UserIMGSection currentUser={currentUser} onLogout={onLogout} />
+                    <UserIMGSection currentUser={currentUser} onLogout={onLogout} onUserUpdate={onUserUpdate} />
 
                     {/* 자기소개 변경 섹션 */}
-                    <UserBioSection currentUser={currentUser} /> {/* 새로 추가된 컴포넌트 */}
+                    <UserBioSection currentUser={currentUser} onUserUpdate={onUserUpdate} /> {/* 새로 추가된 컴포넌트 */}
 
                     {/* 닉네임 변경 섹션 */}
-                    <UserNicknameSection currentUser={currentUser} onLogout={onLogout} />
+                    <UserNicknameSection currentUser={currentUser} onLogout={onLogout} onUserUpdate={onUserUpdate} />
 
                     {/* 아이디 변경 섹션 */}
                     <UserLoginIdSection currentUser={currentUser} onLogout={onLogout} />

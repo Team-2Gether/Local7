@@ -4,9 +4,9 @@ import axios from 'axios';
 import { FaSignature } from 'react-icons/fa';
 import useMessageDisplay from '../hook/useMessageDisplay';
 
-function UserBioSection({ currentUser }) {
+function UserBioSection({ currentUser, onUserUpdate }) { // onUserUpdate prop 추가
     const [userBio, setUserBio] = useState('');
-    const { message, messageType, displayMessage } = useMessageDisplay(); // Corrected: changed showMessage to displayMessage
+    const { message, messageType, displayMessage } = useMessageDisplay();
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
@@ -19,7 +19,7 @@ function UserBioSection({ currentUser }) {
 
     const handleUpdateBio = async () => {
         if (!currentUser || !currentUser.userId) {
-            displayMessage('로그인 정보가 없습니다.', 'error'); // Corrected: changed showMessage to displayMessage
+            displayMessage('로그인 정보가 없습니다.', 'error');
             return;
         }
 
@@ -31,21 +31,21 @@ function UserBioSection({ currentUser }) {
                 }
             });
             if (response.data.status === 'success') {
-                displayMessage('자기소개가 성공적으로 업데이트되었습니다.', 'success'); // Corrected: changed showMessage to displayMessage
+                displayMessage('자기소개가 성공적으로 업데이트되었습니다.', 'success');
                 setIsEditing(false); // 수정 모드 종료
-                // 사용자 정보를 최신 자기소개로 업데이트 (부모 컴포넌트에서 currentUser를 업데이트하는 콜백 필요)
-                // 현재 구조에서는 부모에서 currentUser를 직접 업데이트하는 메커니즘이 없으므로,
-                // 이 부분은 페이지를 새로고침하거나, UserPage에서 전체 사용자 정보를 다시 불러오는 로직이 필요할 수 있습니다.
-                // 편의상 여기서는 메시지만 표시하고 수정 모드를 종료합니다.
+                // onUserUpdate를 통해 부모 컴포넌트의 currentUser 상태 업데이트
+                if (onUserUpdate) {
+                    onUserUpdate({ userBio: userBio });
+                }
             } else {
-                displayMessage(response.data.message || '자기소개 업데이트에 실패했습니다.', 'error'); // Corrected: changed showMessage to displayMessage
+                displayMessage(response.data.message || '자기소개 업데이트에 실패했습니다.', 'error');
             }
         } catch (error) {
             console.error('자기소개 업데이트 오류:', error);
             if (error.response && error.response.data && error.response.data.message) {
-                displayMessage(error.response.data.message, 'error'); // Corrected: changed showMessage to displayMessage
+                displayMessage(error.response.data.message, 'error');
             } else {
-                displayMessage('자기소개 업데이트 중 오류가 발생했습니다.', 'error'); // Corrected: changed showMessage to displayMessage
+                displayMessage('자기소개 업데이트 중 오류가 발생했습니다.', 'error');
             }
         }
     };
