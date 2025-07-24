@@ -215,7 +215,7 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
                         placeholder="댓글을 입력하세요..."
                         rows="3"
                     ></textarea>
-                    <button type="submit">댓글 작성</button>
+                    <button type="submit" disabled={commentsLoading || !newCommentContent.trim()}>댓글 작성</button>
                 </form>
             ) : (
                 <p className="login-prompt">로그인해야 댓글을 작성할 수 있습니다.</p>
