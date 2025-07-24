@@ -10,7 +10,7 @@ import InputField1 from './components/InputField';
 import PasswordConfirmField1 from './components/PasswordConfirmField';
 import EmailVerificationGroup1 from './components/EmailVerificationGroup';
 import TextAreaField1 from './components/TextAreaField';
-import TermsAndPrivacyModal from './components/TermsAndPrivacyModal'; // 새로운 모달 컴포넌트 임포트
+import TermsAndPrivacyModal from './components/TermsAndPrivacyModal';
 
 // onSignupSuccess prop을 추가합니다.
 function SignupPage({ onCloseModal, onSignupSuccess }) {
@@ -37,7 +37,7 @@ function SignupPage({ onCloseModal, onSignupSuccess }) {
   const [idChecked, setIdChecked] = useState(false);
   const [nickChecked, setNickChecked] = useState(false);
   const [emailChecked, setEmailChecked] = useState(false);
-  const [showTermsModal, setShowTermsModal] = useState(false); // 모달 표시 여부 상태
+  const [showTermsModal, setShowTermsModal] = useState(false);
 
   useEffect(() => {
     const requiredFields = [
@@ -61,12 +61,14 @@ function SignupPage({ onCloseModal, onSignupSuccess }) {
     duplicateStatus.userLoginId === false &&
     duplicateStatus.userNickname === false &&
     duplicateStatus.userEmail === false &&
-    emailVerified;
+    emailVerified &&
+    !messages.userPassword && // 비밀번호 유효성 메시지가 없어야 제출 가능
+    !messages.userPasswordConfirm; // 비밀번호 확인 메시지가 없어야 제출 가능
 
   const onSubmit = async (e) => {
     e.preventDefault();
     if (!isSubmitEnabled) {
-      alert('모든 필수 항목, 약관 동의, 중복/인증 확인이 필요합니다.');
+      alert('모든 필수 항목, 약관 동의, 중복/인증 확인, 비밀번호 유효성 검사를 완료해야 합니다.');
       return;
     }
     await handleSubmit(e);
@@ -74,11 +76,11 @@ function SignupPage({ onCloseModal, onSignupSuccess }) {
 
   const handleTermsAndPrivacyClick = (e) => {
     e.preventDefault();
-    setShowTermsModal(true); // 모달 열기
+    setShowTermsModal(true);
   };
 
   const handleCloseTermsModal = () => {
-    setShowTermsModal(false); // 모달 닫기
+    setShowTermsModal(false);
   };
 
   return (
@@ -119,6 +121,7 @@ function SignupPage({ onCloseModal, onSignupSuccess }) {
           onChange={handleChange}
           required
         />
+        {messages.userPassword && <StatusMessage type="error" message={messages.userPassword} />} {/* 비밀번호 유효성 메시지 표시 */}
 
         <PasswordConfirmField1
           label="비밀번호 확인:"

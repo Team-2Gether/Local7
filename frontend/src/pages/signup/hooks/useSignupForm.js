@@ -32,13 +32,11 @@ function useSignupForm(navigate) {
 
   const { duplicateStatus, checkDuplicate, resetDuplicateStatus, setDuplicateStatus } = useDuplicateCheck(setMessages);
 
-  // --- 약관동의 상태 변경: termsOfService, privacyPolicy 대신 termsAndPrivacy 사용 ---
   const [agreements, setAgreements] = useState({
-    termsAndPrivacy: false, // 통합된 약관 동의
+    termsAndPrivacy: false,
     marketingConsent: false,
   });
 
-  // --- 약관동의 변경 핸들러 유지 (name이 'termsAndPrivacy'로 들어옴) ---
   const handleAgreementChange = (e) => {
     const { name, checked } = e.target;
     setAgreements((prev) => ({
@@ -52,10 +50,17 @@ function useSignupForm(navigate) {
       return newMessages;
     });
   };
-  // --- 약관동의 관련 끝 ---
+
+  // 비밀번호 유효성 검사 함수
+  const validatePassword = (password) => {
+    if (password.length > 0 && password.length < 8) {
+      return '비밀번호는 최소 8자 이상이어야 합니다.';
+    }
+    return '';
+  };
 
   const handleAllChanges = (e) => {
-    const { name } = e.target;
+    const { name, value } = e.target;
     handleFormDataChange(e);
 
     setMessages((prev) => {
@@ -64,6 +69,29 @@ function useSignupForm(navigate) {
       delete newMessages.emailStatus;
       delete newMessages.verificationCode;
       delete newMessages[`${name}`];
+
+      // 비밀번호 유효성 검사
+      if (name === 'userPassword') {
+        const passwordError = validatePassword(value);
+        if (passwordError) {
+          newMessages.userPassword = passwordError;
+        } else {
+          delete newMessages.userPassword;
+        }
+        // 비밀번호 확인 필드도 함께 검사하여 업데이트 (비밀번호 변경 시 확인 필드의 일치 여부 다시 검사)
+        if (formData.userPasswordConfirm && value !== formData.userPasswordConfirm) {
+          newMessages.userPasswordConfirm = '비밀번호가 일치하지 않습니다.';
+        } else if (formData.userPasswordConfirm && value === formData.userPasswordConfirm) {
+          delete newMessages.userPasswordConfirm;
+        }
+      } else if (name === 'userPasswordConfirm') {
+        if (formData.userPassword !== value) {
+          newMessages.userPasswordConfirm = '비밀번호가 일치하지 않습니다.';
+        } else {
+          delete newMessages.userPasswordConfirm;
+        }
+      }
+
       if (name === 'userLoginId') setDuplicateStatus((prev) => ({ ...prev, userLoginId: null }));
       if (name === 'userNickname') setDuplicateStatus((prev) => ({ ...prev, userNickname: null }));
       if (name === 'userEmail') {
@@ -74,33 +102,37 @@ function useSignupForm(navigate) {
     });
   };
 
-  // 이미지 파일을 base64로 변환하여 formData에 저장하는 핸들러
   const handleImageChange = (event) => {
     const file = event.target.files ? event.target.files?.[0] : null;
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        // reader.result는 "data:image/jpeg;base64,..." 형태의 문자열입니다.
         handleFormDataChange({ target: { name: 'userProfImgUrl', value: reader.result } });
       };
-      reader.readAsDataURL(file); // 파일을 base64 URL로 읽기
+      reader.readAsDataURL(file);
     } else {
-      handleFormDataChange({ target: { name: 'userProfImgUrl', value: '' } }); // 파일 선택 취소 시 초기화
+      handleFormDataChange({ target: { name: 'userProfImgUrl', value: '' } });
     }
   };
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessages({}); // Submit 시 모든 메시지 초기화 (선택 사항)
+    setMessages({});
 
-    // 유효성 검사 로직 (기존 로직 유지)
     if (!formData.userLoginId || !formData.userPassword || !formData.userPasswordConfirm || !formData.userEmail || !formData.userNickname || !formData.userName) {
       setMessages({ general: '모든 필수 필드를 입력해주세요.' });
       return false;
     }
+
+    const passwordLengthError = validatePassword(formData.userPassword);
+    if (passwordLengthError) {
+      setMessages((prev) => ({ ...prev, userPassword: passwordLengthError, general: '비밀번호를 확인해주세요.' }));
+      return false;
+    }
+
     if (formData.userPassword !== formData.userPasswordConfirm) {
-      setMessages({ general: '비밀번호와 비밀번호 확인이 일치하지 않습니다.' });
+      setMessages((prev) => ({ ...prev, userPasswordConfirm: '비밀번호와 비밀번호 확인이 일치하지 않습니다.', general: '비밀번호 확인이 일치하지 않습니다.' }));
       return false;
     }
     if (!emailVerified) {
@@ -121,7 +153,6 @@ function useSignupForm(navigate) {
       return false;
     }
 
-    // --- 약관 필수 동의 체크 변경: 통합된 termsAndPrivacy 확인 ---
     if (!agreements.termsAndPrivacy) {
       setMessages({ agreements: '서비스 이용약관 및 개인정보 처리방침에 동의해 주세요.' });
       return false;
@@ -132,7 +163,7 @@ function useSignupForm(navigate) {
       const response = await registerUser(dataToSend);
       setMessages({ general: response.message || '회원가입 성공!' });
       navigate('/');
-      resetFormAndStates(); // 회원가입 성공 후 폼 초기화
+      resetFormAndStates();
       return true;
     } catch (error) {
       const errorMessage = error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
@@ -141,14 +172,13 @@ function useSignupForm(navigate) {
     }
   };
 
-  // 모든 상태를 초기화하는 함수 추가
   const resetFormAndStates = () => {
     resetFormData();
     resetEmailVerification();
     resetDuplicateStatus();
     setMessages({});
-    setAgreements({              // 약관 동의 초기화 변경
-      termsAndPrivacy: false, // 통합된 약관 동의 초기화
+    setAgreements({
+      termsAndPrivacy: false,
       marketingConsent: false,
     });
   };
@@ -160,7 +190,7 @@ function useSignupForm(navigate) {
     emailSent,
     messages,
     duplicateStatus,
-    agreements,                 // 추가
+    agreements,
     handleChange: handleAllChanges,
     handleImageChange,
     handleEmailChange: handleAllChanges,
@@ -168,7 +198,7 @@ function useSignupForm(navigate) {
     handleSendVerificationCode: sendVerificationCode,
     handleVerifyEmailCode: verifyEmailCode,
     checkDuplicate,
-    handleAgreementChange,      // 추가
+    handleAgreementChange,
     handleSubmit,
     resetFormAndStates
   };
