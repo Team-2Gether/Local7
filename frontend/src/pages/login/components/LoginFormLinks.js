@@ -30,8 +30,13 @@ function LoginFormLinks({ onCloseModal, onOpenTermsModal, onOpenSignupModal, onO
 
   return (
     <div className="links-container">
+<<<<<<< HEAD
       <a href="#" onClick={handleSignupClick}>회원 가입</a>
       <a href="#" onClick={handleForgetIdPwdClick}>비밀번호 변경</a>
+=======
+      <a href="#" onClick={handleSignupClick}>회원 가입</a> {/* a 태그로 변경 및 onClick 핸들러 적용 */}
+      <a href="#" onClick={handleForgetIdPwdClick}>비밀번호 변경</a> {/* a 태그로 변경 및 onClick 핸들러 적용 */}
+>>>>>>> 65fde1bb90e5b2fcbac0237dc31af7f009294216
       <a href="#" onClick={handleTermsClick}>이용약관</a>
     </div>
   );
