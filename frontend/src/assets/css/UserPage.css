@@ -156,8 +156,8 @@ button {
 /* 제출 버튼 */
 .submit-button {
     background-color: #79AAFF;
-    color: white;
-    width: 100%;
+    color: rgb(0, 0, 0);
+    margin-right:36px;
 }
 .submit-button:hover:not(:disabled) {
     background-color: #0056b3;
@@ -169,6 +169,7 @@ button {
     color: white;
     width: 25%;
     margin-bottom:50px;
+    margin-right:36px;
 }
 .delete-button:hover:not(:disabled) {
     background-color: #b83d49;
