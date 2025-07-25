@@ -17,7 +17,6 @@ function useLogin(onLoginSuccess) {
         try {
             const data = await loginUser(formData.credential, formData.password); //formData에서 credential과 password를 사용
 
-            alert(data.message || "로그인 성공!");
             onLoginSuccess({
                 userId: data.userId,
                 userLoginId: data.userLoginId,
