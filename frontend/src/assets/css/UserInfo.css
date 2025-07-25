@@ -17,6 +17,7 @@
 }
 
 
+
 .UserInfo-bio {
     resize: none;
     background: none;
@@ -31,6 +32,7 @@
     object-fit: cover;
     border: 3px solid #ddd;
 }
+
 
 .user-details p {
     font-size: 1rem;
