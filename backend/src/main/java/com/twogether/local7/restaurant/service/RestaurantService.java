@@ -7,9 +7,15 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 public interface RestaurantService {
-    // 기존 메서드: 모든 음식점 목록을 조회 (지도용)
+    // 모든 음식점 목록을 조회 (지도용)
     Mono<List<RestaurantVO>> getAllRestaurants();
 
-    // 새로 추가된 메서드: 페이징 처리된 음식점 목록을 조회 (목록용)
+    // 페이징 처리된 음식점 목록을 조회 (목록용)
     Mono<Pagination<RestaurantVO>> getAllRestaurantsPaginated(int page, int size);
+
+    // 식당 이름으로 음식점 정보 조회
+    Mono<RestaurantVO> getRestaurantByName(String restName); // Mono<RestaurantVO>로 변경
+
+    // 식당 ID로 음식점 정보 조회
+    Mono<RestaurantVO> getRestaurantById(Long restId); // Mono<RestaurantVO>로 변경
 }

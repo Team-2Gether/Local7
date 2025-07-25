@@ -1,8 +1,14 @@
 package com.twogether.local7.ai.service;
 
 import com.twogether.local7.ai.vo.*;
+import com.twogether.local7.restaurant.service.RestaurantService;
+import com.twogether.local7.review.service.ReviewService;
+import com.twogether.local7.restaurant.vo.RestaurantVO;
+import com.twogether.local7.review.vo.ReviewVO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy; // Lazy 어노테이션 추가
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -10,39 +16,87 @@ import reactor.core.publisher.Mono;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.ArrayList;
+
 @Service
 public class AiService {
 
     private static final Logger logger = LoggerFactory.getLogger(AiService.class);
 
     private final WebClient webClient;
+    private final RestaurantService restaurantService;
+    private final ReviewService reviewService;
 
     @Autowired
-    // @Value를 생성자 파라미터에 직접 붙여서 값을 주입
-    public AiService(WebClient.Builder webClientBuilder, @Value("${ai.server.url}") String aiServerUrl) {
-        // 이제 aiServerUrl은 생성자 호출 시점에 이미 값을 가지고 있음
+    public AiService(WebClient.Builder webClientBuilder,
+                     @Value("${ai.server.url}") String aiServerUrl,
+                     RestaurantService restaurantService,
+                     @Lazy ReviewService reviewService) { // ReviewService에 @Lazy 추가
         logger.info("AI Server URL: {}", aiServerUrl);
         this.webClient = webClientBuilder.baseUrl(aiServerUrl).build();
+        this.restaurantService = restaurantService;
+        this.reviewService = reviewService;
     }
 
-    /**
-     * FastAPI AI 서버의 /chat 엔드포인트를 호출하여 AI 챗봇 응답을 받음
-     * @param request AI 챗봇에게 보낼 메시지 (AiChatRequest VO 객체)
-     * @return AI 챗봇의 응답 (AiChatResponse VO 객체)
-     */
     public Mono<AiChatResponse> getChatResponse(AiChatRequest request) {
-        return webClient.post() // POST 요청 시작
-                .uri("/chat")   // 호출할 엔드포인트 URI
-                .bodyValue(request) // 요청 바디에 AiChatRequest 객체를 JSON으로 변환하여 포함
-                .retrieve()     // 응답을 받아옴
-                .bodyToMono(AiChatResponse.class); // 응답 바디를 AiChatResponse 클래스로 변환
+        String userMessage = request.getMessage();
+        List<RestaurantVO> relevantRestaurants = new ArrayList<>();
+        List<ReviewVO> relevantReviews = new ArrayList<>();
+
+        Pattern restaurantNamePattern = Pattern.compile("(.+?) 식당");
+        Matcher matcher = restaurantNamePattern.matcher(userMessage);
+
+        Pattern restaurantIdPattern = Pattern.compile("(\\d+)번? 식당");
+        Matcher idMatcher = restaurantIdPattern.matcher(userMessage);
+
+
+        if (matcher.find()) {
+            String restaurantName = matcher.group(1).trim();
+            RestaurantVO restaurant = restaurantService.getRestaurantByName(restaurantName).block();
+            if (restaurant != null) {
+                relevantRestaurants.add(restaurant);
+                List<ReviewVO> reviews = reviewService.getReviewsByRestaurantId(restaurant.getRestaurantId(), 5).block();
+                if (reviews != null) {
+                    relevantReviews.addAll(reviews);
+                }
+            }
+        } else if (idMatcher.find()) {
+            try {
+                Long restaurantId = Long.parseLong(idMatcher.group(1));
+                RestaurantVO restaurant = restaurantService.getRestaurantById(restaurantId).block();
+                if (restaurant != null) {
+                    relevantRestaurants.add(restaurant);
+                    List<ReviewVO> reviews = reviewService.getReviewsByRestaurantId(restaurant.getRestaurantId(), 5).block();
+                    if (reviews != null) {
+                        relevantReviews.addAll(reviews);
+                    }
+                }
+            } catch (NumberFormatException e) {
+                logger.warn("Failed to parse restaurant ID from message: {}", idMatcher.group(1));
+            }
+        }
+
+        request.setRestaurants(relevantRestaurants);
+        request.setReviews(relevantReviews);
+
+        logger.info("Sending chat request to AI server with message: {}", request.getMessage());
+        if (!relevantRestaurants.isEmpty()) {
+            logger.info("Including relevant restaurants: {}", relevantRestaurants.stream().map(RestaurantVO::getRestaurantName).toList());
+        }
+        if (!relevantReviews.isEmpty()) {
+            logger.info("Including relevant reviews (first 5): {}", relevantReviews.stream().map(ReviewVO::getReviewContent).limit(5).toList());
+        }
+
+        return webClient.post()
+                .uri("/chat")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(AiChatResponse.class);
     }
 
-    /**
-     * FastAPI AI 서버의 /summarize-review 엔드포인트를 호출하여 리뷰 요약 및 키워드를 받음.
-     * @param request 요약할 리뷰 텍스트 (AiReviewRequest VO 객체)
-     * @return 요약된 리뷰 및 키워드 (AiReviewResponse VO 객체)
-     */
     public Mono<AiReviewResponse> summarizeReview(AiReviewRequest request) {
         return webClient.post()
                 .uri("/summarize-review")
@@ -51,17 +105,11 @@ public class AiService {
                 .bodyToMono(AiReviewResponse.class);
     }
 
-    /**
-     * FastAPI AI 서버의 /analyze-sentiment 엔드포인트를 호출하여 텍스트 감성을 분석
-     * @param request 감성을 분석할 텍스트 (SentimentRequest VO 객체)
-     * @return 분석된 감성 (SentimentResponse VO 객체)
-     */
     public Mono<SentimentResponse> analyzeSentiment(SentimentRequest request) {
         return webClient.post()
-                .uri("/analyze-sentiment") // FastAPI의 새 엔드포인트 URI
+                .uri("/analyze-sentiment")
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(SentimentResponse.class);
     }
-
 }

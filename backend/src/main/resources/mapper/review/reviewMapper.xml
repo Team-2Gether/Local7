@@ -85,6 +85,28 @@
         ORDER BY TR.CREATED_DATE DESC
     </select>
 
+    <!-- 새롭게 추가: 특정 맛집의 리뷰를 제한된 개수만큼 조회 -->
+    <select id="findReviewsByRestaurantIdWithLimit" resultMap="reviewResultMap">
+        SELECT
+        TR.REVIEW_ID,
+        TR.USER_ID,
+        TR.RESTAURANT_ID,
+        TR.REVIEW_RATING,
+        TR.REVIEW_CONTENT,
+        TR.AI_SUMMARY,
+        TR.AI_KEYWORDS,
+        TR.CREATED_DATE,
+        TR.CREATED_ID,
+        TR.UPDATED_DATE,
+        TR.UPDATED_ID,
+        TU.USER_NICKNAME
+        FROM TB_REVIEW TR
+        JOIN TB_USER TU ON TR.USER_ID = TU.USER_ID
+        WHERE TR.RESTAURANT_ID = #{restaurantId}
+        ORDER BY TR.CREATED_DATE DESC
+        FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
     <select id="findReviewsByUserId" parameterType="long" resultMap="reviewResultMap">
         SELECT
         TR.REVIEW_ID,

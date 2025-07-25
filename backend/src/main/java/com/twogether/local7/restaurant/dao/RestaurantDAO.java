@@ -1,7 +1,6 @@
 package com.twogether.local7.restaurant.dao;
 
 import com.twogether.local7.pagintion.Pageable;
-import com.twogether.local7.pagintion.SimplePageable;
 import com.twogether.local7.restaurant.vo.RestaurantVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,4 +20,10 @@ public interface RestaurantDAO {
 
     // 특정 카테고리의 음식점 목록 조회 (확장성을 고려하여 추가)
     List<RestaurantVO> findRestaurantsByCategory(String category);
+
+    // 식당 이름으로 음식점 정보 조회
+    RestaurantVO findRestaurantByName(String restName);
+
+    // 식당 ID로 음식점 정보 조회
+    RestaurantVO findRestaurantById(Long restId);
 }

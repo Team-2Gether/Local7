@@ -93,4 +93,18 @@
         WHERE RESTAURANT_CATEGORY = #{category}
     </select>
 
+    <select id="findRestaurantByName" resultMap="restaurantResultMap">
+        SELECT *
+        FROM TB_RESTAURANT
+        WHERE REST_NAME = #{restName}
+        LIMIT 1
+    </select>
+
+    <select id="findRestaurantById" resultMap="restaurantResultMap">
+        SELECT *
+        FROM TB_RESTAURANT
+        WHERE REST_ID = #{restId}
+        LIMIT 1
+    </select>
+
 </mapper>

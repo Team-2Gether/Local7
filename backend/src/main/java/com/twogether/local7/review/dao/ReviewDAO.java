@@ -2,6 +2,8 @@ package com.twogether.local7.review.dao;
 
 import com.twogether.local7.review.vo.ReviewVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 @Mapper
@@ -24,4 +26,6 @@ public interface ReviewDAO {
 
     // 리뷰 삭제
     void deleteReview(Long reviewId);
+
+    List<ReviewVO> findReviewsByRestaurantIdWithLimit(@Param("restaurantId") Long restaurantId, @Param("limit") int limit);
 }

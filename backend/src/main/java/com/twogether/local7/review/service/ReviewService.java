@@ -15,4 +15,7 @@ public interface ReviewService {
     Mono<ReviewVO> updateReview(ReviewVO review);
 
     Mono<Void> deleteReview(Long reviewId);
+
+    Mono<List<ReviewVO>> getReviewsByRestaurantId(Long restaurantId, int limit);
+
 }

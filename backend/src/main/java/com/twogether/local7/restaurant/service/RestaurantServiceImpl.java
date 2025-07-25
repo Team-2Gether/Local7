@@ -35,4 +35,18 @@ public class RestaurantServiceImpl implements RestaurantService {
         return Mono.zip(listMono, countMono)
                 .map(tuple -> new Pagination<>(tuple.getT1(), pageable, tuple.getT2()));
     }
+
+    @Override
+    public Mono<RestaurantVO> getRestaurantByName(String restName) {
+        // 식당 이름으로 조회하는 DAO 메서드 호출
+        // DAO에 findRestaurantByName 메서드가 없으면 추가해야 합니다.
+        return Mono.fromCallable(() -> restaurantDAO.findRestaurantByName(restName));
+    }
+
+    @Override
+    public Mono<RestaurantVO> getRestaurantById(Long restId) {
+        // 식당 ID로 조회하는 DAO 메서드 호출
+        // DAO에 findRestaurantById 메서드가 없으면 추가해야 합니다.
+        return Mono.fromCallable(() -> restaurantDAO.findRestaurantById(restId));
+    }
 }

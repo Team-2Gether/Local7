@@ -56,5 +56,4 @@ public class AiController {
         return aiService.analyzeSentiment(request)
                 .map(response -> ResponseEntity.ok(response)); // 응답이 오면 HTTP 200 OK와 함께 반환
     }
-
 }
