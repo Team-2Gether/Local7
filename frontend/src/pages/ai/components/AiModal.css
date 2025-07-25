@@ -21,7 +21,12 @@
     max-width: 600px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     color: #f0f0f0;
-    position: relative; /* 닫기 버튼 배치를 위해 필요 */
+    position: fixed; /* 닫기 버튼 배치를 위해 필요 */
+    overflow-y: auto;
+    top: 10%;
+    left: 25%;
+    right: 50%;
+    bottom: 10%;
 }
 
 /* 모달 제목 스타일 */
