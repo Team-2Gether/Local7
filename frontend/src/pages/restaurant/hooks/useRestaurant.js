@@ -141,6 +141,11 @@ export const useMap = (
         if (!map || !allRestaurants.length) 
             return;
         
+        if (clickMarkerRef.current) {
+            clickMarkerRef.current.setMap(null);
+            clickMarkerRef.current = null;
+        }
+        
         const center = map.getCenter();
         const centerLat = center.getLat();
         const centerLon = center.getLng();
@@ -247,6 +252,10 @@ export const useMap = (
                         .setMap(null);
                 }
 
+                if (myLocationMarkerRef.current) {
+                    myLocationMarkerRef.current.setMap(null);
+                }
+
                 const marker = new window
                     .kakao
                     .maps
@@ -313,6 +322,7 @@ export const useMap = (
             myLocationMarkerRef
                 .current
                 .setMap(null);
+            clickMarkerRef.current = null;
         }
 
         const imageSrc = "/local7Compass1.png";

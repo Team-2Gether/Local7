@@ -22,7 +22,7 @@ function Restaurant({ currentUser }) {
   // 카테고리 관련 상태
   const [selectedMainCategory, setSelectedMainCategory] = useState('');
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
-  // ⭐️ 추가: 현재 활성화된 필터 킬로미터 상태 (초기값 null 또는 0으로 설정하여 기본적으로 비활성 상태 유지)
+  // 현재 활성화된 필터 킬로미터 상태 (초기값 null 또는 0으로 설정하여 기본적으로 비활성 상태 유지)
   const [activeFilterKm, setActiveFilterKm] = useState(null); 
 
 
@@ -48,13 +48,13 @@ function Restaurant({ currentUser }) {
     handleFilterClick: mapHandleFilterClick // useMap의 handleFilterClick과 이름 충돌 방지
   } = useMap(allRestaurants, setFilteredRestaurantsForMap, handleRestaurantClick);
 
-  // ⭐️ 수정: filterKm 상태를 업데이트하는 새로운 handleFilterClick 함수
+  // filterKm 상태를 업데이트하는 새로운 handleFilterClick 함수
   const handleFilterClickWithActive = useCallback((km) => {
     setActiveFilterKm(km); // 활성화된 km 설정
     mapHandleFilterClick(km); // useMap 훅의 필터링 함수 호출
   }, [mapHandleFilterClick]);
 
-  // ⭐️ 수정: 내 위치 버튼 클릭 시 activeFilterKm 초기화 (필터 해제)
+  // 내 위치 버튼 클릭 시 activeFilterKm 초기화 
   const handleMyPositionClickWithReset = useCallback(() => {
     setActiveFilterKm(null); // 필터 초기화
     mapHandleMyPositionClick(); // useMap 훅의 내 위치 함수 호출
@@ -142,10 +142,10 @@ function Restaurant({ currentUser }) {
         <div id="map_wrap">
           <div id="map" ref={mapContainerRef}></div>
           <div className="custom-controls">
-            {/* ⭐️ 수정: handleMyPositionClickWithReset 호출 및 active 클래스 조건부 적용 */}
+            {/* handleMyPositionClickWithReset 호출 및 active 클래스 조건부 적용 */}
             <button onClick={handleMyPositionClickWithReset} className={`my-position-btn ${activeFilterKm === null ? 'active' : ''}`}>내 위치</button>
             <div className="filter-buttons">
-              {/* ⭐️ 수정: handleFilterClickWithActive 호출 및 active 클래스 조건부 적용 */}
+              {/* handleFilterClickWithActive 호출 및 active 클래스 조건부 적용 */}
               <button onClick={() => handleFilterClickWithActive(1)} className={activeFilterKm === 1 ? 'active' : ''}>1km</button>
               <button onClick={() => handleFilterClickWithActive(3)} className={activeFilterKm === 3 ? 'active' : ''}>3km</button>
               <button onClick={() => handleFilterClickWithActive(10)} className={activeFilterKm === 10 ? 'active' : ''}>10km</button>
