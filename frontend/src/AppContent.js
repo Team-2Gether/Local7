@@ -72,7 +72,7 @@ export function AppContent() {
 
     const checkLoginStatus = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/api/auth/status");
+            const response = await axios.get("http://192.168.0.10:8080/api/auth/status");
             const data = response.data;
             if (response.status === 200 && data.isLoggedIn) {
                 setIsLoggedIn(true);
@@ -118,7 +118,7 @@ export function AppContent() {
         try {
             // Spring Security의 HttpStatusReturningLogoutSuccessHandler는 본문을 반환하지 않으므로
             // response.data 대신 response.status만 확인합니다.
-            const response = await axios.post("http://localhost:8080/api/auth/logout");
+            const response = await axios.post("http://192.168.0.10:8080/api/auth/logout");
             if (response.status === 200) { // HTTP 200 OK는 성공적인 로그아웃을 의미합니다.
                 alert("로그아웃되었습니다."); // 직접 메시지 출력
                 setIsLoggedIn(false);

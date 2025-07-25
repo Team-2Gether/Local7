@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // withCredentials를 true로 설정하여 쿠키와 인증 헤더를 포함
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: 'http://192.168.0.10:8080/api',
   withCredentials: true, 
 });
 

@@ -8,7 +8,7 @@ function VotePageResult() {
   // 투표 수 불러오기
   useEffect(() => {
     axios
-      .get('http://localhost:8080/api/vote/results')
+      .get('http://192.168.0.10:8080/api/vote/results')
       .then((response) => {
         setVoteData(response.data);
       })

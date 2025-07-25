@@ -20,12 +20,12 @@ function LoginForm({ onLoginSuccess, onCloseModal, onOpenTermsModal, onOpenSignu
 
   const handleGoogleLogin = () => {
     // Spring Boot의 Google OAuth2 시작 엔드포인트로 리다이렉트
-    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+    window.location.href = 'http://192.168.0.10:8080/oauth2/authorization/google';
   };
 
   const handleKakaoLogin = () => {
     // Spring Boot의 Kakao OAuth2 시작 엔드포인트로 리다이렉트
-    window.location.href = 'http://localhost:8080/oauth2/authorization/kakao';
+    window.location.href = 'http://192.168.0.10:8080/oauth2/authorization/kakao';
   };
 
   return (

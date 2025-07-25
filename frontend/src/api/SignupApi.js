@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080/api', // 백엔드 API 기본 URL
+  baseURL: 'http://192.168.0.10:8080/api', // 백엔드 API 기본 URL
   withCredentials: true, // 필요에 따라 설정 (세션/쿠키 기반 인증 시 사용)
 });
 

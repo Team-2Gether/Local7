@@ -42,7 +42,7 @@ function UserIMGSection({ currentUser, onLogout, onUserUpdate }) { // onUserUpda
 
             try {
                 // `params` 대신 직접 JSON 객체를 요청 본문으로 전달
-                const response = await axios.post('http://localhost:8080/api/user/update-profile-image', {
+                const response = await axios.post('http://192.168.0.10:8080/api/user/update-profile-image', {
                     userId: currentUser.userId,
                     userProfileImageUrl: base64Image
                 });

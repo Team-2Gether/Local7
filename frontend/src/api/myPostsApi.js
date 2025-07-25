@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const fetchUserPostsApi = async (userId, page, pageSize) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/user/${userId}/posts`, {
+        const response = await axios.get(`http://192.168.0.10:8080/api/user/${userId}/posts`, {
             params: {
                 page: page,
                 size: pageSize

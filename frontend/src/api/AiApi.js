@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Spring Boot 백엔드의 기본 URL
-const API_BASE_URL = 'http://localhost:8080/api/ai';
+const API_BASE_URL = 'http://192.168.0.10:8080/api/ai';
 
 /**
  * AI 챗봇과 대화하는 API 호출 함수

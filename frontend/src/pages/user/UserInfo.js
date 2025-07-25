@@ -27,7 +27,7 @@ function UserInfo({ currentUser }) {
             }
 
             try {
-                const userProfileResponse = await axios.get(`http://localhost:8080/api/user/profile/loginid/${targetUserLoginId}`);
+                const userProfileResponse = await axios.get(`http://192.168.0.10:8080/api/user/profile/loginid/${targetUserLoginId}`);
                 if (userProfileResponse.data.status === "success") {
                     setUserData(userProfileResponse.data.userProfile);
                     targetUserId = userProfileResponse.data.userProfile.userId;
@@ -48,7 +48,7 @@ function UserInfo({ currentUser }) {
 
             if (targetUserId) {
                 try {
-                    const followerCountResponse = await axios.get(`http://localhost:8080/api/follows/followers/count/${targetUserId}`);
+                    const followerCountResponse = await axios.get(`http://192.168.0.10:8080/api/follows/followers/count/${targetUserId}`);
                     if (followerCountResponse.status === 200) {
                         setFollowerCount(followerCountResponse.data.followerCount);
                     } else {
@@ -59,7 +59,7 @@ function UserInfo({ currentUser }) {
                 }
 
                 try {
-                    const followingCountResponse = await axios.get(`http://localhost:8080/api/follows/followings/count/${targetUserId}`);
+                    const followingCountResponse = await axios.get(`http://192.168.0.10:8080/api/follows/followings/count/${targetUserId}`);
                     if (followingCountResponse.status === 200) {
                         setFollowingCount(followingCountResponse.data.followingCount);
                     } else {

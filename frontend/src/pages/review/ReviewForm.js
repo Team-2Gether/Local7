@@ -50,13 +50,13 @@ function ReviewForm({ restaurantId, userId, userNickname, existingReview, onRevi
             let response;
             if (existingReview) {
                 // 기존 리뷰 수정
-                response = await axios.put(`http://localhost:8080/api/reviews/${existingReview.reviewId}`, {
+                response = await axios.put(`http://192.168.0.10:8080/api/reviews/${existingReview.reviewId}`, {
                     ...reviewData,
                     reviewId: existingReview.reviewId,
                 });
             } else {
                 // 새 리뷰 등록
-                response = await axios.post('http://localhost:8080/api/reviews', reviewData);
+                response = await axios.post('http://192.168.0.10:8080/api/reviews', reviewData);
             }
 
             if (response.data?.status === 'success') {

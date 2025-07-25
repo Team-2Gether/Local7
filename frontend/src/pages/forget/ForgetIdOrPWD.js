@@ -20,7 +20,7 @@ function ForgetIdOrPWD({ onCloseModal }) {
         }
         try {
             // Spring Boot 백엔드에 인증 코드 요청
-            const response = await axios.post('http://localhost:8080/api/forget/sendCode', { email });
+            const response = await axios.post('http://192.168.0.10:8080/api/forget/sendCode', { email });
             setMessage(response.data.message);
             if (response.data.success) {
                 setStep('verifyCode'); // 다음 단계로 이동
@@ -38,7 +38,7 @@ function ForgetIdOrPWD({ onCloseModal }) {
         }
         try {
             // Spring Boot 백엔드에 인증 코드 확인 요청
-            const response = await axios.post('http://localhost:8080/api/forget/verifyCode', { email, authCode });
+            const response = await axios.post('http://192.168.0.10:8080/api/forget/verifyCode', { email, authCode });
             setMessage(response.data.message);
             if (response.data.success) {
                 setStep('resetPassword'); // 인증 성공 시 비밀번호 재설정 단계로 이동
@@ -61,7 +61,7 @@ function ForgetIdOrPWD({ onCloseModal }) {
 
         try {
             // Spring Boot 백엔드에 비밀번호 재설정 요청
-            const response = await axios.post('http://localhost:8080/api/forget/resetPassword', {
+            const response = await axios.post('http://192.168.0.10:8080/api/forget/resetPassword', {
                 email,
                 authCode,
                 newPassword,

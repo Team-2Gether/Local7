@@ -42,7 +42,7 @@ const useUserNickname = (currentUser, onUserUpdate) => { // onLogout 대신 onUs
 
         setIsCheckingNickname(true);
         try {
-            const response = await axios.get(`http://localhost:8080/api/user/check-nickname?userNickname=${newUserNickname}`);
+            const response = await axios.get(`http://192.168.0.10:8080/api/user/check-nickname?userNickname=${newUserNickname}`);
             if (response.data.status === 'success') {
                 setIsNicknameChecked(true);
                 setIsNicknameAvailable(!response.data.isDuplicate);
@@ -78,7 +78,7 @@ const useUserNickname = (currentUser, onUserUpdate) => { // onLogout 대신 onUs
 
         setIsUpdatingNickname(true);
         try {
-            const response = await axios.post('http://localhost:8080/api/user/update-nickname', null, {
+            const response = await axios.post('http://192.168.0.10:8080/api/user/update-nickname', null, {
                 params: {
                     userId: currentUser.userId,
                     newUserNickname: newUserNickname

@@ -24,7 +24,7 @@ const useUserWithdrawal = (currentUser, onLogout, withdrawalPassword, withdrawal
         setIsRequestingWithdrawalCode(true);
         try {
             // 백엔드에서 @RequestParam userId를 받도록 되어 있으므로, body가 아닌 params로 보내는 것이 더 명확
-            const response = await axios.post('http://localhost:8080/api/user/request-withdrawal', null, {
+            const response = await axios.post('http://192.168.0.10:8080/api/user/request-withdrawal', null, {
                 params: {
                     userId: currentUser.userId
                 }
@@ -62,7 +62,7 @@ const useUserWithdrawal = (currentUser, onLogout, withdrawalPassword, withdrawal
         try {
             // @DeleteMapping에서 @PostMapping으로 변경되었으므로 axios.post 사용
             // 백엔드에서 @RequestParam으로 받으므로 params를 사용
-            const response = await axios.post('http://localhost:8080/api/user/withdraw', null, {
+            const response = await axios.post('http://192.168.0.10:8080/api/user/withdraw', null, {
                 params: {
                     userId: currentUser.userId,
                     password: withdrawalPassword,

@@ -24,7 +24,7 @@ function UserBioSection({ currentUser, onUserUpdate }) { // onUserUpdate prop ì¶
         }
 
         try {
-            const response = await axios.post('http://localhost:8080/api/user/update-bio', null, {
+            const response = await axios.post('http://192.168.0.10:8080/api/user/update-bio', null, {
                 params: {
                     userId: currentUser.userId,
                     userBio: userBio

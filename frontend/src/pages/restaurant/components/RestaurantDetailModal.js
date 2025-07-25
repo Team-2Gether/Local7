@@ -41,7 +41,7 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
         setLoadingReviews(true);
         setReviewError(null);
         try {
-            const response = await axios.get(`http://localhost:8080/api/reviews/restaurant/${restaurantId}`);
+            const response = await axios.get(`http://192.168.0.10:8080/api/reviews/restaurant/${restaurantId}`);
             if (response.data?.status === 'success') {
                 const fetchedReviews = response.data.data;
                 setReviews(fetchedReviews);
@@ -93,7 +93,7 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
     const handleDeleteReview = async (reviewId) => {
         if (window.confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
             try {
-                const response = await axios.delete(`http://localhost:8080/api/reviews/${reviewId}`);
+                const response = await axios.delete(`http://192.168.0.10:8080/api/reviews/${reviewId}`);
                 if (response.data?.status === 'success') {
                     alert('리뷰가 삭제되었습니다.');
                     fetchReviews(restaurant.restaurantId); // 리뷰 목록 새로고침
