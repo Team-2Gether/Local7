@@ -1,4 +1,4 @@
-package com.twogether.local7.login.config;
+package com.twogether.local7.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
