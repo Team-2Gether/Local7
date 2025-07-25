@@ -221,10 +221,12 @@ html, body {
     cursor: pointer;
     transition: background-color 0.3s ease;
     text-decoration: none;
-  color: inherit; /* 기본 텍스트 색상 유지하고 싶을 때 */
+    color: inherit; /* 기본 텍스트 색상 유지하고 싶을 때 */
+    border-radius: 15px;
 }
 .sidebar-button:hover {
     background-color: #575757;
+    border-radius: 15px;
 }
 
 .sidebar-icon {
