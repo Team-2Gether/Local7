@@ -188,10 +188,32 @@ button:disabled {
 }
 
 .profile-image-container {
-    margin-bottom: 20px;
-    margin-right: 100px;
-    margin-left: 100px;
-    text-align: center;
+    display: flex;
+    justify-content: center;    /* 수평 중앙 정렬 */
+    align-items: center;        /* 수직 중앙 정렬 (선택) */
+    flex-direction: column;     /* 세로로 쌓이게 */
+    margin: 0 auto 20px auto;   /* 아래 여백 + 수평 중앙 */
+    padding: 20px;
+    background-color: #2c2c2c;  /* 배경색 (선택) */
+    border-radius: 20px;        /* 둥근 테두리 */
+    max-width: 1200px;          /* 폭 제한 */
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;         /* 내부 텍스트 중앙 정렬 */
+}
+.profile-image-container1 {
+    display: flex;
+    justify-content: center;    /* 수평 중앙 정렬 */
+    align-items: center;        /* 수직 중앙 정렬 (선택) */
+    flex-direction: column;     /* 세로로 쌓이게 */
+    margin: 0 auto 20px auto;   /* 아래 여백 + 수평 중앙 */
+    padding: 20px;
+    background-color: #2c2c2c;  /* 배경색 (선택) */
+    border-radius: 20px;        /* 둥근 테두리 */
+    max-width: 1200px;          /* 폭 제한 */
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;         /* 내부 텍스트 중앙 정렬 */
 }
 
 .custom-file-input1 {

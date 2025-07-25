@@ -20,6 +20,14 @@
     color: #f1f1f1;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
+.OtherUser-info-section1 {
+    background-color: #2c2c2c;
+    padding: 25px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    color: #f1f1f1;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
 
 /* 프로필 제목 */
 .OtherUser-profile-title {
