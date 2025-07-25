@@ -6,10 +6,10 @@
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.75);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+    display: flex; /* 모달을 중앙에 배치하기 위해 flexbox 사용 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    z-index: 2001;
 }
 
 /* 모달 본체 스타일 */
@@ -21,12 +21,10 @@
     max-width: 600px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     color: #f0f0f0;
-    position: fixed; /* 닫기 버튼 배치를 위해 필요 */
-    overflow-y: auto;
-    top: 10%;
-    left: 25%;
-    right: 50%;
-    bottom: 10%;
+    position: relative; /* 닫기 버튼의 absolute 포지셔닝을 위한 기준점 설정 */
+    overflow-y: auto; /* 내용이 넘칠 경우 스크롤바 생성 */
+    max-height: 70vh; /* 뷰포트 높이의 70%를 넘지 않도록 최대 높이 설정 */
+    margin: auto; /* flexbox 중앙 정렬과 함께 사용될 때 추가적인 중앙 정렬 보조 */
 }
 
 /* 모달 제목 스타일 */
