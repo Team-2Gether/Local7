@@ -215,7 +215,7 @@ function PostForm({ currentUser }) {
                                     <div className="image-thumbnails">
                                         {existingImages.map((image, index) => (
                                             <div key={image.imageId} className="thumbnail-wrapper">
-                                                <img src={image.imageUrl} alt={`기존 이미지 ${index + 1}`} className="thumbnail-image" />
+                                                <img src={`data:image/jpeg;base64,${image.imageUrl}`} alt={`기존 이미지 ${index + 1}`} className="thumbnail-image" />
                                                 <button type="button" onClick={() => handleRemoveExistingImage(image.imageId)} className="remove-image-button">X</button>
                                             </div>
                                         ))}
