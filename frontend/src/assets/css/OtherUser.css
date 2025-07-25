@@ -43,6 +43,7 @@
     flex-wrap: wrap;
     border-radius: 20px;
     margin-bottom: 20px; /* margin 줄임 */
+    border: 1px solid #757575; /* ✅ 테두리 색 추가 */
 }
 
 

@@ -66,13 +66,12 @@
     background-color: #444444;
     border-radius: 20px;
     padding: 0 100px 0 100px;
-
     width: 800px;              /* 고정 폭 */
-    
     box-sizing: border-box;
     margin: 0 auto;             /* 가운데 정렬 */
     overflow-x: hidden;         /* 가로 스크롤 방지 */
     overflow-wrap: break-word;  /* 긴 글자 줄바꿈 */
+    border: 2px solid #000000; /* ✅ 테두리 색 추가 */
 }
 
 .profile-image {
@@ -107,7 +106,9 @@
 /* 내가 작성한 게시글 섹션 */
 .my-posts-container {
   padding: 39px;
+  
 }
+
 
 .my-posts-title {
     font-size: 1.1em; /* 폰트 크기 줄임 */
@@ -148,10 +149,11 @@
      background-color: #353535;
     border: 1px solid #6d6d6d; /* 기본 테두리 */
     border-radius: 20px;
-    padding: 10px;
+    padding: 8px;
     display: flex;
     align-items: center;
     transition: border-color 0.3s ease; /* 부드러운 전환 효과 추가 */
+    margin-bottom: 5px;
 }
 
 .post-item:hover {

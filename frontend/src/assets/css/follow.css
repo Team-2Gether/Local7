@@ -42,7 +42,7 @@
 .follow-items {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin-bottom: 5px;
     display: flex;
     flex-direction: column;
     gap: 15px;
