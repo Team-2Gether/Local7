@@ -40,8 +40,8 @@ class RestaurantVO(BaseModel):
     restaurantHoliday: Optional[str] = None
     parkingInfo: Optional[str] = None
     kakaoPlaceId: Optional[str] = None
-    averageRating: Optional[float] = None # RestaurantVO에 averageRating 필드가 있으므로 추가
-    totalComments: Optional[int] = None # RestaurantVO에 totalComments 필드가 있으므로 추가
+    averageRating: Optional[float] = None 
+    totalComments: Optional[int] = None 
 
 class ReviewVO(BaseModel):
     reviewId: Optional[int] = None
@@ -122,7 +122,7 @@ async def chat(request: ChatRequest):
 
     return ChatResponse(response=ai_response_content)
 
-# --- 리뷰 요약 및 키워드 추출 엔드포인트 (기존 기능 유지) ---
+# --- 리뷰 요약 및 키워드 추출 엔드포인트 ---
 class ReviewRequest(BaseModel):
     review_text: str
 
@@ -162,7 +162,7 @@ async def summarize_review(request: ReviewRequest):
         print(f"AI 응답 생성 중 오류 발생: {e}")
         raise HTTPException(status_code=500, detail=f"리뷰 요약 중 오류 발생: {str(e)}")
 
-# --- 감성 분석 엔드포인트 (기존 기능 유지) ---
+# --- 감성 분석 엔드포인트  ---
 class SentimentRequest(BaseModel):
     text: str
 
