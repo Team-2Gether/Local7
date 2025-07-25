@@ -63,10 +63,16 @@
 }
 
 .my-page-main-content {
-    flex-grow: 1;
-    background-color:#444444;
+    background-color: #444444;
     border-radius: 20px;
-    padding: 0 50px 0 175px;
+    padding: 0 100px 0 100px;
+
+    width: 800px;              /* 고정 폭 */
+    
+    box-sizing: border-box;
+    margin: 0 auto;             /* 가운데 정렬 */
+    overflow-x: hidden;         /* 가로 스크롤 방지 */
+    overflow-wrap: break-word;  /* 긴 글자 줄바꿈 */
 }
 
 .profile-image {

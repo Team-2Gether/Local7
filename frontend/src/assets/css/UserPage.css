@@ -151,7 +151,6 @@ button {
     background-color: #79AAFF;
     color: white;
     width: 100%;
-    margin-bottom: 15px; /* 오른쪽 정렬 */
 }
 .submit-button:hover:not(:disabled) {
     background-color: #0056b3;
@@ -162,6 +161,7 @@ button {
     background-color: #000000;
     color: white;
     width: 25%;
+    margin-bottom:50px;
 }
 .delete-button:hover:not(:disabled) {
     background-color: #b83d49;
@@ -182,7 +182,8 @@ button:disabled {
 
 .profile-image-container {
     margin-bottom: 20px;
-    margin-right: 20px;
+    margin-right: 100px;
+    margin-left: 100px;
     text-align: center;
 }
 
