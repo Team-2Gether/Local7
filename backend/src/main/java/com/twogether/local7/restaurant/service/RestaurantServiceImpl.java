@@ -26,12 +26,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     public Mono<Pagination<RestaurantVO>> getAllRestaurantsPaginated(int page, int size) {
         SimplePageable pageable = new SimplePageable(page, size);
 
-        // 전체 음식점 개수와 페이징된 목록을 비동기적으로 가져옵니다.
-        // 다음 단계에서 DAO에 이 메서드들을 추가해야 합니다.
+        // 전체 음식점 개수와 페이징된 목록을 비동기적으로 가져옴
         Mono<Long> countMono = Mono.fromCallable(() -> restaurantDAO.countAllRestaurants());
         Mono<List<RestaurantVO>> listMono = Mono.fromCallable(() -> restaurantDAO.findAllRestaurantsPaginated(pageable));
 
-        // 두 Mono의 결과를 결합하여 Pagination 객체를 생성합니다.
+        // 두 Mono의 결과를 결합하여 Pagination 객체를 생성
         return Mono.zip(listMono, countMono)
                 .map(tuple -> new Pagination<>(tuple.getT1(), pageable, tuple.getT2()));
     }
@@ -39,14 +38,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public Mono<RestaurantVO> getRestaurantByName(String restName) {
         // 식당 이름으로 조회하는 DAO 메서드 호출
-        // DAO에 findRestaurantByName 메서드가 없으면 추가해야 합니다.
         return Mono.fromCallable(() -> restaurantDAO.findRestaurantByName(restName));
     }
 
     @Override
     public Mono<RestaurantVO> getRestaurantById(Long restId) {
         // 식당 ID로 조회하는 DAO 메서드 호출
-        // DAO에 findRestaurantById 메서드가 없으면 추가해야 합니다.
         return Mono.fromCallable(() -> restaurantDAO.findRestaurantById(restId));
     }
 

@@ -59,7 +59,7 @@ public class ReviewServiceImpl implements ReviewService {
         }).subscribeOn(Schedulers.boundedElastic());
     }
 
-    // 새롭게 추가: 특정 맛집의 리뷰를 제한된 개수만큼 조회하는 메서드 구현
+    // 특정 맛집의 리뷰를 제한된 개수만큼 조회하는 메서드 구현
     @Override
     public Mono<List<ReviewVO>> getReviewsByRestaurantId(Long restaurantId, int limit) {
         return Mono.fromCallable(() -> {
@@ -85,7 +85,6 @@ public class ReviewServiceImpl implements ReviewService {
     public Mono<ReviewVO> updateReview(ReviewVO review) {
         return Mono.fromCallable(() -> {
             logger.info("ReviewService: updateReview 호출 - {}", review);
-            // 오류 수정: 닫는 따옴표 앞의 백슬래시 제거
             logger.info("ReviewService: 리뷰 업데이트 성공, ID: {}", review.getReviewId());
             return review;
         }).subscribeOn(Schedulers.boundedElastic());

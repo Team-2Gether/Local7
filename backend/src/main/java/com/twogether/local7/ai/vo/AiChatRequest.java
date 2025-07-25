@@ -20,6 +20,6 @@ public class AiChatRequest {
     // 특정 식당의 리뷰를 요청하거나, 식당 관련 질문 시 해당 식당의 리뷰를 담아 보냅니다.
     private List<ReviewVO> reviews;
 
-    // 또는, 특정 식당 ID만 보내서 AI 서버가 직접 데이터를 조회하게 할 수도 있습니다.
+    // 특정 식당 ID만 보내서 AI 서버가 직접 데이터를 조회하게 할 수도 있습니다.
     // private Long targetRestaurantId;
 }

@@ -13,7 +13,7 @@ import com.twogether.local7.review.vo.ReviewVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy; // Lazy 어노테이션 추가
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -40,7 +40,7 @@ public class AiService {
     public AiService(WebClient.Builder webClientBuilder,
                      @Value("${ai.server.url}") String aiServerUrl,
                      RestaurantService restaurantService,
-                     @Lazy ReviewService reviewService) { // ReviewService에 @Lazy 추가
+                     @Lazy ReviewService reviewService) {
         logger.info("AI Server URL: {}", aiServerUrl);
         this.webClient = webClientBuilder.baseUrl(aiServerUrl).build();
         this.restaurantService = restaurantService;
