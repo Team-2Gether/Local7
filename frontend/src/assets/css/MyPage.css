@@ -8,6 +8,7 @@
     display: flex; /* Flexbox를 사용하여 내부 요소들을 가로로 배치 */
     width: 100%; /* 부모 컨테이너 너비에 맞춤 */
     gap: 20px; /* 네비게이션과 컨텐츠 사이의 간격 */
+    margin-bottom: 50px;
 }
 
 .my-page-navigation {
@@ -58,6 +59,19 @@
     margin-left: -142px !important;
     margin-right: 1px auto !important;
 }
+.user-details {
+  background-color: #2c2c2c;     /* 전체 배경 색 */
+  color: #ffffff;                /* 텍스트 색상 */
+  font-size: 1rem !important;
+  margin: 20px auto !important;  /* 위아래 간격 + 수평 중앙 정렬 */
+  padding: 20px 30px;            /* 내부 여백 */
+  text-align: center;            /* 텍스트 가운데 정렬 */
+  border-radius: 20px;           /* 둥근 테두리 */
+  width: 100%;
+  max-width: 1200px;             /* 화면 크기 제한 */
+  box-sizing: border-box;
+}
+
 .user-details p {
   font-size: 1rem !important;
   color: #c7c7c7 !important;

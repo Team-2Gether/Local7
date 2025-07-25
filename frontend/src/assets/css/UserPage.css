@@ -78,8 +78,15 @@
 
 /* 정보 수정 폼 */
 .user-update-form {
-    background-color: #444;
-    padding-top: 20px;
+    background-color: #2c2c2c;   /* 배경색 */
+    color: #ffffff;              /* 글자색 (선택) */
+    padding: 30px 40px;          /* 내부 여백 */
+    text-align: center;          /* 텍스트 중앙 정렬 */
+    border-radius: 20px;         /* 모서리 둥글게 */
+    margin: 20px auto;           /* 위아래 간격 + 수평 중앙 정렬 */
+    width: 100%;
+    max-width: 1200px;           /* 폭 제한 */
+    box-sizing: border-box;      /* padding 포함 너비 계산 */
 }
 .user-update-form h3 {
     color: #FFCC00;
@@ -151,7 +158,6 @@ button {
     background-color: #79AAFF;
     color: white;
     width: 100%;
-    margin-bottom: 15px; /* 오른쪽 정렬 */
 }
 .submit-button:hover:not(:disabled) {
     background-color: #0056b3;
@@ -162,6 +168,7 @@ button {
     background-color: #000000;
     color: white;
     width: 25%;
+    margin-bottom:50px;
 }
 .delete-button:hover:not(:disabled) {
     background-color: #b83d49;
@@ -180,11 +187,32 @@ button:disabled {
     margin-bottom: 15px;
 }
 
-.profile-image-container {
-    margin-bottom: 20px;
-    margin-right: 20px;
-    text-align: center;
+.profile-image-container ,.OtherUser-profile-image-container {
+    display: flex;
+    justify-content: center;    /* 수평 중앙 정렬 */
+    align-items: center;        /* 수직 중앙 정렬 (선택) */
+    flex-direction: column;     /* 세로로 쌓이게 */
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #2c2c2c;  /* 배경색 (선택) */
+    border-radius: 20px;        /* 둥근 테두리 */
+    max-width: 800px;          /* 폭 제한 */
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;         /* 내부 텍스트 중앙 정렬 */
 }
+.profile-image {
+    margin-left: 0 !important;     /* 왼쪽 마진 자동으로 밀어내서 오른쪽 정렬 */
+    margin-bottom: 10px;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #666;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+
 
 .custom-file-input1 {
   padding: 6px 10px;
@@ -228,7 +256,17 @@ button:disabled {
     margin-top: 10px;
     font-size: 0.9em;
 }
-
+.user-section {
+    background-color: #2c2c2c; /* 원하는 색상으로 변경 */
+    color: #ffffff;            /* 텍스트 색상 (선택) */
+    text-align: center;        /* 내부 텍스트 가운데 정렬 */
+    padding: 30px 0;           /* 상하 여백 추가 */
+    border-radius: 20px;       /* 둥근 모서리 (선택) */
+    margin: 20px auto;         /* 수직 간격 + 가운데 정렬 */
+    width: 100%;
+    max-width: 1200px;         /* 화면 폭 제한 */
+    box-sizing: border-box;
+}
 .user-section-content, .user-section-title {
   justify-content: center; /* 가로 가운데 정렬 */
   align-items: center;     /* 세로 가운데 정렬 */
@@ -241,10 +279,6 @@ button:disabled {
   overflow-x: hidden;     /* 가로 스크롤 방지 */
   box-sizing: border-box; /* 패딩/테두리 포함한 크기 계산 */
 }
-
-.current-info button{
- margin-left:44%;
-} 
 
 .user-section input[type="file"] {
     margin-top: 10px;

@@ -143,7 +143,7 @@ function OtherUser({ currentUser }) {
                     <img
                         src={otherUserProfile.userProfileImageUrl || "https://via.placeholder.com/150"}
                         alt="프로필 이미지"
-                        className="OtherUser-profile-image"
+                        className="OtherUser-profile-image1"
                     />
                 </div>
                 <div className="OtherUser-user-details">

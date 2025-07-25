@@ -3,11 +3,20 @@
     background: #444444;
     display: flex;
     align-items: center;
-    gap: 10px; /* 간격 약간 줄임 */
     flex-wrap: wrap;
     border-radius: 20px;
     margin-bottom: 20px; /* margin 줄임 */
 }
+
+.user-info-section .profile-image-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    border-radius: 20px;
+    margin-bottom: 20px; /* margin 줄임 */
+}
+
+
 
 .UserInfo-bio {
     resize: none;
@@ -23,6 +32,7 @@
     object-fit: cover;
     border: 3px solid #ddd;
 }
+
 
 .user-details p {
     font-size: 1rem;
