@@ -219,17 +219,34 @@ button:disabled {
 
 
 .custom-file-input1 {
-  padding: 6px 10px;
+  color: white;
   font-size: 14px;
-  border-radius: 20px;
-  color: #000;
+  background-color: transparent;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
 }
 
-.custom-file-input1:hover {
-  background-color: #e6b800;
+/* ✅ 파일 선택 버튼 스타일 */
+.custom-file-input1::file-selector-button {
+  background-color: #ffcc00;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* ✅ hover 효과 */
+.custom-file-input1::file-selector-button:hover {
+  background-color: #b49000;
+}
+
+/* ✅ 포커스 시에도 효과 추가 */
+.custom-file-input1::file-selector-button:focus {
+  outline: 2px solid #ffaa00;
+  outline-offset: 2px;
 }
 
 
