@@ -113,6 +113,9 @@
     display: block;
     font-weight: bold;
     color: #eee;
+    text-align: left;     /* 텍스트 왼쪽 정렬 */
+    margin-left: 0;       /* 왼쪽 마진 제거 */
+    padding-left: 0;      /* 왼쪽 패딩 제거 */
 }
 .form-group input[type="text"],
 .form-group input[type="password"] {
