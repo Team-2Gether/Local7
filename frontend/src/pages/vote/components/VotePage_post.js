@@ -8,7 +8,7 @@ import {
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './VotePage_post.css';
+import '../../../assets/css/VotePage_post.css';
 
 function VotePagePost() {
   const [posts, setPosts] = useState([]);

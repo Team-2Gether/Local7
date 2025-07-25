@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../VotePage.css';
+import '../../../assets/css/VotePage.css';
 
 function VotePageResult() {
   const [voteData, setVoteData] = useState([]);

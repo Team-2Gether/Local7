@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import VotePagePost from './components/VotePage_post';
 import VotePageResult from './components/VotePage_result';
 import axios from 'axios';
-import './VotePage.css';
+import '../../assets/css/VotePage.css';
 
 function VotePage() {
   const [regions, setRegions] = useState([]);
