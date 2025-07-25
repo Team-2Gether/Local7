@@ -89,7 +89,7 @@
         #{createdId},
         COALESCE(#{userPassword, jdbcType=VARCHAR}, 'NO_PASSWORD_OAUTH'),
         COALESCE(#{userNickname, jdbcType=VARCHAR}, 'Kakao_User'),
-        COALESCE(#{userBio, jdbcType=VARCHAR}, 'Self-introduction not provided.')
+        COALESCE(#{userBio, jdbcType=VARCHAR}, '입력된 자기소개가 없습니다')
         )
     </insert>
 

@@ -66,21 +66,8 @@
     flex-grow: 1;
     background-color:#444444;
     border-radius: 20px;
-    padding: 50px; /* 패딩 줄임 */
+    padding: 0 50px 0 175px;
 }
-
-/* User Info Section */
-.user-info-section {
-    background: #444444;
-    display: flex;
-    align-items: center;
-    gap: 10px; /* 간격 약간 줄임 */
-    flex-wrap: wrap;
-    border-radius: 20px;
-    padding: 0px 115px; /* 패딩 줄임 */
-    margin-bottom: 20px; /* margin 줄임 */
-}
-
 
 .profile-image {
     width: 120px; /* 크기 줄임 */
@@ -94,8 +81,7 @@
 .user-details {
   flex-grow: 1;
   line-height: 1.4;
-  /* 디자인 추가 */
-  color: #eee;                   /* 글씨 색상 */
+  color: #eee;
 }
 .user-details1 p {
     margin-right: 200px; /* margin-right 줄임 */
@@ -115,8 +101,6 @@
 /* 내가 작성한 게시글 섹션 */
 .my-posts-container {
   padding: 39px;
-  position: relative;
-  top: -80px;  /* 위로 이동 */
 }
 
 .my-posts-title {
@@ -245,12 +229,6 @@
         flex: none;
         width: 100%;
         margin-bottom: 15px; /* margin 줄임 */
-    }
-
-    .user-info-section {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px; /* 간격 줄임 */
     }
 
     .user-details p {

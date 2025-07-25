@@ -47,22 +47,6 @@
     color: black;
 }
 
-
-.user-info-section {
-    background: #444444;
-    display: flex;
-    align-items: center;
-    gap: 10px; /* 간격 약간 줄임 */
-    flex-wrap: wrap;
-    border-radius: 20px;
-    padding: 0px 115px; /* 패딩 줄임 */
-    margin-bottom: 20px; /* margin 줄임 */
-}
-
-.profile-image-container {
-    margin-bottom: 20px;
-}
-
 .profile-image {
     width: 200px !important;
     height: 200px !important;

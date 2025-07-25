@@ -6,15 +6,15 @@
     gap: 10px; /* 간격 약간 줄임 */
     flex-wrap: wrap;
     border-radius: 20px;
-    padding: 0px 115px; /* 패딩 줄임 */
     margin-bottom: 20px; /* margin 줄임 */
 }
 
-.profile-image-container {
-    margin-bottom: 20px;
+.UserInfo-bio {
+    resize: none;
+    background: none;
+    border: none;
+    color: white;
 }
-
-
 
 .profile-image {
     width: 150px;
