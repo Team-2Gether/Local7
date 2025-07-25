@@ -108,6 +108,11 @@
 .my-posts-container {
   padding: 39px;
 }
+.post-link {
+    display: block;         /* 블록 요소로 만들어야 margin: auto 적용 가능 */
+    text-align: center;     /* 내부 텍스트 중앙 정렬 */
+    margin: 0 auto;         /* 요소 자체도 가운데로 */
+}
 
 .my-posts-title {
     font-size: 1.1em; /* 폰트 크기 줄임 */
