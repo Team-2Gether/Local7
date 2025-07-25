@@ -268,14 +268,10 @@
 
 
 /* 게시글 카드 제목 (PostList) */
+
 .post-card-title {
     font-size: 1.3em;
-    color: #ffffff;
-    word-break: break-word;
-}
-.post-card-title {
-    font-size: 1.3em;
-    color: #ffffff;
+    color: #FFCC00;
     word-break: break-word;
 }
 
@@ -293,6 +289,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: left;
 }
 
 /* 게시글 메타 정보 (PostList) */

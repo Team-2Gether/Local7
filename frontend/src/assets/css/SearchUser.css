@@ -212,7 +212,9 @@ p {
 .pagination-button1.active1 {
   border-color: var(--primary-color); 
   font-weight: bold; 
-  color: #111111; 
+  color: #ffffff; 
+    background-color: #ffcc00; /* 선택된(활성화된) 버튼 색상 */
+  color: black;
 }
 
 .pagination-button1:disabled {
@@ -220,6 +222,8 @@ p {
   opacity: 0.5;
   color:black;
 }
+
+
 
 /* --- 반응형 디자인 --- */
 @media (max-width: 600px) {
