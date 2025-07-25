@@ -34,7 +34,7 @@
         JOIN
             TB_USER B ON A.USER_ID = B.USER_ID
         LEFT JOIN
-            TB_COMMENT_LIKE TBL ON A.COMMENT_ID = TBL.COMMENT_ID AND TBL.USER_ID = #{currentUserId}
+            TB_COMMENT_LIKE TBL ON A.COMMENT_ID = TBL.COMMENT_ID AND TBL.USER_ID = #{currentUserId, jdbcType=NUMERIC}
         WHERE A.POST_ID = #{postId}
         <choose>
             <when test="sortOrder == 'likes'">

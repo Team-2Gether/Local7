@@ -14,6 +14,7 @@ import com.twogether.local7.user.dao.UserDAO;
 import com.twogether.local7.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -111,6 +112,7 @@ public class AdminServiceImpl implements AdminService {
 
     // 사용자 삭제 메소드 구현
     @Override
+    @Transactional
     public void deleteUser(Long userId) {
         adminDAO.deleteAllPostsByUserId(userId);
         adminDAO.deleteAllCommentsByUserId(userId);
