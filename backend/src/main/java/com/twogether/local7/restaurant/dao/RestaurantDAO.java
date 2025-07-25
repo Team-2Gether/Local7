@@ -26,4 +26,7 @@ public interface RestaurantDAO {
 
     // 식당 ID로 음식점 정보 조회
     RestaurantVO findRestaurantById(Long restId);
+
+    // 특정 지역에서 평균 평점이 높은 음식점 목록 조회
+    List<RestaurantVO> findTopRatedRestaurantsByRegion(@Param("regionName") String regionName, @Param("limit") int limit);
 }

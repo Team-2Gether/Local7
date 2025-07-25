@@ -18,4 +18,8 @@ public interface RestaurantService {
 
     // 식당 ID로 음식점 정보 조회
     Mono<RestaurantVO> getRestaurantById(Long restId); // Mono<RestaurantVO>로 변경
+
+    // 특정 지역에서 평균 평점이 높은 음식점 목록 조회
+    Mono<List<RestaurantVO>> getTopRatedRestaurantsByRegion(String regionName, int limit);
+
 }

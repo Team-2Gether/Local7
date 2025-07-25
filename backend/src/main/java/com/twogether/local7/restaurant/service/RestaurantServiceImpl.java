@@ -49,4 +49,10 @@ public class RestaurantServiceImpl implements RestaurantService {
         // DAO에 findRestaurantById 메서드가 없으면 추가해야 합니다.
         return Mono.fromCallable(() -> restaurantDAO.findRestaurantById(restId));
     }
+
+    @Override
+    public Mono<List<RestaurantVO>> getTopRatedRestaurantsByRegion(String regionName, int limit) {
+        // 특정 지역에서 평균 평점이 높은 음식점 목록을 조회하는 DAO 메서드 호출
+        return Mono.fromCallable(() -> restaurantDAO.findTopRatedRestaurantsByRegion(regionName, limit));
+    }
 }
