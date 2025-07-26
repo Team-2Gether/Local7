@@ -14,7 +14,7 @@
     <resultMap id="userMap" type="com.twogether.local7.vote.vo.VoteVO">
         <id property="userId" column="USER_ID"/>
         <result property="hasVoted" column="HAS_VOTED"/>
-    </resultMap>
+        <result property="votedRegion" column="VOTED_REGION"/> </resultMap>
 
     <resultMap id="voteResultMap" type="com.twogether.local7.vote.vo.VoteVO">
         <id property="regionId" column="REGION_ID"/>
@@ -22,29 +22,33 @@
         <result property="viewCount" column="VIEW_COUNT"/>
     </resultMap>
 
-    <!-- view_count 증가 -->
     <update id="increaseViewCount">
         UPDATE tb_region
         SET view_count = view_count + 1
         WHERE region_id = #{regionId}
     </update>
-    <!-- 유저 투표 상태 Y로 변경-->
-    <update id="updateHasVoted" parameterType="java.lang.Long">
+    <update id="updateHasVoted">
         UPDATE tb_user
         SET has_voted = 'Y'
-        WHERE user_id = #{userId, jdbcType=BIGINT}
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updateVotedRegion">
+        UPDATE tb_user
+        SET voted_region = #{regionId}
+        WHERE user_id = #{userId}
     </update>
 
     <select id="getAllViewCount" resultMap="voteResultMap">
         SELECT  region_id,
-                krName,
-                view_count
+        krName,
+        view_count
         FROM (
-            SELECT  region_id,
-                    SUBSTR(region_description, 1, 2) AS krName,
-                    view_count
-            FROM tb_region
-            ORDER BY view_count DESC
+        SELECT  region_id,
+        SUBSTR(region_description, 1, 2) AS krName,
+        view_count
+        FROM tb_region
+        ORDER BY view_count DESC
         )
         WHERE ROWNUM &lt;= 10
     </select>
@@ -52,8 +56,8 @@
     <select id="getUserById" resultMap="userMap">
         SELECT
         user_id,
-        has_voted
-        FROM tb_user
+        has_voted,
+        voted_region FROM tb_user
         WHERE user_id = #{userId}
     </select>
 

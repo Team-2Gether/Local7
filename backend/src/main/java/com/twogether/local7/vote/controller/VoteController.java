@@ -24,6 +24,7 @@ public class VoteController {
         if (userId == null) {
             return ResponseEntity.status(401).body("로그인이 필요합니다.");
         }
+        // regionId를 받아 vote 서비스 호출
         voteService.vote(userId, voteVO.getRegionId());
         return ResponseEntity.ok("투표 완료");
     }
@@ -54,6 +55,3 @@ public class VoteController {
         return voteService.getAllPosts();
     }
 }
-
-
-

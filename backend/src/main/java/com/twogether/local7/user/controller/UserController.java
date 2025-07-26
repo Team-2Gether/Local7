@@ -299,6 +299,21 @@ public class UserController {
         }
     }
 
+    // 투표 여부 및 투표 지역 업데이트 엔드포인트 추가
+    @PostMapping("/update-vote-status") //
+    public ResponseEntity<Map<String, Object>> updateVotedStatus( //
+                                                                  @RequestParam Long userId, //
+                                                                  @RequestParam String hasVoted, //
+                                                                  @RequestParam(required = false) Integer votedRegion) { //
+        try { //
+            userService.updateVotedStatus(userId, hasVoted, votedRegion); //
+            return ResponseEntity.ok(createSuccessResponse("투표 상태 및 지역이 성공적으로 업데이트되었습니다.")); //
+        } catch (Exception e) { //
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) //
+                    .body(createErrorResponse("vote_status_update_failed", "투표 상태 및 지역 업데이트 중 오류가 발생했습니다.")); //
+        } //
+    } //
+
     private Map<String, Object> createErrorResponse(String code, String message) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "error");

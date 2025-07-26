@@ -23,6 +23,9 @@ public class VoteServiceImpl implements VoteService{
 
         // has_voted = 'Y' 로 변경
         voteDAO.updateHasVoted(userId);
+
+        // voted_region 업데이트
+        voteDAO.updateVotedRegion(userId, regionId);
     }
 
     @Override
@@ -33,6 +36,12 @@ public class VoteServiceImpl implements VoteService{
     @Override
     public void updateHasVoted(Long userId) {
         voteDAO.updateHasVoted(userId);
+    }
+
+    // voted_region 업데이트 메서드 구현
+    @Override
+    public void updateVotedRegion(Long userId, Long regionId) {
+        voteDAO.updateVotedRegion(userId, regionId);
     }
 
     @Override

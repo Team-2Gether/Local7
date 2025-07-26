@@ -13,6 +13,7 @@ public class VoteVO {
     private Long userId;
     private Long viewCount;
     private String hasVoted; // "Y" or "N"
+    private Long votedRegion; // 추가된 votedRegion 필드
 
     //region
     private Long regionId;

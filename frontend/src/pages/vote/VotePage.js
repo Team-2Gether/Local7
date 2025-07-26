@@ -1,3 +1,4 @@
+// frontend/src/pages/VotePage.js
 import React, { useState, useEffect } from 'react';
 import VotePagePost from './components/VotePage_post';
 import VotePageResult from './components/VotePage_result';
@@ -44,6 +45,18 @@ function VotePage() {
     if (userId) fetchUserVoteStatus();
   }, [userId]);
 
+  // regions나 selectedOption이 변경될 때 slideIndex를 업데이트
+  useEffect(() => {
+    if (regions.length > 0 && selectedOption !== null) {
+      const currentRegionIndex = regions.findIndex(
+        (region) => region.key === selectedOption
+      );
+      if (currentRegionIndex !== -1 && currentRegionIndex !== slideIndex) {
+        setSlideIndex(currentRegionIndex);
+      }
+    }
+  }, [selectedOption, regions]);
+
   const fetchUserStatus = async () => {
     try {
       const res = await axios.get('http://192.168.0.10:8080/api/auth/status', {
@@ -67,8 +80,8 @@ function VotePage() {
       console.log('hasVoted 설정:', voteData.hasVoted === 'Y');
       if (voteData && voteData.hasVoted === 'Y') {
         setHasVoted(true);
-        setSelectedOption(voteData.regionId);
-        const idx = regions.findIndex((r) => r.key === voteData.regionId);
+        setSelectedOption(voteData.votedRegion); // 변경: votedRegion 사용
+        const idx = regions.findIndex((r) => r.key === voteData.votedRegion); // 변경: votedRegion 사용
         if (idx >= 0) setSlideIndex(idx);
       }
     } catch (err) {
@@ -96,8 +109,11 @@ function VotePage() {
       setRegions(regionsWithImg);
 
       if (regionsWithImg.length > 0) {
-        setSelectedOption(regionsWithImg[0].key);
-        setSlideIndex(0);
+        // 첫 번째 지역으로 초기화 (hasVoted가 N일 경우)
+        if (!hasVoted) {
+          setSelectedOption(regionsWithImg[0].key);
+          setSlideIndex(0);
+        }
 
         const topRegion = regionsWithImg.reduce(
           (max, region) => (region.voteCount > max.voteCount ? region : max),
@@ -123,7 +139,9 @@ function VotePage() {
       );
       setHasVoted(true);
       alert('투표가 완료되었습니다!');
-      fetchRegions();
+      fetchRegions(); // 투표 후 지역 데이터 다시 불러오기 (투표 수 업데이트 위함)
+      fetchUserVoteStatus(); // 투표 후 사용자 투표 상태 다시 불러오기 (votedRegion 업데이트 위함)
+      setSelectedOption(selectedOption); // 투표 완료 후 해당 지역 버튼 활성화 유지
     } catch (err) {
       console.error('투표 처리 실패', err);
       alert('투표 중 오류가 발생했습니다.');

@@ -16,6 +16,8 @@ public class UserVO {
     private String userBio;
     private Long ruleId; // 1은 admin 2는 user
     private String ruleName; // TB_RULE 테이블의 RULE_NAME 컬럼과 매핑
+    private String hasVoted; //
+    private Integer votedRegion; //
     private Timestamp createDate;
     private String createdId;
     private Timestamp updatedDate;

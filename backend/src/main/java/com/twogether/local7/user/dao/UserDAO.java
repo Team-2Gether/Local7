@@ -19,8 +19,15 @@ public interface UserDAO {
     void updateUserLoginId(Long userId, String newUserLoginId);
 
     int countByUserNickname(String userNickname);
+
     void updateUserNickname(Long userId, String newUserNickname);
+
     void deleteUser(Long userId);
+    // 추가된 메서드
+    void deleteFollowsByFollowerId(Long userId); //
+
+    void deleteFollowsByFollowingId(Long userId); //
+
 
     List<PostDetailVO> findPostsByUserId(Long userId, RowBounds rowBounds);
 
@@ -41,10 +48,12 @@ public interface UserDAO {
     // 새롭게 추가된 부분
     void updateUserBio(Long userId, String userBio);
 
-    // --- 아이디/비밀번호 찾기 기능 추가 ---
     // 이메일로 사용자 로그인 ID 찾기
     String findUserLoginIdByEmail(String userEmail);
 
     // 이메일로 사용자 비밀번호 업데이트
     int updateUserPasswordByEmail(Map<String, Object> params);
+
+    // 투표 여부 및 투표 지역 업데이트
+    void updateVotedStatus(Long userId, String hasVoted, Integer votedRegion); //
 }

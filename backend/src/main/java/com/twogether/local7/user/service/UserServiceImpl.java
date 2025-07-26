@@ -1,5 +1,5 @@
-// src/main/java/com/twogether/local7/user/service/impl/UserServiceImpl.java
-package com.twogether.local7.user.service.impl;
+// src/main/java/com/twogether/local7/user/service/UserServiceImpl.java
+package com.twogether.local7.user.service;
 
 import com.twogether.local7.like.service.LikeService;
 import com.twogether.local7.pagintion.Pagination;
@@ -133,6 +133,8 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("유효하지 않거나 만료된 인증 코드입니다.");
         }
 
+        userDAO.deleteFollowsByFollowerId(userId); //
+        userDAO.deleteFollowsByFollowingId(userId); //
         userDAO.deleteUser(userId);
         verificationCodes.remove(userId); // 사용된 인증 코드 삭제
     }
@@ -229,5 +231,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserBio(Long userId, String userBio) {
         userDAO.updateUserBio(userId, userBio);
+    }
+
+    @Override
+    public void updateVotedStatus(Long userId, String hasVoted, Integer votedRegion) { //
+        userDAO.updateVotedStatus(userId, hasVoted, votedRegion); //
     }
 }
