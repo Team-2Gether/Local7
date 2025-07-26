@@ -72,7 +72,7 @@
         WHERE COMMENT_ID = #{commentId}
     </update>
 
-    <delete id="deleteComment" parameterType="long">
+    <delete id="deleteComment" parameterType="long" flushCache="true">
         DELETE FROM TB_COMMENT
         WHERE COMMENT_ID = #{commentId}
     </delete>

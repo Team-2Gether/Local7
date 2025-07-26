@@ -20,13 +20,13 @@ public interface CommentDAO {
 
     void updateComment(CommentVO comment);
 
-    void deleteComment(Long commentId);
+    int deleteComment(Long commentId);
 
     CommentVO selectComment(Long commentId);
 
     void incrementCommentCount(@Param("postId") Long postId);
 
-    void decrementCommentCount(@Param("postId") Long postId);
+    int decrementCommentCount(@Param("postId") Long postId);
 
     // 특정 사용자가 특정 댓글에 좋아요를 눌렀는지 확인
     boolean checkCommentLike(

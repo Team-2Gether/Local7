@@ -147,7 +147,7 @@ public class PostController {
         post.setUpdatedId(currentUserLoginId);
 
         try {
-            boolean success = postService.updatePost(post, images, currentUserId);
+            boolean success = postService.updatePost(post, images, currentUserId); // <-- 이 부분에서 권한 및 이미지 처리가 서비스 계층에서 이루어짐
 
             if (success) {
                 response.put("status", "success");

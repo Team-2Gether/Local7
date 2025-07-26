@@ -5,13 +5,19 @@ import com.twogether.local7.comment.vo.CommentVO;
 import com.twogether.local7.user.dao.UserDAO;
 import com.twogether.local7.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 @Service
 public class CommentServiceImpl implements CommentService {
+
+
+    private static final Logger logger = LoggerFactory.getLogger(CommentServiceImpl.class); // 로거 선언
 
     @Autowired
     private CommentDAO commentDAO;
@@ -44,15 +50,45 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public boolean deleteComment(Long commentId, Long userId, Long ruleId) {
-        CommentVO originalComment = commentDAO.selectComment(commentId);
+        CommentVO originalComment = commentDAO.selectComment(commentId); // 이 시점의 originalComment는 삭제 전의 상태
 
-        // 원본 작성자이거나 ruleId가 1인 경우에만 허용
         if (originalComment != null && (originalComment.getUserId().equals(userId) || (ruleId != null && ruleId == 1))) {
-            commentDAO.deleteComment(commentId);
-            commentDAO.decrementCommentCount(originalComment.getPostId());
+            Long postIdToUpdate = originalComment.getPostId(); // 댓글이 속한 게시글 ID
+            logger.info("댓글 삭제 시작: commentId={}, postId={}", commentId, postIdToUpdate);
+
+            // 1. 댓글 자체 삭제
+            int deleteCommentResult = commentDAO.deleteComment(commentId);
+            if (deleteCommentResult == 0) {
+                logger.warn("댓글 삭제 실패: commentId={}. 해당 댓글이 없거나 권한 없음.", commentId);
+                // 댓글 삭제 자체가 실패했다면, 더 진행할 필요가 없습니다.
+                return false;
+            }
+            logger.info("댓글 삭제 성공: commentId={}", commentId);
+
+            // 2. 게시글 댓글 수 감소
+            if (postIdToUpdate != null) {
+                logger.info("게시글 댓글 수 감소 시도: postId={}", postIdToUpdate);
+                // decrementCommentCount 메서드의 반환 값을 받아 로깅합니다.
+                // CommentDAO 인터페이스에서 decrementCommentCount의 반환 타입을 int로 변경해야 합니다.
+                int affectedRows = commentDAO.decrementCommentCount(postIdToUpdate);
+                logger.info("게시글 댓글 수 감소 결과: postId={}, affectedRows={}", postIdToUpdate, affectedRows);
+
+                // 만약 affectedRows가 0이라면, 업데이트가 되지 않았음을 의미합니다.
+                if (affectedRows == 0) {
+                    logger.warn("게시글 댓글 수 감소 실패 또는 대상 게시글 없음: postId={}", postIdToUpdate);
+                }
+            } else {
+                logger.warn("originalComment에서 postId를 가져올 수 없습니다. 댓글 수 감소 건너_입니다.");
+            }
+
+
+            // 3. 댓글 좋아요 삭제 (이 부분은 COMMENT_COUNT와는 별개)
             commentDAO.deleteCommentLikesByCommentId(commentId);
+            logger.info("댓글 좋아요 삭제 완료: commentId={}", commentId);
+
             return true;
         }
+        logger.warn("댓글 삭제 권한 없음: commentId={}, userId={}, ruleId={}", commentId, userId, ruleId);
         return false;
     }
 
