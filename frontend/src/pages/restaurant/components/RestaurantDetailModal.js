@@ -279,18 +279,24 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                                                 </span>
                                             </div>
                                         </div>
-                                        <p className="review-content">{review.reviewContent}</p>
-                                        {currentUser && (currentUser.userId === review.userId || currentUser.ruleId === 1) ? (
-                                            <div className="review-actions">
-                                                <button onClick={() => handleEditReview(review)}>수정</button>
-                                                <button onClick={() => handleDeleteReview(review.reviewId)}>삭제</button>
-                                            </div>
-                                        ) : (
-                                            // 다른 사람 리뷰의 경우
-                                            <div className="review-actions">
-                                                {
-                                                    // 작성자가 관리자(userId가 1 또는 닉네임이 '관리자')가 아닐 때만 신고 버튼 표시
-                                                    review.userId !== 1 && review.userNickname !== '관리자' && (
+                                        
+                                        {console.log('Rendering review:', review)}
+                                        {console.log('Current user:', currentUser)}
+                                        {console.log('Condition check for report button:', review.userId !== 1 && review.userNickname !== '관리자')}
+
+                                        <div className="review-actions">
+                                            {currentUser && (
+                                                <>
+                                                    {/* 시나리오 A: 리뷰 작성자 본인이거나 로그인한 사용자가 관리자인 경우 (수정/삭제 권한) */}
+                                                    {(currentUser.userId === review.userId || currentUser.ruleId === 1) && (
+                                                        <>
+                                                            <button onClick={() => handleEditReview(review)}>수정</button>
+                                                            <button onClick={() => handleDeleteReview(review.reviewId)}>삭제</button>
+                                                        </>
+                                                    )}
+
+                                                    {/* 시나리오 B: 현재 로그인한 사용자가 관리자이면서, 리뷰 작성자가 관리자가 아닌 경우 (관리자가 일반 유저 리뷰를 신고) */}
+                                                    {currentUser.ruleId === 1 && review.userId !== 1 && review.userNickname !== '관리자' && (
                                                         <button
                                                             onClick={() => handleOpenReportModal(review)}
                                                             className="icon-button"
@@ -298,10 +304,23 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                                                         >
                                                             <FaExclamationTriangle />
                                                         </button>
-                                                    )
-                                                }
-                                            </div>
-                                        )}
+                                                    )}
+
+                                                    {/* 시나리오 C: 현재 로그인한 사용자가 일반 유저이면서, 리뷰 작성자가 본인이 아니고, 리뷰 작성자가 관리자가 아닌 경우 (일반 유저가 다른 일반 유저 리뷰를 신고) */}
+                                                    {currentUser.ruleId !== 1 && currentUser.userId !== review.userId && review.userId !== 1 && review.userNickname !== '관리자' && (
+                                                        <button
+                                                            onClick={() => handleOpenReportModal(review)}
+                                                            className="icon-button"
+                                                            title="리뷰 신고"
+                                                        >
+                                                            <FaExclamationTriangle />
+                                                        </button>
+                                                    )}
+                                                </>
+                                            )}
+                                        </div>
+
+                                        <p>{review.reviewContent}</p>
                                     </li>
                                 ))}
                             </ul>

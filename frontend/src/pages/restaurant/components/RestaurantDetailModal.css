@@ -80,7 +80,7 @@
 .review-list-container {
     background-color: #1e1e1e;
     padding: 20px;
-    margin-top:10px;
+    margin-top: 10px;
     border-radius: 10px;
     color: #e0e0e0;
 }
@@ -215,10 +215,13 @@
 /* AI 종합 요약 컨테이너 */
 .modal-action-buttons,
 .restaurant-ai-summary {
-    background-color: #1e1e1e; /* 음식점 항목과 동일한 배경색 */
-    border: 1px solid #333; /* 음식점 항목과 동일한 테두리 */
+    background-color: #1e1e1e;
+    /* 음식점 항목과 동일한 배경색 */
+    border: 1px solid #333;
+    /* 음식점 항목과 동일한 테두리 */
     border-radius: 8px;
-    padding: 1.5rem; /* 충분한 내부 여백 */
+    padding: 1.5rem;
+    /* 충분한 내부 여백 */
     margin-top: 2rem;
 }
 
@@ -228,7 +231,8 @@
     align-items: center;
     color: #fff;
     font-size: 1.2rem;
-    margin: 0 0 1rem 0; /* 아래 여백 */
+    margin: 0 0 1rem;
+    /* 아래 여백 */
 }
 
 /* AI 요약 텍스트 */
@@ -247,26 +251,54 @@
 .restaurant-ai-summary p:last-child {
     font-size: 0.9rem;
     margin-top: 0.5rem;
-    color: #f39c12; 
+    color: #f39c12;
 }
 
 .kakao-map-link-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 15px;
-  background-color: #FEE500; /* 카카오 브랜드 컬러 */
-  color: #191919; /* 카카오 브랜드 글자색 */
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  text-decoration: none; /* 밑줄 제거 */
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    background-color: #FEE500;
+    /* 카카오 브랜드 컬러 */
+    color: #191919;
+    /* 카카오 브랜드 글자색 */
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    /* 밑줄 제거 */
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap;
+    /* 텍스트가 줄바꿈되지 않도록 설정 */
 }
 
 .kakao-map-link-button:hover {
-  background-color: #F7E600; /* 호버 시 약간 더 어두운 노란색 */
-  transform: translateY(-1px); /* 살짝 위로 이동하는 효과 */
+    background-color: #F7E600;
+    /* 호버 시 약간 더 어두운 노란색 */
+    transform: translateY(-1px);
+    /* 살짝 위로 이동하는 효과 */
+}
+
+.icon-button {
+    background-color: #dc3545; /* 빨간색 계열 */
+    color: white;
+    border: none;
+    border-radius: 20px; /* 수정/삭제 버튼과 동일하게 둥글게 */
+    width: auto; /* 내용에 맞게 너비 자동 조절 */
+    height: auto; /* 내용에 맞게 높이 자동 조절 */
+    padding: 6px 12px; /* 수정/삭제 버튼과 동일한 패딩 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem; /* 텍스트와 아이콘 모두에 적용 */
+    opacity: 0.8;
+    transition: opacity 0.2s, background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.icon-button:hover {
+    opacity: 1;
 }

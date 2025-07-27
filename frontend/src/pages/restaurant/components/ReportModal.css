@@ -9,25 +9,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 2002;
 }
 
 /* 모달 본체 스타일 */
 .report-modal {
     background-color: #333;
     color: #f0f0f0;
-    padding: 30px;
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     width: 90%;
     max-width: 500px;
     text-align: center;
 }
 
 /* 모달 내용 컨테이너 */
-.modal-content {
-    /* 기존 스타일이 .report-modal에 적용되어 있어 추가적인 스타일이 필요 없어 보입니다. */
-}
+
 
 /* 제목(h3) 스타일 */
 .modal-content h3 {
