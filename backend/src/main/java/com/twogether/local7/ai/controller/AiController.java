@@ -24,11 +24,12 @@ public class AiController {
      * 요청 예시: {"message": "안녕하세요"}
      * 응답 예시: {"response": "안녕하세요, 무엇을 도와드릴까요?"}
      */
+    // AiService를 호출하여 AI 서버로부터 비동기 응답을 받음
     @PostMapping("/chat")
     public Mono<ResponseEntity<AiChatResponse>> chatWithAi(@RequestBody AiChatRequest request) {
-        // AiService를 호출하여 AI 서버로부터 비동기 응답을 받음
+        // 응답이 오면 HTTP 200 OK와 함께 반환
         return aiService.getChatResponse(request)
-                .map(response -> ResponseEntity.ok(response)); // 응답이 오면 HTTP 200 OK와 함께 반환
+                .map(response -> ResponseEntity.ok(response));
     }
 
     /**
