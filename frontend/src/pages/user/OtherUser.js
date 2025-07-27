@@ -28,14 +28,14 @@ function OtherUser({ currentUser }) {
 
             try {
                 // 1. 사용자 프로필 조회
-                const userProfileResponse = await axios.get(`http://192.168.0.10:8080/api/user/profile/loginid/${userLoginId}`);
+                const userProfileResponse = await axios.get(`http://localhost:8080/api/user/profile/loginid/${userLoginId}`);
                 if (userProfileResponse.status === 200 && userProfileResponse.data.status === "success") {
                     const profileData = userProfileResponse.data.userProfile;
                     setOtherUserProfile(profileData);
 
                     // 2. 팔로우 상태 확인 (현재 로그인한 사용자가 있을 때만)
                     if (currentUser && currentUser.userId && profileData.userId) {
-                        const followStatusResponse = await axios.get(`http://192.168.0.10:8080/api/follows/status`, {
+                        const followStatusResponse = await axios.get(`http://localhost:8080/api/follows/status`, {
                             params: {
                                 followerId: currentUser.userId,
                                 followingId: profileData.userId
@@ -50,7 +50,7 @@ function OtherUser({ currentUser }) {
                     const targetUserId = profileData.userId;
                     if (targetUserId) {
                         try {
-                            const followerCountResponse = await axios.get(`http://192.168.0.10:8080/api/follows/followers/count/${targetUserId}`);
+                            const followerCountResponse = await axios.get(`http://localhost:8080/api/follows/followers/count/${targetUserId}`);
                             if (followerCountResponse.status === 200) {
                                 setFollowerCount(followerCountResponse.data.followerCount);
                             } else {
@@ -61,7 +61,7 @@ function OtherUser({ currentUser }) {
                         }
 
                         try {
-                            const followingCountResponse = await axios.get(`http://192.168.0.10:8080/api/follows/followings/count/${targetUserId}`);
+                            const followingCountResponse = await axios.get(`http://localhost:8080/api/follows/followings/count/${targetUserId}`);
                             if (followingCountResponse.status === 200) {
                                 setFollowingCount(followingCountResponse.data.followingCount);
                             } else {
@@ -97,7 +97,7 @@ function OtherUser({ currentUser }) {
         }
 
         try {
-            const response = await axios.post('http://192.168.0.10:8080/api/follows/toggle', {
+            const response = await axios.post('http://localhost:8080/api/follows/toggle', {
                 followerId: currentUser.userId,
                 followingId: otherUserProfile.userId,
                 createdId: currentUser.userLoginId,

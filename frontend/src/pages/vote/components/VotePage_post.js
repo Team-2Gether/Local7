@@ -17,7 +17,7 @@ function VotePagePost() {
   //벡엔드 호출
   useEffect(() => {
     axios
-      .get('http://192.168.0.10:8080/api/vote/posts') //
+      .get('http://localhost:8080/api/vote/posts') //
       .then((res) => {
         setPosts(res.data);
       })

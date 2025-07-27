@@ -47,7 +47,7 @@ function UserPasswordSection({ currentUser, onLogout }) { // onLogout prop을 �
         try {
             //
             const response = await axios.post( // axios.post 사용
-                'http://192.168.0.10:8080/api/user/check-password', //
+                'http://localhost:8080/api/user/check-password', //
                 new URLSearchParams({ // URLSearchParams 사용하여 x-www-form-urlencoded 유지
                     userId: currentUser.userId,
                     password: currentPassword,
@@ -121,7 +121,7 @@ function UserPasswordSection({ currentUser, onLogout }) { // onLogout prop을 �
             // 1. 현재 비밀번호 확인 API 호출 (비밀번호 변경 전에 다시 한번 확인)
             //
             const checkPasswordResponse = await axios.post( // axios.post 사용
-                'http://192.168.0.10:8080/api/user/check-password', //
+                'http://localhost:8080/api/user/check-password', //
                 new URLSearchParams({
                     userId: currentUser.userId,
                     password: currentPassword,
@@ -145,7 +145,7 @@ function UserPasswordSection({ currentUser, onLogout }) { // onLogout prop을 �
             // 2. 비밀번호 변경 API 호출
             //
             const changePasswordResponse = await axios.post( // axios.post 사용
-                'http://192.168.0.10:8080/api/user/change-password', //
+                'http://localhost:8080/api/user/change-password', //
                 new URLSearchParams({
                     userId: currentUser.userId,
                     currentPassword: currentPassword,

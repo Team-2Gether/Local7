@@ -33,7 +33,7 @@ function FollowingList({ currentUser }) {
             setTargetUserId(idToFetch);
 
             try {
-                const response = await axios.get(`http://192.168.0.10:8080/api/follows/followings/${idToFetch}`);
+                const response = await axios.get(`http://localhost:8080/api/follows/followings/${idToFetch}`);
                 if (response.status === 200) {
                     setFollowings(response.data);
                 } else {

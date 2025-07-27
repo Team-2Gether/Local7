@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // API 클라이언트 인스턴스 생성
 const apiClient = axios.create({
-    baseURL: 'http://192.168.0.10:8080/api/admin', // 관리자 API의 공통 경로 설정
+    baseURL: 'http://localhost:8080/api/admin', // 관리자 API의 공통 경로 설정
     withCredentials: true, // 세션 쿠키를 포함하여 요청을 보냄
 });
 

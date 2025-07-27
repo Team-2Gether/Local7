@@ -29,7 +29,7 @@ function SearchUser() {
                 searchField: searchSearchField // 인자로 받은 검색 필드 사용
             };
 
-            const response = await axios.get(`http://192.168.0.10:8080/api/search/users`, {
+            const response = await axios.get(`http://localhost:8080/api/search/users`, {
                 params: params
             });
 

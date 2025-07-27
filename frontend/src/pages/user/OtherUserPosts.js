@@ -36,7 +36,7 @@ function OtherUserPosts({ userId }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get(`http://192.168.0.10:8080/api/user/${userId}/posts`, {
+            const response = await axios.get(`http://localhost:8080/api/user/${userId}/posts`, {
                 params: {
                     page: currentPage,
                     size: pageSize
