@@ -20,13 +20,14 @@
         <id property="regionId" column="REGION_ID"/>
         <result property="krName" column="krName"/>
         <result property="viewCount" column="VIEW_COUNT"/>
-    </resultMap>
+        <result property="votedRegionCount" column="VOTED_REGION_COUNT"/> </resultMap>
 
     <update id="increaseViewCount">
         UPDATE tb_region
         SET view_count = view_count + 1
         WHERE region_id = #{regionId}
     </update>
+
     <update id="updateHasVoted">
         UPDATE tb_user
         SET has_voted = 'Y'
@@ -40,17 +41,13 @@
     </update>
 
     <select id="getAllViewCount" resultMap="voteResultMap">
-        SELECT  region_id,
-        krName,
-        view_count
-        FROM (
-        SELECT  region_id,
-        SUBSTR(region_description, 1, 2) AS krName,
-        view_count
-        FROM tb_region
-        ORDER BY view_count DESC
-        )
-        WHERE ROWNUM &lt;= 10
+        <![CDATA[
+            SELECT  region_id,
+            SUBSTR(region_description, 1, 2) AS krName,
+            view_count
+            FROM tb_region
+            ORDER BY view_count DESC
+        ]]>
     </select>
 
     <select id="getUserById" resultMap="userMap">
@@ -59,6 +56,27 @@
         has_voted,
         voted_region FROM tb_user
         WHERE user_id = #{userId}
+    </select>
+
+    <select id="getVotedRegionCounts" resultMap="voteResultMap">
+        SELECT
+        main.REGION_ID,
+        main.krName,
+        main.VIEW_COUNT,
+        COUNT(tu.VOTED_REGION) AS VOTED_REGION_COUNT
+        FROM
+        (SELECT
+        tr.REGION_ID,
+        TO_CHAR(SUBSTR(tr.REGION_DESCRIPTION, 1, 2)) AS krName, tr.VIEW_COUNT
+        FROM
+        TB_REGION tr
+        ) main
+        LEFT JOIN
+        TB_USER tu ON main.REGION_ID = tu.VOTED_REGION
+        GROUP BY
+        main.REGION_ID, main.krName, main.VIEW_COUNT
+        ORDER BY
+        VOTED_REGION_COUNT DESC
     </select>
 
 </mapper>

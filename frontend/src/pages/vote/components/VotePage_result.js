@@ -4,27 +4,29 @@ import '../../../assets/css/VotePage.css';
 
 function VotePageResult() {
   const [voteData, setVoteData] = useState([]);
+  const [totalVotes, setTotalVotes] = useState(0);
 
   // 투표 수 불러오기
   useEffect(() => {
     axios
-      .get('http://192.168.0.10:8080/api/vote/results')
+      .get('http://192.169.0.10:8080/api/vote/voted-counts') // 변경된 엔드포인트 호출
       .then((response) => {
         setVoteData(response.data);
+        const calculatedTotalVotes = response.data.reduce((sum, item) => sum + item.votedRegionCount, 0); // votedRegionCount 사용
+        setTotalVotes(calculatedTotalVotes); // totalVotes 업데이트
       })
       .catch((error) => {
         console.error('투표 결과 불러오기 실패:', error);
       });
   }, []);
 
-  const totalVotes = voteData.reduce((sum, item) => sum + item.viewCount, 0);
 
   return (
     <div className="vote-result-container">
       <div className="vote-result-header">다음달 선정 투표 현황</div>
 
       {voteData.map((item, index) => {
-        const percent = ((item.viewCount / totalVotes) * 100).toFixed(1);
+        const percent = totalVotes === 0 ? 0 : ((item.votedRegionCount / totalVotes) * 100).toFixed(1); // votedRegionCount 사용
         return (
           <div className="vote-result-row" key={item.regionId}>
             <div className="vote-result-rank">{index + 1}</div>
