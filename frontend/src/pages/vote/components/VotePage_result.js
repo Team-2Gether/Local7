@@ -9,7 +9,7 @@ function VotePageResult() {
   // 투표 수 불러오기
   useEffect(() => {
     axios
-      .get('http://192.169.0.10:8080/api/vote/voted-counts') // 변경된 엔드포인트 호출
+      .get('http://192.168.0.10:8080/api/vote/voted-counts') // 변경된 엔드포인트 호출
       .then((response) => {
         setVoteData(response.data);
         const calculatedTotalVotes = response.data.reduce((sum, item) => sum + item.votedRegionCount, 0); // votedRegionCount 사용
