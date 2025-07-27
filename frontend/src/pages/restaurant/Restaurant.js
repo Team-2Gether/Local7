@@ -64,32 +64,33 @@ function Restaurant({ currentUser }) {
   // 1. 사용 가능한 메인 카테고리 목록 추출
   const availableMainCategories = useMemo(() => {
     const categories = new Set();
-    allRestaurants.forEach(restaurant => {
-      if (restaurant.restaurantCategory) {
-        const parts = restaurant.restaurantCategory.split(' > ');
-        if (parts.length > 1) { // '음식점 > 한식' 형식
-          categories.add(parts[1]);
+    filteredRestaurants.forEach(restaurant => { //
+        if (restaurant.restaurantCategory) {
+            const parts = restaurant.restaurantCategory.split(' > ');
+            if (parts.length > 1) {
+                categories.add(parts[1]);
+            }
         }
-      }
     });
-    return ['', ...Array.from(categories).sort()]; // 전체 선택 옵션 추가
-  }, [allRestaurants]);
+    return ['', ...Array.from(categories).sort()];
+}, [filteredRestaurants]);
 
   // 2. 선택된 메인 카테고리에 따른 하위 카테고리 목록 추출
   const availableSubCategories = useMemo(() => {
     const subCategories = new Set();
-    allRestaurants.forEach(restaurant => {
-      if (restaurant.restaurantCategory) {
-        const parts = restaurant.restaurantCategory.split(' > ');
-        if (selectedMainCategory) {
-          if (selectedMainCategory && parts[1] === selectedMainCategory && parts.length > 2) { // '한식 > 해물,생선' 형식
-            subCategories.add(parts[2]);
-          }
+    filteredRestaurants.forEach(restaurant => { //
+        if (restaurant.restaurantCategory) {
+            const parts = restaurant.restaurantCategory.split(' > ');
+            if (selectedMainCategory) {
+                // 메인 카테고리 필터링 시에는 filteredRestaurants에서 해당 메인 카테고리를 포함하는 항목만 확인
+                if (parts.length > 2 && parts[1] === selectedMainCategory) {
+                    subCategories.add(parts[2]);
+                }
+            }
         }
-      }
     });
-    return ['', ...Array.from(subCategories).sort()]; // 전체 선택 옵션 추가
-  }, [selectedMainCategory, allRestaurants]);
+    return ['', ...Array.from(subCategories).sort()];
+  }, [selectedMainCategory, filteredRestaurants]);
 
   // 3. 카테고리 선택에 따른 필터링 로직
   const categorizedRestaurants = useMemo(() => {
