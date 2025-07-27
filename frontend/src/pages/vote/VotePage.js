@@ -202,10 +202,10 @@ function VotePage() {
             이달의 게시물
           </div>
         </div>
-        <p className="best-reigon">
+        <div className="best-reigon">
           이번달의 선정지는
           <p className="best-reigon1">{topRegionName}</p>
-        </p>
+        </div>
       </div>
 
       {selectedTap === 'place' && (
