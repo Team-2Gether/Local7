@@ -29,4 +29,6 @@ public interface VoteDAO {
     //게시글 목록 불러오기
     List<VoteVO> getAllPosts();
 
+    // 각 지역별 투표한 사용자 수를 조회하는 메서드 추가
+    List<VoteVO> getVotedRegionCounts();
 }

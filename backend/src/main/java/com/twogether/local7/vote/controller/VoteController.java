@@ -54,4 +54,10 @@ public class VoteController {
     public List<VoteVO> getPosts() {
         return voteService.getAllPosts();
     }
+
+    // 각 지역별 투표한 사용자 수를 조회하는 엔드포인트 추가
+    @GetMapping("/voted-counts")
+    public List<VoteVO> getVotedRegionCounts() {
+        return voteService.getVotedRegionCounts();
+    }
 }

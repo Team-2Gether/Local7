@@ -25,4 +25,6 @@ public interface VoteService {
 
     List<VoteVO> getAllPosts();
 
+    // 각 지역별 투표한 사용자 수를 조회하는 메서드 추가
+    List<VoteVO> getVotedRegionCounts();
 }

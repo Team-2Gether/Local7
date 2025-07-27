@@ -65,4 +65,10 @@ public class VoteServiceImpl implements VoteService{
     public List<VoteVO> getAllPosts() {
         return voteDAO.getAllPosts();
     }
+
+    // 각 지역별 투표한 사용자 수를 조회하는 메서드 구현
+    @Override
+    public List<VoteVO> getVotedRegionCounts() {
+        return voteDAO.getVotedRegionCounts();
+    }
 }
