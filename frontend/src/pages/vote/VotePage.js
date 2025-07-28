@@ -59,7 +59,7 @@ function VotePage() {
 
   const fetchUserStatus = async () => {
     try {
-      const res = await axios.get('http://192.168.0.10:8080/api/auth/status', {
+      const res = await axios.get('http://localhost:8080/api/auth/status', {
         withCredentials: true,
       });
       setUserId(res.data.isLoggedIn ? res.data.userId : null);
@@ -70,7 +70,7 @@ function VotePage() {
 
   const fetchUserVoteStatus = async () => {
     try {
-      const res = await axios.get('http://192.168.0.10:8080/api/vote/userId', {
+      const res = await axios.get('http://localhost:8080/api/vote/userId', {
         withCredentials: true,
       });
 
@@ -102,7 +102,7 @@ function VotePage() {
 
   const fetchRegions = async () => {
     try {
-      const res = await axios.get('http://192.168.0.10:8080/api/vote/regions', {
+      const res = await axios.get('http://localhost:8080/api/vote/regions', {
         withCredentials: true,
       });
 
@@ -138,7 +138,7 @@ function VotePage() {
     if (!selectedOption || hasVoted) return;
     try {
       await axios.post(
-        'http://192.168.0.10:8080/api/vote/votes',
+        'http://localhost:8080/api/vote/votes',
         { regionId: selectedOption },
         { withCredentials: true }
       );

@@ -54,7 +54,7 @@ const useUserLoginId = (currentUser, onLogout) => {
 
         setIsCheckingLoginId(true);
         try {
-            const response = await axios.get(`http://192.168.0.10:8080/api/user/check-loginid?userLoginId=${newUserLoginId}`);
+            const response = await axios.get(`http://localhost:8080/api/user/check-loginid?userLoginId=${newUserLoginId}`);
             if (response.data.status === 'success') {
                 setIsLoginIdChecked(true);
                 setIsLoginIdAvailable(!response.data.isDuplicate);
@@ -90,7 +90,7 @@ const useUserLoginId = (currentUser, onLogout) => {
 
         setIsRequestingVerification(true);
         try {
-            const response = await axios.post('http://192.168.0.10:8080/api/user/request-loginid-change-verification', null, {
+            const response = await axios.post('http://localhost:8080/api/user/request-loginid-change-verification', null, {
                 params: {
                     userId: currentUser.userId,
                     newUserLoginId: newUserLoginId
@@ -138,7 +138,7 @@ const useUserLoginId = (currentUser, onLogout) => {
 
         setIsConfirmingLoginId(true);
         try {
-            const response = await axios.post('http://192.168.0.10:8080/api/user/confirm-loginid-change', null, {
+            const response = await axios.post('http://localhost:8080/api/user/confirm-loginid-change', null, {
                 params: {
                     userId: currentUser.userId,
                     newUserLoginId: newUserLoginId,

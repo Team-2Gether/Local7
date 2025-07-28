@@ -97,7 +97,7 @@ function OtherUser({ currentUser }) {
         }
 
         try {
-            const response = await axios.post('http://192.168.0.10:8080/api/follows/toggle', {
+            const response = await axios.post('http://localhost:8080/api/follows/toggle', {
                 followerId: currentUser.userId,
                 followingId: otherUserProfile.userId,
                 createdId: currentUser.userLoginId,

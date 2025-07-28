@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // API 클라이언트 인스턴스 생성
 const apiClient = axios.create({
-    baseURL: 'http://192.168.0.10:8080/api', // 기본 URL을 /api로 설정
+    baseURL: 'http://localhost:8080/api', // 기본 URL을 /api로 설정
     withCredentials: true, // 쿠키 등 인증 정보 포함
 });
 

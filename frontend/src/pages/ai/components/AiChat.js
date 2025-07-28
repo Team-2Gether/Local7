@@ -16,7 +16,7 @@ const AiChat = () => {
             <textarea
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                placeholder="R7봇에게 7번국도에 해당하는 도시명을 포함해서 질문해주세요..."
+                placeholder="R7봇에게 7번국도에 해당하는 도시명을 포함해서 질문해주세요...        예) 부산에 있는 한식 중 인기 있는 맛집 추천해줘"
                 rows="4"
                 className="ai-chat-textarea"
             />

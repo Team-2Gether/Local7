@@ -15,7 +15,7 @@ const OAuth2RedirectHandler = () => {
       try {
         // 백엔드의 googleLoginSuccess 엔드포인트 호출 (GET 요청)
         // 이 호출을 통해 백엔드는 OAuth2User 정보를 처리하고 세션에 저장합니다.
-        const response = await axios.get("http://192.168.0.10:8080/api/auth/login/oauth2/code/google");
+        const response = await axios.get("http://localhost:8080/api/auth/login/oauth2/code/google");
         
         if (response.status === 200 && response.data.isLoggedIn) {
           console.log('Google 로그인 처리 완료 및 상태 확인 성공:', response.data);
