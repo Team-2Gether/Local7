@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { fetchPosts, fetchPostById, createPost, updatePost as updatePostApi, deletePost, reportPost as reportPostApi } from '../../../api/PostApi';
+import { AdminApi } from '../../../api/AdminApi';
 
 const usePost = () => {
     const [posts, setPosts] = useState([]);
@@ -74,21 +75,30 @@ const usePost = () => {
     }, []);
 
     // 게시글 삭제 함수
-    const removePost = useCallback(async (postId) => {
+    const removePost = useCallback(async (postId, userId, isAdmin = false) => {
         setLoading(true);
         setError(null);
         setMessage(null);
         try {
-            const response = await deletePost(postId);
+            let response;
+            if (isAdmin && userId) {
+                console.log(`[usePost] AdminApi.deletePost 호출: postId=${postId}, userId=${userId}`);
+                response = await AdminApi.deletePost(postId, userId);
+            } else {
+                console.log(`[usePost] PostApi.deletePost 호출: postId=${postId}`);
+                response = await deletePost(postId);
+            }
             setMessage(response.message || '게시글이 성공적으로 삭제되었습니다.');
+            // 삭제 성공 후, UI에서 해당 게시글을 직접 제거하여 즉시 반영되도록 할 수 있습니다.
+            setPosts(prevPosts => prevPosts.filter(post => post.postId !== postId)); // 이 라인 추가
         } catch (err) {
             setError(err.response?.data?.message || '게시글 삭제에 실패했습니다.');
-            console.error('Failed to delete post:', err);
+            console.error('게시글 삭제에 실패했습니다:', err);
             throw err;
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [setPosts]);
     
     // 게시글 신고 함수
     const reportPost = useCallback(async (postId, reportReason) => {

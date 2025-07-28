@@ -21,7 +21,7 @@ function PostList({ currentUser, selectedCity }) {
         loadAllPosts(sortBy);
     }, [loadAllPosts, sortBy]);
 
-        useEffect(() => {
+    useEffect(() => {
         if (posts.length > 0) {
             // 1. 도시 필터링
             let currentFilteredPosts = [];
@@ -67,8 +67,13 @@ function PostList({ currentUser, selectedCity }) {
         // alert 대신 커스텀 모달 UI 사용 권장
         if (window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
             try {
-                await removePost(postId);
-                loadAllPosts();
+                // 현재 사용자가 관리자인지 확인
+                const isAdmin = currentUser && currentUser.ruleId === 1; // ruleId가 1이면 관리자라고 가정
+                const userId = currentUser ? currentUser.userId : null; // 현재 로그인한 사용자의 ID
+
+                // removePost 함수에 postId, userId, isAdmin 플래그 전달
+                await removePost(postId, userId, isAdmin);
+                loadAllPosts(); // 삭제 성공 후 게시글 목록을 다시 불러옴
             } catch (err) {
                 console.error('게시글 삭제 오류:', err);
                 // alert 대신 커스텀 모달 UI 사용 권장
@@ -115,7 +120,7 @@ function PostList({ currentUser, selectedCity }) {
         }
     }, [message, setMessage]);
 
-     const handlePostClick = (postId) => {
+    const handlePostClick = (postId) => {
         navigate(`/posts/${postId}`); // postId를 포함한 URL로 이동
     };
 
@@ -199,18 +204,17 @@ function PostList({ currentUser, selectedCity }) {
                                     <p className="post-card-meta">위치 | {post.locationTag}</p>
                                 </div>
                                 <div className="post-card-actions">
-                                        <span
-                                            className={`like-button3 ${post.liked ? 'liked' : ''}`}
-                                            onClick={(e) => handleToggleLike(post.postId, e)} // 좋아요 버튼 클릭 이벤트
-                                            disabled={likeLoading}
-                                        >
-                                            {post.liked ? '❤️' : '🤍'}
-                                        </span>
-                                        <span className="like-count">❤️{post.likeCount || 0}</span>
-                                        <span className="comment-count">💬 {post.commentCount}</span>
+                                    <span
+                                        className={`like-button3 ${post.liked ? 'liked' : ''}`}
+                                        onClick={(e) => handleToggleLike(post.postId, e)} // 좋아요 버튼 클릭 이벤트
+                                        disabled={likeLoading}
+                                    >
+                                        {post.liked ? '❤️' : '🤍'}
+                                    </span>
+                                    <span className="like-count">❤️{post.likeCount || 0}</span>
+                                    <span className="comment-count">💬 {post.commentCount}</span>
 
-                                {currentUser && (currentUser.userId === post.userId || currentUser.userLoginId === 'admin') && (
-
+                                {currentUser && (currentUser.userId === post.userId || currentUser.ruleId === 1) && ( // currentUser.userLoginId === 'admin' 대신 currentUser.ruleId === 1 사용
                                     <>
                                     <button
                                         onClick={(e) => {
@@ -226,9 +230,8 @@ function PostList({ currentUser, selectedCity }) {
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            if (window.confirm('삭제하시겠습니까?')) {
-                                                handleDelete(post.postId);
-                                            }
+                                            // handleDelete 함수에 postId, currentUser.userId, isAdmin 전달
+                                            handleDelete(post.postId);
                                         }}
                                         className="post-action-button delete"
                                     >

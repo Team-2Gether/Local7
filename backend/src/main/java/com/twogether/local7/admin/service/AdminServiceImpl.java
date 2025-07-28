@@ -9,8 +9,8 @@ import com.twogether.local7.pagintion.SimplePageable;
 import com.twogether.local7.post.vo.PostVO;
 import com.twogether.local7.report.vo.ReportVO;
 import com.twogether.local7.restaurant.vo.RestaurantVO;
-import com.twogether.local7.review.vo.ReviewVO; // ReviewVO import
-import com.twogether.local7.user.dao.UserDAO;
+import com.twogether.local7.review.vo.ReviewVO;
+import com.twogether.local7.user.dao.UserDAO; // UserDAO 임포트 유지
 import com.twogether.local7.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,12 +23,12 @@ import java.util.List;
 public class AdminServiceImpl implements AdminService {
 
     private final AdminDAO adminDAO;
-    private final UserDAO userDAO;
+    private final UserDAO userDAO; // UserDAO 유지
 
     @Override
     public boolean isAdmin(Long userId) {
-        UserVO user = userDAO.findByUserId(userId);
-        return user != null && user.getRuleId() != null && user.getRuleId() == 1;
+        UserVO user = userDAO.findByUserId(userId); // UserDAO를 통해 사용자 정보 조회
+        return user != null && user.getRuleId() != null && user.getRuleId() == 1L; // ruleId가 Long 타입이므로 1L로 비교
     }
 
     @Override
@@ -48,7 +48,20 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Transactional // 트랜잭션 처리
+    public boolean updatePost(PostVO postVO) {
+        // adminDAO에 postId만으로 업데이트하는 메서드가 필요합니다.
+        // 현재 adminDAO에는 updatePost 메서드가 없으므로, adminMapper.xml과 AdminDAO.java에 추가해야 합니다.
+        // 여기서는 adminDAO.updatePost(postVO)를 호출한다고 가정합니다.
+        return adminDAO.updatePost(postVO) > 0;
+    }
+
+    @Override
+    @Transactional // 트랜잭션 처리
     public void deletePost(Long postId) {
+        // 게시글에 연결된 이미지 먼저 삭제
+        adminDAO.deleteImagesByPostId(postId); // AdminDAO에 deleteImagesByPostId 메서드 추가 필요
+        // 게시글 삭제
         adminDAO.deletePost(postId);
     }
 
@@ -65,7 +78,6 @@ public class AdminServiceImpl implements AdminService {
         adminDAO.deleteComment(commentId);
     }
 
-    // 리뷰 목록 조회 추가
     @Override
     public Pagination<ReviewVO> getAllReviews(int pageNumber, int pageSize) {
         Pageable pageable = new SimplePageable(pageNumber, pageSize);
@@ -75,7 +87,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deleteReview(Long reviewId) { adminDAO.deleteReview(reviewId); }
+    public void deleteReview(Long reviewId) {
+        adminDAO.deleteReview(reviewId);
+    }
 
     @Override
     public Pagination<ReportVO> getAllReports(int pageNumber, int pageSize) {
@@ -91,6 +105,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Transactional // 트랜잭션 처리
     public void deleteContentFromReport(Long reportId) {
         ReportVO report = adminDAO.getReportById(reportId);
 
@@ -99,7 +114,9 @@ public class AdminServiceImpl implements AdminService {
             Long targetId = report.getTargetId();
 
             if ("post".equals(reportType)) {
-                adminDAO.deletePost(targetId);
+                // 게시글 삭제 시 이미지도 함께 삭제하도록 변경
+                adminDAO.deleteImagesByPostId(targetId); // 이미지 삭제
+                adminDAO.deletePost(targetId); // 게시글 삭제
             } else if ("comment".equals(reportType)) {
                 adminDAO.deleteComment(targetId);
             } else if ("review".equals(reportType)) {
@@ -110,21 +127,18 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-    // 사용자 삭제 메소드 구현
     @Override
-    @Transactional
+    @Transactional // 트랜잭션 처리
     public void deleteUser(Long userId) {
         adminDAO.deleteAllPostsByUserId(userId);
         adminDAO.deleteAllCommentsByUserId(userId);
         adminDAO.deleteAllReportsByUserId(userId);
-        adminDAO.deleteAllReviewsByUserId(userId); // 리뷰 기록 삭제 추가
-        adminDAO.deleteUser(userId); // 최종 사용자 삭제
+        adminDAO.deleteAllReviewsByUserId(userId);
+        adminDAO.deleteUser(userId);
     }
 
-    // 음식점 ID로 음식점 상세 정보 조회 메서드
     @Override
     public RestaurantVO getRestaurantById(Long restaurantId) {
         return adminDAO.findRestaurantById(restaurantId);
     }
-
 }

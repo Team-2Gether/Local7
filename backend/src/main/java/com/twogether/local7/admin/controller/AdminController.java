@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Mono; // Mono 임포트 유지
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class AdminController {
         return null; // 관리자 권한 확인 성공
     }
 
-    // --- 사용자 관리 API ---
+    // --- 사용자 관리 API (기존 코드 유지) ---
     @GetMapping("/users")
     public Mono<ResponseEntity<?>> getAllUsers(
             @RequestHeader("X-USER-ID") Long userId,
@@ -84,7 +84,31 @@ public class AdminController {
         }).map(posts -> new ResponseEntity<>(posts, HttpStatus.OK));
     }
 
-    @DeleteMapping("/posts/{postId}")
+    // 관리자용 게시글 수정 추가
+    @PutMapping("/posts/{postId}") // @PutMapping으로 수정하여 기존 DeleteMapping과 충돌 방지
+    public Mono<ResponseEntity<?>> updatePost(@RequestHeader("X-USER-ID") Long userId,
+                                              @PathVariable Long postId,
+                                              @RequestBody PostVO postVO) {
+        ResponseEntity<?> authCheck = checkAdminAuth(userId);
+        if (authCheck != null) {
+            return Mono.just(authCheck);
+        }
+
+        return Mono.fromCallable(() -> {
+            postVO.setPostId(postId); // PostVO에 postId 설정 (Long 타입)
+            // PostVO의 updatedId 필드가 있다면 관리자 ID로 설정 가능
+            // 예: postVO.setUpdatedId(String.valueOf(userId));
+
+            boolean success = adminService.updatePost(postVO); // AdminService의 updatePost 메서드 호출
+            if (success) {
+                return new ResponseEntity<>("게시글이 성공적으로 수정되었습니다.", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("게시글 수정에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        });
+    }
+
+    @DeleteMapping("/posts/{postId}") // 기존 deletePost 메서드 유지 및 사용
     public Mono<ResponseEntity<?>> deletePost(@RequestHeader("X-USER-ID") Long userId,
                                               @PathVariable Long postId) {
         ResponseEntity<?> authCheck = checkAdminAuth(userId);
@@ -92,11 +116,11 @@ public class AdminController {
             return Mono.just(authCheck);
         }
 
-        return Mono.fromRunnable(() -> adminService.deletePost(postId))
+        return Mono.fromRunnable(() -> adminService.deletePost(postId)) // adminService.deletePost 호출 유지
                 .thenReturn(new ResponseEntity<>("게시글이 성공적으로 삭제되었습니다.", HttpStatus.OK));
     }
 
-    // --- 댓글 관리 API ---
+    // --- 댓글 관리 API (기존 코드 유지) ---
     @GetMapping("/comments")
     public Mono<ResponseEntity<?>> getAllComments(
             @RequestHeader("X-USER-ID") Long userId,
@@ -126,7 +150,7 @@ public class AdminController {
                 .thenReturn(new ResponseEntity<>("댓글이 성공적으로 삭제되었습니다.", HttpStatus.OK));
     }
 
-    // --- 리뷰 관리 API 추가 ---
+    // --- 리뷰 관리 API 추가 (기존 코드 유지) ---
     @GetMapping("/reviews")
     public Mono<ResponseEntity<?>> getAllReviews(
             @RequestHeader("X-USER-ID") Long userId,
@@ -138,7 +162,6 @@ public class AdminController {
             return Mono.just(authCheck);
         }
 
-        // reviewService를 사용하거나 adminService에 getAllReviews를 추가하여 사용
         return Mono.fromCallable(() -> {
             Pagination<ReviewVO> reviewsPagination = adminService.getAllReviews(page, size);
             System.out.println("Returning reviews pagination: " + reviewsPagination);
@@ -158,7 +181,7 @@ public class AdminController {
                 .thenReturn(new ResponseEntity<>("리뷰가 성공적으로 삭제되었습니다.", HttpStatus.OK));
     }
 
-    // --- 신고 관리 API ---
+    // --- 신고 관리 API (기존 코드 유지) ---
     @GetMapping("/reports")
     public Mono<ResponseEntity<?>> getAllReports(
             @RequestHeader("X-USER-ID") Long userId,
