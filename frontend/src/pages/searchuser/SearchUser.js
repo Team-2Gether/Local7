@@ -137,10 +137,7 @@ function SearchUser() {
                                 className="profile-image1"
                             />
                             <div className="user-details1">
-                                <p><strong>아이디:</strong> {user.userLoginId}</p>
                                 <p><strong>닉네임:</strong> {user.userNickname}</p>
-                                <p><strong>이름:</strong> {user.userName}</p>
-                                <p><strong>이메일:</strong> {user.userEmail}</p>
                             </div>
                         </div>
                     ))}

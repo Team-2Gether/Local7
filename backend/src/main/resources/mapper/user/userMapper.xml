@@ -102,6 +102,7 @@
         TB_USER U ON P.USER_ID = U.USER_ID
         WHERE
         P.USER_ID = #{userId}
+        ORDER BY P.CREATED_DATE ASC
     </select>
 
     <select id="countPostsByUserId" parameterType="long" resultType="int">
@@ -146,6 +147,7 @@
         FROM TB_POST P
         JOIN TB_USER U ON P.USER_ID = U.USER_ID
         WHERE P.POST_ID = #{postId}
+        ORDER BY P.CREATED_DATE ASC
     </select>
 
     <update id="updateUserPassword" parameterType="map">
