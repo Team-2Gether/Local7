@@ -113,9 +113,17 @@
 
     <select id="findByUserLoginId" parameterType="string" resultMap="userResultMap">
         SELECT
-        USER_ID, RULE_ID, LOGIN_ID, USER_NAME, USER_PASSWORD, USER_EMAIL,
-        USER_NICKNAME, USER_PROF_IMG_URL, USER_BIO, HAS_VOTED, VOTED_REGION, CREATE_DATE, CREATED_ID,
-        UPDATED_DATE, UPDATED_ID
+        USER_ID,
+        USER_NAME,
+        USER_NICKNAME,
+        USER_PROF_IMG_URL,
+        USER_BIO,
+        HAS_VOTED,
+        VOTED_REGION,
+        CREATE_DATE,
+        CREATED_ID,
+        UPDATED_DATE,
+        UPDATED_ID
         FROM TB_USER
         WHERE LOGIN_ID = #{userLoginId}
     </select>

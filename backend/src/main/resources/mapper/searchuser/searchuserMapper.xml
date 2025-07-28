@@ -27,15 +27,10 @@
         SELECT
         ROWNUM AS rn,
         A.USER_ID,
-        A.LOGIN_ID,
         A.USER_EMAIL,
-        A.USER_PASSWORD,
         A.USER_NAME,
         A.USER_NICKNAME,
         A.USER_PROF_IMG_URL,
-        A.USER_BIO,
-        A.RULE_ID,
-        B.RULE_NAME,
         A.CREATE_DATE,
         A.CREATED_ID,
         A.UPDATED_DATE,
@@ -61,6 +56,9 @@
                     A.USER_EMAIL LIKE '%' || #{keyword} || '%'
                 </if>
                 )
+            </if>
+            <if test="keyword == null or keyword == ''">
+                AND 1 = 0
             </if>
         </where>
         ORDER BY A.USER_ID DESC
@@ -92,6 +90,9 @@
                     A.USER_EMAIL LIKE '%' || #{keyword} || '%'
                 </if>
                 )
+            </if>
+            <if test="keyword == null or keyword == ''">
+                AND 1 = 0
             </if>
         </where>
     </select>
