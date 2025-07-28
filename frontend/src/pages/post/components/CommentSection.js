@@ -80,8 +80,8 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
             setCommentError('로그인 후 댓글을 수정할 수 있습니다.');
             return;
         }
-        // 이 부분의 조건을 수정했습니다: 관리자(admin)이거나 본인 댓글인 경우
-        if (currentUser.userId !== comment.userId && currentUser.userLoginId !== 'admin') {
+        // 권한 확인 롤백: currentUser.userId와 comment.userId를 비교
+        if (currentUser.userId !== comment.userId && currentUser.ruleId !== 1) { // ruleId가 1 (관리자)인 경우 허용
             setCommentError('댓글을 수정할 권한이 없습니다.');
             return;
         }
@@ -104,7 +104,8 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
         
         // 수정할 댓글의 정보를 comments 배열에서 찾아서 권한 다시 확인
         const commentToEdit = comments.find(c => c.commentId === commentId);
-        if (!commentToEdit || (currentUser.userId !== commentToEdit.userId && currentUser.userLoginId !== 'admin')) {
+        // 권한 확인 롤백: currentUser.userId와 commentToEdit.userId를 비교
+        if (!commentToEdit || (currentUser.userId !== commentToEdit.userId && currentUser.ruleId !== 1)) { // ruleId가 1 (관리자)인 경우 허용
             setCommentError('댓글을 수정할 권한이 없습니다.');
             return;
         }
@@ -135,7 +136,8 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
 
         // 삭제할 댓글의 정보를 comments 배열에서 찾아서 권한 다시 확인
         const commentToDelete = comments.find(c => c.commentId === commentId);
-        if (!commentToDelete || (currentUser.userId !== commentToDelete.userId && currentUser.userLoginId !== 'admin')) {
+        // 권한 확인 롤백: currentUser.userId와 commentToDelete.userId를 비교
+        if (!commentToDelete || (currentUser.userId !== commentToDelete.userId && currentUser.ruleId !== 1)) { // ruleId가 1 (관리자)인 경우 허용
             setCommentError('댓글을 삭제할 권한이 없습니다.');
             return;
         }
@@ -196,7 +198,7 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
         return <p>댓글을 불러오는 중...</p>;
     }
 
-    if (commentError && !message) { // 메시지가 있으면 에러 메시지 대신 메시지를 보여줄 수 있음
+    if (commentError && !message) { 
         return <p className="error-message">{commentError}</p>;
     }
 
@@ -239,9 +241,10 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
                     comments.map((comment) => (
                         <div key={comment.commentId} className="comment-item">
                             <div className="comment-header">
-                                <Link to={`/user/profile/${post.userLoginId}`} className="user-profile-link">
+                                {/* 이 부분은 여전히 comment.loginId를 사용합니다. */}
+                                <Link to={`/user/profile/${comment.loginId}`} className="user-profile-link"> 
                                     <img
-                                        src={comment.userProfImgUrl || '/images/default_profile.png'} // 기본 프로필 이미지 경로 수정 (이전에 안내드린대로)
+                                        src={comment.userProfImgUrl || '/images/default_profile.png'} 
                                         alt="프로필"
                                         className="profile-img"
                                     />
@@ -268,7 +271,7 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
 
                             <div className="comment-footer">
                                 {/* 수정/삭제 버튼은 댓글 작성자 또는 관리자에게만 표시 */}
-                                {currentUser && (currentUser.userId === comment.userId || currentUser.userLoginId === 'admin') && editingCommentId !== comment.commentId && (
+                                {currentUser && (currentUser.userId === comment.userId || currentUser.ruleId === 1) && editingCommentId !== comment.commentId && ( 
                                     <div className="comment-actions">
                                         <button 
                                             onClick={() => handleUpdateCommentClick(comment)}
@@ -289,7 +292,7 @@ function CommentSection({ postId, currentUser, onCommentCountChange, post }) {
                                 <button
                                     className={`like-button2 ${comment.likedByCurrentUser ? 'liked' : ''}`}
                                     onClick={() => handleToggleLike(comment.commentId)}
-                                    disabled={!currentUser} // 로그인하지 않은 경우 비활성화
+                                    disabled={!currentUser} 
                                 >
                                     ❤️ {comment.likeCount || 0}
                                 </button>

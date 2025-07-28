@@ -15,6 +15,7 @@ public class CommentVO {
 
     private String userNickname;
     private String userProfImgUrl;
+    private String loginId; // loginId 필드 추가됨
 
     private int likeCount;
 

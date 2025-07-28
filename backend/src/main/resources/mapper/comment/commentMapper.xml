@@ -14,27 +14,28 @@
         <result property="updatedDate" column="UPDATED_DATE"/>
         <result property="userNickname" column="USER_NICKNAME"/>
         <result property="userProfImgUrl" column="USER_PROF_IMG_URL"/>
-        <result property="likeCount" column="LIKE_COUNT"/>
+        <result property="loginId" column="LOGIN_ID"/> <result property="likeCount" column="LIKE_COUNT"/>
         <result property="likedByCurrentUser" column="LIKED_BY_CURRENT_USER" javaType="boolean"/>
     </resultMap>
 
     <select id="selectCommentList" resultMap="commentResultMap">
         SELECT
-            A.COMMENT_ID,
-            A.POST_ID,
-            A.USER_ID,
-            A.CONTENT,
-            A.CREATED_DATE,
-            A.UPDATED_DATE,
-            A.LIKE_COUNT, B.USER_NICKNAME,
-            B.USER_PROF_IMG_URL,
-            CASE WHEN TBL.USER_ID IS NOT NULL THEN 1 ELSE 0 END AS LIKED_BY_CURRENT_USER
+        A.COMMENT_ID,
+        A.POST_ID,
+        A.USER_ID,
+        A.CONTENT,
+        A.CREATED_DATE,
+        A.UPDATED_DATE,
+        A.LIKE_COUNT,
+        B.USER_NICKNAME,
+        B.USER_PROF_IMG_URL,
+        B.LOGIN_ID, CASE WHEN TBL.USER_ID IS NOT NULL THEN 1 ELSE 0 END AS LIKED_BY_CURRENT_USER
         FROM
-            TB_COMMENT A
+        TB_COMMENT A
         JOIN
-            TB_USER B ON A.USER_ID = B.USER_ID
+        TB_USER B ON A.USER_ID = B.USER_ID
         LEFT JOIN
-            TB_COMMENT_LIKE TBL ON A.COMMENT_ID = TBL.COMMENT_ID AND TBL.USER_ID = #{currentUserId, jdbcType=NUMERIC}
+        TB_COMMENT_LIKE TBL ON A.COMMENT_ID = TBL.COMMENT_ID AND TBL.USER_ID = #{currentUserId, jdbcType=NUMERIC}
         WHERE A.POST_ID = #{postId}
         <choose>
             <when test="sortOrder == 'likes'">
@@ -50,25 +51,25 @@
             SELECT SEQ_TB_COMMENT.NEXTVAL FROM DUAL
         </selectKey>
         INSERT INTO TB_COMMENT (
-            COMMENT_ID,
-            POST_ID,
-            USER_ID,
-            CONTENT,
-            LIKE_COUNT
+        COMMENT_ID,
+        POST_ID,
+        USER_ID,
+        CONTENT,
+        LIKE_COUNT
         ) VALUES (
-            #{commentId},
-            #{postId},
-            #{userId},
-            #{content},
-            0
+        #{commentId},
+        #{postId},
+        #{userId},
+        #{content},
+        0
         )
     </insert>
 
     <update id="updateComment" parameterType="com.twogether.local7.comment.vo.CommentVO">
         UPDATE TB_COMMENT
         SET
-            CONTENT = #{content},
-            UPDATED_DATE = SYSTIMESTAMP
+        CONTENT = #{content},
+        UPDATED_DATE = SYSTIMESTAMP
         WHERE COMMENT_ID = #{commentId}
     </update>
 
@@ -79,23 +80,24 @@
 
     <select id="selectComment" parameterType="long" resultMap="commentResultMap">
         SELECT
-            A.COMMENT_ID,
-            A.POST_ID,
-            A.USER_ID,
-            A.CONTENT,
-            A.CREATED_DATE,
-            A.UPDATED_DATE,
-            A.LIKE_COUNT, B.USER_NICKNAME,
-            B.USER_PROF_IMG_URL
-        FROM TB_COMMENT A
-            JOIN TB_USER B ON A.USER_ID = B.USER_ID
+        A.COMMENT_ID,
+        A.POST_ID,
+        A.USER_ID,
+        A.CONTENT,
+        A.CREATED_DATE,
+        A.UPDATED_DATE,
+        A.LIKE_COUNT,
+        B.USER_NICKNAME,
+        B.USER_PROF_IMG_URL,
+        B.LOGIN_ID FROM TB_COMMENT A
+        JOIN TB_USER B ON A.USER_ID = B.USER_ID
         WHERE A.COMMENT_ID = #{commentId}
     </select>
 
     <update id="incrementCommentCount">
         UPDATE TB_POST
         SET
-            COMMENT_COUNT = COMMENT_COUNT + 1
+        COMMENT_COUNT = COMMENT_COUNT + 1
         WHERE POST_ID = #{postId}
     </update>
 
@@ -115,13 +117,13 @@
             SELECT SEQ_TB_COMMENT_LIKE.NEXTVAL FROM DUAL
         </selectKey>
         INSERT INTO TB_COMMENT_LIKE (
-            COMMENT_LIKE_ID,
-            COMMENT_ID,
-            USER_ID
+        COMMENT_LIKE_ID,
+        COMMENT_ID,
+        USER_ID
         ) VALUES (
-            #{commentLikeId},
-            #{commentId},
-            #{userId}
+        #{commentLikeId},
+        #{commentId},
+        #{userId}
         )
     </insert>
 
@@ -133,14 +135,14 @@
     <update id="incrementCommentLikeCount">
         UPDATE TB_COMMENT
         SET
-            LIKE_COUNT = LIKE_COUNT + 1
+        LIKE_COUNT = LIKE_COUNT + 1
         WHERE COMMENT_ID = #{commentId}
     </update>
 
     <update id="decrementCommentLikeCount">
         UPDATE TB_COMMENT
         SET
-            LIKE_COUNT = LIKE_COUNT - 1
+        LIKE_COUNT = LIKE_COUNT - 1
         WHERE COMMENT_ID = #{commentId}
     </update>
 
