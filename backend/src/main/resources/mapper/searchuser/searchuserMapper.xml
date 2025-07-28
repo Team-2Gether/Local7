@@ -29,6 +29,7 @@
         A.USER_ID,
         A.USER_EMAIL,
         A.USER_NAME,
+        A.LOGIN_ID,
         A.USER_NICKNAME,
         A.USER_PROF_IMG_URL,
         A.CREATE_DATE,
