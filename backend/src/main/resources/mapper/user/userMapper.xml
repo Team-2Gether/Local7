@@ -102,7 +102,7 @@
         TB_USER U ON P.USER_ID = U.USER_ID
         WHERE
         P.USER_ID = #{userId}
-        ORDER BY P.CREATED_DATE ASC
+        ORDER BY P.CREATED_DATE DESC
     </select>
 
     <select id="countPostsByUserId" parameterType="long" resultType="int">

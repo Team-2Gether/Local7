@@ -150,6 +150,8 @@ function PostForm({ currentUser }) {
         return <div className="loading-spinner"></div>;
     }
 
+    const locationOptions = ["고성", "속초", "양양", "강릉", "동해", "삼척", "울진", "영덕", "포항", "경주", "울산", "부산"];
+
     return (
         <div className="post-form-page">
             <div className="post-form-container">
@@ -183,14 +185,19 @@ function PostForm({ currentUser }) {
                         </div>
                         <div className="form-group">
                             <label htmlFor="locationTag" className="form-label">위치 태그</label>
-                            <input
-                                type="text"
+                            <select
                                 id="locationTag"
                                 name="locationTag"
                                 value={formData.locationTag}
                                 onChange={handleChange}
-                                className="form-input"
-                            />
+                                className="form-input" // 기존 input에 적용되던 스타일을 select에도 적용
+                                required
+                            >
+                                <option value="">지역 선택</option> {/* 기본값 */}
+                                {locationOptions.map((location, index) => (
+                                    <option key={index} value={location}>{location}</option>
+                                ))}
+                            </select>
                         </div>
 
                         {/* 이미지 업로드 필드 추가 */}

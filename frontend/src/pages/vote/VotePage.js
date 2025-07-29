@@ -208,6 +208,9 @@ function VotePage() {
         </div>
         <div className="best-reigon">
           이번달의 선정지는
+          <p className="best-reigon1">부산</p>
+
+          현 투표의 최다 선정지는
           <p className="best-reigon1">{topRegionName}</p>
         </div>
       </div>
