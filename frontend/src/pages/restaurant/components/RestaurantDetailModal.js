@@ -158,10 +158,11 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
         }
     };
 
-    // averageRating은 restaurant prop에서 직접 가져오도록 변경 
-    // 모달 내부에서 reviews 배열로 계산하는 로직은 제거
-    const displayAverageRating = restaurant?.averageRating ? restaurant.averageRating.toFixed(1) : '0.0';
-    const displayTotalComments = restaurant?.totalComments !== undefined ? restaurant.totalComments : 0;
+    // 평점과 리뷰 수를 reviews 상태를 기반으로 계산
+    const calculatedAverageRating = reviews.length > 0
+        ? (reviews.reduce((sum, review) => sum + (review.reviewRating || 0), 0) / reviews.length).toFixed(1)
+        : '0.0';
+    const calculatedTotalComments = reviews.length;
 
 
     // 리뷰 신고 처리
@@ -250,11 +251,11 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                     <p className="average-rating-text">
                         평점:
                         <span className="average-rating-stars">
-                            {'★'.repeat(Math.floor(displayAverageRating))}
-                            {'☆'.repeat(5 - Math.floor(displayAverageRating))}
+                            {'★'.repeat(Math.floor(calculatedAverageRating))}
+                            {'☆'.repeat(5 - Math.floor(calculatedAverageRating))}
                         </span>
-                        <span className="average-rating-value">{displayAverageRating}</span>
-                        <span className="review-count">({displayTotalComments}개 리뷰)</span> {/* restaurant prop의 totalComments 사용 */}
+                        <span className="average-rating-value">{calculatedAverageRating}</span>
+                        <span className="review-count">({calculatedTotalComments}개 리뷰)</span> {/* reviews 상태 기반으로 계산된 값 사용 */}
                     </p>
                 </div>
 
@@ -269,7 +270,6 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                     )}
                 </div>
 
-                {/* showReviewForm 상태에 따라 ReviewForm 또는 리뷰 목록을 렌더링 */}
                 {showReviewForm ? (
                     <ReviewForm
                         restaurantId={restaurant.restaurantId}
@@ -307,8 +307,6 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                                             </div>
                                         </div>
                                         
-                                        {/* console.log 제거 */}
-
                                         <div className="review-actions">
                                             {currentUser && (
                                                 <>
