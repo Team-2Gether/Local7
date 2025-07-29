@@ -6,17 +6,17 @@ import './Restaurant.css';
 function Restaurant({ currentUser }) {
   const {
     allRestaurants,
-    filteredRestaurants, // 검색 및 정렬된 결과 (useRestaurants 훅에서 반환)
+    filteredRestaurants, 
     loading,
     error,
     searchTerm,
     setSearchTerm,
     handleSearch,
-    handleShowAllRestaurants, // 이 함수는 더 이상 사용되지 않지만, 훅에서 반환되므로 유지
+    handleShowAllRestaurants, 
     activeSortBy,
     handleSortClick,
-    setFilteredRestaurants: setFilteredRestaurantsForMap, // useMap에 전달할 setFilteredRestaurants 함수
-    refetchRestaurants,
+    setFilteredRestaurants: setFilteredRestaurantsForMap, 
+    refetchRestaurants, 
   } = useRestaurants();
 
   // 카테고리 관련 상태
@@ -25,28 +25,44 @@ function Restaurant({ currentUser }) {
   // 현재 활성화된 필터 킬로미터 상태 (초기값 null 또는 0으로 설정하여 기본적으로 비활성 상태 유지)
   const [activeFilterKm, setActiveFilterKm] = useState(null); 
 
-
   // 모달 관련 상태
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+
+  // Kakao Maps API 로딩 상태 추가
+  const [isKakaoMapLoaded, setIsKakaoMapLoaded] = useState(false);
+
+  // Kakao Maps API 로딩 완료 감지
+  useEffect(() => {
+    const checkKakaoMap = setInterval(() => {
+      if (window.kakao && window.kakao.maps) {
+        setIsKakaoMapLoaded(true);
+        clearInterval(checkKakaoMap);
+      }
+    }, 100); // 100ms 간격으로 확인
+
+    return () => clearInterval(checkKakaoMap); // 컴포넌트 언마운트 시 인터벌 정리
+  }, []);
 
   const handleRestaurantClick = useCallback((restaurant) => {
     setSelectedRestaurant(restaurant);
     setIsDetailModalOpen(true);
   }, []);
 
+  // 모달 닫기 시 호출될 함수: 리뷰 삭제/수정 후 메인 음식점 목록 새로고침
   const handleModalClose = useCallback(() => {
     setIsDetailModalOpen(false);
     setSelectedRestaurant(null);
-  }, []);
+    refetchRestaurants(); // 모달이 닫힐 때 음식점 목록 데이터를 새로고침
+  }, [refetchRestaurants]); // refetchRestaurants를 의존성 배열에 추가
 
-  // useMap 훅 호출 시 handleRestaurantClick 함수를 인자로 전달
+  // useMap 훅 호출 시 handleRestaurantClick 함수와 isKakaoMapLoaded 상태를 인자로 전달
   const {
     map,
     mapContainerRef,
     handleMyPositionClick: mapHandleMyPositionClick, // useMap의 handleMyPositionClick과 이름 충돌 방지
     handleFilterClick: mapHandleFilterClick // useMap의 handleFilterClick과 이름 충돌 방지
-  } = useMap(allRestaurants, setFilteredRestaurantsForMap, handleRestaurantClick);
+  } = useMap(allRestaurants, setFilteredRestaurantsForMap, handleRestaurantClick, isKakaoMapLoaded); // isKakaoMapLoaded 추가
 
   // filterKm 상태를 업데이트하는 새로운 handleFilterClick 함수
   const handleFilterClickWithActive = useCallback((km) => {
@@ -141,7 +157,9 @@ function Restaurant({ currentUser }) {
         </h1>
 
         <div id="map_wrap">
-          <div id="map" ref={mapContainerRef}></div>
+          <div id="map" ref={mapContainerRef}>
+            {!isKakaoMapLoaded && <p className="map-loading-message">지도 로딩 중...</p>} {/* 지도 로딩 상태 표시 */}
+          </div>
           <div className="custom-controls">
             {/* handleMyPositionClickWithReset 호출 및 active 클래스 조건부 적용 */}
             <button onClick={handleMyPositionClickWithReset} className={`my-position-btn ${activeFilterKm === null ? 'active' : ''}`}>내 위치</button>
@@ -263,7 +281,7 @@ function Restaurant({ currentUser }) {
             onRequestClose={handleModalClose}
             restaurant={selectedRestaurant}
             currentUser={currentUser}
-            onReviewSubmitted={refetchRestaurants}
+            onReviewSubmitted={refetchRestaurants} 
           />
         )}
       </div>
