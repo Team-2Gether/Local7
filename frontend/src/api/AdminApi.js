@@ -104,6 +104,51 @@ export const AdminApi = {
     },
 
     /**
+     * 특정 리뷰를 관리자 권한으로 수정합니다.
+     * @param {number} reviewId - 수정할 리뷰의 ID
+     * @param {Object} reviewData - 수정할 리뷰 데이터 (ReviewVO와 유사한 형태)
+     * @param {string} adminId - 관리자 자신의 userId (X-USER-ID 헤더에 사용)
+     * @returns {Promise<Object>} 수정 성공 메시지 또는 데이터
+     * @throws {Error} API 호출 실패 시 에러 발생
+     */
+    updateReview: async (reviewId, reviewData, adminId) => {
+        try {
+            const response = await apiClient.put(`/reviews/${reviewId}`, reviewData, {
+                headers: { 'X-USER-ID': adminId }
+            });
+            return response.data;
+        } catch (error) {
+            console.error(`리뷰 (ID: ${reviewId}) 수정 실패:`, error);
+            if (error.response && error.response.data && error.response.data.message) {
+                throw new Error(error.response.data.message);
+            }
+            throw error;
+        }
+    },
+
+    /**
+     * 특정 리뷰를 삭제합니다.
+     * @param {number} reviewId - 삭제할 리뷰의 ID
+     * @param {string} adminId - 관리자 자신의 userId (X-USER-ID 헤더에 사용)
+     * @returns {Promise<Object>} 삭제 성공 메시지 또는 데이터
+     * @throws {Error} API 호출 실패 시 에러 발생
+     */
+    deleteReview: async (reviewId, adminId) => {
+        try {
+            const response = await apiClient.delete(`/reviews/${reviewId}`, {
+                headers: { 'X-USER-ID': adminId }
+            });
+            return response.data;
+        } catch (error) {
+            console.error(`리뷰 (ID: ${reviewId}) 삭제 실패:`, error);
+            if (error.response && error.response.data && error.response.data.message) {
+                throw new Error(error.response.data.message);
+            }
+            throw error;
+        }
+    },
+
+    /**
      * 모든 신고 목록을 가져옵니다.
      * @param {string} adminId - 관리자 자신의 userId (X-USER-ID 헤더에 사용)
      * @param {number} page - 요청할 페이지 번호
@@ -209,28 +254,6 @@ export const AdminApi = {
             return response.data;
         } catch (error) {
             console.error(`댓글 (ID: ${commentId}) 삭제 실패:`, error);
-            if (error.response && error.response.data && error.response.data.message) {
-                throw new Error(error.response.data.message);
-            }
-            throw error;
-        }
-    },
-
-    /**
-     * 특정 리뷰를 삭제합니다.
-     * @param {number} reviewId - 삭제할 리뷰의 ID
-     * @param {string} adminId - 관리자 자신의 userId (X-USER-ID 헤더에 사용)
-     * @returns {Promise<Object>} 삭제 성공 메시지 또는 데이터
-     * @throws {Error} API 호출 실패 시 에러 발생
-     */
-    deleteReview: async (reviewId, adminId) => {
-        try {
-            const response = await apiClient.delete(`/reviews/${reviewId}`, {
-                headers: { 'X-USER-ID': adminId }
-            });
-            return response.data;
-        } catch (error) {
-            console.error(`리뷰 (ID: ${reviewId}) 삭제 실패:`, error);
             if (error.response && error.response.data && error.response.data.message) {
                 throw new Error(error.response.data.message);
             }
