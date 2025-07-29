@@ -16,7 +16,7 @@ export const useRestaurants = () => {
         try {
             const data = await fetchAllRestaurants();
             setAllRestaurants(data);
-            setFilteredRestaurants(data); // 초기에는 모든 음식점을 필터링된 목록으로 설정
+            setFilteredRestaurants(data); 
         } catch (err) {
             setError(err.message);
         } finally {
@@ -39,15 +39,6 @@ export const useRestaurants = () => {
         }
     }, [searchTerm, allRestaurants]);
 
-    // handleShowAllRestaurants는 Restaurant.js에서 더 이상 사용되지 않으므로 제거하거나 주석 처리할 수 있습니다.
-    // 현재 Restaurant.js에서는 setSearchTerm('') 후 handleSearch()를 호출하고 있습니다.
-    /*
-    const handleShowAllRestaurants = useCallback(() => {
-        setSearchTerm('');
-        setFilteredRestaurants(allRestaurants);
-    }, [allRestaurants]);
-    */
-
     const handleSortClick = useCallback((sortBy) => {
         setActiveSortBy(sortBy);
         let sorted = [...filteredRestaurants]; // 현재 필터링된 목록을 복사하여 정렬
@@ -59,7 +50,6 @@ export const useRestaurants = () => {
         setFilteredRestaurants(sorted);
     }, [filteredRestaurants]);
 
-    // refetchRestaurants는 loadData를 다시 호출하여 모든 데이터를 새로 불러옵니다.
     const refetchRestaurants = useCallback(() => {
         loadData();
     }, [loadData]);
@@ -74,7 +64,6 @@ export const useRestaurants = () => {
         searchTerm,
         setSearchTerm,
         handleSearch,
-        // handleShowAllRestaurants, // Restaurant.js에서 사용되지 않으므로 제거 또는 주석 처리
         activeSortBy,
         handleSortClick,
         refetchRestaurants,
@@ -82,15 +71,14 @@ export const useRestaurants = () => {
 };
 
 // 2. 지도 기능
-// isKakaoMapLoaded 인자 추가
 export const useMap = (
     allRestaurants,
     setFilteredRestaurants,
     handleRestaurantClick,
-    isKakaoMapLoaded // Restaurant.js에서 전달받은 카카오맵 로딩 상태
+    isKakaoMapLoaded 
 ) => {
     const mapContainerRef = useRef(null);
-    const mapRef = useRef(null);
+    const mapRef = useRef(null); // 지도 인스턴스
     const myLocationMarkerRef = useRef(null); // 내 위치 마커
     const clickMarkerRef = useRef(null); // 클릭한 위치 마커
     const markersRef = useRef([]); // 음식점 마커들을 관리할 배열
@@ -98,8 +86,6 @@ export const useMap = (
 
     const DONGHAE_CITY_HALL_LAT = 37.5255;
     const DONGHAE_CITY_HALL_LON = 129.1147;
-    // KAKAO_APP_KEY는 public/index.html에서 로드되므로 여기서는 필요 없습니다.
-    // const KAKAO_APP_KEY = '690813b8710fce175e3acf9121422624'; 
 
     // 마커 업데이트 함수
     const updateMapMarkers = useCallback((mapInstance, restaurants) => {
@@ -154,7 +140,7 @@ export const useMap = (
         if (restaurants.length > 0) {
             mapInstance.setBounds(bounds);
         }
-    }, [handleRestaurantClick]); // handleRestaurantClick 의존성 추가
+    }, [handleRestaurantClick]);
 
     // 지도의 idle 상태일 때 보이는 음식점 필터링
     const filterVisibleRestaurants = useCallback(() => {
@@ -172,10 +158,10 @@ export const useMap = (
         setFilteredRestaurants(visibleRestaurants);
     }, [allRestaurants, setFilteredRestaurants]);
 
-    // 지도 생성 및 초기화 (isKakaoMapLoaded 조건 추가)
+    // 지도 생성 및 초기화 
     useEffect(() => {
         const container = mapContainerRef.current;
-        // isKakaoMapLoaded가 true이고, container가 존재하며, mapRef.current가 아직 초기화되지 않았을 때만 지도 생성
+       
         if (isKakaoMapLoaded && container && !mapRef.current) {
             const map = new window.kakao.maps.Map(container, {
                 center: new window.kakao.maps.LatLng(DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON),
@@ -190,21 +176,42 @@ export const useMap = (
             // 초기 마커 표시
             updateMapMarkers(map, allRestaurants);
         }
-    }, [isKakaoMapLoaded, allRestaurants, filterVisibleRestaurants, updateMapMarkers]); // allRestaurants 의존성 추가
 
-    // 클릭 시 마커 및 반경 필터링
+        // 클린업 함수: 컴포넌트 언마운트 시 또는 의존성 변경 시 지도 인스턴스 정리
+        return () => {
+            if (mapRef.current) {
+                // 모든 마커 제거
+                markersRef.current.forEach(marker => marker.setMap(null));
+                markersRef.current = [];
+
+                if (myLocationMarkerRef.current) {
+                    myLocationMarkerRef.current.setMap(null);
+                    myLocationMarkerRef.current = null;
+                }
+                if (clickMarkerRef.current) {
+                    clickMarkerRef.current.setMap(null);
+                    clickMarkerRef.current = null;
+                }
+                if (infoWindowRef.current) {
+                    infoWindowRef.current.close();
+                    infoWindowRef.current = null;
+                }
+
+                // 지도 인스턴스 참조 해제 
+                mapRef.current = null;
+            }
+        };
+    }, [isKakaoMapLoaded, allRestaurants, filterVisibleRestaurants, updateMapMarkers]);
+
+    // 클릭 시 마커 및 반경 필터링 
     useEffect(() => {
         const map = mapRef.current;
         if (!map) return;
         
-        // 기존 클릭 리스너 제거 (중복 방지)
-        // 이 부분은 addListener가 반환하는 함수를 저장해서 cleanup 하는 방식으로 변경하는 것이 더 안전합니다.
-        // 현재는 useEffect가 다시 실행될 때마다 리스너가 추가될 수 있습니다.
-        // 하지만, mapRef.current가 !mapRef.current 조건으로 한 번만 생성되므로 큰 문제는 아닐 수 있습니다.
-
-        window.kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+        // 이벤트 리스너를 추가하고, 클린업 함수에서 제거하는 방식으로 변경
+        const clickListener = window.kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
             const latlng = mouseEvent.latLng;
-            const imageSrc = '/local7Compass1.png'; // 사용할 이미지 경로 (public 폴더 기준)
+            const imageSrc = '/local7Compass1.png'; // 사용할 이미지 경로 
             const imageSize = new window.kakao.maps.Size(40, 40); // 마커 이미지의 크기
             const imageOption = {
                 offset: new window.kakao.maps.Point(20, 40)
@@ -216,11 +223,12 @@ export const useMap = (
             if (clickMarkerRef.current) {
                 clickMarkerRef.current.setMap(null);
             }
-            // 내 위치 마커 제거
+            // 내 위치 마커 제거: 지도 클릭 시 내 위치 마커도 사라지도록 추가
             if (myLocationMarkerRef.current) {
                 myLocationMarkerRef.current.setMap(null);
+                myLocationMarkerRef.current = null;
             }
-
+            
             const marker = new window.kakao.maps.Marker({map: map, position: latlng, image: markerImage});
             clickMarkerRef.current = marker;
 
@@ -253,14 +261,22 @@ export const useMap = (
                         r.restaurantLat,
                         r.restaurantLon
                     );
-                    return distance <= 10; // 10km 반경 필터링 (기존 로직 유지)
+                    return distance <= 10; // 10km 반경 필터링 
                 }
                 return false;
             });
 
             setFilteredRestaurants(filtered);
         });
-    }, [allRestaurants, setFilteredRestaurants, handleRestaurantClick]);
+
+        // 클린업 함수: 컴포넌트 언마운트 시 이벤트 리스너 제거
+        return () => {
+            // mapRef.current가 null이 아닐 때만 removeListener 호출
+            if (mapRef.current) {
+                window.kakao.maps.event.removeListener(map, 'click', clickListener);
+            }
+        };
+    }, [allRestaurants, setFilteredRestaurants, handleRestaurantClick, myLocationMarkerRef]); // myLocationMarkerRef 의존성 추가
 
     // 내 위치 버튼 클릭 시 동해시청으로 이동 및 마커 생성
     const handleMyPositionClick = useCallback(() => {
@@ -272,16 +288,18 @@ export const useMap = (
         }
         
         const donghaePos = new window.kakao.maps.LatLng(DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON);
-        map.setLevel(5); // 줌 레벨 조정
-        map.panTo(donghaePos); // 지도 중심 이동
+        map.setLevel(5); 
+        map.panTo(donghaePos); 
 
-        // 기존 내 위치 마커 제거
+        // 기존 내 위치 마커 제거 
         if (myLocationMarkerRef.current) {
             myLocationMarkerRef.current.setMap(null);
+            myLocationMarkerRef.current = null;
         }
-        // 클릭 마커 제거
+        // 클릭 마커 제거 
         if (clickMarkerRef.current) {
             clickMarkerRef.current.setMap(null);
+            clickMarkerRef.current = null;
         }
 
         const imageSrc = "/local7Compass1.png";
@@ -291,7 +309,7 @@ export const useMap = (
         });
 
         const newMarker = new window.kakao.maps.Marker({map: map, position: donghaePos, image: markerImage});
-        myLocationMarkerRef.current = newMarker;
+        myLocationMarkerRef.current = newMarker; 
 
         // 3km 필터 (기존 로직 유지)
         const filtered = allRestaurants.filter(r => {
@@ -330,19 +348,32 @@ export const useMap = (
             return;
         }
         
-        // 기존 클릭 마커 및 내 위치 마커 제거
+        // 클릭 마커 제거 (이 부분은 유지)
         if (clickMarkerRef.current) {
             clickMarkerRef.current.setMap(null);
+            clickMarkerRef.current = null;
         }
+
+        // 필터링의 중심점 설정:
+        // '내 위치' 마커가 존재한다면 그 위치를, 아니면 동해 시청 위치를 필터의 중심으로 사용
+        let filterCenterLat = DONGHAE_CITY_HALL_LAT;
+        let filterCenterLon = DONGHAE_CITY_HALL_LON;
+        let mapCenter = new window.kakao.maps.LatLng(DONGHAE_CITY_HALL_LAT, DONGHAE_CITY_HALL_LON);
+
         if (myLocationMarkerRef.current) {
-            myLocationMarkerRef.current.setMap(null);
+            const myPos = myLocationMarkerRef.current.getPosition();
+            filterCenterLat = myPos.getLat();
+            filterCenterLon = myPos.getLng();
+            mapCenter = myPos;
+        } else {
+            // '내 위치' 마커가 없다면, 현재 지도의 중심을 필터의 중심으로 사용 
+            const currentMapCenter = map.getCenter();
+            filterCenterLat = currentMapCenter.getLat();
+            filterCenterLon = currentMapCenter.getLng();
+            mapCenter = currentMapCenter;
         }
 
-        const center = map.getCenter();
-        const centerLat = center.getLat();
-        const centerLon = center.getLng();
-
-        // 거리 계산 함수
+        // 거리 계산 함수 
         const getDistance = (lat1, lon1, lat2, lon2) => {
             const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -354,7 +385,7 @@ export const useMap = (
             return R * c;
         };
 
-        // 지도 줌 레벨 조정
+        // 지도 줌 레벨 조정 
         let level;
         if (radius <= 1) 
             level = 4;
@@ -365,17 +396,17 @@ export const useMap = (
         else if (radius <= 20) 
             level = 9;
         else 
-            level = 9; // 기본값 또는 더 넓은 범위
+            level = 9; 
         
-        map.setLevel(level); // 줌 레벨 설정
-        map.panTo(center); // 현재 중심 유지
+        map.setLevel(level); 
+        map.panTo(mapCenter); 
 
         // 음식점 필터링
         const filtered = allRestaurants.filter(r => {
             if (r.restaurantLat && r.restaurantLon) {
                 const distance = getDistance(
-                    centerLat,
-                    centerLon,
+                    filterCenterLat,
+                    filterCenterLon,
                     r.restaurantLat,
                     r.restaurantLon
                 );
@@ -385,7 +416,7 @@ export const useMap = (
         });
 
         setFilteredRestaurants(filtered);
-    }, [allRestaurants, setFilteredRestaurants]);
+    }, [allRestaurants, setFilteredRestaurants, myLocationMarkerRef]); // myLocationMarkerRef 의존성 추가
 
 
     return {map: mapRef.current, mapContainerRef, handleMyPositionClick, handleFilterClick};
