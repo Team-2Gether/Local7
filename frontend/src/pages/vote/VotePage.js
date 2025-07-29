@@ -37,6 +37,7 @@ function VotePage() {
     const init = async () => {
       fetchUserStatus();
       fetchRegions();
+      fetchTopRegionName(); // 페이지 로드 시 topRegionName을 가져오도록 추가
     };
     init();
   }, []);
@@ -80,11 +81,10 @@ function VotePage() {
       console.log('hasVoted 설정:', voteData.hasVoted === 'Y');
       if (voteData && voteData.hasVoted === 'Y') {
         setHasVoted(true);
-        setSelectedOption(voteData.votedRegion); // 변경: votedRegion 사용
-        const idx = regions.findIndex((r) => r.key === voteData.votedRegion); // 변경: votedRegion 사용
+        setSelectedOption(voteData.votedRegion);
+        const idx = regions.findIndex((r) => r.key === voteData.votedRegion);
         if (idx >= 0) setSlideIndex(idx);
       } else {
-        // 사용자가 투표하지 않았을 경우, 첫 번째 지역으로 selectedOption 초기화
         if (regions.length > 0) {
           setSelectedOption(regions[0].key);
           setSlideIndex(0);
@@ -92,7 +92,6 @@ function VotePage() {
       }
     } catch (err) {
       console.error('투표 여부 상태 불러오기 실패', err);
-      // 에러 발생 시에도 첫 번째 지역으로 초기화 시도
       if (regions.length > 0) {
         setSelectedOption(regions[0].key);
         setSlideIndex(0);
@@ -106,7 +105,6 @@ function VotePage() {
         withCredentials: true,
       });
 
-      // API에서 imgUrl이 없으면 지역명 매핑 함수로 기본 경로 할당
       const regionsWithImg = res.data.map((region) => ({
         key: region.regionId,
         name: region.krName,
@@ -118,18 +116,23 @@ function VotePage() {
       }));
 
       setRegions(regionsWithImg);
+    } catch (err) {
+      console.error('지역 데이터 불러오기 실패', err);
+    }
+  };
 
-      if (regionsWithImg.length > 0) {
-        const topRegion = regionsWithImg.reduce(
-          (max, region) => (region.voteCount > max.voteCount ? region : max),
-          regionsWithImg[0]
-        );
-        setTopRegionName(topRegion.name);
+  // VotePageResult와 동일한 로직으로 topRegionName을 가져오는 함수 추가
+  const fetchTopRegionName = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/vote/voted-counts');
+      if (response.data.length > 0) {
+        const topResult = response.data[0];
+        setTopRegionName(topResult.krName);
       } else {
         setTopRegionName('없음');
       }
-    } catch (err) {
-      console.error('지역 데이터 불러오기 실패', err);
+    } catch (error) {
+      console.error('상위 지역 이름 불러오기 실패:', error);
       setTopRegionName('없음');
     }
   };
@@ -144,8 +147,9 @@ function VotePage() {
       );
       setHasVoted(true);
       alert('투표가 완료되었습니다!');
-      fetchRegions(); // 투표 후 지역 데이터 다시 불러오기 (투표 수 업데이트 위함)
-      fetchUserVoteStatus(); // 투표 후 사용자 투표 상태 다시 불러오기 (votedRegion 업데이트 위함)
+      fetchRegions();
+      fetchUserVoteStatus();
+      fetchTopRegionName(); // 투표 완료 후 topRegionName 업데이트
     } catch (err) {
       console.error('투표 처리 실패', err);
       alert('투표 중 오류가 발생했습니다.');
@@ -273,7 +277,8 @@ function VotePage() {
         </>
       )}
 
-      {selectedTap === 'result' && <VotePageResult />}
+      {/* VotePageResult에 setTopRegionName을 props로 전달 */}
+      {selectedTap === 'result' && <VotePageResult setTopRegionName={setTopRegionName} />}
       {selectedTap === 'post' && <VotePagePost />}
     </div>
   );

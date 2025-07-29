@@ -87,6 +87,7 @@ function SearchUser() {
         // 여기서 fetchUsers를 호출하지 않습니다.
     };
 
+    const imageUrl = process.env.PUBLIC_URL + 'userprofile.jpg';
 
     return (
         <div className="search-user-container1">
@@ -102,7 +103,6 @@ function SearchUser() {
                         className="search-select1"
                     >
                         <option value="all">전체</option>
-                        <option value="userLoginId">아이디</option>
                         <option value="userName">이름</option>
                         <option value="userNickname">닉네임</option>
                         <option value="userEmail">이메일</option>
@@ -132,7 +132,7 @@ function SearchUser() {
                     {users.map(user => (
                         <div key={user.userId} className="user-item1" onClick={() => handleUserClick(user.userLoginId)}>
                             <img
-                                src={user.userProfileImageUrl || "https://via.placeholder.com/50"}
+                                src={user.userProfileImageUrl || imageUrl}
                                 alt="프로필"
                                 className="profile-image1"
                             />

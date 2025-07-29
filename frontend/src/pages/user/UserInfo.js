@@ -98,16 +98,8 @@ function UserInfo({ currentUser }) {
             </div>
             <div className="user-details">
                 <p>
-                    <strong>아이디:</strong>
-                    {userData.userLoginId}
-                </p>
-                <p>
                     <strong>닉네임:</strong>
                     {userData.userNickname}
-                </p>
-                <p>
-                    <strong>이메일:</strong>
-                    {userData.userEmail}
                 </p>
                 <p>
                     <strong>이름:</strong>

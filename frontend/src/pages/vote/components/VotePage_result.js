@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../../assets/css/VotePage.css';
 
-function VotePageResult() {
+// setTopRegionName을 props로 받도록 변경
+function VotePageResult({ setTopRegionName }) {
   const [voteData, setVoteData] = useState([]);
   const [totalVotes, setTotalVotes] = useState(0);
 
@@ -14,11 +15,20 @@ function VotePageResult() {
         setVoteData(response.data);
         const calculatedTotalVotes = response.data.reduce((sum, item) => sum + item.votedRegionCount, 0); // votedRegionCount 사용
         setTotalVotes(calculatedTotalVotes); // totalVotes 업데이트
+
+        // 가장 많은 득표를 한 지역을 찾아서 상위 컴포넌트로 전달
+        if (response.data.length > 0) {
+          const topResult = response.data[0]; // 이미 정렬되어 있다고 가정
+          setTopRegionName(topResult.krName);
+        } else {
+          setTopRegionName('없음');
+        }
       })
       .catch((error) => {
         console.error('투표 결과 불러오기 실패:', error);
+        setTopRegionName('없음'); // 에러 발생 시에도 '없음'으로 설정
       });
-  }, []);
+  }, [setTopRegionName]); // setTopRegionName을 의존성 배열에 추가
 
 
   return (

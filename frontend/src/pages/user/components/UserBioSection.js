@@ -78,9 +78,9 @@ function UserBioSection({ currentUser, onUserUpdate }) { // onUserUpdate prop �
                     </div>
                 ) : (
                     <div className="current-info">
-                        <p className="info-display">
+                        <textarea className="info-display">
                             {userBio ? userBio : '아직 자기소개가 없습니다.'}
-                        </p>
+                        </textarea>
                         <button onClick={() => setIsEditing(true)} className="btn btn-edit">수정</button>
                     </div>
                 )}

@@ -135,13 +135,15 @@ function OtherUser({ currentUser }) {
 
     const showFollowButton = currentUser && currentUser.userId !== otherUserProfile.userId;
 
+    const imageUrl = process.env.PUBLIC_URL + 'userprofile.jpg';
+    
     return (
         <div className="OtherUser-page">
             <div className="OtherUser-info-section">
                 <h2 className="OtherUser-profile-title">{otherUserProfile.userNickname}님의 프로필</h2>
                 <div className="OtherUser-profile-image-container">
                     <img
-                        src={otherUserProfile.userProfileImageUrl || "https://via.placeholder.com/150"}
+                        src={otherUserProfile.userProfileImageUrl || imageUrl}
                         alt="프로필 이미지"
                         className="profile-image    "
                     />
@@ -151,10 +153,10 @@ function OtherUser({ currentUser }) {
                     <p><strong>소개 : </strong> {otherUserProfile.userBio || "작성된 소개가 없습니다."}</p>
                     <p><strong>가입일 : </strong> {new Date(otherUserProfile.createDate).toLocaleDateString()}</p>
                     <p>
-                        <strong>팔로워 : </strong> <Link to={`/user/profile/${otherUserProfile.userId}/followers`}>{followerCount}</Link>
+                        <Link to={`/user/profile/${otherUserProfile.userId}/followers`}> <strong>팔로워 : </strong> {followerCount}</Link>
                     </p>
                     <p>
-                        <strong>팔로잉 : </strong> <Link to={`/user/profile/${otherUserProfile.userId}/followings`}>{followingCount}</Link>
+                        <Link to={`/user/profile/${otherUserProfile.userId}/followings`}> <strong>팔로잉 : </strong> {followingCount}</Link>
                     </p>
                 </div>
                 {showFollowButton && (
