@@ -3,7 +3,7 @@ import axios from 'axios';
 // withCredentials를 true로 설정하여 쿠키와 인증 헤더를 포함
 const apiClient = axios.create({
   baseURL: 'http://localhost:8080/api',
-  withCredentials: true, 
+  withCredentials: true,
 });
 
 /**
@@ -13,15 +13,22 @@ const apiClient = axios.create({
 export const fetchAllRestaurants = async () => {
   try {
     // apiClient 인스턴스를 사용하여 /restaurants/all 엔드포인트에 GET 요청을 보냅니다.
-    const response = await apiClient.get('/restaurants/all');
-    
+    const response = await apiClient.get('/restaurants/all', {
+      // 캐시를 무시하도록 no-cache 헤더 추가 (이전 답변에서 제안된 내용)
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
+
     if (response.data?.status === 'success' && response.data.data) {
       return response.data.data;
     } else {
       console.error('API 응답 형식이 예상과 다릅니다.', response.data);
       throw new Error('API 응답 형식 오류');
     }
-  } catch (error) { // 에러 변수명을 err에서 error로 통일
+  } catch (error) {
     console.error('음식점 데이터 가져오기 오류:', error);
     throw new Error('음식점 데이터를 가져오는 데 실패했습니다.');
   }
@@ -38,7 +45,7 @@ export const reportReview = async (reviewId, reportReason, reviewContent, target
         };
 
         const response = await apiClient.post(`/reviews/${reviewId}/report`, requestBody);
-        
+
         if (response.data?.status === 'success') {
             return response.data;
         } else {
@@ -50,3 +57,5 @@ export const reportReview = async (reviewId, reportReason, reviewContent, target
         throw new Error(errorMessage);
     }
 };
+
+export default apiClient;

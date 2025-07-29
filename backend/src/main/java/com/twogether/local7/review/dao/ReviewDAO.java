@@ -28,4 +28,7 @@ public interface ReviewDAO {
     void deleteReview(Long reviewId);
 
     List<ReviewVO> findReviewsByRestaurantIdWithLimit(@Param("restaurantId") Long restaurantId, @Param("limit") int limit);
+
+    ReviewVO findReviewById(Long reviewId);
+
 }

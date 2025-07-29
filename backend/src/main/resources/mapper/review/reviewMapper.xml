@@ -144,4 +144,13 @@
         WHERE REVIEW_ID = #{reviewId}
     </delete>
 
+
+    <select id="findReviewById" parameterType="long" resultMap="reviewResultMap">
+        SELECT
+            REVIEW_ID, USER_ID, RESTAURANT_ID, REVIEW_RATING, REVIEW_CONTENT,
+            AI_SUMMARY, AI_KEYWORDS, CREATED_DATE, CREATED_ID, UPDATED_DATE, UPDATED_ID
+        FROM TB_REVIEW
+        WHERE REVIEW_ID = #{reviewId}
+    </select>
+
 </mapper>

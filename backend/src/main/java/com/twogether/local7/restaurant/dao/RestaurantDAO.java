@@ -29,4 +29,8 @@ public interface RestaurantDAO {
 
     // 특정 지역에서 평균 평점이 높은 음식점 목록 조회
     List<RestaurantVO> findTopRatedRestaurantsByRegion(@Param("regionName") String regionName, @Param("limit") int limit);
+
+    void updateRestaurantRatingAndComments(@Param("restaurantId") Long restaurantId,
+                                           @Param("averageRating") Double averageRating,
+                                           @Param("totalComments") Integer totalComments);
 }
