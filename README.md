@@ -28,10 +28,10 @@
 ## 프론트엔드 (React) 실행
 📁 위치: /frontend (디렉토리로 이동)
 ## 의존성 설치
-- yarn install 또는 npm install
+- npm install
 
 ## 개발 서버 실행
-- yarn start 또는 npm start
+-  npm start
 - 기본 접속 주소: http://localhost:3000
 
 # 동해안 맛집 정보 공유 웹 서비스
