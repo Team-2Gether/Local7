@@ -33,7 +33,7 @@
         <result property="averageRating" column="AVERAGE_RATING"/>
         <result property="kakaoPlaceId" column="KAKAO_PLACE_ID"/>
     </resultMap>
-    
+
     <select id="findAllRestaurants" resultMap="restaurantResultMap">
         SELECT
             RESTAURANT_ID,
