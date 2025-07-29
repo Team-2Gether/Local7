@@ -1,4 +1,4 @@
-package com.twogether.local7.admin.service.impl;
+package com.twogether.local7.admin.service;
 
 import com.twogether.local7.admin.dao.AdminDAO;
 import com.twogether.local7.admin.service.AdminService;
