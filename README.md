@@ -1,4 +1,4 @@
-### 📌 사전 요구 사항 및 환경 설정 방법
+## 📌 사전 요구 사항 및 환경 설정 방법
 
 - Python 3.11 이상
 - Node.js 18.x 이상
@@ -9,31 +9,29 @@
 📁 위치: /ai-server (디렉토리로 이동)
 
 - 가상환경 생성 및 활성화
-# Windows
+### Windows
 python -m venv venv
 venv\Scripts\activate
 
-# macOS / Linux
+### macOS / Linux
 python3 -m venv venv
 source venv/bin/activate
 
-- 패키지 설치
+### 패키지 설치
 pip install --upgrade pip
 pip install -r requirements.txt
 
-- 서버 실행
+### 서버 실행
 uvicorn ai_server:app --reload
-
 기본 접속 주소: http://127.0.0.1:8000
 
 ## 프론트엔드 (React) 실행
 📁 위치: /frontend (디렉토리로 이동)
-- 의존성 설치
+## 의존성 설치
 yarn install 또는 npm install
 
-- 개발 서버 실행
+## 개발 서버 실행
 yarn start 또는 npm start
-
 기본 접속 주소: http://localhost:3000
 
 # 동해안 맛집 정보 공유 웹 서비스
