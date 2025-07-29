@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { MdPushPin, MdLink } from 'react-icons/md';
 import { FaExclamationTriangle } from 'react-icons/fa';
 import Modal from 'react-modal';
-import axios from 'axios';
 import ReviewForm from '../../review/ReviewForm'; 
 import { summarizeReview } from '../../../api/AiApi';
 import './RestaurantDetailModal.css';
 import { reportReview } from '../../../api/RestaurantApi';
 import ReportModal from './ReportModal';
+import { fetchReviewsByRestaurantId, deleteReview } from '../../../api/ReviewApi'; // ReviewApi에서 임포트
 
 Modal.setAppElement('#root');
 
@@ -25,6 +25,48 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
     // `showReviewForm` 상태에 따라 텍스트를 변경합니다.
     const reviewFormButtonText = showReviewForm ? '리뷰 목록 보기' : '리뷰 작성하기';
 
+    // 리뷰 목록을 불러오는 함수
+    const fetchReviews = useCallback(async (restaurantId) => {
+        if (!restaurantId) return; // restaurantId가 없으면 호출하지 않음
+
+        setLoadingReviews(true);
+        setReviewError(null);
+        try {
+            // ReviewApi.js에서 정의된 함수 사용
+            const fetchedReviews = await fetchReviewsByRestaurantId(restaurantId);
+            setReviews(fetchedReviews);
+            
+            // 리뷰가 성공적으로 로드되면 AI 요약 통합 함수 호출
+            if (fetchedReviews.length > 0) {
+                // 모든 리뷰 내용을 결합하여 AI 요약에 전달
+                const allReviewContent = fetchedReviews.map(r => r.reviewContent).filter(Boolean).join(' ');
+                const allReviewKeywords = fetchedReviews.flatMap(r => r.aiKeywords ? r.aiKeywords.split(',').map(k => k.trim()) : []).filter(Boolean).join(' ');
+
+                try {
+                    // summarizeReview는 AiApi.js에서 임포트된 함수
+                    const finalAiResult = await summarizeReview(allReviewContent + ' ' + allReviewKeywords);
+                    setRestaurantAiSummary(finalAiResult.summary);
+                    setRestaurantAiKeywords(finalAiResult.keywords);
+                } catch (aiError) {
+                    console.error('레스토랑 전체 요약 생성 중 오류 발생:', aiError);
+                    setRestaurantAiSummary('리뷰 요약 생성에 실패했습니다.');
+                    setRestaurantAiKeywords([]);
+                }
+            } else {
+                setRestaurantAiSummary('아직 리뷰가 없습니다.');
+                setRestaurantAiKeywords([]);
+            }
+        } catch (error) {
+            console.error('리뷰 조회 중 오류 발생:', error);
+            setReviewError('서버에서 리뷰를 가져오는 데 실패했습니다.');
+            setReviews([]);
+            setRestaurantAiSummary('리뷰를 불러오는 데 실패했습니다.');
+            setRestaurantAiKeywords([]);
+        } finally {
+            setLoadingReviews(false);
+        }
+    }, []); // 의존성 배열에서 restaurant.restaurantId 제거, 인자로 받도록 수정
+
     useEffect(() => {
         if (isOpen && restaurant?.restaurantId) {
             fetchReviews(restaurant.restaurantId);
@@ -34,54 +76,35 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
         } else {
             setReviews([]);
             setReviewError(null);
+            setRestaurantAiSummary(''); // 모달 닫힐 때 요약 초기화
+            setRestaurantAiKeywords([]); // 모달 닫힐 때 키워드 초기화
         }
-    }, [isOpen, restaurant?.restaurantId]);
-
-    const fetchReviews = async (restaurantId) => {
-        setLoadingReviews(true);
-        setReviewError(null);
-        try {
-            const response = await axios.get(`http://localhost:8080/api/reviews/restaurant/${restaurantId}`);
-            if (response.data?.status === 'success') {
-                const fetchedReviews = response.data.data;
-                setReviews(fetchedReviews);
-                // 리뷰가 성공적으로 로드되면 AI 요약 통합 함수 호출
-                if (fetchedReviews.length > 0) {
-                    summarizeRestaurantReviews(fetchedReviews);
-                }
-            } else {
-                setReviewError(response.data?.message || '리뷰 목록 조회에 실패했습니다.');
-            }
-        } catch (error) {
-            console.error('리뷰 조회 중 오류 발생:', error);
-            setReviewError('서버에서 리뷰를 가져오는 데 실패했습니다.');
-        } finally {
-            setLoadingReviews(false);
-        }
-    };
+    }, [isOpen, restaurant?.restaurantId, fetchReviews]); // fetchReviews를 의존성 배열에 추가
 
     const summarizeRestaurantReviews = async (allReviews) => {
+        // 이 함수는 fetchReviews 내에서 이미 처리되므로, 여기서는 단순히 기존 로직을 유지합니다.
+        // 실제로는 fetchReviews에서 AI 요약 로직을 직접 처리하는 것이 더 효율적입니다.
         try {
-            // 모든 AI 요약과 키워드를 결합
             const combinedSummary = allReviews
                 .map(r => r.aiSummary)
-                .filter(Boolean) // null 또는 빈 문자열 제외
+                .filter(Boolean)
                 .join(' ');
             const combinedKeywords = allReviews
                 .flatMap(r => r.aiKeywords ? r.aiKeywords.split(',').map(k => k.trim()) : [])
                 .filter(Boolean);
 
-            if (combinedSummary) {
-                // AiApi.js에 새로운 함수를 만들어 호출
-                // 현재는 기존 summarizeReview를 활용
+            if (combinedSummary || combinedKeywords.length > 0) {
                 const finalAiResult = await summarizeReview(combinedSummary + ' ' + combinedKeywords.join(' '));
-                
                 setRestaurantAiSummary(finalAiResult.summary);
                 setRestaurantAiKeywords(finalAiResult.keywords);
+            } else {
+                setRestaurantAiSummary('아직 리뷰가 없습니다.');
+                setRestaurantAiKeywords([]);
             }
         } catch (error) {
             console.error("레스토랑 전체 요약 생성 중 오류 발생:", error);
-            // 오류 처리
+            setRestaurantAiSummary('리뷰 요약 생성에 실패했습니다.');
+            setRestaurantAiKeywords([]);
         }
     };
 
@@ -93,16 +116,20 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
     const handleDeleteReview = async (reviewId) => {
         if (window.confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
             try {
-                const response = await axios.delete(`http://localhost:8080/api/reviews/${reviewId}`);
-                if (response.data?.status === 'success') {
-                    alert('리뷰가 삭제되었습니다.');
-                    fetchReviews(restaurant.restaurantId); // 리뷰 목록 새로고침
-                } else {
-                    alert('리뷰 삭제에 실패했습니다.');
+                // ReviewApi.js에서 정의된 deleteReview 함수 사용
+                await deleteReview(reviewId);
+                alert('리뷰가 삭제되었습니다.'); // 사용자에게 피드백
+                
+                // 1. 모달 내의 리뷰 목록 새로고침
+                fetchReviews(restaurant.restaurantId); 
+                
+                // 2. 부모 컴포넌트(Restaurant.js)에 알림 -> 음식점 목록 새로고침
+                if (onReviewSubmitted) { 
+                    onReviewSubmitted(); 
                 }
             } catch (error) {
                 console.error('Error deleting review:', error);
-                alert('리뷰 삭제 중 오류가 발생했습니다.');
+                alert(`리뷰 삭제 중 오류가 발생했습니다: ${error.message}`);
             }
         }
     };
@@ -115,28 +142,29 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
         const ampm = hour < 12 ? '오전' : '오후';
         const displayHour = hour % 12 === 0 ? 12 : hour % 12;
         
-        // 분 데이터가 없는 경우를 처리
-        const displayMinute = minute !== null && minute !== undefined ? `${minute}분` : '';
+        const displayMinute = minute !== null && minute !== undefined ? `${String(minute).padStart(2, '0')}분` : '';
 
         return `${ampm} ${displayHour}시 ${displayMinute}`.trim();
     };
 
-    // 리뷰 제출 성공 시 호출될 함수
+    // 리뷰 제출 성공 시 호출될 함수 (리뷰 작성/수정 후)
     const handleReviewSubmitted = () => {
         // 폼을 숨기고, 리뷰 목록을 새로고침
         setShowReviewForm(false);
         setEditingReview(null);
-        fetchReviews(restaurant.restaurantId);
+        fetchReviews(restaurant.restaurantId); // 모달 내 리뷰 목록 새로고침
         if (onReviewSubmitted) { 
-            onReviewSubmitted();
+            onReviewSubmitted(); // 부모 컴포넌트(Restaurant.js)에 알림 -> 음식점 목록 새로고침
         }
     };
 
-    const averageRating = reviews.length > 0
-        ? (reviews.reduce((sum, review) => sum + (review.reviewRating || 0), 0) / reviews.length).toFixed(1)
-        : '0.0';
+    // averageRating은 restaurant prop에서 직접 가져오도록 변경 
+    // 모달 내부에서 reviews 배열로 계산하는 로직은 제거
+    const displayAverageRating = restaurant?.averageRating ? restaurant.averageRating.toFixed(1) : '0.0';
+    const displayTotalComments = restaurant?.totalComments !== undefined ? restaurant.totalComments : 0;
 
-    //  리뷰 신고 처리
+
+    // 리뷰 신고 처리
     const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
     const handleOpenReportModal = (review) => {
@@ -151,7 +179,6 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
         }
 
         try {
-            // targetReview 객체에서 필요한 정보를 추출하여 전달
             await reportReview(
                 targetReview.reviewId,
                 reportReason,
@@ -161,7 +188,7 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
             );
             alert('리뷰 신고가 접수되었습니다. 감사합니다.');
             setIsReportModalOpen(false);
-            fetchReviews(restaurant.restaurantId);
+            fetchReviews(restaurant.restaurantId); // 신고 후 리뷰 목록 새로고침
         } catch (err) {
             alert(err.message || '리뷰 신고 중 오류가 발생했습니다.');
         }
@@ -176,7 +203,7 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
             overlayClassName="restaurant-detail-overlay"
         >
             <div>
-                
+                <button className="modal-close-button" onClick={onRequestClose}>닫기</button>
                 <h2>{restaurant?.restaurantName}</h2>
                 <p>주소: {`${restaurant?.addrSido || ''} ${restaurant?.addrSigungu || ''} ${restaurant?.addrDong || ''} ${restaurant?.addrDetail || ''}`}</p>
                 <p>전화번호: {restaurant?.phoneNumber}</p>
@@ -216,18 +243,18 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                             </p>
                         )}
                     </div>
-                )}
+                    )}
                 </div>
 
                 <div className="average-rating-container">
                     <p className="average-rating-text">
                         평점:
                         <span className="average-rating-stars">
-                            {'★'.repeat(Math.floor(averageRating))}
-                            {'☆'.repeat(5 - Math.floor(averageRating))}
+                            {'★'.repeat(Math.floor(displayAverageRating))}
+                            {'☆'.repeat(5 - Math.floor(displayAverageRating))}
                         </span>
-                        <span className="average-rating-value">{averageRating}</span>
-                        <span className="review-count">({reviews.length}개 리뷰)</span>
+                        <span className="average-rating-value">{displayAverageRating}</span>
+                        <span className="review-count">({displayTotalComments}개 리뷰)</span> {/* restaurant prop의 totalComments 사용 */}
                     </p>
                 </div>
 
@@ -280,9 +307,7 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                                             </div>
                                         </div>
                                         
-                                        {console.log('Rendering review:', review)}
-                                        {console.log('Current user:', currentUser)}
-                                        {console.log('Condition check for report button:', review.userId !== 1 && review.userNickname !== '관리자')}
+                                        {/* console.log 제거 */}
 
                                         <div className="review-actions">
                                             {currentUser && (
@@ -328,11 +353,10 @@ function RestaurantDetailModal({ isOpen, onRequestClose, restaurant, currentUser
                     </div>
                 )}
             </div>
-            <button className="modal-close-button" onClick={onRequestClose}>닫기</button>
             <ReportModal
                 isOpen={isReportModalOpen}
                 onClose={() => setIsReportModalOpen(false)}
-                onReport={handleReviewReport} // 완성된 리뷰 신고 함수 연결
+                onReport={handleReviewReport} 
                 target="리뷰"
             />
         </Modal>
