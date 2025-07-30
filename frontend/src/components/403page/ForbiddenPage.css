@@ -1,0 +1,55 @@
+/* src/components/403page/ForbiddenPage.css */
+.forbidden-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #f8f8f8;
+    color: #333;
+    font-family: Arial, sans-serif;
+}
+
+.forbidden-page-title {
+    font-size: 3em;
+    color: #dc3545; /* 빨간색 계열 */
+    margin-bottom: 20px;
+}
+
+.forbidden-page-message {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+.forbidden-page-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.forbidden-page-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.forbidden-page-button:first-child {
+    background-color: #6c757d; /* 회색 계열 */
+    color: white;
+}
+
+.forbidden-page-button:first-child:hover {
+    background-color: #5a6268;
+}
+
+.forbidden-page-button:last-child {
+    background-color: #007bff; /* 파란색 계열 */
+    color: white;
+}
+
+.forbidden-page-button:last-child:hover {
+    background-color: #0056b3;
+}
