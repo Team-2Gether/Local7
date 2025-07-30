@@ -12,6 +12,10 @@
     /* 중앙 정렬 */
 }
 
+.admin-page-container h2{
+    font-size: 1.8em;
+}
+
 .admin-page-title {
     text-align: center;
     color: #f5f5f5;

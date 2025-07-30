@@ -21,7 +21,6 @@
   position: relative; /* 또는 삭제 */
   top: 0;
   left: 0;
-  margin-top: 40px; /* 원하는 만큼 띄우기 */
   color:white;
   font-size: 1.8rem;
 }

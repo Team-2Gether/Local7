@@ -60,7 +60,6 @@
 /* 버튼 공통 */
 .signup-container1 button,
 .forgetIdOrPWD-container button {
-  width: 100%;
   background-color: #FFCC00;
   color: rgb(0, 0, 0);
   border: none;
