@@ -4,7 +4,7 @@
   --dark-surface-color: #1e1e1e;
   --dark-text-color: #e0e0e0;
   --dark-secondary-text-color: #b0b0b0;
-  /*--accent-color: #6a0dad; */ /* 보라색 계열로 포인트를 주었습니다. */
+  --accent-color: #6a0dad; /* 보라색 계열 포인트 색상 */
   --border-color: #333333;
 }
 
@@ -14,6 +14,7 @@
   color: var(--dark-text-color);
   padding: 10px 20px;
   border-radius: 8px;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 /* 제목 스타일 */
@@ -45,7 +46,7 @@
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  color: #fff; /* 텍스트 색 전체 하얀색 */
+  color: #fff; /* 텍스트 전체 흰색 */
 }
 
 /* 내부 링크 밑줄 제거 및 색 통일 */
@@ -54,7 +55,7 @@
   color: #ffffff;
 }
 
-/* 혹시 있을 다른 텍스트 태그들도 대비 */
+/* 텍스트 태그 색상 및 장식 */
 .post-item1 p,
 .post-item1 span,
 .post-item1 h3,
@@ -63,14 +64,12 @@
   text-decoration: none;
 }
 
-/* 마우스 호버 시 테두리 강조 및 부드러운 효과 */
-.post-item1 p{
-  font-size:18px;
-
+/* 본문 텍스트 크기 */
+.post-item1 p {
+  font-size: 18px;
 }
 
-
-/* 마우스 오버 시 효과 */
+/* 마우스 오버 시 그림자 강조 */
 .post-item1:hover {
   box-shadow: 0 8px 16px #79AAFF;
 }
@@ -94,14 +93,11 @@
   width: 100%;
   height: 200px;
   overflow: hidden;
-  border-radius: 8px; /* 모서리 둥글게 */
+  border-radius: 8px;
   margin-bottom: 15px;
   position: relative;
-  
-  /* 테두리와 그림자 추가 */
   border: 2px solid var(--border-color);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-  
   transition: box-shadow 0.3s ease;
 }
 
@@ -113,17 +109,16 @@
 .post-img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 이미지가 컨테이너를 가득 채우도록 */
+  object-fit: cover;
   display: block;
   transition: transform 0.3s ease;
 }
 
-/* 마우스 오버 시 이미지 확대 효과 */
 .post-img:hover {
   transform: scale(1.05);
 }
 
-/* 제목, 닉네임, 내용 등 텍스트 스타일 */
+/* 제목, 닉네임, 내용 텍스트 스타일 */
 .post-item p {
   font-size: 0.9rem;
   color: var(--dark-secondary-text-color);
@@ -141,11 +136,14 @@
   margin-top: 0;
 }
 
-.post-item .user-nickname, .post-item .location-tag {
+/* 닉네임 및 위치 태그 */
+.post-item .user-nickname,
+.post-item .location-tag {
   color: var(--accent-color);
   font-weight: bold;
 }
 
+/* 좋아요 수 */
 .post-item .like-count {
   color: var(--accent-color);
   font-weight: bold;
@@ -162,32 +160,29 @@
   margin: 10px 0;
 }
 
+/* 게시글 내 아이콘 */
 .post-item p svg {
-  margin-right: 5px; /* 아이콘과 텍스트 사이 간격 */
-  color: #b0b0b0;    /* 아이콘 색상 */
-  font-size: 1rem;   /* 아이콘 크기 */
-  vertical-align: middle; /* 텍스트와 수직 정렬 */
+  margin-right: 5px;
+  color: #b0b0b0;
+  font-size: 1rem;
+  vertical-align: middle;
 }
 
-/* 사용자 정보 영역 - 더 눈에 띄도록 수정 */
+/* 사용자 정보 영역 */
 .user-info55 {
-  /* 기존 레이아웃 유지 */
   display: flex;
-  flex-direction: column; 
-  align-items: center; 
-  
-  /* 배경색, 테두리, 그림자 강조 */
+  flex-direction: column;
+  align-items: center;
   margin: 5px 0;
   width: 100%;
 }
-
 
 .user-info55 .profile-img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--accent-color); /* 테두리 강조 */
+  border: 3px solid var(--accent-color);
   margin-bottom: 10px;
 }
 
@@ -195,17 +190,17 @@
 .user-info55 .user-nickname {
   font-size: 1.1rem;
   font-weight: bold;
-  color: var(--accent-color); /* 닉네임 색상을 포인트 색상으로 변경 */
+  color: var(--accent-color);
   margin: 0;
   text-align: center;
-  
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 /* 닉네임 아이콘 */
 .user-info55 .user-nickname svg {
   margin-right: 5px;
   font-size: 1.1rem;
-  color: var(--accent-color); /* 아이콘 색상도 포인트 색상으로 변경 */
+  color: var(--accent-color);
 }

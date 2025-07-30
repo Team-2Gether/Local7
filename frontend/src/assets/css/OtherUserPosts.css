@@ -3,19 +3,20 @@
 
 .OtherUserPosts-section {
     flex: 1;
-    padding: 0px;
-    overflow-y: auto;       /* 사이드바 너비만큼 오른쪽으로 */
+    padding: 20px;
+    overflow-y: auto;
     box-sizing: border-box;
     width: 100%;
     max-width: 800px;
     margin: 20px auto;
-    padding: 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
 }
 
 .OtherUserPosts-section .section-title {
-    font-size: 1.8em;
+    font-size: 1.8rem;
     color: #333;
     margin-bottom: 20px;
     text-align: center;
@@ -27,7 +28,7 @@
 .OtherUserPosts-section.error-message,
 .OtherUserPosts-section.no-posts {
     text-align: center;
-    font-size: 1.2em;
+    font-size: 1.2rem;
     color: #555;
     padding: 20px;
     background-color: #fff;
@@ -59,24 +60,24 @@
     transform: translateY(-5px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
 .post-link1 a {
     display: flex;
-    justify-content: center;  /* 수평 중앙 정렬 */
-    align-items: center;      /* 수직 중앙 정렬 */
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    
-    /* 필요한 경우 높이/너비도 설정 */
     width: 100%;
     height: 100%;
 }
+
 .OtherUserPosts-section .post-link {
     text-decoration: none;
     color: inherit;
-    display: block; /* Link 전체 영역 클릭 가능하게 */
+    display: block;
 }
 
 .OtherUserPosts-section .post-title {
-    font-size: 1.5em;
+    font-size: 1.5rem;
     color: #007bff;
     margin-top: 0;
     margin-bottom: 10px;
@@ -86,19 +87,19 @@
 }
 
 .OtherUserPosts-section .post-content {
-    font-size: 1em;
+    font-size: 1rem;
     color: #555;
     margin-bottom: 10px;
     line-height: 1.5;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* 3줄 이상 넘어가면 생략 */
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .OtherUserPosts-section .post-meta {
-    font-size: 0.9em;
+    font-size: 0.9rem;
     color: #888;
     margin-bottom: 10px;
 }
@@ -119,7 +120,7 @@
 }
 
 .OtherUserPosts-section .post-comments {
-    font-size: 0.9em;
+    font-size: 0.9rem;
     color: #007bff;
     margin-top: 10px;
     text-align: right;
@@ -135,7 +136,7 @@
 
 .OtherUserPosts-section .pagination-button {
     padding: 10px 20px;
-    font-size: 1em;
+    font-size: 1rem;
     color: #fff;
     background-color: #007bff;
     border: none;
@@ -154,38 +155,39 @@
 }
 
 .OtherUserPosts-section .page-info {
-    font-size: 1.1em;
+    font-size: 1.1rem;
     color: #333;
-    min-width: 100px; /* 가운데 정렬을 위해 너비 확보 */
+    min-width: 100px;
     text-align: center;
 }
 
-/* Optional: Add some responsiveness */
+/* Responsive design */
 @media (max-width: 768px) {
     .OtherUserPosts-section {
         margin: 10px;
         padding: 15px;
+        font-size: 14px;
     }
 
     .OtherUserPosts-section .section-title {
-        font-size: 1.5em;
+        font-size: 1.5rem;
     }
 
     .OtherUserPosts-section .post-title {
-        font-size: 1.3em;
+        font-size: 1.3rem;
     }
 
     .OtherUserPosts-section .post-content {
-        font-size: 0.95em;
+        font-size: 0.95rem;
     }
 
     .OtherUserPosts-section .pagination-button {
         padding: 8px 15px;
-        font-size: 0.9em;
+        font-size: 0.9rem;
     }
 
     .OtherUserPosts-section .page-info {
-        font-size: 1em;
+        font-size: 1rem;
     }
 }
 
@@ -195,11 +197,11 @@
     }
 
     .OtherUserPosts-section .post-title {
-        font-size: 1.2em;
+        font-size: 1.2rem;
     }
 
     .OtherUserPosts-section .post-content {
-        font-size: 0.9em;
+        font-size: 0.9rem;
     }
 
     .OtherUserPosts-section .post-image-thumbnail {

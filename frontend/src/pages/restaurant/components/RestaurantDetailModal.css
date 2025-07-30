@@ -293,7 +293,7 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    font-size: 0.9rem; /* 텍스트와 아이콘 모두에 적용 */
+    font-size: 1.6rem; /* 텍스트와 아이콘 모두에 적용 */
     opacity: 0.8;
     transition: opacity 0.2s, background-color 0.2s;
     flex-shrink: 0;

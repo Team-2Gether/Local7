@@ -124,11 +124,15 @@
 
 
 /* 댓글 헤더 (프로필, 닉네임, 날짜) */
-.comment-header .user-profile-link{
+.comment-header .user-profile-link {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: center;        /* 세로 중앙 정렬 */
+  justify-content: center;    /* 가로 중앙 정렬 */
   margin-bottom: 10px;
+  gap: 10px;                  /* 아이템 간 간격 (필요시 추가) */
+}
+.user-profile-link,.span{
+  font-size: 25px;
 }
 
 .profile-img {
@@ -229,7 +233,7 @@
     border: 1px solid #555; 
     border-radius: 20px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     background-color: #444; 
     color: #eee; 
     transition: background-color 0.2s ease, border-color 0.2s ease;
@@ -273,7 +277,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1.2em;
+    font-size: 1.6em;
     padding: 2;
     color: #666;
     display: flex;

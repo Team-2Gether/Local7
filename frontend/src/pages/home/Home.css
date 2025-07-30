@@ -156,6 +156,7 @@ html, body {
 
 .description-area p {
     line-height: 1.5;
+    font-size: 1.1em;
     margin-bottom: 20px;
     color: #fff;
     text-align: left; /* 텍스트를 좌측 정렬 */

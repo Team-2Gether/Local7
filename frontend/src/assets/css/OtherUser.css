@@ -1,6 +1,6 @@
 /* === OtherUser 페이지 메인 컨테이너 === */
 .OtherUser-page {
-    width: 80vw;               /* 화면의 90% 사용 → 너무 벌어지지 않음 */
+    width: 80vw;               /* 화면의 80% 사용 */
     max-width: 1200px;         /* 데스크탑에서 너무 넓어지지 않게 제한 */
     min-width: 360px;          /* 너무 작아지지 않게 제한 */
     margin: 40px auto;         /* 화면 중앙 정렬 */
@@ -10,11 +10,15 @@
     overflow: hidden;          /* 내부가 넘치지 않도록 */
     word-wrap: break-word;
     overflow-wrap: break-word;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;           /* 기본 폰트 크기 통일 */
 }
+
 .OtherUser-profile-image1{
     max-width: 600px; 
     min-width: 360px;
 }
+
 /* === 사용자 프로필 정보 영역 === */
 .OtherUser-info-section {
     background-color: #2c2c2c;
@@ -25,10 +29,9 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-
 /* 프로필 제목 */
 .OtherUser-profile-title {
-    font-size: 2em;
+    font-size: 1.8rem;         /* 2em → 1.8rem로 적절 조절 */
     color: #ffd700;
     margin-bottom: 20px;
     text-align: center;
@@ -42,10 +45,9 @@
     align-items: center;
     flex-wrap: wrap;
     border-radius: 20px;
-    margin-bottom: 20px; /* margin 줄임 */
-    border: 1px solid #757575; /* ✅ 테두리 색 추가 */
+    margin-bottom: 20px;       /* margin 줄임 */
+    border: 1px solid #757575; /* 테두리 색 추가 */
 }
-
 
 .OtherUser-profile-image {
     width: 200px;
@@ -59,37 +61,37 @@
 /* 사용자 상세 정보 */
 .OtherUser-user-details {
     color: #ddd;
-    line-height: 1.8;
+    line-height: 1.6;
     padding: 10px 20px;
+    font-size: 1rem;            /* 1.2em → 1rem로 통일 */
 }
 
 .OtherUser-user-details strong {
-    font-size: 1.0em;
+    font-size: 1rem;
     color: #FFCC00;
 }
 
 .OtherUser-user-details p {
-    font-size: 1.2em;
     margin: 5px 150px;
     text-align: left;
 }
 
 .OtherUser-user-details a {
-  display: inline-block;        /* 블록처럼 동작하도록 */
-  font-size: 0.8em;
-  text-align: center;
-  color: #ddd;
-  background-color: #333;       /* 어두운 버튼 배경 */
-  padding: 8px 16px;            /* 내부 여백 */
-  border-radius: 20px;          /* 둥근 테두리 */
-  text-decoration: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  border: 2px solid #6a9cfd;       /* 테두리 추가로 입체감 */
+    display: inline-block;      /* 블록처럼 동작하도록 */
+    font-size: 0.8rem;
+    text-align: center;
+    color: #ddd;
+    background-color: #333;     /* 어두운 버튼 배경 */
+    padding: 8px 16px;          /* 내부 여백 */
+    border-radius: 20px;        /* 둥근 테두리 */
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border: 2px solid #6a9cfd; /* 테두리 추가로 입체감 */
 }
 
 .OtherUser-user-details a:hover {
-  color: #fff;                  /* 텍스트 하얀색 */
-  border-color: #8ab0fc;
+    color: #fff;                /* 텍스트 하얀색 */
+    border-color: #8ab0fc;
 }
 
 /* 팔로우 버튼 */
@@ -97,7 +99,7 @@
     display: block;
     margin: 20px auto 0;
     padding: 12px 24px;
-    font-size: 1em;
+    font-size: 1rem;
     background-color: #FFCC00;
     color: rgb(0, 0, 0);
     border: none;
@@ -114,20 +116,23 @@
 @media (max-width: 768px) {
     .OtherUser-page {
         width: 90vw;
+        font-size: 14px;         /* 폰트 크기 축소 */
+        padding: 40px;
     }
 
     .OtherUser-profile-title {
-        font-size: 1.6em;
+        font-size: 1.4rem;
     }
 
     .OtherUser-user-details {
-        font-size: 0.95em;
+        font-size: 0.9rem;
         padding: 5px 10px;
     }
 
     .OtherUser-follow-button {
         width: 100%;
-        font-size: 1em;
+        font-size: 1rem;
+        padding: 12px 20px;
     }
 
     .OtherUser-profile-image {
@@ -138,7 +143,11 @@
 
 @media (max-width: 480px) {
     .OtherUser-profile-title {
-        font-size: 1.4em;
+        font-size: 1.2rem;
+    }
+
+    .OtherUser-user-details {
+        font-size: 0.85rem;
     }
 
     .OtherUser-profile-image {
@@ -147,7 +156,7 @@
     }
 
     .OtherUser-follow-button {
-        font-size: 0.95em;
+        font-size: 0.85rem;
         padding: 10px 15px;
     }
 }

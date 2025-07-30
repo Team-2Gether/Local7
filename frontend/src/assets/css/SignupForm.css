@@ -1,5 +1,6 @@
 body {
   background-color: #1a1a1a !important;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .signup-container1 {
@@ -12,6 +13,7 @@ body {
   background-color: #000000;
   box-sizing: border-box;
   font-size: 14px;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 h2 {
@@ -21,10 +23,9 @@ h2 {
   font-weight: 700 !important;
 }
 
-.form-group1 {
-  margin-bottom: 14px;
+.form-group1{
+  
 }
-
 .form-group1 label {
   display: block;
   font-weight: 500;
@@ -44,6 +45,8 @@ h2 {
   font-size: 20px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   height: 36px;
+  background-color: #1e1e1e;
+  color: #e0e0e0;
 }
 
 .form-group1 textarea {
@@ -57,6 +60,8 @@ h2 {
 .form-group1 textarea:focus {
   border-color: #79AAFF;
   outline: none;
+  box-shadow: 0 0 6px #79AAFF;
+  background-color: #2a2a2a;
 }
 
 .form-group1 button {
@@ -74,6 +79,7 @@ h2 {
 /* 입력 그룹 */
 .input-with-button1,
 .email-input-group1 {
+  display: flex;
   gap: 10px;
   align-items: center;
 }
@@ -105,20 +111,20 @@ h2 {
 }
 
 /* hover */
-/* 개별 버튼 호버: 원래 #79AAFF 보다 어두운 파란색으로 */
 .btn-send-code1:hover,
 .btn-verify-code1:hover,
 .btn-check-duplicate1:hover,
 .btn-submit1:hover {
-  background-color: #5a7dcc; /* 기존 #79AAFF보다 어두운 파란색 */
+  background-color: #5a7dcc;
 }
 
-/* disabled 상태는 그대로 유지 */
+/* disabled 상태 */
 .btn-send-code1:disabled,
 .btn-verify-code1:disabled,
 .btn-check-duplicate1:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+  color: #666666;
 }
 
 /* 회원가입 제출 버튼 */
