@@ -5,6 +5,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 /* 공통 메시지 박스 */
@@ -15,6 +16,7 @@
     width: 100%;
     text-align: center;
     font-weight: bold;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 .message.success {
     color: #155724;
@@ -27,13 +29,13 @@
     border: 1px solid #f5c6cb;
 }
 
-
 /* 전체 레이아웃 */
 .user-page-content {
   display: flex;
   width: 100%;
   background-color: #444;
-  margin:-10%;  /* 왼쪽으로 당김 */
+  margin: -10%;  /* 왼쪽으로 당김 */
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 /* 왼쪽 네비게이션 */
@@ -43,6 +45,7 @@
     padding: 20px;
     border-radius: 20px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-family: 'Noto Sans KR', sans-serif;
 }
 .user-page-navigation ul {
     list-style: none;
@@ -87,7 +90,7 @@
     width: 100%;
     max-width: 1200px;           /* 폭 제한 */
     box-sizing: border-box;      /* padding 포함 너비 계산 */
-    border: 1px solid #757575; /* ✅ 테두리 색 추가 */
+    border: 1px solid #757575;   /* 테두리 색 추가 */
 }
 .user-update-form h3 {
     color: #FFCC00;
@@ -97,15 +100,15 @@
     position: relative;
     border-top: none; /* 기존 선 제거 */
 }
-
 .user-update-form h3::before {
     content: "";
     position: absolute;
     top: 0;               /* h3 맨 위 */
     left: 0;
-    width: 100%;          /* 선 길이 조절 (100%보다 크게) */
+    width: 100%;          /* 선 길이 조절 */
     border-top: 2px solid #333333;
 }
+
 /* 폼 그룹 */
 .form-group {
     margin-bottom: 10px;
@@ -114,13 +117,13 @@
     display: block;
     font-weight: bold;
     color: #eee;
-    text-align: left;     /* 텍스트 왼쪽 정렬 */
-    margin-left: 0;       /* 왼쪽 마진 제거 */
-    padding-left: 0;      /* 왼쪽 패딩 제거 */
+    text-align: left;
+    margin-left: 0;
+    padding-left: 0;
 }
 .form-group input[type="text"],
 .form-group input[type="password"] {
-    width:100%;
+    width: 100%;
     padding: 10px;
     border: none;
     border-radius: 20px;
@@ -129,7 +132,6 @@
 }
 
 /* 입력 + 버튼 묶음 */
-
 .input-with-button input {
     flex-grow: 1;
     padding: 12px;
@@ -161,7 +163,7 @@ button {
 .submit-button {
     background-color: #79AAFF;
     color: rgb(0, 0, 0);
-    margin-right:36px;
+    margin-right: 36px;
 }
 .submit-button:hover:not(:disabled) {
     background-color: #0056b3;
@@ -172,8 +174,8 @@ button {
     background-color: #000000;
     color: white;
     width: 25%;
-    margin-bottom:50px;
-    margin-right:36px;
+    margin-bottom: 50px;
+    margin-right: 36px;
 }
 .delete-button:hover:not(:disabled) {
     background-color: #b83d49;
@@ -192,33 +194,36 @@ button:disabled {
     margin-bottom: 15px;
 }
 
-.profile-image-container ,.OtherUser-profile-image-container {
+/* 프로필 이미지 컨테이너 */
+.profile-image-container,
+.OtherUser-profile-image-container {
     display: flex;
     justify-content: center;    /* 수평 중앙 정렬 */
-    align-items: center;        /* 수직 중앙 정렬 (선택) */
+    align-items: center;        /* 수직 중앙 정렬 */
     flex-direction: column;     /* 세로로 쌓이게 */
     padding: 20px;
     margin-top: 20px;
-    background-color: #2c2c2c;  /* 배경색 (선택) */
+    background-color: #2c2c2c;  /* 배경색 */
     border-radius: 20px;        /* 둥근 테두리 */
-    max-width: 800px;          /* 폭 제한 */
+    max-width: 800px;           /* 폭 제한 */
     width: 100%;
     box-sizing: border-box;
     text-align: center;         /* 내부 텍스트 중앙 정렬 */
 }
+
+/* 프로필 이미지 */
 .profile-image {
-    margin-left: 0 !important;     /* 왼쪽 마진 자동으로 밀어내서 오른쪽 정렬 */
-    margin-bottom: 10px;
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid #666;
-    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    display: block;                /* 블록 요소로 변환 (중앙 정렬 가능) */
+    margin: 0 auto 10px auto;      /* 좌우 자동 마진으로 가로 중앙 정렬 + 하단 여백 */
+    width: 150px;                  /* 이미지 너비 */
+    height: 150px;                 /* 이미지 높이 */
+    object-fit: cover;            /* 비율 유지하면서 영역 채우기 */
+    border-radius: 50%;           /* 원형 이미지 */
+    border: 2px solid #666;       /* 테두리 회색 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); /* 그림자 효과 */
 }
 
-
-
+/* 커스텀 파일 입력 */
 .custom-file-input1 {
   color: white;
   font-size: 14px;
@@ -227,7 +232,7 @@ button:disabled {
   cursor: pointer;
 }
 
-/* ✅ 파일 선택 버튼 스타일 */
+/* 파일 선택 버튼 스타일 */
 .custom-file-input1::file-selector-button {
   background-color: #ffcc00;
   color: #000;
@@ -239,27 +244,28 @@ button:disabled {
   transition: background-color 0.3s ease;
 }
 
-/* ✅ hover 효과 */
+/* 파일 선택 버튼 hover 효과 */
 .custom-file-input1::file-selector-button:hover {
   background-color: #b49000;
 }
 
-/* ✅ 포커스 시에도 효과 추가 */
+/* 파일 선택 버튼 focus 효과 */
 .custom-file-input1::file-selector-button:focus {
   outline: 2px solid #ffaa00;
   outline-offset: 2px;
 }
 
-
+/* 프로필 미리보기 이미지 */
 .profile-preview-image {
     width: 150px;
     height: 150px;
     border-radius: 50%; /* 원형 이미지 */
-    object-fit: cover; /* 이미지가 잘리지 않고 채워지도록 */
+    object-fit: cover;  /* 이미지가 잘리지 않고 채워지도록 */
     border: 1px solid #ddd;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
+/* 프로필 플레이스홀더 이미지 */
 .profile-placeholder-image {
     width: 150px;
     height: 150px;
@@ -278,23 +284,28 @@ button:disabled {
     margin-top: 10px;
     font-size: 0.9em;
 }
+
+/* 사용자 섹션 */
 .user-section {
     background-color: #2c2c2c; /* 원하는 색상으로 변경 */
-    color: #ffffff;            /* 텍스트 색상 (선택) */
+    color: #ffffff;            /* 텍스트 색상 */
     text-align: center;        /* 내부 텍스트 가운데 정렬 */
     padding: 30px 0;           /* 상하 여백 추가 */
-    border-radius: 20px;       /* 둥근 모서리 (선택) */
+    border-radius: 20px;       /* 둥근 모서리 */
     margin: 20px auto;         /* 수직 간격 + 가운데 정렬 */
     width: 100%;
     max-width: 1200px;         /* 화면 폭 제한 */
     box-sizing: border-box;
-    border: 1px solid #757575; /* ✅ 테두리 색 추가 */
+    border: 1px solid #757575; /* 테두리 색 추가 */
 }
+
+/* 사용자 섹션 내용 및 제목 가운데 정렬 */
 .user-section-content, .user-section-title {
   justify-content: center; /* 가로 가운데 정렬 */
   align-items: center;     /* 세로 가운데 정렬 */
 }
 
+/* 현재 정보 텍스트 스타일 */
 .current-info {
   width: 100%;            /* 가로 길이는 부모 기준으로 설정 */
   overflow-wrap: break-word;  /* 긴 단어가 있으면 줄바꿈 */
@@ -303,6 +314,7 @@ button:disabled {
   box-sizing: border-box; /* 패딩/테두리 포함한 크기 계산 */
 }
 
+/* 사용자 섹션 파일 입력 */
 .user-section input[type="file"] {
     margin-top: 10px;
     margin-bottom: 15px;
@@ -311,6 +323,7 @@ button:disabled {
     margin-right: auto;
 }
 
+/* 사용자 섹션 버튼 */
 .user-section button {
     background-color: #000000;
     color: rgb(255, 255, 255);

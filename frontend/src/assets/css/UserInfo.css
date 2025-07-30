@@ -1,11 +1,13 @@
 /* UserInfoSection.css */
+
 .user-info-section {
-    background: #444444;
+    background: #2c2c2c;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     border-radius: 20px;
     margin-bottom: 20px; /* margin 줄임 */
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .user-info-section .profile-image-container {
@@ -15,8 +17,6 @@
     border-radius: 20px;
     margin-bottom: 20px; /* margin 줄임 */
 }
-
-
 
 .UserInfo-bio {
     resize: none;
@@ -33,10 +33,9 @@
     border: 3px solid #ddd;
 }
 
-
 .user-details p {
     font-size: 1rem;
-    color: #555;
+    color: #e0e0e0;
     margin-bottom: 10px;
     text-align: left;
 }

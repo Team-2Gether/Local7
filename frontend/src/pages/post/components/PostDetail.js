@@ -171,7 +171,7 @@ function PostDetail({ currentUser }) {
                         onClick={() => navigate('/', { state: { from: 'posts' } })}
                         className="post-detail-button back"
                     >
-                        목록으로 돌아가기
+                        목록으로
                     </button>
 
                     {currentUser && (currentUser.userId === post.userId || currentUser.userLoginId === 'admin') && (

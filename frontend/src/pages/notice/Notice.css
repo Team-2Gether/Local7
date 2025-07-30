@@ -23,6 +23,7 @@
   left: 0;
   margin-top: 40px; /* 원하는 만큼 띄우기 */
   color:white;
+  font-size: 1.8rem;
 }
 
 /* 공지사항 상단 '글쓰기' 버튼 영역 */
