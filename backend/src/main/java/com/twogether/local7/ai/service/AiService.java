@@ -58,11 +58,11 @@ public class AiService {
         List<RestaurantVO> relevantRestaurants = new ArrayList<>();
         List<ReviewVO> relevantReviews = new ArrayList<>();
 
-        // filteredRestaurants 변수를 여기서 선언합니다.
+        // filteredRestaurants 변수 선언
         List<RestaurantVO> filteredRestaurants = new ArrayList<>();
 
 
-        // 7번 국도에 해당하는 주요 지역 목록 (필요에 따라 추가/수정)
+        // 7번 국도에 해당하는 주요 지역 목록
         List<String> nationalRoad7Regions = Arrays.asList(
                 "강릉", "속초", "양양", "동해", "삼척", "울진", "영덕", "포항", "경주", "부산", "울산"
         );
