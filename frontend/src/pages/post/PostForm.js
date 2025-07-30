@@ -96,11 +96,6 @@ function PostForm({ currentUser }) {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
 
-        if (!currentUser || !currentUser.userId || !currentUser.userLoginId) {
-            setError('로그인이 필요합니다.');
-            return;
-        }
-
         try {
             const dataToSubmit = {
                 ...formData,
@@ -134,17 +129,6 @@ function PostForm({ currentUser }) {
             setError(err.response?.data?.message || '게시글 저장에 실패했습니다.'); // 백엔드 에러 메시지 표시
         }
     }, [isEditMode, id, formData, selectedFiles, addPost, modifyPost, navigate, setMessage, setError, currentUser]);
-
-
-    // 로그인되지 않은 경우
-    if (!currentUser) {
-        return (
-            <div className="post-form-page">
-                <p className="error-message">게시글을 작성하거나 수정하려면 로그인이 필요합니다.</p>
-                <button onClick={() => navigate('/login')} className="post-button post-back-button">로그인 페이지로 이동</button>
-            </div>
-        );
-    }
 
     if (loading && isEditMode && !post) {
         return <div className="loading-spinner"></div>;

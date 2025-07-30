@@ -34,6 +34,8 @@ import ForgetIdOrPWD from "./pages/forget/ForgetIdOrPWD";
 import SearchUser from "./pages/searchuser/SearchUser";
 import OAuth2RedirectHandler from './pages/OAuth2RedirectHandler';
 import UserInfo from "./pages/user/UserInfo"; // 분리된 UserInfo 컴포넌트 임포트
+import ForbiddenPage from "./components/403page/ForbiddenPage"; // 403 Forbidden 페이지 임포트 추가
+import ProtectedRoutesWrapper from "./components/ProtectedRoutesWrapper"; // ProtectedRoutesWrapper 임포트 추가
 
 Modal.setAppElement("#root");
 
@@ -230,115 +232,93 @@ export function AppContent() {
                                         </div>
                                     </div>
                                 )} />
-                        <Route path="/restaurants" element={<Restaurant currentUser={currentUser} />} />
-                        <Route
-                            path="/pick"
-                            element={<RestaurantVote currentUser={currentUser} />}
-                        />
-                        <Route
-                            path="/posts"
-                            element={<PostList currentUser={currentUser} selectedCity={selectedCity} />}
-                        />
-                        <Route
-                            path="/posts/new"
-                            element={<PostForm currentUser={
-                                currentUser
-                            } />
-                            }
-                        />
-                        <Route
-                            path="/posts/edit/:id"
-                            element={<PostForm currentUser={
-                                currentUser
-                            } />
-                            }
-                        />
-                        <Route
-                            path="/posts/:id"
-                            element={<PostDetail currentUser={
-                                currentUser
-                            } />
-                            }
-                        />
-                        <Route
-                            path="/mypage"
-                            element={isLoggedIn
-                                ? (<MyPage currentUser={currentUser} isLoggedIn={isLoggedIn} />)
-                                : (
-                                    <div className="initial-login-screen">
-                                        로그인이 필요합니다.{" "}
-                                        <button onClick={() => setIsLoginModalOpen(true)}>
-                                            로그인
-                                        </button>
-                                    </div>
-                                )}>
+                        {/* 로그인 필요 없는 페이지 */}
+                        <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
+
+                        {/* 모든 로그인 필요 페이지를 ProtectedRoutesWrapper로 감쌈 */}
+                        <Route element={<ProtectedRoutesWrapper isLoggedIn={isLoggedIn} />}>
+                            <Route path="/restaurants" element={<Restaurant currentUser={currentUser} />} />
                             <Route
-                                index="index"
-                                element={<UserInfo currentUser={currentUser} />
-                                }
+                                path="/posts"
+                                element={<PostList currentUser={currentUser} selectedCity={selectedCity} />}
                             />
                             <Route
-                                path="edit"
-                                element={<UserPage currentUser={
-                                    currentUser
-                                }
-                                    onLogout={
-                                        handleLogout
-                                    }
-                                    onUserUpdate={updateCurrentUser} // updateCurrentUser prop 추가
-                                />
-                                }
-                            />
-                            <Route
-                                path="posts"
-                                element={<MyPosts currentUser={
+                                path="/posts/:id"
+                                element={<PostDetail currentUser={
                                     currentUser
                                 } />
                                 }
                             />
-                            {/* MyPage 내부 라우트: 팔로워/팔로잉 목록 */}
                             <Route
-                                path="followers"
-                                element={<FollowerList currentUser={currentUser} />}
+                                path="/pick"
+                                element={<RestaurantVote currentUser={currentUser} />}
                             />
                             <Route
-                                path="followings"
-                                element={<FollowingList currentUser={currentUser} />}
+                                path="/posts/new"
+                                element={<PostForm currentUser={currentUser} />}
                             />
+                            <Route
+                                path="/posts/edit/:id"
+                                element={<PostForm currentUser={currentUser} />}
+                            />
+                            <Route
+                                path="/mypage"
+                                element={<MyPage currentUser={currentUser} isLoggedIn={isLoggedIn} />}>
+                                <Route
+                                    index="index"
+                                    element={<UserInfo currentUser={currentUser} />
+                                    }
+                                />
+                                <Route
+                                    path="edit"
+                                    element={<UserPage currentUser={
+                                        currentUser
+                                    }
+                                        onLogout={
+                                            handleLogout
+                                        }
+                                        onUserUpdate={updateCurrentUser} // updateCurrentUser prop 추가
+                                    />
+                                    }
+                                />
+                                <Route
+                                    path="posts"
+                                    element={<MyPosts currentUser={
+                                        currentUser
+                                    } />
+                                    }
+                                />
+                                {/* MyPage 내부 라우트: 팔로워/팔로잉 목록 */}
+                                <Route
+                                    path="followers"
+                                    element={<FollowerList currentUser={currentUser} />}
+                                />
+                                <Route
+                                    path="followings"
+                                    element={<FollowingList currentUser={currentUser} />}
+                                />
+                            </Route>
+
+                            <Route path="/search-user" element={<SearchUser />} />
+
+                            <Route
+                                path="/notice/*"
+                                element={<Notice currentUser={currentUser} />} />
+                            {/* /userpage는 /mypage/edit으로 리다이렉트되므로, Protection은 부모 Route에서 이미 적용됨 */}
+                            <Route path="/userpage" element={<Navigate to="/mypage/edit" replace />} />
                         </Route>
 
-                        {/* OtherUser 페이지 라우트: 다른 사용자의 프로필 */}
+
+                        {/* OtherUser 페이지 라우트: 다른 사용자의 프로필 (로그인 필요 없음 또는 별도 로직) */}
                         <Route path="/user/profile/:userLoginId" element={<OtherUser currentUser={currentUser} />} />
                         {/* 다른 사용자의 팔로워/팔로잉 목록 라우트 추가 - userId를 사용 */}
                         <Route path="/user/profile/:userId/followers" element={<FollowerList currentUser={currentUser} />} />
                         <Route path="/user/profile/:userId/followings" element={<FollowingList currentUser={currentUser} />} />
 
-                        <Route path="/search-user" element={<SearchUser />} />
-
-                        {/* OAuth2RedirectHandler 경로가 src/pages/OAuth2RedirectHandler.js 에 있다면 이 경로를 사용 */}
-                        <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
-
-
-                        <Route
-                            path="/notice/*"
-                            element={isLoggedIn
-                                ? (<Notice currentUser={currentUser} />)
-                                : (
-                                    <div className="initial-login-screen">
-                                        로그인이 필요합니다.{" "}
-                                        <button onClick={() => setIsLoginModalOpen(true)}>
-                                            로그인
-                                        </button>
-                                    </div>
-                                )} />
-                        <Route path="/userpage" element={<Navigate to="/mypage/edit" replace />} />
-
-                        {/* 이 부분은 이제 모달로 띄우므로 주석 처리하거나 삭제합니다. */}
-                        {/* <Route path="/signup" element={<SignupForm />} /> */}
-                        {/* <Route path="/forget-ID-PWD" element={<ForgetIdOrPWD />} */}
 
                         <Route path="/admin" element={currentUser && currentUser.ruleId === 1 ? <AdminPage currentUser={currentUser} /> : <Navigate to="/" />} />
                         <Route path="*" element={<NotFoundPage />} />
+                        <Route path="/forbidden" element={<ForbiddenPage />} />
                     </Routes>
                 </div>
             </div>
