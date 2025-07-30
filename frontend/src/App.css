@@ -1,6 +1,10 @@
 /* src/App.css */
 
 /* 전체 앱 레이아웃 */
+*{
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -14,6 +18,7 @@ html, body {
     display: flex;
     flex-direction: column;
     min-height: 100vh; /* 최소 높이를 뷰포트 높이로 설정 */
+    font-family: 'Noto Sans KR', sans-serif !important;
 }
 
 
@@ -28,6 +33,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: 'Noto Sans KR', sans-serif !important;
 }
 
 /* 로그인 모달 콘텐츠 스타일 */
@@ -41,6 +47,7 @@ html, body {
     width: 100%;
     position: relative;
     z-index: 3001;
+    font-family: 'Noto Sans KR', sans-serif !important;
 }
 
 .login-form-container .navbar-brand{
