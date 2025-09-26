@@ -57,13 +57,13 @@
 
 ## 🛠️ 기술 스택
 
-| 분류              | 사용 기술                                          |
+| 분류              | 사용 기술                                         |
 |-------------------|---------------------------------------------------|
-| **개발 도구**     | IntelliJ IDEA, VS Code                           |
-| **프론트엔드**    | JavaScript, React, HTML, CSS, Axios              |
-| **백엔드**        | Spring Boot, REST API, MyBatis, Python, Java     |
+| **개발 도구**     | IntelliJ IDEA, VS Code                            |
+| **프론트엔드**    | JavaScript, React, HTML, CSS, Axios               |
+| **백엔드**        | Spring Boot, REST API, MyBatis, Python, Java      |
 | **데이터베이스**  | Oracle Database                                   |
-| **외부 서비스**   | Kakao Maps API, OpenAI                           |
+| **외부 서비스**   | Kakao Maps API, OpenAI                            |
 | **협업 도구**     | GitHub, JANDI, Discord                            |
 
 ---
